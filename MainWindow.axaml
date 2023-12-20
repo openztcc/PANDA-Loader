@@ -10,122 +10,142 @@
         Height="450"
         MinWidth="686"
         MinHeight="450"
-        MaxWidth="686"
-        MaxHeight="450"
+
         >
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition
-			    Width="56" />
-			<ColumnDefinition
-			    Width="640"
-				/>		
-		</Grid.ColumnDefinitions>
-        <!-- This is the sidebar. -->
-        <StackPanel
-            Background="#1E284A"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Width="56"
-            Height="450"  
-            Grid.Column="0"
-        >  
+
+        
+        <StackPanel Orientation="Horizontal">  
+            <!-- Sidebar. -->
             <Border
+                Background="#1E284A"
                 BorderBrush="#323E67"
                 BorderThickness="1"
-                Padding="0, 56,0,0"
-                Height="450">
-                <TextBlock
-                    Text="Home"
-                    Foreground="White"
-                    FontSize="20"
-                    Margin="10,0,0,0"
-                    
-                />
-            </Border>
-			<Border
-				Padding="0, 56,0,0"
-				Background=""
-				>
-				<Image Source="/Assets/png/bolt-2x.png" Width="14" Height="14"/>
-			</Border>
-        </StackPanel>
-
-        <Grid
-            Grid.Column="1"
-        >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="43"/>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <!-- This is the title bar. -->
-            <Border
-                BorderBrush="#323E67"
-                BorderThickness="0, 1, 1, 1"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                Grid.Row="0"
-                Grid.Column="0"
                 >
-                <ComboBox
-                    Height="42"
-                    BorderBrush="#323E67"
-                    BorderThickness="0,0,1,1"
-                    CornerRadius="0"
-                    Background="#1E284A"
-
-                    >
-                    <ComboBoxItem>Zoo Tycoon 1</ComboBoxItem>
-                    <ComboBoxItem>Zoo Tycoon 2</ComboBoxItem>
-                </ComboBox>
-
-            </Border>
-            <!-- This is the main content. -->
-            <Border
-                Padding="20" 
+            <Grid ColumnDefinitions="56" RowDefinitions="Auto, Auto, *">
+                <Rectangle
+                    Fill="#323E67"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Height="43"
+                    />
+                <Rectangle
+                Fill="#000"
+                Grid.Column="0"
                 Grid.Row="1"
-            >
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="135" />
-                    </Grid.ColumnDefinitions>
-                    <!-- Left text block -->
+                Height="45"
+                />
+            </Grid>
+            </Border>
+            <!-- Body -->
+            <StackPanel Orientation="Vertical">  
+                <Grid ColumnDefinitions="*" RowDefinitions="43, Auto, Auto">
+                    <!-- Title bar. -->
                     <Border
                         BorderBrush="#323E67"
-                        BorderThickness="0"
-                        VerticalAlignment="Top"
+                        BorderThickness="0, 1, 1, 1"
+                        Grid.Row="0"
                         Grid.Column="0"
                         >
-                        <TextBlock
-                            Text="Mod Manager"
-                            Foreground="White"
-                            FontSize="20"
-                            HorizontalAlignment="Left"
-                            FontFamily="{StaticResource ManropeFont}"
-                        />
+                        <ComboBox
+                            Height="42"
+                            BorderBrush="#323E67"
+                            BorderThickness="0,0,1,1"
+                            CornerRadius="0"
+                            Background="#1E284A"
+
+                            >
+                            <ComboBoxItem>Zoo Tycoon 1</ComboBoxItem>
+                            <ComboBoxItem>Zoo Tycoon 2</ComboBoxItem>
+                        </ComboBox>
+
                     </Border>
-                    <!-- Right text block -->
+                    <!-- Main content. -->
 
-                    <Button Padding="10"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Stretch"
-                            Grid.Column="1"
-                            Background="#F8AA62">
-                        <StackPanel Orientation="Horizontal" Spacing="5">
-                            <Image Source="/Assets/png/bolt-2x.png" Width="14" Height="14"/>
-                            <TextBlock 
-                            FontFamily="{StaticResource ManropeFont}"
-                            FontWeight="Bold"
-                            VerticalAlignment="Center">Launch Game</TextBlock>
-                        </StackPanel>
-                    </Button>
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!-- Left text block -->
+                            <Border
+                                BorderBrush="#323E67"
+                                BorderThickness="0"
+                                Grid.Column="0"
+                                >
+                                <TextBlock
+                                    Text="Mod Manager"
+                                    Foreground="White"
+                                    FontSize="20"
+                                    HorizontalAlignment="Left"
+                                    FontFamily="{StaticResource ManropeFont}"
+                                />
+                            </Border>
+                            <!-- Right text block -->
 
-                </Grid>
-            </Border>
-		</Grid>
-    </Grid>
+                            <Button Padding="10"
+                                    Margin="0,0,5,0"
+
+                                    Grid.Column="1"
+                                    Background="#F8AA62">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <Image Source="/Assets/png/bolt-2x.png" Width="14" Height="14"/>
+                                    <TextBlock 
+                                    FontFamily="{StaticResource ManropeFont}"
+                                    FontWeight="Bold"
+                                    VerticalAlignment="Center">Launch Game</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    
+                <Border Grid.Column="0" Grid.Row="2">
+                    <ItemsControl
+                        >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    Padding="20"
+                                    BorderBrush="#323E67"
+                                    BorderThickness="0,0,0,1"
+                                    >
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="140" />
+                                        </Grid.ColumnDefinitions>
+                                        <!-- Left text block -->
+                                        <Border
+                                            BorderBrush="#323E67"
+                                            BorderThickness="0"
+                                            VerticalAlignment="Top"
+                                            Grid.Column="0"
+                                            >
+                                            <TextBlock
+                                                Text="Test"
+                                                Foreground="White"
+                                                FontSize="20"
+                                                HorizontalAlignment="Left"
+                                                FontFamily="{StaticResource ManropeFont}"
+                                            />
+                                        </Border>
+                                        <!-- Right text block -->
+                                        <TextBlock
+                                            Text="Test"
+                                            Foreground="White"
+                                            FontSize="20"
+                                            HorizontalAlignment="Right"
+                                            Grid.Column="1"
+                                            FontFamily="{StaticResource ManropeFont}"
+                                            />
+                                    </Grid>
+
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>  
+                    </ItemsControl>  
+                </Border>
+            
+		    </Grid>
+            </StackPanel>
+        </StackPanel>
+
 </Window>
