@@ -14,30 +14,30 @@
         >
 
         
-        <StackPanel Orientation="Horizontal">  
+        <Grid ColumnDefinitions="56, *">  
             <!-- Sidebar. -->
             <Border
                 Background="#1E284A"
                 BorderBrush="#323E67"
                 BorderThickness="1"
                 >
-            <Grid ColumnDefinitions="56" RowDefinitions="Auto, Auto, *">
-                <Rectangle
-                    Fill="#323E67"
+                <Grid Grid.Column="0" ColumnDefinitions="*" RowDefinitions="Auto, Auto, *">
+                    <Rectangle
+                        Fill="#323E67"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Height="43"
+                        />
+                    <Rectangle
+                    Fill="#000"
                     Grid.Column="0"
-                    Grid.Row="0"
-                    Height="43"
+                    Grid.Row="1"
+                    Height="45"
                     />
-                <Rectangle
-                Fill="#000"
-                Grid.Column="0"
-                Grid.Row="1"
-                Height="45"
-                />
-            </Grid>
+                </Grid>
             </Border>
             <!-- Body -->
-            <StackPanel Orientation="Vertical">  
+            <StackPanel Grid.Column="1" Orientation="Vertical">  
                 <Grid ColumnDefinitions="*" RowDefinitions="43, Auto, Auto">
                     <!-- Title bar. -->
                     <Border
@@ -60,43 +60,53 @@
 
                     </Border>
                     <!-- Main content. -->
-
-                        <Grid Grid.Column="0" Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Grid.Row="1" Padding="20">
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
                             <!-- Left text block -->
                             <Border
                                 BorderBrush="#323E67"
                                 BorderThickness="0"
-                                Grid.Column="0"
-                                >
+                                VerticalAlignment="Center"
+                                Grid.Column="0" 
+                                Grid.Row="0">
                                 <TextBlock
+									
                                     Text="Mod Manager"
                                     Foreground="White"
                                     FontSize="20"
                                     HorizontalAlignment="Left"
                                     FontFamily="{StaticResource ManropeFont}"
                                 />
+                            </Border>   
+                            <Border Grid.Column="0" Grid.Row="1" Padding="0,20">
+                                <WrapPanel>
+									<TextBlock
+										TextWrapping="Wrap"
+                                        Foreground="#97A0AA"
+                                        FontSize="15"
+                                        FontFamily="{StaticResource ManropeFont}">Manage your mods using PANDA’s enable/disable features.</TextBlock>
+                                </WrapPanel>
                             </Border>
-                            <!-- Right text block -->
 
+                            <!-- Right text block -->
                             <Button Padding="10"
                                     Margin="0,0,5,0"
-
+                                    VerticalAlignment="Center"
                                     Grid.Column="1"
                                     Background="#F8AA62">
                                 <StackPanel Orientation="Horizontal" Spacing="5">
                                     <Image Source="/Assets/png/bolt-2x.png" Width="14" Height="14"/>
-                                    <TextBlock 
+                                    <TextBlock
+									
                                     FontFamily="{StaticResource ManropeFont}"
                                     FontWeight="Bold"
                                     VerticalAlignment="Center">Launch Game</TextBlock>
                                 </StackPanel>
                             </Button>
                         </Grid>
-                    
+                    </Border>
+                    <!-- View blurb -->
+
                 <Border Grid.Column="0" Grid.Row="2">
                     <ItemsControl
                         >
@@ -146,6 +156,6 @@
             
 		    </Grid>
             </StackPanel>
-        </StackPanel>
+        </Grid>
 
 </Window>
