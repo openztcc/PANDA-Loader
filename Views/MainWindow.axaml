@@ -105,10 +105,6 @@
                                     TextWrapping="Wrap">
                                     Manage your mods using PANDA’s enable/disable features.
                                 </TextBlock>
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding Greeting}" />
                             </WrapPanel>
                         </Border>
 
@@ -135,16 +131,40 @@
                         </Button>
                     </Grid>
                 </Border>
-                <!--  View blurb  -->
+                <!--  Mods List  -->
 
-                <Border Grid.Row="2" Grid.Column="0">
-                    <ItemsControl ItemsSource="{Binding MyList}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Foreground="Black" Text="" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                <Border
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Padding="20,0,20,20">
+
+                    <Grid RowDefinitions="39,Auto">
+
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Background="#1E284A"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Grid.Row="0"
+                                Padding="20,0"
+                                VerticalAlignment="Center"
+                                Foreground="White">
+                                <Label>Status</Label>
+                                <Label>Name</Label>
+                                <Label>Category</Label>
+                                <Label>Actions</Label>
+                            </TextBlock>
+                        </StackPanel>
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding MyList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Foreground="Black" Text="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+
                 </Border>
 
             </Grid>
