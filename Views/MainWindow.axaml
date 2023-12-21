@@ -1,0 +1,138 @@
+<Window
+    x:Class="PandaLdr.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="PandaLdr"
+    Width="686"
+    Height="450"
+    MinWidth="686"
+    MinHeight="450"
+    d:DesignHeight="450"
+    d:DesignWidth="686"
+    Background="#212C54"
+    mc:Ignorable="d">
+
+
+    <Grid ColumnDefinitions="56, *">
+        <!--  Sidebar.  -->
+        <Border
+            Background="#1E284A"
+            BorderBrush="#323E67"
+            BorderThickness="1">
+            <Grid
+                Grid.Column="0"
+                ColumnDefinitions="*"
+                RowDefinitions="Auto, Auto, *">
+                <Rectangle
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Height="43"
+                    Fill="#323E67" />
+                <Rectangle
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Height="45"
+                    Fill="#000" />
+            </Grid>
+        </Border>
+        <!--  Body  -->
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+            <Grid ColumnDefinitions="*" RowDefinitions="43, Auto, Auto">
+                <!--  Title bar.  -->
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    BorderBrush="#323E67"
+                    BorderThickness="0,1,1,1">
+                    <ComboBox
+                        Height="42"
+                        Background="#212C54"
+                        BorderBrush="#323E67"
+                        BorderThickness="0,0,1,1"
+                        CornerRadius="0"
+                        FontFamily="{StaticResource ManropeFont}"
+                        FontSize="15"
+                        Foreground="#97A0AA"
+                        SelectedIndex="0">
+                        <ComboBoxItem>Zoo Tycoon 1</ComboBoxItem>
+                        <ComboBoxItem>Zoo Tycoon 2</ComboBoxItem>
+                    </ComboBox>
+
+                </Border>
+                <!--  Main content.  -->
+                <Border
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Padding="20">
+                    <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                        <!--  Left text block  -->
+                        <Border
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            BorderBrush="#323E67"
+                            BorderThickness="0">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontFamily="{StaticResource ManropeFont}"
+                                FontSize="20"
+                                Foreground="White"
+                                Text="Mod Manager" />
+                        </Border>
+                        <Border
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Padding="0,20">
+                            <WrapPanel>
+                                <TextBlock
+                                    FontFamily="{StaticResource ManropeFont}"
+                                    FontSize="15"
+                                    Foreground="#97A0AA"
+                                    TextWrapping="Wrap">
+                                    Manage your mods using PANDA’s enable/disable features.
+                                </TextBlock>
+                            </WrapPanel>
+                        </Border>
+
+                        <!--  Right text block  -->
+                        <Button
+                            Grid.Column="1"
+                            Margin="0,0,5,0"
+                            Padding="10"
+                            VerticalAlignment="Center"
+                            Background="#F8AA62">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Image
+                                    Width="14"
+                                    Height="14"
+                                    Source="/Assets/png/bolt-2x.png" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontFamily="{StaticResource ManropeFont}"
+                                    FontWeight="Bold"
+                                    Foreground="#1E284A">
+                                    Launch Game
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+                <!--  View blurb  -->
+
+                <<Border Grid.Row="2" Grid.Column="0">
+                    <ItemsControl Items="{Binding MyList}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="Black" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>>
+
+            </Grid>
+        </StackPanel>
+    </Grid>
+
+</Window>

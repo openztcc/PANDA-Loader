@@ -1,25 +1,18 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
-namespace PandaLdr
+namespace PandaLdr.Views
 {
     public partial class MainWindow : Window
     {
-        public List<string> MyList { get; set; }
+        public ObservableCollection<string> MyList { get; set; } = new ObservableCollection<string>(new string[] { "Row 1", "Row 2", "Row 3" });
 
         public MainWindow()
         {
             InitializeComponent();
-            MyList = new List<string>();
-            PopulateList();
-        }
-
-        private void PopulateList()
-        {
-            MyList.Add("Item 1");
-            MyList.Add("Item 2");
-            MyList.Add("Item 3");
+            DataContext = this;
         }
 
         private void InitializeComponent()
