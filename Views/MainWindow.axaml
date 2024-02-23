@@ -1,3 +1,9 @@
+<!--
+    * MainWindow.axaml
+    * ~~~~~~~~~~~
+    * This source file defines the Avalonia UI structure for the main window.
+-->
+
 <Window
     x:Class="PandaLdr.Views.MainWindow"
     xmlns="https://github.com/avaloniaui"
@@ -24,6 +30,16 @@
         -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="Background" Value="#1e284a" />
+            <Setter Property="Foreground" Value="#f1f2f4" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+
+    </Window.Styles>
 
 
 
@@ -133,40 +149,53 @@
                 </Border>
                 <!--  Mods List  -->
 
-                <Border
+                <DataGrid
                     Grid.Row="2"
                     Grid.Column="0"
-                    Padding="20,0,20,20">
+                    Margin="20"
+                    BorderThickness="0"
+                    CanUserReorderColumns="True"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="True"
+                    GridLinesVisibility="None"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding MyList}">
 
-                    <Grid RowDefinitions="39,Auto">
-
-                        <StackPanel
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Background="#1E284A"
-                            Orientation="Horizontal">
-                            <TextBlock
-                                Grid.Row="0"
-                                Padding="20,0"
-                                VerticalAlignment="Center"
-                                Foreground="White">
-                                <Label>Status</Label>
-                                <Label>Name</Label>
-                                <Label>Category</Label>
-                                <Label>Actions</Label>
-                            </TextBlock>
-                        </StackPanel>
-                        <ItemsControl Grid.Row="1" ItemsSource="{Binding MyList}">
-                            <ItemsControl.ItemTemplate>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Status">
+                            <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Foreground="Black" Text="{Binding}" />
+                                    <Button
+                                        Margin="0,10"
+                                        Padding="20,8"
+                                        Background="#41b670"
+                                        Content="Enabled"
+                                        CornerRadius="0">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <Image
+                                                Width="14"
+                                                Height="14"
+                                                Source="/Assets/png/check-2x.png" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontFamily="{StaticResource ManropeFont}"
+                                                FontWeight="Bold"
+                                                Foreground="#1E284A">
+                                                Enabled
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Button>
                                 </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Grid>
-
-                </Border>
-
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn
+                            Binding="{Binding $self}"
+                            Foreground="#f1f2f4"
+                            Header="Name" />
+                        <DataGridTextColumn Header="Category" />
+                        <DataGridTextColumn Header="Actions" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </StackPanel>
     </Grid>
