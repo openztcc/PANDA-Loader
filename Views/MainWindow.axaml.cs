@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using PandaLdr.ViewModels;
 
 namespace PandaLdr.Views
 {
@@ -8,7 +7,6 @@ namespace PandaLdr.Views
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainWindowViewModel();
         }
     }
 }
