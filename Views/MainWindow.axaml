@@ -1,20 +1,51 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:PandaLdr.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="PandaLdr.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="PandaLdr">
+<Window
+    x:Class="PandaLdr.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:PandaLdr.ViewModels"
+    Title="PandaLdr"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:MainWindowViewModel"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <!--<StackPanel
+        Margin="10"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Spacing="10">
+        <Rectangle
+            Width="100"
+            Height="100"
+            HorizontalAlignment="Center"
+            Fill="Red" />
+        <TextBlock Name="TextBlockName" Text="{Binding Greeting}" />
+        <Button HorizontalAlignment="Center" Click="ButtonOnClick">Click me</Button>
+    </StackPanel>-->
+    <SplitView
+        CompactPaneLength="50"
+        DisplayMode="Inline"
+        IsPaneOpen="True"
+        OpenPaneLength="200">
+        <SplitView.Pane>
+            <StackPanel>
+                <Button Content="Home" />
+                <Button Content="Settings" />
+            </StackPanel>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <ContentControl Content="{Binding CurrentView}" />
+        </SplitView.Content>
+    </SplitView>
 </Window>
