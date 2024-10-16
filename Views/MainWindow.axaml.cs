@@ -16,7 +16,6 @@ namespace PandaLdr.Views
         private void ButtonOnClick(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Button clicked");
-            TextBlockName.Text = "Button clicked";
             // TextBlockText = "Button clicked";
         }
     }

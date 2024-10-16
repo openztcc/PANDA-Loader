@@ -22,7 +22,6 @@ namespace PandaLdr.ViewModels
 
         public ICommand NavigateHomeCommand { get; }
         public ICommand NavigateSettingsCommand { get; }
-        // Add more navigation commands as needed
 
         public MainWindowViewModel()
         {
@@ -49,5 +48,4 @@ namespace PandaLdr.ViewModels
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-}
 }
