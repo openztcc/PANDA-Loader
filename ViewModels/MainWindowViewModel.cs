@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace PandaLdr.ViewModels
 {
-    public partial class MainWindowViewModel : INotifyPropertyChanged
+    public partial class MainWindowViewModel : ObservableObject
     {
         private object _currentView;
 
@@ -26,8 +27,8 @@ namespace PandaLdr.ViewModels
         public MainWindowViewModel()
         {
             // Initialize commands
-            NavigateHomeCommand = ReactiveCommand.Create(NavigateHome);
-            NavigateSettingsCommand = ReactiveCommand.Create(NavigateSettings);
+            NavigateHomeCommand = new RelayCommand(NavigateHome);
+            NavigateSettingsCommand = new RelayCommand(NavigateSettings);
 
             // Set default view
             CurrentView = new HomeViewModel();
