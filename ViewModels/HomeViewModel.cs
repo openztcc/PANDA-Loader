@@ -22,7 +22,7 @@ namespace PandaLdr.ViewModels
 
         public HomeViewModel()
         {
-            HomeView = new HomeViewModel();
+            _homeView = new object(); // Initialize _homeView to a non-null value
         }
     }
 }

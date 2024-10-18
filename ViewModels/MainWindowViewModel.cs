@@ -8,7 +8,7 @@ namespace PandaLdr.ViewModels
 {
     public partial class MainWindowViewModel : ObservableObject
     {
-        private object _currentView;
+        private object _currentView = new HomeViewModel(); // Initialize to avoid CS8618
 
         public object CurrentView
         {
@@ -44,8 +44,10 @@ namespace PandaLdr.ViewModels
         }
 
         // Implement INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName) =>
+        public new event PropertyChangedEventHandler? PropertyChanged; // Make nullable to avoid CS8618
+        protected new void OnPropertyChanged(string propertyName)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

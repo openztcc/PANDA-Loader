@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:PandaLdr.Views"
-    xmlns:vm="using:PandaLdr.ViewModels"
+    xmlns:vm="clr-namespace:PandaLdr.ViewModels"
     Title="PandaLdr"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -20,20 +20,6 @@
         -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
-
-    <!--<StackPanel
-        Margin="10"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Spacing="10">
-        <Rectangle
-            Width="100"
-            Height="100"
-            HorizontalAlignment="Center"
-            Fill="Red" />
-        <TextBlock Name="TextBlockName" Text="{Binding Greeting}" />
-        <Button HorizontalAlignment="Center" Click="ButtonOnClick">Click me</Button>
-    </StackPanel>-->
     <SplitView
         CompactPaneLength="50"
         DisplayMode="Inline"
@@ -48,8 +34,11 @@
         <SplitView.Content>
             <ContentControl Content="{Binding CurrentView}">
                 <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+                    <DataTemplate x:Key="Home" DataType="vm:HomeViewModel">
                         <views:HomeView />
+                    </DataTemplate>
+                    <DataTemplate x:Key="Settings" DataType="vm:SettingsViewModel">
+                        <views:SettingsView />
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>

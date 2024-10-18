@@ -1,4 +1,4 @@
-<Window
+<UserControl
     x:Class="PandaLdr.Views.HomeView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,5 +7,8 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    Welcome to Avalonia!
-</Window>
+    <TextBlock
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Text="Welcome to Avalonia!" />
+</UserControl>

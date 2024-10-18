@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace PandaLdr.Views
 {
-    public partial class SettingsView : Window
+    public partial class SettingsView : UserControl
     {
         public SettingsView()
         {
