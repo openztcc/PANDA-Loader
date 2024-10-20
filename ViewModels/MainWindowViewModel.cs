@@ -1,53 +1,56 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace PandaLdr.ViewModels
 {
-    public partial class MainWindowViewModel : ObservableObject
+    public partial class MainWindowViewModel : ViewModelBase
     {
-        private object _currentView = new HomeViewModel(); // Initialize to avoid CS8618
+        [ObservableProperty]
+        private bool _isPaneOpen = true;
 
-        public object CurrentView
+        [ObservableProperty]
+        private ViewModelBase _currentPage = new HomeViewModel();
+
+        [ObservableProperty]
+        private ListItemTemplate? _selectedListItem;
+
+        // Override the setter of the SelectedListItem property to create an instance of the selected ViewModel
+        partial void OnSelectedListItemChanged(ListItemTemplate? value)
         {
-            get => _currentView;
-            set
+            if (value is null) return;
+            var instance = Activator.CreateInstance(value.ModelType);
+            if (instance is not null)
             {
-                _currentView = value;
-                OnPropertyChanged(nameof(CurrentView));
+                CurrentPage = (ViewModelBase)instance;
             }
+            else return;
         }
 
-        public ICommand NavigateHomeCommand { get; }
-        public ICommand NavigateSettingsCommand { get; }
+        public ObservableCollection<ListItemTemplate> Items { get; } = new()
+        { 
+            new ListItemTemplate(typeof(HomeViewModel)),
+            new ListItemTemplate(typeof(SettingsViewModel)),
+        };
 
-        public MainWindowViewModel()
+        [RelayCommand]
+        public void TogglePane()
         {
-            // Initialize commands
-            NavigateHomeCommand = new RelayCommand(NavigateHome);
-            NavigateSettingsCommand = new RelayCommand(NavigateSettings);
-
-            // Set default view
-            CurrentView = new HomeViewModel();
+            IsPaneOpen = !IsPaneOpen;
         }
+    }
 
-        private void NavigateHome()
+    public class ListItemTemplate
+    {
+        public ListItemTemplate(Type type)
         {
-            CurrentView = new HomeViewModel();
+            ModelType = type;
+            Label = type.Name.Replace("ViewModel", "");
         }
 
-        private void NavigateSettings()
-        {
-            CurrentView = new SettingsViewModel();
-        }
-
-        // Implement INotifyPropertyChanged
-        public new event PropertyChangedEventHandler? PropertyChanged; // Make nullable to avoid CS8618
-        protected new void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public string Label { get; }
+        public Type ModelType { get; }
     }
 }

@@ -1,28 +1,10 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace PandaLdr.ViewModels
 {
-    internal class HomeViewModel : ObservableObject
+    internal class HomeViewModel : ViewModelBase
     {
-        private object _homeView;
 
-        public object HomeView
-        {
-            get => _homeView;
-            set
-            {
-                _homeView = value;
-                OnPropertyChanged(nameof(HomeViewModel));
-            }
-        }
-
-        public HomeViewModel()
-        {
-            _homeView = new object(); // Initialize _homeView to a non-null value
-        }
     }
 }
