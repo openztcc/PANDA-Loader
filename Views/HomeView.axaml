@@ -31,5 +31,20 @@
                 CornerRadius="0"
                 Foreground="#000" />
         </Grid>
+        <Border Margin="20,0" ClipToBounds="True">
+            <Image
+                Height="180"
+                Source="avares://PandaLdr/Assets/home-banner.png"
+                Stretch="UniformToFill" />
+        </Border>
+        <TabControl Margin="20">
+            <TabItem Header="Statistics">
+                <TextBlock Margin="10" Text="This is the Statistics tab content." />
+            </TabItem>
+
+            <TabItem Header="Launch Options">
+                <TextBlock Margin="10" Text="This is the Launch Options tab content." />
+            </TabItem>
+        </TabControl>
     </StackPanel>
 </UserControl>
