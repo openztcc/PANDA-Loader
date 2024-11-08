@@ -1,4 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using System;
+using System.Diagnostics;
 
 namespace PandaLdr.Views
 {
@@ -8,5 +11,13 @@ namespace PandaLdr.Views
         {
             InitializeComponent();
         }
+
+
+        private void ButtonOnClick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Button clicked");
+            // TextBlockText = "Button clicked";
+        }
     }
+
 }
