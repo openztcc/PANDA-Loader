@@ -7,6 +7,12 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Styles>
+        <Style Selector="Button.LaunchHover:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#E59E5C" />
+            <Setter Property="Foreground" Value="#000" />
+        </Style>
+    </UserControl.Styles>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <Grid Margin="20">
@@ -28,6 +34,7 @@
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
                     Background="#f8aa62"
+                    Classes="LaunchHover"
                     Click="LaunchGame"
                     Content="Launch"
                     CornerRadius="0"
