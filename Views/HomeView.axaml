@@ -28,6 +28,7 @@
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
                     Background="#f8aa62"
+                    Click="LaunchGame"
                     Content="Launch"
                     CornerRadius="0"
                     Foreground="#000" />
@@ -41,16 +42,14 @@
             <TabControl Margin="20">
                 <TabItem Header="Statistics">
                     <Grid>
-                        <!--  Define columns  -->
+                        <!--  columns  -->
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <!--  Adjusts to content width  -->
                             <ColumnDefinition Width="*" />
-                            <!--  Fills remaining space  -->
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  Define rows  -->
+                        <!--  rows  -->
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -58,7 +57,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <!--  Row 1 Data  -->
+                        <!--  Row 1  -->
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="0"
@@ -75,7 +74,7 @@
                             Grid.Column="2"
                             Content="Mod Manager" />
 
-                        <!--  Row 2 Data  -->
+                        <!--  Row 2  -->
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="0"
@@ -88,6 +87,7 @@
                             Margin="5"
                             Text="4" />
 
+                        <!--  Row 3  -->
                         <TextBlock
                             Grid.Row="3"
                             Grid.Column="0"
