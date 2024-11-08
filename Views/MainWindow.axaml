@@ -22,7 +22,7 @@
     </Design.DataContext>
     <SplitView
         Background="#1e1e1e"
-        CompactPaneLength="50"
+        CompactPaneLength="58"
         DisplayMode="CompactInline"
         IsPaneOpen="{Binding IsPaneOpen}"
         OpenPaneLength="200"
@@ -36,6 +36,10 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:ListItemTemplate}">
                             <StackPanel Orientation="Horizontal" Spacing="15">
+                                <Image
+                                    Width="24"
+                                    Height="24"
+                                    Source="avares://PandaLdr/Assets/home.png" />
                                 <TextBlock Text="{Binding Label}" />
                             </StackPanel>
                         </DataTemplate>

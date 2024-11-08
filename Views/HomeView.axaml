@@ -7,8 +7,29 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <TextBlock
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Text="Welcome to Avalonia!" />
+    <StackPanel>
+        <Grid Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Text="PANDA Loader" />
+            <Button
+                Grid.Column="1"
+                Width="200"
+                Height="60"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="#f8aa62"
+                Content="Launch"
+                CornerRadius="0"
+                Foreground="#000" />
+        </Grid>
+    </StackPanel>
 </UserControl>
