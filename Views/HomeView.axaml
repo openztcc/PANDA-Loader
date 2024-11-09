@@ -115,7 +115,7 @@
                     <StackPanel Margin="10" Spacing="10">
 
                         <!--  Display Settings Section  -->
-                        <Expander Header="Display Settings" IsExpanded="True">
+                        <Expander Header="Display Settings" IsExpanded="True" HorizontalAlignment="Stretch">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -179,7 +179,7 @@
                                 </ComboBox>
                             </Grid>
                         </Expander>
-                        <Expander Header="User Settings" IsExpanded="True">
+                        <Expander Header="User Settings" IsExpanded="False" HorizontalAlignment="Stretch">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -255,7 +255,7 @@
                             </Grid>
                         </Expander>
 
-                        <Expander Header="Advanced Settings" IsExpanded="False">
+                        <Expander Header="Advanced Settings" IsExpanded="False" HorizontalAlignment="Stretch">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -344,7 +344,7 @@
                         </Expander>
 
                         <!--  Map Settings Section  -->
-                        <Expander Header="Map Settings" IsExpanded="False">
+                        <Expander Header="Map Settings" IsExpanded="False" HorizontalAlignment="Stretch">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -374,7 +374,7 @@
 
 
                         <!--  UI Settings Section  -->
-                        <Expander Header="UI Settings" IsExpanded="False">
+                        <Expander Header="UI Settings" IsExpanded="False" HorizontalAlignment="Stretch">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
