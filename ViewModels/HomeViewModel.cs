@@ -182,7 +182,8 @@ namespace PandaLdr.ViewModels
             IniData data = parser.ReadFile(_zooIniPath);
 
             // Display Settings
-            FullScreen = Convert.ToBoolean(data["user"]["fullScreen"]);
+            string FullScreenStr = data["user"]["fullscreen"];
+            FullScreen = Convert.ToBoolean(int.Parse(FullScreenStr));
             var screenWidth = data["user"]["screenwidth"];
             var screenHeight = data["user"]["screenheight"];
             Resolution = screenWidth + "x" + screenHeight;
@@ -193,23 +194,28 @@ namespace PandaLdr.ViewModels
             UnlockCount = data["user"]["unlockCount"];
             UnlockEntity1 = data["user"]["unlockEntity1"];
             UnlockEntity2 = data["user"]["unlockEntity2"];
-            ShowUserEntityWarning = Convert.ToBoolean(data["user"]["showUserEntityWarning"]);
+            string ShowUserEntityWarningStr = data["user"]["showUserEntityWarning"];
+            ShowUserEntityWarning = Convert.ToBoolean(int.Parse(ShowUserEntityWarningStr));
 
             // Advanced Settings
             Drag = data["advanced"]["drag"];
             Click = data["advanced"]["click"];
             Normal = data["advanced"]["normal"];
             Level = data["advanced"]["level"];
-            LoadHalfAnimations = Convert.ToBoolean(data["advanced"]["loadHalfAnims"]);
-            Use8BitSound = Convert.ToBoolean(data["advanced"]["use8BitSound"]);
-            DeveloperModeEnabled = Convert.ToBoolean(data["advanced"]["devModeEnabled"]);
+            string LoadHalfAnimationsStr = data["advanced"]["loadHalfAnims"];
+            LoadHalfAnimations = Convert.ToBoolean(int.Parse(LoadHalfAnimationsStr));
+            string Use8BitSoundStr = data["advanced"]["use8BitSound"];
+            Use8BitSound = Convert.ToBoolean(int.Parse(Use8BitSoundStr));
+            string DeveloperModeEnabledStr = data["advanced"]["devModeEnabled"];
+            DeveloperModeEnabled = Convert.ToBoolean(int.Parse(DeveloperModeEnabledStr));
 
             // Map Settings
             MapX = data["map"]["mapX"];
             MapY = data["map"]["mapY"];
 
             // UI Settings
-            UseAlternateCursors = Convert.ToBoolean(data["ui"]["useAlternateCursors"]);
+            string UseAlternateCursorsStr = data["UI"]["useAlternateCursors"];
+            UseAlternateCursors = Convert.ToBoolean(int.Parse(UseAlternateCursorsStr));
             TooltipDelay = data["UI"]["tooltipDelay"];
             TooltipDuration = data["UI"]["tooltipDuration"];
             MessageDisplay = data["UI"]["MessageDisplay"];
@@ -221,12 +227,15 @@ namespace PandaLdr.ViewModels
             KeyScrollY = data["UI"]["keyScrollY"];
             MinimumMessageInterval = data["UI"]["minimumMessageInterval"];
             DefaultEditCharLimit = data["UI"]["defaultEditCharLimit"];
-            NoMenuMusic = Convert.ToBoolean(data["UI"]["noMenuMusic"]);
+            string NoMenuMusicStr = data["UI"]["noMenuMusic"];
+            NoMenuMusic = Convert.ToBoolean(int.Parse(NoMenuMusicStr));
             MenuMusic = data["UI"]["menuMusic"];
             HelpType = data["UI"]["helpType"];
-            PlayMovie = Convert.ToBoolean(data["UI"]["playMovie"]);
+            string PlayMovieStr = data["UI"]["playMovie"];
+            PlayMovie = Convert.ToBoolean(int.Parse(PlayMovieStr));
             MovieVolume1 = data["UI"]["movievolume1"];
-            PlaySecondMovie = Convert.ToBoolean(data["UI"]["playSecondMovie"]);
+            string PlaySecondMovieStr = data["UI"]["playSecondMovie"];
+            PlaySecondMovie = Convert.ToBoolean(int.Parse(PlaySecondMovieStr));
             MovieVolume2 = data["UI"]["movievolume2"];
             MaxShortTooltipWidth = data["UI"]["maxShortTooltipWidth"];
             MaxLongTooltipWidth = data["UI"]["maxLongTooltipWidth"];
@@ -247,9 +256,12 @@ namespace PandaLdr.ViewModels
             MsCashIncrement = data["UI"]["MSCashIncrement"];
             MsMinCash = data["UI"]["MSMinCash"];
             MsMaxCash = data["UI"]["MSMaxCash"];
-            StartedFirstTutorial = Convert.ToBoolean(data["UI"]["startedFirstTutorial"]);
-            StartedDinoTutorial = Convert.ToBoolean(data["UI"]["startedDinoTutorial"]);
-            StartedAquaTutorial = Convert.ToBoolean(data["UI"]["startedAquaTutorial"]);
+            string StartedFirstTutorialStr = data["UI"]["startedFirstTutorial"];
+            string StartedDinoTutorialStr = data["UI"]["startedDinoTutorial"];
+            string StartedAquaTutorialStr = data["UI"]["startedAquaTutorial"];
+            StartedFirstTutorial = Convert.ToBoolean(int.Parse(StartedFirstTutorialStr));
+            StartedDinoTutorial = Convert.ToBoolean(int.Parse(StartedDinoTutorialStr));
+            StartedAquaTutorial = Convert.ToBoolean(int.Parse(StartedAquaTutorialStr));
             LastWindowX = data["UI"]["lastWindowX"];
             LastWindowY = data["UI"]["lastWindowY"];
             ProgressCalls = data["UI"]["progressCalls"];
