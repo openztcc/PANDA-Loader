@@ -14,6 +14,10 @@ namespace PandaLdr.ViewModels
         private int _installedModCount;
         [ObservableProperty]
         private int _installedMapCount;
+        [ObservableProperty]
+        private string _pandaVersion;
+        [ObservableProperty]
+        private string _oztVersion = "0.1.0";
 
         public HomeViewModel()
         {
@@ -22,6 +26,8 @@ namespace PandaLdr.ViewModels
 
             InstalledMapCount = MapMgr.GetMaps(_mapPath).Count;
             Console.WriteLine("Installed maps: " + InstalledMapCount);
+
+            PandaVersion = "0.1.0";
         }
     }
 }
