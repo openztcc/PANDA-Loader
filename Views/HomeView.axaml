@@ -111,241 +111,428 @@
                     </Grid>
                 </TabItem>
 
-<TabItem Header="Launch Options">
-    <StackPanel Margin="10" Spacing="10">
-        
-        <!-- Display Settings Section -->
-        <Expander Header="Display Settings" IsExpanded="True">
-            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto" Spacing="10">
-                <TextBlock Grid.Row="0" Text="Full Screen" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="0" IsChecked="{Binding IsFullScreen}" />
+                <TabItem Header="Launch Options">
+                    <StackPanel Margin="10" Spacing="10">
 
-                <TextBlock Grid.Row="1" Text="Resolution" VerticalAlignment="Center" />
-                <ComboBox Grid.Row="1" SelectedIndex="{Binding SelectedResolution}">
-                    <ComboBoxItem Content="1920x1080" />
-                    <ComboBoxItem Content="1280x720" />
-                </ComboBox>
+                        <!--  Display Settings Section  -->
+                        <Expander Header="Display Settings" IsExpanded="True">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    VerticalAlignment="Center"
+                                    Text="Full Screen" />
+                                <CheckBox Grid.Row="0" IsChecked="{Binding FullScreen}" />
 
-                <TextBlock Grid.Row="2" Text="Update Rate" VerticalAlignment="Center" />
-                <ComboBox Grid.Row="2" SelectedIndex="{Binding SelectedUpdateRate}">
-                    <ComboBoxItem Content="60" />
-                    <ComboBoxItem Content="30" />
-                    <ComboBoxItem Content="20" />
-                    <ComboBoxItem Content="15" />
-                </ComboBox>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    VerticalAlignment="Center"
+                                    Text="Resolution" />
+                                <ComboBox Grid.Row="1" SelectedIndex="{Binding Resolution}">
+                                    <ComboBoxItem Content="1920x1080" />
+                                    <ComboBoxItem Content="1280x720" />
+                                </ComboBox>
 
-                <TextBlock Grid.Row="3" Text="Draw Rate" VerticalAlignment="Center" />
-                <ComboBox Grid.Row="3" SelectedIndex="{Binding SelectedDrawRate}">
-                    <ComboBoxItem Content="60" />
-                    <ComboBoxItem Content="30" />
-                    <ComboBoxItem Content="20" />
-                    <ComboBoxItem Content="15" />
-                </ComboBox>
-            </Grid>
-        </Expander>
+                                <TextBlock
+                                    Grid.Row="2"
+                                    VerticalAlignment="Center"
+                                    Text="Update Rate" />
+                                <ComboBox Grid.Row="2" SelectedIndex="{Binding UpdateRate}">
+                                    <ComboBoxItem Content="60" />
+                                    <ComboBoxItem Content="30" />
+                                    <ComboBoxItem Content="20" />
+                                    <ComboBoxItem Content="15" />
+                                </ComboBox>
 
-        <!-- User Settings Section -->
-        <Expander Header="User Settings" IsExpanded="True">
-            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" Spacing="10">
-                <TextBlock Grid.Row="0" Text="Last File" VerticalAlignment="Center" />
-                <TextBox Grid.Row="0" Text="{Binding LastFile}" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    VerticalAlignment="Center"
+                                    Text="Draw Rate" />
+                                <ComboBox Grid.Row="3" SelectedIndex="{Binding DrawRate}">
+                                    <ComboBoxItem Content="60" />
+                                    <ComboBoxItem Content="30" />
+                                    <ComboBoxItem Content="20" />
+                                    <ComboBoxItem Content="15" />
+                                </ComboBox>
+                            </Grid>
+                        </Expander>
 
-                <TextBlock Grid.Row="1" Text="Unlock Entity0" VerticalAlignment="Center" />
-                <TextBox Grid.Row="1" Text="{Binding UnlockEntity0}" />
+                        <!--  User Settings Section  -->
+                        <Expander Header="User Settings" IsExpanded="True">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    VerticalAlignment="Center"
+                                    Text="Last File" />
+                                <TextBox Grid.Row="0" Text="{Binding LastFile}" />
 
-                <TextBlock Grid.Row="2" Text="Unlock Count" VerticalAlignment="Center" />
-                <TextBox Grid.Row="2" Text="{Binding UnlockCount}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    VerticalAlignment="Center"
+                                    Text="Unlock Entity0" />
+                                <TextBox Grid.Row="1" Text="{Binding UnlockEntity0}" />
 
-                <TextBlock Grid.Row="3" Text="Unlock Entity1" VerticalAlignment="Center" />
-                <TextBox Grid.Row="3" Text="{Binding UnlockEntity1}" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    VerticalAlignment="Center"
+                                    Text="Unlock Count" />
+                                <TextBox Grid.Row="2" Text="{Binding UnlockCount}" />
 
-                <TextBlock Grid.Row="4" Text="Unlock Entity2" VerticalAlignment="Center" />
-                <TextBox Grid.Row="4" Text="{Binding UnlockEntity2}" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    VerticalAlignment="Center"
+                                    Text="Unlock Entity1" />
+                                <TextBox Grid.Row="3" Text="{Binding UnlockEntity1}" />
 
-                <TextBlock Grid.Row="5" Text="Show User Entity Warning" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="5" IsChecked="{Binding ShowUserEntityWarning}" />
-            </Grid>
-        </Expander>
+                                <TextBlock
+                                    Grid.Row="4"
+                                    VerticalAlignment="Center"
+                                    Text="Unlock Entity2" />
+                                <TextBox Grid.Row="4" Text="{Binding UnlockEntity2}" />
 
-        <!-- Advanced Settings Section -->
-        <Expander Header="Advanced Settings" IsExpanded="False">
-            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" Spacing="10">
-                <TextBlock Grid.Row="0" Text="Drag" VerticalAlignment="Center" />
-                <TextBox Grid.Row="0" Text="{Binding Drag}" />
+                                <TextBlock
+                                    Grid.Row="5"
+                                    VerticalAlignment="Center"
+                                    Text="Show User Entity Warning" />
+                                <CheckBox Grid.Row="5" IsChecked="{Binding ShowUserEntityWarning}" />
+                            </Grid>
+                        </Expander>
 
-                <TextBlock Grid.Row="1" Text="Click" VerticalAlignment="Center" />
-                <TextBox Grid.Row="1" Text="{Binding Click}" />
+                        <!--  Advanced Settings Section  -->
+                        <Expander Header="Advanced Settings" IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    VerticalAlignment="Center"
+                                    Text="Drag" />
+                                <TextBox Grid.Row="0" Text="{Binding Drag}" />
 
-                <TextBlock Grid.Row="2" Text="Normal" VerticalAlignment="Center" />
-                <TextBox Grid.Row="2" Text="{Binding Normal}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    VerticalAlignment="Center"
+                                    Text="Click" />
+                                <TextBox Grid.Row="1" Text="{Binding Click}" />
 
-                <TextBlock Grid.Row="3" Text="Level" VerticalAlignment="Center" />
-                <TextBox Grid.Row="3" Text="{Binding Level}" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    VerticalAlignment="Center"
+                                    Text="Normal" />
+                                <TextBox Grid.Row="2" Text="{Binding Normal}" />
 
-                <TextBlock Grid.Row="4" Text="Load Half Animations" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="4" IsChecked="{Binding LoadHalfAnims}" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    VerticalAlignment="Center"
+                                    Text="Level" />
+                                <TextBox Grid.Row="3" Text="{Binding Level}" />
 
-                <TextBlock Grid.Row="5" Text="Use 8 Bit Sound" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="5" IsChecked="{Binding Use8BitSound}" />
+                                <TextBlock
+                                    Grid.Row="4"
+                                    VerticalAlignment="Center"
+                                    Text="Load Half Animations" />
+                                <CheckBox Grid.Row="4" IsChecked="{Binding LoadHalfAnimations}" />
 
-                <TextBlock Grid.Row="6" Text="Developer Mode Enabled" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="6" IsChecked="{Binding DevModeEnabled}" />
-            </Grid>
-        </Expander>
+                                <TextBlock
+                                    Grid.Row="5"
+                                    VerticalAlignment="Center"
+                                    Text="Use 8 Bit Sound" />
+                                <CheckBox Grid.Row="5" IsChecked="{Binding Use8BitSound}" />
 
-        <!-- Map Settings Section -->
-        <Expander Header="Map Settings" IsExpanded="False">
-            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" Spacing="10">
-                <TextBlock Grid.Row="0" Text="Map X" VerticalAlignment="Center" />
-                <TextBox Grid.Row="0" Text="{Binding MapX}" />
+                                <TextBlock
+                                    Grid.Row="6"
+                                    VerticalAlignment="Center"
+                                    Text="Developer Mode Enabled" />
+                                <CheckBox Grid.Row="6" IsChecked="{Binding DeveloperModeEnabled}" />
+                            </Grid>
+                        </Expander>
 
-                <TextBlock Grid.Row="1" Text="Map Y" VerticalAlignment="Center" />
-                <TextBox Grid.Row="1" Text="{Binding MapY}" />
-            </Grid>
-        </Expander>
-        
-        <!-- UI Settings Section -->
-        <Expander Header="UI Settings" IsExpanded="False">
-            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" Spacing="10">
-                <TextBlock Grid.Row="0" Text="Use Alternate Cursors" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="0" IsChecked="{Binding UseAlternateCursors}" />
+                        <!--  Map Settings Section  -->
+                        <Expander Header="Map Settings" IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    VerticalAlignment="Center"
+                                    Text="Map X" />
+                                <TextBox Grid.Row="0" Text="{Binding MapX}" />
 
-                <TextBlock Grid.Row="1" Text="Tooltip Delay" VerticalAlignment="Center" />
-                <TextBox Grid.Row="1" Text="{Binding TooltipDelay}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    VerticalAlignment="Center"
+                                    Text="Map Y" />
+                                <TextBox Grid.Row="1" Text="{Binding MapY}" />
+                            </Grid>
+                        </Expander>
 
-                <TextBlock Grid.Row="2" Text="Tooltip Duration" VerticalAlignment="Center" />
-                <TextBox Grid.Row="2" Text="{Binding TooltipDuration}" />
+                        <!--  UI Settings Section  -->
+                        <Expander Header="UI Settings" IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    VerticalAlignment="Center"
+                                    Text="Use Alternate Cursors" />
+                                <CheckBox Grid.Row="0" IsChecked="{Binding UseAlternateCursors}" />
 
-                <TextBlock Grid.Row="3" Text="Message Display" VerticalAlignment="Center" />
-                <TextBox Grid.Row="3" Text="{Binding MessageDisplay}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    VerticalAlignment="Center"
+                                    Text="Tooltip Delay" />
+                                <TextBox Grid.Row="1" Text="{Binding TooltipDelay}" />
 
-                <TextBlock Grid.Row="4" Text="Mouse Scroll Threshold" VerticalAlignment="Center" />
-                <TextBox Grid.Row="4" Text="{Binding MouseScrollThreshold}" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    VerticalAlignment="Center"
+                                    Text="Tooltip Duration" />
+                                <TextBox Grid.Row="2" Text="{Binding TooltipDuration}" />
 
-                <TextBlock Grid.Row="5" Text="Mouse Scroll Delay" VerticalAlignment="Center" />
-                <TextBox Grid.Row="5" Text="{Binding MouseScrollDelay}" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    VerticalAlignment="Center"
+                                    Text="Message Display" />
+                                <TextBox Grid.Row="3" Text="{Binding MessageDisplay}" />
 
-                <TextBlock Grid.Row="6" Text="Mouse Scroll X" VerticalAlignment="Center" />
-                <TextBox Grid.Row="6" Text="{Binding MouseScrollX}" />
+                                <TextBlock
+                                    Grid.Row="4"
+                                    VerticalAlignment="Center"
+                                    Text="Mouse Scroll Threshold" />
+                                <TextBox Grid.Row="4" Text="{Binding MouseScrollThreshold}" />
 
-                <TextBlock Grid.Row="7" Text="Mouse Scroll Y" VerticalAlignment="Center" />
-                <TextBox Grid.Row="7" Text="{Binding MouseScrollY}" />
+                                <TextBlock
+                                    Grid.Row="5"
+                                    VerticalAlignment="Center"
+                                    Text="Mouse Scroll Delay" />
+                                <TextBox Grid.Row="5" Text="{Binding MouseScrollDelay}" />
 
-                <TextBlock Grid.Row="8" Text="Key Scroll X" VerticalAlignment="Center" />
-                <TextBox Grid.Row="8" Text="{Binding KeyScrollX}" />
+                                <TextBlock
+                                    Grid.Row="6"
+                                    VerticalAlignment="Center"
+                                    Text="Mouse Scroll X" />
+                                <TextBox Grid.Row="6" Text="{Binding MouseScrollX}" />
 
-                <TextBlock Grid.Row="9" Text="Key Scroll Y" VerticalAlignment="Center" />
-                <TextBox Grid.Row="9" Text="{Binding KeyScrollY}" />
+                                <TextBlock
+                                    Grid.Row="7"
+                                    VerticalAlignment="Center"
+                                    Text="Mouse Scroll Y" />
+                                <TextBox Grid.Row="7" Text="{Binding MouseScrollY}" />
 
-                <TextBlock Grid.Row="10" Text="Minimum Message Interval" VerticalAlignment="Center" />
-                <TextBox Grid.Row="10" Text="{Binding MinimumMessageInterval}" />
+                                <TextBlock
+                                    Grid.Row="8"
+                                    VerticalAlignment="Center"
+                                    Text="Key Scroll X" />
+                                <TextBox Grid.Row="8" Text="{Binding KeyScrollX}" />
 
-                <TextBlock Grid.Row="11" Text="Default Edit Char Limit" VerticalAlignment="Center" />
-                <TextBox Grid.Row="11" Text="{Binding DefaultEditCharLimit}" />
+                                <TextBlock
+                                    Grid.Row="9"
+                                    VerticalAlignment="Center"
+                                    Text="Key Scroll Y" />
+                                <TextBox Grid.Row="9" Text="{Binding KeyScrollY}" />
 
-                <TextBlock Grid.Row="12" Text="No Menu Music" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="12" IsChecked="{Binding NoMenuMusic}" />
+                                <TextBlock
+                                    Grid.Row="10"
+                                    VerticalAlignment="Center"
+                                    Text="Minimum Message Interval" />
+                                <TextBox Grid.Row="10" Text="{Binding MinimumMessageInterval}" />
 
-                <TextBlock Grid.Row="13" Text="Menu Music" VerticalAlignment="Center" />
-                <TextBox Grid.Row="13" Text="{Binding MenuMusic}" />
+                                <TextBlock
+                                    Grid.Row="11"
+                                    VerticalAlignment="Center"
+                                    Text="Default Edit Char Limit" />
+                                <TextBox Grid.Row="11" Text="{Binding DefaultEditCharLimit}" />
 
-                <TextBlock Grid.Row="14" Text="Help Type" VerticalAlignment="Center" />
-                <TextBox Grid.Row="14" Text="{Binding HelpType}" />
+                                <TextBlock
+                                    Grid.Row="12"
+                                    VerticalAlignment="Center"
+                                    Text="No Menu Music" />
+                                <CheckBox Grid.Row="12" IsChecked="{Binding NoMenuMusic}" />
 
-                <TextBlock Grid.Row="15" Text="Play Movie" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="15" IsChecked="{Binding PlayMovie}" />
+                                <TextBlock
+                                    Grid.Row="13"
+                                    VerticalAlignment="Center"
+                                    Text="Menu Music" />
+                                <TextBox Grid.Row="13" Text="{Binding MenuMusic}" />
 
-                <TextBlock Grid.Row="16" Text="Movie Volume 1" VerticalAlignment="Center" />
-                <TextBox Grid.Row="16" Text="{Binding MovieVolume1}" />
+                                <TextBlock
+                                    Grid.Row="14"
+                                    VerticalAlignment="Center"
+                                    Text="Help Type" />
+                                <TextBox Grid.Row="14" Text="{Binding HelpType}" />
 
-                <TextBlock Grid.Row="17" Text="Play Second Movie" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="17" IsChecked="{Binding PlaySecondMovie}" />
+                                <TextBlock
+                                    Grid.Row="15"
+                                    VerticalAlignment="Center"
+                                    Text="Play Movie" />
+                                <CheckBox Grid.Row="15" IsChecked="{Binding PlayMovie}" />
 
-                <TextBlock Grid.Row="18" Text="Movie Volume 2" VerticalAlignment="Center" />
-                <TextBox Grid.Row="18" Text="{Binding MovieVolume2}" />
+                                <TextBlock
+                                    Grid.Row="16"
+                                    VerticalAlignment="Center"
+                                    Text="Movie Volume 1" />
+                                <TextBox Grid.Row="16" Text="{Binding MovieVolume1}" />
 
-                <TextBlock Grid.Row="19" Text="Max Short Tooltip Width" VerticalAlignment="Center" />
-                <TextBox Grid.Row="19" Text="{Binding MaxShortTooltipWidth}" />
+                                <TextBlock
+                                    Grid.Row="17"
+                                    VerticalAlignment="Center"
+                                    Text="Play Second Movie" />
+                                <CheckBox Grid.Row="17" IsChecked="{Binding PlaySecondMovie}" />
 
-                <TextBlock Grid.Row="20" Text="Max Long Tooltip Width" VerticalAlignment="Center" />
-                <TextBox Grid.Row="20" Text="{Binding MaxLongTooltipWidth}" />
+                                <TextBlock
+                                    Grid.Row="18"
+                                    VerticalAlignment="Center"
+                                    Text="Movie Volume 2" />
+                                <TextBox Grid.Row="18" Text="{Binding MovieVolume2}" />
 
-                <TextBlock Grid.Row="21" Text="Progress Left" VerticalAlignment="Center" />
-                <TextBox Grid.Row="21" Text="{Binding ProgressLeft}" />
+                                <TextBlock
+                                    Grid.Row="19"
+                                    VerticalAlignment="Center"
+                                    Text="Max Short Tooltip Width" />
+                                <TextBox Grid.Row="19" Text="{Binding MaxShortTooltipWidth}" />
 
-                <TextBlock Grid.Row="22" Text="Progress Top" VerticalAlignment="Center" />
-                <TextBox Grid.Row="22" Text="{Binding ProgressTop}" />
+                                <TextBlock
+                                    Grid.Row="20"
+                                    VerticalAlignment="Center"
+                                    Text="Max Long Tooltip Width" />
+                                <TextBox Grid.Row="20" Text="{Binding MaxLongTooltipWidth}" />
 
-                <TextBlock Grid.Row="23" Text="Progress Right" VerticalAlignment="Center" />
-                <TextBox Grid.Row="23" Text="{Binding ProgressRight}" />
+                                <TextBlock
+                                    Grid.Row="21"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Left" />
+                                <TextBox Grid.Row="21" Text="{Binding ProgressLeft}" />
 
-                <TextBlock Grid.Row="24" Text="Progress Bottom" VerticalAlignment="Center" />
-                <TextBox Grid.Row="24" Text="{Binding ProgressBottom}" />
+                                <TextBlock
+                                    Grid.Row="22"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Top" />
+                                <TextBox Grid.Row="22" Text="{Binding ProgressTop}" />
 
-                <TextBlock Grid.Row="25" Text="Progress Red" VerticalAlignment="Center" />
-                <TextBox Grid.Row="25" Text="{Binding ProgressRed}" />
+                                <TextBlock
+                                    Grid.Row="23"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Right" />
+                                <TextBox Grid.Row="23" Text="{Binding ProgressRight}" />
 
-                <TextBlock Grid.Row="26" Text="Progress Green" VerticalAlignment="Center" />
-                <TextBox Grid.Row="26" Text="{Binding ProgressGreen}" />
+                                <TextBlock
+                                    Grid.Row="24"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Bottom" />
+                                <TextBox Grid.Row="24" Text="{Binding ProgressBottom}" />
 
-                <TextBlock Grid.Row="27" Text="Progress Blue" VerticalAlignment="Center" />
-                <TextBox Grid.Row="27" Text="{Binding ProgressBlue}" />
+                                <TextBlock
+                                    Grid.Row="25"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Red" />
+                                <TextBox Grid.Row="25" Text="{Binding ProgressRed}" />
 
-                <TextBlock Grid.Row="28" Text="Progress Shadow X Offset" VerticalAlignment="Center" />
-                <TextBox Grid.Row="28" Text="{Binding ProgressShadowXOffset}" />
+                                <TextBlock
+                                    Grid.Row="26"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Green" />
+                                <TextBox Grid.Row="26" Text="{Binding ProgressGreen}" />
 
-                <TextBlock Grid.Row="29" Text="Progress Shadow Y Offset" VerticalAlignment="Center" />
-                <TextBox Grid.Row="29" Text="{Binding ProgressShadowYOffset}" />
+                                <TextBlock
+                                    Grid.Row="27"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Blue" />
+                                <TextBox Grid.Row="27" Text="{Binding ProgressBlue}" />
 
-                <TextBlock Grid.Row="30" Text="Progress Shadow Red" VerticalAlignment="Center" />
-                <TextBox Grid.Row="30" Text="{Binding ProgressShadowRed}" />
+                                <TextBlock
+                                    Grid.Row="28"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Shadow X Offset" />
+                                <TextBox Grid.Row="28" Text="{Binding ProgressShadowXOffset}" />
 
-                <TextBlock Grid.Row="31" Text="Progress Shadow Green" VerticalAlignment="Center" />
-                <TextBox Grid.Row="31" Text="{Binding ProgressShadowGreen}" />
+                                <TextBlock
+                                    Grid.Row="29"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Shadow Y Offset" />
+                                <TextBox Grid.Row="29" Text="{Binding ProgressShadowYOffset}" />
 
-                <TextBlock Grid.Row="32" Text="Progress Shadow Blue" VerticalAlignment="Center" />
-                <TextBox Grid.Row="32" Text="{Binding ProgressShadowBlue}" />
+                                <TextBlock
+                                    Grid.Row="30"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Shadow Red" />
+                                <TextBox Grid.Row="30" Text="{Binding ProgressShadowRed}" />
 
-                <TextBlock Grid.Row="33" Text="Completed Exhibit Attenuation" VerticalAlignment="Center" />
-                <TextBox Grid.Row="33" Text="{Binding CompletedExhibitAttenuation}" />
+                                <TextBlock
+                                    Grid.Row="31"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Shadow Green" />
+                                <TextBox Grid.Row="31" Text="{Binding ProgressShadowGreen}" />
 
-                <TextBlock Grid.Row="34" Text="MS Starting Cash" VerticalAlignment="Center" />
-                <TextBox Grid.Row="34" Text="{Binding MSStartingCash}" />
+                                <TextBlock
+                                    Grid.Row="32"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Shadow Blue" />
+                                <TextBox Grid.Row="32" Text="{Binding ProgressShadowBlue}" />
 
-                <TextBlock Grid.Row="35" Text="MS Cash Increment" VerticalAlignment="Center" />
-                <TextBox Grid.Row="35" Text="{Binding MSCashIncrement}" />
+                                <TextBlock
+                                    Grid.Row="33"
+                                    VerticalAlignment="Center"
+                                    Text="Completed Exhibit Attenuation" />
+                                <TextBox Grid.Row="33" Text="{Binding CompletedExhibitAttenuation}" />
 
-                <TextBlock Grid.Row="36" Text="MS Min Cash" VerticalAlignment="Center" />
-                <TextBox Grid.Row="36" Text="{Binding MSMinCash}" />
+                                <TextBlock
+                                    Grid.Row="34"
+                                    VerticalAlignment="Center"
+                                    Text="MS Starting Cash" />
+                                <TextBox Grid.Row="34" Text="{Binding MSStartingCash}" />
 
-                <TextBlock Grid.Row="37" Text="MS Max Cash" VerticalAlignment="Center" />
-                <TextBox Grid.Row="37" Text="{Binding MSMaxCash}" />
+                                <TextBlock
+                                    Grid.Row="35"
+                                    VerticalAlignment="Center"
+                                    Text="MS Cash Increment" />
+                                <TextBox Grid.Row="35" Text="{Binding MSCashIncrement}" />
 
-                <TextBlock Grid.Row="38" Text="Started First Tutorial" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="38" IsChecked="{Binding StartedFirstTutorial}" />
+                                <TextBlock
+                                    Grid.Row="36"
+                                    VerticalAlignment="Center"
+                                    Text="MS Min Cash" />
+                                <TextBox Grid.Row="36" Text="{Binding MSMinCash}" />
 
-                <TextBlock Grid.Row="39" Text="Started Dino Tutorial" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="39" IsChecked="{Binding StartedDinoTutorial}" />
+                                <TextBlock
+                                    Grid.Row="37"
+                                    VerticalAlignment="Center"
+                                    Text="MS Max Cash" />
+                                <TextBox Grid.Row="37" Text="{Binding MSMaxCash}" />
 
-                <TextBlock Grid.Row="40" Text="Started Aqua Tutorial" VerticalAlignment="Center" />
-                <CheckBox Grid.Row="40" IsChecked="{Binding StartedAquaTutorial}" />
+                                <TextBlock
+                                    Grid.Row="38"
+                                    VerticalAlignment="Center"
+                                    Text="Started First Tutorial" />
+                                <CheckBox Grid.Row="38" IsChecked="{Binding StartedFirstTutorial}" />
 
-                <TextBlock Grid.Row="41" Text="Last Window X" VerticalAlignment="Center" />
-                <TextBox Grid.Row="41" Text="{Binding LastWindowX}" />
+                                <TextBlock
+                                    Grid.Row="39"
+                                    VerticalAlignment="Center"
+                                    Text="Started Dino Tutorial" />
+                                <CheckBox Grid.Row="39" IsChecked="{Binding StartedDinoTutorial}" />
 
-                <TextBlock Grid.Row="42" Text="Last Window Y" VerticalAlignment="Center" />
-                <TextBox Grid.Row="42" Text="{Binding LastWindowY}" />
+                                <TextBlock
+                                    Grid.Row="40"
+                                    VerticalAlignment="Center"
+                                    Text="Started Aqua Tutorial" />
+                                <CheckBox Grid.Row="40" IsChecked="{Binding StartedAquaTutorial}" />
 
-                <TextBlock Grid.Row="43" Text="Progress Calls" VerticalAlignment="Center" />
-                <TextBox Grid.Row="43" Text="{Binding ProgressCalls}" />
-            </Grid>
-        </Expander>
-    </StackPanel>
-</TabItem>
+                                <TextBlock
+                                    Grid.Row="41"
+                                    VerticalAlignment="Center"
+                                    Text="Last Window X" />
+                                <TextBox Grid.Row="41" Text="{Binding LastWindowX}" />
 
+                                <TextBlock
+                                    Grid.Row="42"
+                                    VerticalAlignment="Center"
+                                    Text="Last Window Y" />
+                                <TextBox Grid.Row="42" Text="{Binding LastWindowY}" />
 
+                                <TextBlock
+                                    Grid.Row="43"
+                                    VerticalAlignment="Center"
+                                    Text="Progress Calls" />
+                                <TextBox Grid.Row="43" Text="{Binding ProgressCalls}" />
+                            </Grid>
+                        </Expander>
                     </StackPanel>
                 </TabItem>
+
+
             </TabControl>
         </StackPanel>
     </ScrollViewer>

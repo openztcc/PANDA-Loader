@@ -198,6 +198,53 @@ namespace PandaLdr.ViewModels
             Use8BitSound = Convert.ToBoolean(data["advanced"]["use8BitSound"]);
             DeveloperModeEnabled = Convert.ToBoolean(data["advanced"]["devModeEnabled"]);
 
+            // UI Settings
+            UseAlternateCursors = Convert.ToBoolean(data["ui"]["useAlternateCursors"]);
+            TooltipDelay = data["UI"]["tooltipDelay"];
+            TooltipDuration = data["UI"]["tooltipDuration"];
+            MessageDisplay = data["UI"]["MessageDisplay"];
+            MouseScrollThreshold = data["UI"]["mouseScrollThreshold"];
+            MouseScrollDelay = data["UI"]["mouseScrollDelay"];
+            MouseScrollX = data["UI"]["mouseScrollX"];
+            MouseScrollY = data["UI"]["mouseScrollY"];
+            KeyScrollX = data["UI"]["keyScrollX"];
+            KeyScrollY = data["UI"]["keyScrollY"];
+            MinimumMessageInterval = data["UI"]["minimumMessageInterval"];
+            DefaultEditCharLimit = data["UI"]["defaultEditCharLimit"];
+            NoMenuMusic = Convert.ToBoolean(data["UI"]["noMenuMusic"]);
+            MenuMusic = data["UI"]["menuMusic"];
+            HelpType = data["UI"]["helpType"];
+            PlayMovie = Convert.ToBoolean(data["UI"]["playMovie"]);
+            MovieVolume1 = data["UI"]["movievolume1"];
+            PlaySecondMovie = Convert.ToBoolean(data["UI"]["playSecondMovie"]);
+            MovieVolume2 = data["UI"]["movievolume2"];
+            MaxShortTooltipWidth = data["UI"]["maxShortTooltipWidth"];
+            MaxLongTooltipWidth = data["UI"]["maxLongTooltipWidth"];
+            ProgressLeft = data["UI"]["progressLeft"];
+            ProgressTop = data["UI"]["progressTop"];
+            ProgressRight = data["UI"]["progressRight"];
+            ProgressBottom = data["UI"]["progressBottom"];
+            ProgressRed = data["UI"]["progressRed"];
+            ProgressGreen = data["UI"]["progressGreen"];
+            ProgressBlue = data["UI"]["progressBlue"];
+            ProgressShadowXOffset = data["UI"]["progressShadowXOffset"];
+            ProgressShadowYOffset = data["UI"]["progressShadowYOffset"];
+            ProgressShadowRed = data["UI"]["progressShadowRed"];
+            ProgressShadowGreen = data["UI"]["progressShadowGreen"];
+            ProgressShadowBlue = data["UI"]["progressShadowBlue"];
+            CompletedExhibitAttenuation = data["UI"]["completedExhibitAttenuation"];
+            MsStartingCash = data["UI"]["MSStartingCash"];
+            MsCashIncrement = data["UI"]["MSCashIncrement"];
+            MsMinCash = data["UI"]["MSMinCash"];
+            MsMaxCash = data["UI"]["MSMaxCash"];
+            StartedFirstTutorial = Convert.ToBoolean(data["UI"]["startedFirstTutorial"]);
+            StartedDinoTutorial = Convert.ToBoolean(data["UI"]["startedDinoTutorial"]);
+            StartedAquaTutorial = Convert.ToBoolean(data["UI"]["startedAquaTutorial"]);
+            LastWindowX = data["UI"]["lastWindowX"];
+            LastWindowY = data["UI"]["lastWindowY"];
+            ProgressCalls = data["UI"]["progressCalls"];
+
+
         }
     }
 }
