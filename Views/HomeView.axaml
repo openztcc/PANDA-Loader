@@ -111,8 +111,153 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem Header="Launch Options">
-                    <TextBlock Margin="10" Text="This is the Launch Options tab content." />
+<TabItem Header="Launch Options">
+    <StackPanel Margin="10" Spacing="10">
+        
+        <!-- Display Settings Section -->
+        <Expander Header="Display Settings" IsExpanded="True">
+            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto" Spacing="10">
+                <TextBlock Grid.Row="0" Text="Full Screen" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="0" IsChecked="{Binding IsFullScreen}" />
+
+                <TextBlock Grid.Row="1" Text="Resolution" VerticalAlignment="Center" />
+                <ComboBox Grid.Row="1" SelectedIndex="{Binding SelectedResolution}">
+                    <ComboBoxItem Content="1920x1080" />
+                    <ComboBoxItem Content="1280x720" />
+                </ComboBox>
+
+                <TextBlock Grid.Row="2" Text="Update Rate" VerticalAlignment="Center" />
+                <ComboBox Grid.Row="2" SelectedIndex="{Binding SelectedUpdateRate}">
+                    <ComboBoxItem Content="60" />
+                    <ComboBoxItem Content="30" />
+                    <ComboBoxItem Content="20" />
+                    <ComboBoxItem Content="15" />
+                </ComboBox>
+
+                <TextBlock Grid.Row="3" Text="Draw Rate" VerticalAlignment="Center" />
+                <ComboBox Grid.Row="3" SelectedIndex="{Binding SelectedDrawRate}">
+                    <ComboBoxItem Content="60" />
+                    <ComboBoxItem Content="30" />
+                    <ComboBoxItem Content="20" />
+                    <ComboBoxItem Content="15" />
+                </ComboBox>
+            </Grid>
+        </Expander>
+
+        <!-- User Settings Section -->
+        <Expander Header="User Settings" IsExpanded="True">
+            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" Spacing="10">
+                <TextBlock Grid.Row="0" Text="Last File" VerticalAlignment="Center" />
+                <TextBox Grid.Row="0" Text="{Binding LastFile}" />
+
+                <TextBlock Grid.Row="1" Text="Unlock Entity0" VerticalAlignment="Center" />
+                <TextBox Grid.Row="1" Text="{Binding UnlockEntity0}" />
+
+                <TextBlock Grid.Row="2" Text="Unlock Count" VerticalAlignment="Center" />
+                <TextBox Grid.Row="2" Text="{Binding UnlockCount}" />
+
+                <TextBlock Grid.Row="3" Text="Unlock Entity1" VerticalAlignment="Center" />
+                <TextBox Grid.Row="3" Text="{Binding UnlockEntity1}" />
+
+                <TextBlock Grid.Row="4" Text="Unlock Entity2" VerticalAlignment="Center" />
+                <TextBox Grid.Row="4" Text="{Binding UnlockEntity2}" />
+
+                <TextBlock Grid.Row="5" Text="Show User Entity Warning" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="5" IsChecked="{Binding ShowUserEntityWarning}" />
+            </Grid>
+        </Expander>
+
+        <!-- Advanced Settings Section -->
+        <Expander Header="Advanced Settings" IsExpanded="False">
+            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" Spacing="10">
+                <TextBlock Grid.Row="0" Text="Drag" VerticalAlignment="Center" />
+                <TextBox Grid.Row="0" Text="{Binding Drag}" />
+
+                <TextBlock Grid.Row="1" Text="Click" VerticalAlignment="Center" />
+                <TextBox Grid.Row="1" Text="{Binding Click}" />
+
+                <TextBlock Grid.Row="2" Text="Normal" VerticalAlignment="Center" />
+                <TextBox Grid.Row="2" Text="{Binding Normal}" />
+
+                <TextBlock Grid.Row="3" Text="Level" VerticalAlignment="Center" />
+                <TextBox Grid.Row="3" Text="{Binding Level}" />
+
+                <TextBlock Grid.Row="4" Text="Load Half Animations" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="4" IsChecked="{Binding LoadHalfAnims}" />
+
+                <TextBlock Grid.Row="5" Text="Use 8 Bit Sound" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="5" IsChecked="{Binding Use8BitSound}" />
+
+                <TextBlock Grid.Row="6" Text="Developer Mode Enabled" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="6" IsChecked="{Binding DevModeEnabled}" />
+            </Grid>
+        </Expander>
+
+        <!-- Map Settings Section -->
+        <Expander Header="Map Settings" IsExpanded="False">
+            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" Spacing="10">
+                <TextBlock Grid.Row="0" Text="Map X" VerticalAlignment="Center" />
+                <TextBox Grid.Row="0" Text="{Binding MapX}" />
+
+                <TextBlock Grid.Row="1" Text="Map Y" VerticalAlignment="Center" />
+                <TextBox Grid.Row="1" Text="{Binding MapY}" />
+            </Grid>
+        </Expander>
+
+        <!-- UI Settings Section -->
+        <Expander Header="UI Settings" IsExpanded="False">
+            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" Spacing="10">
+                <TextBlock Grid.Row="0" Text="Use Alternate Cursors" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="0" IsChecked="{Binding UseAlternateCursors}" />
+
+                <TextBlock Grid.Row="1" Text="Tooltip Delay" VerticalAlignment="Center" />
+                <TextBox Grid.Row="1" Text="{Binding TooltipDelay}" />
+
+                <TextBlock Grid.Row="2" Text="Tooltip Duration" VerticalAlignment="Center" />
+                <TextBox Grid.Row="2" Text="{Binding TooltipDuration}" />
+
+                <TextBlock Grid.Row="3" Text="Message Display" VerticalAlignment="Center" />
+                <TextBox Grid.Row="3" Text="{Binding MessageDisplay}" />
+
+                <TextBlock Grid.Row="4" Text="Mouse Scroll Threshold" VerticalAlignment="Center" />
+                <TextBox Grid.Row="4" Text="{Binding MouseScrollThreshold}" />
+
+                <TextBlock Grid.Row="5" Text="Mouse Scroll Delay" VerticalAlignment="Center" />
+                <TextBox Grid.Row="5" Text="{Binding MouseScrollDelay}" />
+
+                <TextBlock Grid.Row="6" Text="Mouse Scroll X" VerticalAlignment="Center" />
+                <TextBox Grid.Row="6" Text="{Binding MouseScrollX}" />
+
+                <TextBlock Grid.Row="7" Text="Mouse Scroll Y" VerticalAlignment="Center" />
+                <TextBox Grid.Row="7" Text="{Binding MouseScrollY}" />
+
+                <TextBlock Grid.Row="8" Text="Key Scroll X" VerticalAlignment="Center" />
+                <TextBox Grid.Row="8" Text="{Binding KeyScrollX}" />
+
+                <TextBlock Grid.Row="9" Text="Key Scroll Y" VerticalAlignment="Center" />
+                <TextBox Grid.Row="9" Text="{Binding KeyScrollY}" />
+
+                <TextBlock Grid.Row="10" Text="Minimum Message Interval" VerticalAlignment="Center" />
+                <TextBox Grid.Row="10" Text="{Binding MinimumMessageInterval}" />
+
+                <TextBlock Grid.Row="11" Text="Default Edit Char Limit" VerticalAlignment="Center" />
+                <TextBox Grid.Row="11" Text="{Binding DefaultEditCharLimit}" />
+
+                <TextBlock Grid.Row="12" Text="No Menu Music" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="12" IsChecked="{Binding NoMenuMusic}" />
+
+                <TextBlock Grid.Row="13" Text="Menu Music" VerticalAlignment="Center" />
+                <TextBox Grid.Row="13" Text="{Binding MenuMusic}" />
+
+                <TextBlock Grid.Row="14" Text="Help Type" VerticalAlignment="Center" />
+                <TextBox Grid.Row="14" Text="{Binding HelpType}" />
+            </Grid>
+        </Expander>
+    </StackPanel>
+</TabItem>
+
+
+                    </StackPanel>
                 </TabItem>
             </TabControl>
         </StackPanel>
