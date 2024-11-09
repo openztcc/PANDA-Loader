@@ -64,6 +64,12 @@ namespace PandaLdr.ViewModels
         [ObservableProperty]
         private bool _developerModeEnabled;
 
+        // Map Settings Section
+        [ObservableProperty]
+        private string _mapX;
+        [ObservableProperty]
+        private string _mapY;
+
         // UI Settings Section
         [ObservableProperty]
         private bool _useAlternateCursors;
@@ -197,6 +203,10 @@ namespace PandaLdr.ViewModels
             LoadHalfAnimations = Convert.ToBoolean(data["advanced"]["loadHalfAnims"]);
             Use8BitSound = Convert.ToBoolean(data["advanced"]["use8BitSound"]);
             DeveloperModeEnabled = Convert.ToBoolean(data["advanced"]["devModeEnabled"]);
+
+            // Map Settings
+            MapX = data["map"]["mapX"];
+            MapY = data["map"]["mapY"];
 
             // UI Settings
             UseAlternateCursors = Convert.ToBoolean(data["ui"]["useAlternateCursors"]);
