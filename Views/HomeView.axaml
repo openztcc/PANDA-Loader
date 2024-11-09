@@ -203,7 +203,7 @@
                 <TextBox Grid.Row="1" Text="{Binding MapY}" />
             </Grid>
         </Expander>
-
+        
         <!-- UI Settings Section -->
         <Expander Header="UI Settings" IsExpanded="False">
             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" Spacing="10">
@@ -251,6 +251,93 @@
 
                 <TextBlock Grid.Row="14" Text="Help Type" VerticalAlignment="Center" />
                 <TextBox Grid.Row="14" Text="{Binding HelpType}" />
+
+                <TextBlock Grid.Row="15" Text="Play Movie" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="15" IsChecked="{Binding PlayMovie}" />
+
+                <TextBlock Grid.Row="16" Text="Movie Volume 1" VerticalAlignment="Center" />
+                <TextBox Grid.Row="16" Text="{Binding MovieVolume1}" />
+
+                <TextBlock Grid.Row="17" Text="Play Second Movie" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="17" IsChecked="{Binding PlaySecondMovie}" />
+
+                <TextBlock Grid.Row="18" Text="Movie Volume 2" VerticalAlignment="Center" />
+                <TextBox Grid.Row="18" Text="{Binding MovieVolume2}" />
+
+                <TextBlock Grid.Row="19" Text="Max Short Tooltip Width" VerticalAlignment="Center" />
+                <TextBox Grid.Row="19" Text="{Binding MaxShortTooltipWidth}" />
+
+                <TextBlock Grid.Row="20" Text="Max Long Tooltip Width" VerticalAlignment="Center" />
+                <TextBox Grid.Row="20" Text="{Binding MaxLongTooltipWidth}" />
+
+                <TextBlock Grid.Row="21" Text="Progress Left" VerticalAlignment="Center" />
+                <TextBox Grid.Row="21" Text="{Binding ProgressLeft}" />
+
+                <TextBlock Grid.Row="22" Text="Progress Top" VerticalAlignment="Center" />
+                <TextBox Grid.Row="22" Text="{Binding ProgressTop}" />
+
+                <TextBlock Grid.Row="23" Text="Progress Right" VerticalAlignment="Center" />
+                <TextBox Grid.Row="23" Text="{Binding ProgressRight}" />
+
+                <TextBlock Grid.Row="24" Text="Progress Bottom" VerticalAlignment="Center" />
+                <TextBox Grid.Row="24" Text="{Binding ProgressBottom}" />
+
+                <TextBlock Grid.Row="25" Text="Progress Red" VerticalAlignment="Center" />
+                <TextBox Grid.Row="25" Text="{Binding ProgressRed}" />
+
+                <TextBlock Grid.Row="26" Text="Progress Green" VerticalAlignment="Center" />
+                <TextBox Grid.Row="26" Text="{Binding ProgressGreen}" />
+
+                <TextBlock Grid.Row="27" Text="Progress Blue" VerticalAlignment="Center" />
+                <TextBox Grid.Row="27" Text="{Binding ProgressBlue}" />
+
+                <TextBlock Grid.Row="28" Text="Progress Shadow X Offset" VerticalAlignment="Center" />
+                <TextBox Grid.Row="28" Text="{Binding ProgressShadowXOffset}" />
+
+                <TextBlock Grid.Row="29" Text="Progress Shadow Y Offset" VerticalAlignment="Center" />
+                <TextBox Grid.Row="29" Text="{Binding ProgressShadowYOffset}" />
+
+                <TextBlock Grid.Row="30" Text="Progress Shadow Red" VerticalAlignment="Center" />
+                <TextBox Grid.Row="30" Text="{Binding ProgressShadowRed}" />
+
+                <TextBlock Grid.Row="31" Text="Progress Shadow Green" VerticalAlignment="Center" />
+                <TextBox Grid.Row="31" Text="{Binding ProgressShadowGreen}" />
+
+                <TextBlock Grid.Row="32" Text="Progress Shadow Blue" VerticalAlignment="Center" />
+                <TextBox Grid.Row="32" Text="{Binding ProgressShadowBlue}" />
+
+                <TextBlock Grid.Row="33" Text="Completed Exhibit Attenuation" VerticalAlignment="Center" />
+                <TextBox Grid.Row="33" Text="{Binding CompletedExhibitAttenuation}" />
+
+                <TextBlock Grid.Row="34" Text="MS Starting Cash" VerticalAlignment="Center" />
+                <TextBox Grid.Row="34" Text="{Binding MSStartingCash}" />
+
+                <TextBlock Grid.Row="35" Text="MS Cash Increment" VerticalAlignment="Center" />
+                <TextBox Grid.Row="35" Text="{Binding MSCashIncrement}" />
+
+                <TextBlock Grid.Row="36" Text="MS Min Cash" VerticalAlignment="Center" />
+                <TextBox Grid.Row="36" Text="{Binding MSMinCash}" />
+
+                <TextBlock Grid.Row="37" Text="MS Max Cash" VerticalAlignment="Center" />
+                <TextBox Grid.Row="37" Text="{Binding MSMaxCash}" />
+
+                <TextBlock Grid.Row="38" Text="Started First Tutorial" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="38" IsChecked="{Binding StartedFirstTutorial}" />
+
+                <TextBlock Grid.Row="39" Text="Started Dino Tutorial" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="39" IsChecked="{Binding StartedDinoTutorial}" />
+
+                <TextBlock Grid.Row="40" Text="Started Aqua Tutorial" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="40" IsChecked="{Binding StartedAquaTutorial}" />
+
+                <TextBlock Grid.Row="41" Text="Last Window X" VerticalAlignment="Center" />
+                <TextBox Grid.Row="41" Text="{Binding LastWindowX}" />
+
+                <TextBlock Grid.Row="42" Text="Last Window Y" VerticalAlignment="Center" />
+                <TextBox Grid.Row="42" Text="{Binding LastWindowY}" />
+
+                <TextBlock Grid.Row="43" Text="Progress Calls" VerticalAlignment="Center" />
+                <TextBox Grid.Row="43" Text="{Binding ProgressCalls}" />
             </Grid>
         </Expander>
     </StackPanel>
