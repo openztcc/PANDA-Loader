@@ -210,8 +210,8 @@ namespace PandaLdr.ViewModels
             DeveloperModeEnabled = Convert.ToBoolean(int.Parse(DeveloperModeEnabledStr));
 
             // Map Settings
-            MapX = data["map"]["mapX"];
-            MapY = data["map"]["mapY"];
+            MapX = data["Map"]["mapX"];
+            MapY = data["Map"]["mapY"];
 
             // UI Settings
             string UseAlternateCursorsStr = data["UI"]["useAlternateCursors"];
@@ -264,7 +264,7 @@ namespace PandaLdr.ViewModels
             StartedAquaTutorial = Convert.ToBoolean(int.Parse(StartedAquaTutorialStr));
             LastWindowX = data["UI"]["lastWindowX"];
             LastWindowY = data["UI"]["lastWindowY"];
-            ProgressCalls = data["UI"]["progressCalls"];
+            ProgressCalls = data["UI"]["progresscalls"];
 
 
         }
