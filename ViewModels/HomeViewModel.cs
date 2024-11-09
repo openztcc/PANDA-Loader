@@ -25,20 +25,30 @@ namespace PandaLdr.ViewModels
         [ObservableProperty]
         private bool _fullScreen;
         [ObservableProperty]
-        private bool _resolution;
+        private string _resolution;
         [ObservableProperty]
-        private bool _updateRate;
+        private string _updateRate;
         [ObservableProperty]
-        private bool _drawRate;
+        private string _drawRate;
         [ObservableProperty]
 
         // User Settings Section
-        private bool _lastFile;
-        private bool _unlockEntity0;
-        private bool _unlockCount;
-        private bool _unlockEntity1;
-        private bool _unlockEntity2;
+        private string _lastFile;
+        private string _unlockEntity0;
+        private string _unlockCount;
+        private string _unlockEntity1;
+        private string _unlockEntity2;
         private bool _showUserEntityWarning;
+
+        // Advanced Settings Section
+        private string _drag;
+        private string _click;
+        private string _normal;
+        private string _level;
+        private bool _loadHalfAnimations;
+        private bool _use8BitSound;
+        private bool _developerModeEnabled;
+
 
         public HomeViewModel()
         {
