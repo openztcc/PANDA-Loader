@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using PandaLdr.Models;
 using System;
+using IniParser;
+using IniParser.Model;
 
 namespace PandaLdr.ViewModels
 {
@@ -9,6 +11,7 @@ namespace PandaLdr.ViewModels
     {
         private string _modPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate";
         private string _mapPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\maps";
+        private string _zooIniPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.ini";
 
         [ObservableProperty]
         private int _installedModCount;
@@ -151,6 +154,12 @@ namespace PandaLdr.ViewModels
         [ObservableProperty]
         private string _progressCalls;
 
+        private string[] parseResolution(string resolution)
+        {
+            string[] res = resolution.Split('x');
+            return res;
+        }
+
         public HomeViewModel()
         {
             InstalledModCount = ArchiveMgr.GetArchives(_modPath).Count;
@@ -160,6 +169,35 @@ namespace PandaLdr.ViewModels
             Console.WriteLine("Installed maps: " + InstalledMapCount);
 
             PandaVersion = "0.1.0";
+
+            // Load INI Configuration
+
+            var parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(_zooIniPath);
+
+            // Display Settings
+            FullScreen = Convert.ToBoolean(data["user"]["fullScreen"]);
+            var screenWidth = data["user"]["screenwidth"];
+            var screenHeight = data["user"]["screenheight"];
+            Resolution = screenWidth + "x" + screenHeight;
+            UpdateRate = data["user"]["UpdateRate"];
+            DrawRate = data["user"]["DrawRate"];
+            LastFile = data["user"]["lastfile"];
+            UnlockEntity0 = data["user"]["unlockEntity0"];
+            UnlockCount = data["user"]["unlockCount"];
+            UnlockEntity1 = data["user"]["unlockEntity1"];
+            UnlockEntity2 = data["user"]["unlockEntity2"];
+            ShowUserEntityWarning = Convert.ToBoolean(data["user"]["showUserEntityWarning"]);
+
+            // Advanced Settings
+            Drag = data["advanced"]["drag"];
+            Click = data["advanced"]["click"];
+            Normal = data["advanced"]["normal"];
+            Level = data["advanced"]["level"];
+            LoadHalfAnimations = Convert.ToBoolean(data["advanced"]["loadHalfAnims"]);
+            Use8BitSound = Convert.ToBoolean(data["advanced"]["use8BitSound"]);
+            DeveloperModeEnabled = Convert.ToBoolean(data["advanced"]["devModeEnabled"]);
+
         }
     }
 }
