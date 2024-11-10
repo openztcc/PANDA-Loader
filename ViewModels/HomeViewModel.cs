@@ -28,11 +28,11 @@ namespace PandaLdr.ViewModels
         [ObservableProperty]
         private bool _fullScreen;
         [ObservableProperty]
-        private string _resolution;
+        private int _resolution;
         [ObservableProperty]
-        private string _updateRate;
+        private int _updateRate;
         [ObservableProperty]
-        private string _drawRate;
+        private int _drawRate;
 
         // User Settings Section
         [ObservableProperty]
@@ -186,9 +186,74 @@ namespace PandaLdr.ViewModels
             FullScreen = Convert.ToBoolean(int.Parse(FullScreenStr));
             var screenWidth = data["user"]["screenwidth"];
             var screenHeight = data["user"]["screenheight"];
-            Resolution = screenWidth + "x" + screenHeight;
-            UpdateRate = data["user"]["UpdateRate"];
-            DrawRate = data["user"]["DrawRate"];
+            var selectedResolution = 0;
+            if (screenWidth == "800" && screenHeight == "600")
+            {
+                selectedResolution = 0;
+            }
+            else if (screenWidth == "1024" && screenHeight == "768")
+            {
+                selectedResolution = 1;
+            }
+            else if (screenWidth == "1280" && screenHeight == "1024")
+            {
+                selectedResolution = 2;
+            }
+            else if (screenWidth == "1600" && screenHeight == "1200")
+            {
+                selectedResolution = 3;
+            }
+            else if (screenWidth == "1920" && screenHeight == "1080")
+            {
+                selectedResolution = 4;
+            }
+            else if (screenWidth == "2560" && screenHeight == "1440")
+            {
+                selectedResolution = 5;
+            }
+            else if (screenWidth == "3840" && screenHeight == "2160")
+            {
+                selectedResolution = 6;
+            }
+            Resolution = selectedResolution;
+            string UpdateRateStr = data["user"]["UpdateRate"];
+            switch (UpdateRateStr)
+            {
+                case "15":
+                    UpdateRate = 3;
+                    break;
+                case "20":
+                    UpdateRate = 2;
+                    break;
+                case "30":
+                    UpdateRate = 1;
+                    break;  
+                case "60":
+                    UpdateRate = 0;
+                    break;
+                default:
+                    UpdateRate = 1;
+                    break;
+            }
+            string DrawRateStr = data["user"]["DrawRate"];
+            switch (DrawRateStr)
+            {
+                case "15":
+                    DrawRate = 3;
+                    break;
+                case "20":
+                    DrawRate = 2;
+                    break;
+                case "30":
+                    DrawRate = 1;
+                    break;
+                case "60":
+                    DrawRate = 0;
+                    break;
+                default:
+                    DrawRate = 1;
+                    break;
+            }
             LastFile = data["user"]["lastfile"];
             UnlockEntity0 = data["user"]["unlockEntity0"];
             UnlockCount = data["user"]["unlockCount"];

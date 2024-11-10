@@ -115,7 +115,10 @@
                     <StackPanel Margin="10" Spacing="10">
 
                         <!--  Display Settings Section  -->
-                        <Expander Header="Display Settings" IsExpanded="True" HorizontalAlignment="Stretch">
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Display Settings"
+                            IsExpanded="True">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -140,8 +143,13 @@
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
                                     SelectedIndex="{Binding Resolution}">
+                                    <ComboBoxItem Content="800x600" />
+                                    <ComboBoxItem Content="1024x768" />
+                                    <ComboBoxItem Content="1280x1024" />
+                                    <ComboBoxItem Content="1600x1200" />
                                     <ComboBoxItem Content="1920x1080" />
-                                    <ComboBoxItem Content="1280x720" />
+                                    <ComboBoxItem Content="2560x1440" />
+                                    <ComboBoxItem Content="3840x2160" />
                                 </ComboBox>
 
                                 <TextBlock
@@ -179,7 +187,12 @@
                                 </ComboBox>
                             </Grid>
                         </Expander>
-                        <Expander Header="User Settings" IsExpanded="False" HorizontalAlignment="Stretch">
+
+                        <!--  User Settings Section  -->
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="User Settings"
+                            IsExpanded="False">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -255,7 +268,11 @@
                             </Grid>
                         </Expander>
 
-                        <Expander Header="Advanced Settings" IsExpanded="False" HorizontalAlignment="Stretch">
+                        <!--  Advanced Settings Section  -->
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Advanced Settings"
+                            IsExpanded="False">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -344,7 +361,10 @@
                         </Expander>
 
                         <!--  Map Settings Section  -->
-                        <Expander Header="Map Settings" IsExpanded="False" HorizontalAlignment="Stretch">
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Map Settings"
+                            IsExpanded="False">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -372,9 +392,179 @@
                             </Grid>
                         </Expander>
 
+                        <!--  Language Settings  -->
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Language Settings"
+                            IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Lang" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Lang}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Sublang" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Sublang}" />
+                            </Grid>
+                        </Expander>
+
+                        <!--  Dependency Settings  -->
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Dependency Settings"
+                            IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Res" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Res}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Lang" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Lang}" />
+                            </Grid>
+                        </Expander>
+
+                        <!--  Resource Settings  -->
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Resource Settings"
+                            IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Path" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Path}" />
+                            </Grid>
+                        </Expander>
+
+                        <!--  Manager Settings  -->
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Manager Settings"
+                            IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="AIMgr" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Aimgr}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="WorldMgr" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Worldmgr}" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="GameMgr" />
+                                <TextBox
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Gamemgr}" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="ScenarioMgr" />
+                                <TextBox
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Scenariomgr}" />
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="ScriptMgr" />
+                                <TextBox
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Scriptmgr}" />
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="SoundMgr" />
+                                <TextBox
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Soundmgr}" />
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="TerrainMgr" />
+                                <TextBox
+                                    Grid.Row="6"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Terrainmgr}" />
+                            </Grid>
+                        </Expander>
 
                         <!--  UI Settings Section  -->
-                        <Expander Header="UI Settings" IsExpanded="False" HorizontalAlignment="Stretch">
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="UI Settings"
+                            IsExpanded="False">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
@@ -905,10 +1095,88 @@
                                     Text="{Binding ProgressCalls}" />
                             </Grid>
                         </Expander>
+
+                        <!--  Scenario Settings  -->
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Scenario Settings"
+                            IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Tutorial" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Tutorial}" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="BA" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Ba}" />
+
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="CG" />
+                                <TextBox
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Cg}" />
+
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="GC" />
+                                <TextBox
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Gc}" />
+
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="CN" />
+                                <TextBox
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Cn}" />
+
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="BB" />
+                                <TextBox
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Bb}" />
+                            </Grid>
+                        </Expander>
                     </StackPanel>
                 </TabItem>
-
-
             </TabControl>
         </StackPanel>
     </ScrollViewer>
