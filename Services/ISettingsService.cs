@@ -12,7 +12,29 @@ namespace PandaLdr.Services
 
     public interface ISettingsService
     {
-        void SaveZooINI(string path, IniData data);
-        IniData LoadZooINI(string path);
+        void SaveIni(IniData data);
+        IniData LoadIni();
+    }
+
+    public class IniService : ISettingsService
+    {
+        private readonly FileIniDataParser _parser;
+        private readonly string _path;
+
+        public IniService(string path)
+        {
+            _parser = new FileIniDataParser();
+            _path = path;
+        }
+
+        public IniData LoadIni()
+        {
+            return _parser.ReadFile(_path);
+        }
+
+        public void SaveIni(IniData data)
+        {
+            _parser.WriteFile(_path, data);
+        }
     }
 }

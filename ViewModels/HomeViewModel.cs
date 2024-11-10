@@ -4,14 +4,35 @@ using PandaLdr.Models;
 using System;
 using IniParser;
 using IniParser.Model;
+using PandaLdr.Services;
+using Avalonia.Svg.Commands;
 
 namespace PandaLdr.ViewModels
 {
+    public class ZooIniMessage 
+    {
+
+    }
     public partial class HomeViewModel : ViewModelBase
     {
+        private readonly ISettingsService _settingsService;
         private string _modPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate";
         private string _mapPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\maps";
         private string _zooIniPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.ini";
+
+        public HomeViewModel()
+        {
+            InstalledModCount = ArchiveMgr.GetArchives(_modPath).Count;
+            Console.WriteLine("Installed mods: " + InstalledModCount);
+
+            InstalledMapCount = MapMgr.GetMaps(_mapPath).Count;
+            Console.WriteLine("Installed maps: " + InstalledMapCount);
+
+            PandaVersion = "0.1.0";
+
+            _settingsService = new IniService(_zooIniPath);
+            LoadIni();
+        }
 
         [ObservableProperty]
         private int _installedModCount;
@@ -225,26 +246,13 @@ namespace PandaLdr.ViewModels
         private string _bb;
 
 
-        private string[] parseResolution(string resolution)
+        public RelayCommand SaveCommand => new RelayCommand(SaveIni);
+
+        private void LoadIni()
         {
-            string[] res = resolution.Split('x');
-            return res;
-        }
-
-        public HomeViewModel()
-        {
-            InstalledModCount = ArchiveMgr.GetArchives(_modPath).Count;
-            Console.WriteLine("Installed mods: " + InstalledModCount);
-
-            InstalledMapCount = MapMgr.GetMaps(_mapPath).Count;
-            Console.WriteLine("Installed maps: " + InstalledMapCount);
-
-            PandaVersion = "0.1.0";
-
             // Load INI Configuration
 
-            var parser = new FileIniDataParser();
-            IniData data = parser.ReadFile(_zooIniPath);
+            IniData data = _settingsService.LoadIni();
 
             // Display Settings
             string FullScreenStr = data["user"]["fullscreen"];
@@ -454,6 +462,190 @@ namespace PandaLdr.ViewModels
             Gc = data["scenario"]["gc"];
             Cn = data["scenario"]["cn"];
             Bb = data["scenario"]["bb"];
+        }
+
+        private void SaveIni()
+        {
+            IniData data = new IniData();
+
+            // Display Settings
+            data["user"]["fullscreen"] = Convert.ToInt32(FullScreen).ToString();
+            switch (Resolution)
+            {
+                case 0:
+                    data["user"]["screenwidth"] = "800";
+                    data["user"]["screenheight"] = "600";
+                    break;
+                case 1:
+                    data["user"]["screenwidth"] = "1024";
+                    data["user"]["screenheight"] = "768";
+                    break;
+                case 2:
+                    data["user"]["screenwidth"] = "1280";
+                    data["user"]["screenheight"] = "1024";
+                    break;
+                case 3:
+                    data["user"]["screenwidth"] = "1600";
+                    data["user"]["screenheight"] = "1200";
+                    break;
+                case 4:
+                    data["user"]["screenwidth"] = "1920";
+                    data["user"]["screenheight"] = "1080";
+                    break;
+                case 5:
+                    data["user"]["screenwidth"] = "2560";
+                    data["user"]["screenheight"] = "1440";
+                    break;
+                case 6:
+                    data["user"]["screenwidth"] = "3840";
+                    data["user"]["screenheight"] = "2160";
+                    break;
+                default:
+                    data["user"]["screenwidth"] = "1024";
+                    data["user"]["screenheight"] = "768";
+                    break;
+            }
+            switch (UpdateRate)
+            {
+                case 0:
+                    data["user"]["UpdateRate"] = "60";
+                    break;
+                case 1:
+                    data["user"]["UpdateRate"] = "30";
+                    break;
+                case 2:
+                    data["user"]["UpdateRate"] = "20";
+                    break;
+                case 3:
+                    data["user"]["UpdateRate"] = "15";
+                    break;
+                default:
+                    data["user"]["UpdateRate"] = "30";
+                    break;
+            }
+            switch (DrawRate)
+            {
+                case 0:
+                    data["user"]["DrawRate"] = "60";
+                    break;
+                case 1:
+                    data["user"]["DrawRate"] = "30";
+                    break;
+                case 2:
+                    data["user"]["DrawRate"] = "20";
+                    break;
+                case 3:
+                    data["user"]["DrawRate"] = "15";
+                    break;
+                default:
+                    data["user"]["DrawRate"] = "30";
+                    break;
+            }
+            data["user"]["lastfile"] = LastFile;
+            data["user"]["unlockEntity0"] = UnlockEntity0;
+            data["user"]["unlockCount"] = UnlockCount;
+            data["user"]["unlockEntity1"] = UnlockEntity1;
+            data["user"]["unlockEntity2"] = UnlockEntity2;
+            data["user"]["showUserEntityWarning"] = Convert.ToInt32(ShowUserEntityWarning).ToString();
+
+            // Debug Settings
+            data["debug"]["logCutoff"] = LogCutoff;
+            data["debug"]["sendLogfile"] = Convert.ToInt32(SendLogfile).ToString();
+            data["debug"]["sendDebugger"] = Convert.ToInt32(SendDebugger).ToString();
+            data["debug"]["deltaLog1"] = DeltaLog1;
+            data["debug"]["deltaLog0"] = DeltaLog0;
+            data["debug"]["drawfps"] = Convert.ToInt32(DrawFps).ToString();
+            data["debug"]["drawfpsx"] = DrawFpsX;
+            data["debug"]["drawfpsy"] = DrawFpsY;
+
+            // Manager Settings
+            data["mgr"]["aimgr"] = AiMgr;
+            data["mgr"]["worldmgr"] = ZtWorldMgr;
+            data["mgr"]["gamemgr"] = BfGameMgr;
+            data["mgr"]["scenariomgr"] = ZtScenarioMgr;
+            data["mgr"]["scriptmgr"] = BfScriptMgr;
+            data["mgr"]["soundmgr"] = BfSoundMgr;
+            data["mgr"]["terrainmgr"] = ZtAdvTerrainMgr;
+
+            // Language Settings
+            data["language"]["lang"] = Lang;
+            data["language"]["sublang"] = Sublang;
+
+            // Dependency Settings
+            data["lib"]["res"] = Res;
+            data["lib"]["lang"] = LangDep;
+
+            // Resource Settings
+            data["resource"]["path"] = Path;
+
+            // Advanced Settings
+            data["advanced"]["drag"] = Drag;
+            data["advanced"]["click"] = Click;
+            data["advanced"]["normal"] = Normal;
+            data["advanced"]["level"] = Level;
+            data["advanced"]["loadHalfAnims"] = Convert.ToInt32(LoadHalfAnimations).ToString();
+            data["advanced"]["use8BitSound"] = Convert.ToInt32(Use8BitSound).ToString();
+            data["advanced"]["devModeEnabled"] = Convert.ToInt32(DeveloperModeEnabled).ToString();
+
+            // Map Settings
+            data["Map"]["mapX"] = MapX;
+            data["Map"]["mapY"] = MapY;
+
+            // UI Settings
+            data["UI"]["useAlternateCursors"] = Convert.ToInt32(UseAlternateCursors).ToString();
+            data["UI"]["tooltipDelay"] = TooltipDelay;
+            data["UI"]["tooltipDuration"] = TooltipDuration;
+            data["UI"]["MessageDisplay"] = MessageDisplay;
+            data["UI"]["mouseScrollThreshold"] = MouseScrollThreshold;
+            data["UI"]["mouseScrollDelay"] = MouseScrollDelay;
+            data["UI"]["mouseScrollX"] = MouseScrollX;
+            data["UI"]["mouseScrollY"] = MouseScrollY;
+            data["UI"]["keyScrollX"] = KeyScrollX;
+            data["UI"]["keyScrollY"] = KeyScrollY;
+            data["UI"]["minimumMessageInterval"] = MinimumMessageInterval;
+            data["UI"]["defaultEditCharLimit"] = DefaultEditCharLimit;
+            data["UI"]["noMenuMusic"] = Convert.ToInt32(NoMenuMusic).ToString();
+            data["UI"]["menuMusic"] = MenuMusic;
+            data["UI"]["helpType"] = HelpType;
+            data["UI"]["playMovie"] = Convert.ToInt32(PlayMovie).ToString();
+            data["UI"]["movievolume1"] = MovieVolume1;
+            data["UI"]["playSecondMovie"] = Convert.ToInt32(PlaySecondMovie).ToString();
+            data["UI"]["movievolume2"] = MovieVolume2;
+            data["UI"]["maxShortTooltipWidth"] = MaxShortTooltipWidth;
+            data["UI"]["maxLongTooltipWidth"] = MaxLongTooltipWidth;
+            data["UI"]["progressLeft"] = ProgressLeft;
+            data["UI"]["progressTop"] = ProgressTop;
+            data["UI"]["progressRight"] = ProgressRight;
+            data["UI"]["progressBottom"] = ProgressBottom;
+            data["UI"]["progressRed"] = ProgressRed;
+            data["UI"]["progressGreen"] = ProgressGreen;
+            data["UI"]["progressBlue"] = ProgressBlue;
+            data["UI"]["progressShadowXOffset"] = ProgressShadowXOffset;
+            data["UI"]["progressShadowYOffset"] = ProgressShadowYOffset;
+            data["UI"]["progressShadowRed"] = ProgressShadowRed;
+            data["UI"]["progressShadowGreen"] = ProgressShadowGreen;
+            data["UI"]["progressShadowBlue"] = ProgressShadowBlue;
+            data["UI"]["completedExhibitAttenuation"] = CompletedExhibitAttenuation;
+            data["UI"]["MSStartingCash"] = MsStartingCash;
+            data["UI"]["MSCashIncrement"] = MsCashIncrement;
+            data["UI"]["MSMinCash"] = MsMinCash;
+            data["UI"]["MSMaxCash"] = MsMaxCash;
+            data["UI"]["startedFirstTutorial"] = Convert.ToInt32(StartedFirstTutorial).ToString();
+            data["UI"]["startedDinoTutorial"] = Convert.ToInt32(StartedDinoTutorial).ToString();
+            data["UI"]["startedAquaTutorial"] = Convert.ToInt32(StartedAquaTutorial).ToString();
+            data["UI"]["lastWindowX"] = LastWindowX;
+            data["UI"]["lastWindowY"] = LastWindowY;
+            data["UI"]["progresscalls"] = ProgressCalls;
+        
+            // Scenario Settings
+            data["scenario"]["tutorial"] = Tutorial;
+            data["scenario"]["ba"] = Ba;
+            data["scenario"]["cg"] = Cg;
+            data["scenario"]["gc"] = Gc;
+            data["scenario"]["cn"] = Cn;
+            data["scenario"]["bb"] = Bb;
+
+            _settingsService.SaveIni(data);
         }
     }
 }

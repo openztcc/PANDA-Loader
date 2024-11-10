@@ -8,22 +8,21 @@ namespace PandaLdr.Views
 {
     public partial class HomeView : UserControl
     {
-        private string _modPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon 2\\dlupdate";
-        public HomeView()
+        private string _path;
+        public HomeView(string path)
         {
             InitializeComponent();
+            _path = path;
         }
         private void LaunchGame(object? sender, RoutedEventArgs e)
         {
-            string path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
-            
-            if (System.IO.File.Exists(path))
+            if (System.IO.File.Exists(_path))
             {
                 try
                 {
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = path,
+                        FileName = _path,
                         UseShellExecute = true
                     });
                 }
@@ -34,7 +33,7 @@ namespace PandaLdr.Views
             }
             else
             {
-                Console.WriteLine("zoo.exe not found at {path}");
+                Console.WriteLine("zoo.exe not found at {_path}");
             }
         }
 

@@ -15,7 +15,7 @@
         <FluentTheme />
         <Style Selector="TextBlock">
             <Setter Property="FontFamily" Value="avares://PandaLdr/Assets/Fonts/Space_Grotesk/static/SpaceGrotesk-Regular.ttf" />
-            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontSize" Value="15" />
             <Setter Property="Foreground" Value="White" />
         </Style>
         <Style Selector="Button">

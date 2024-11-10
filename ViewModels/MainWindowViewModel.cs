@@ -3,11 +3,16 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using PandaLdr.ViewModels;
+using PandaLdr.Services;
+using Avalonia.Svg.Commands;
 
 namespace PandaLdr.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
+        private readonly ISettingsService _settingsService;
+
         [ObservableProperty]
         private bool _isPaneOpen = true;
 
@@ -27,6 +32,15 @@ namespace PandaLdr.ViewModels
                 CurrentPage = (ViewModelBase)instance;
             }
             else return;
+
+            _settingsService = new IniService("settings.ini");
+            SaveCommand = new RelayCommand(() => _settingsService.SaveIni(new IniData()));
+        }
+
+        public MainWindowViewModel()
+        {
+            _settingsService = new IniService("settings.ini");
+            SaveCommand = new RelayCommand(() => _settingsService.SaveIni(new IniData()));
         }
 
         public ObservableCollection<ListItemTemplate> Items { get; } = new()
