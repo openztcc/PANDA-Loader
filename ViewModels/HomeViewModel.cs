@@ -325,7 +325,10 @@ namespace PandaLdr.ViewModels
             UnlockEntity1 = data["user"]["unlockEntity1"];
             UnlockEntity2 = data["user"]["unlockEntity2"];
             string ShowUserEntityWarningStr = data["user"]["showUserEntityWarning"];
-            ShowUserEntityWarning = Convert.ToBoolean(int.Parse(ShowUserEntityWarningStr));
+            if (ShowUserEntityWarningStr != null)
+            {
+                ShowUserEntityWarning = Convert.ToBoolean(int.Parse(ShowUserEntityWarningStr));
+            }
 
             // Debug Settings
             LogCutoff = data["debug"]["logCutoff"];
@@ -366,18 +369,27 @@ namespace PandaLdr.ViewModels
             Normal = data["advanced"]["normal"];
             Level = data["advanced"]["level"];
             string LoadHalfAnimationsStr = data["advanced"]["loadHalfAnims"];
-            LoadHalfAnimations = Convert.ToBoolean(int.Parse(LoadHalfAnimationsStr));
+            if (LoadHalfAnimationsStr != null)
+            {
+                LoadHalfAnimations = Convert.ToBoolean(int.Parse(LoadHalfAnimationsStr));
+            }
             string Use8BitSoundStr = data["advanced"]["use8BitSound"];
-            Use8BitSound = Convert.ToBoolean(int.Parse(Use8BitSoundStr));
+            if (Use8BitSoundStr != null)
+            {
+                Use8BitSound = Convert.ToBoolean(int.Parse(Use8BitSoundStr));
+            }
             string DeveloperModeEnabledStr = data["advanced"]["devModeEnabled"];
-            DeveloperModeEnabled = Convert.ToBoolean(int.Parse(DeveloperModeEnabledStr));
+            if (DeveloperModeEnabledStr != null)
+            {
+                DeveloperModeEnabled = Convert.ToBoolean(int.Parse(DeveloperModeEnabledStr));
+            }
 
             // Map Settings
             MapX = data["Map"]["mapX"];
             MapY = data["Map"]["mapY"];
 
             // UI Settings
-            string UseAlternateCursorsStr = data["UI"]["useAlternateCursors"];
+            string UseAlternateCursorsStr = data["UI"]["useAlternateCursors"];       
             UseAlternateCursors = Convert.ToBoolean(int.Parse(UseAlternateCursorsStr));
             TooltipDelay = data["UI"]["tooltipDelay"];
             TooltipDuration = data["UI"]["tooltipDuration"];
@@ -423,8 +435,14 @@ namespace PandaLdr.ViewModels
             string StartedDinoTutorialStr = data["UI"]["startedDinoTutorial"];
             string StartedAquaTutorialStr = data["UI"]["startedAquaTutorial"];
             StartedFirstTutorial = Convert.ToBoolean(int.Parse(StartedFirstTutorialStr));
-            StartedDinoTutorial = Convert.ToBoolean(int.Parse(StartedDinoTutorialStr));
-            StartedAquaTutorial = Convert.ToBoolean(int.Parse(StartedAquaTutorialStr));
+            if (StartedDinoTutorialStr != null)
+            {
+                StartedDinoTutorial = Convert.ToBoolean(int.Parse(StartedDinoTutorialStr));
+            }
+            if (StartedAquaTutorialStr != null)
+            {
+                StartedAquaTutorial = Convert.ToBoolean(int.Parse(StartedAquaTutorialStr));
+            }
             LastWindowX = data["UI"]["lastWindowX"];
             LastWindowY = data["UI"]["lastWindowY"];
             ProgressCalls = data["UI"]["progresscalls"];
