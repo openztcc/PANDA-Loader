@@ -44,7 +44,7 @@ namespace PandaLdr.ViewModels
         [ObservableProperty]
         private string _ztScenarioMgr;
         [ObservableProperty]
-        private string _bgScriptMgr;
+        private string _bfScriptMgr;
         [ObservableProperty]
         private string _bfSoundMgr;
         [ObservableProperty]
@@ -314,7 +314,7 @@ namespace PandaLdr.ViewModels
             ZtWorldMgr = data["mgr"]["worldmgr"];
             BfGameMgr = data["mgr"]["gamemgr"];
             ZtScenarioMgr = data["mgr"]["scenariomgr"];
-            BgScriptMgr = data["mgr"]["scriptmgr"];
+            BfScriptMgr = data["mgr"]["scriptmgr"];
             BfSoundMgr = data["mgr"]["soundmgr"];
             ZtAdvTerrainMgr = data["mgr"]["terrainmgr"];
 

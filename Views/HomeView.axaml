@@ -450,7 +450,7 @@
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding Lang}" />
+                                    Text="{Binding LangDep}" />
                             </Grid>
                         </Expander>
 
@@ -485,78 +485,78 @@
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="AIMgr" />
+                                    Text="AI" />
                                 <TextBox
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding Aimgr}" />
+                                    Text="{Binding AiMgr}" />
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="WorldMgr" />
+                                    Text="World" />
                                 <TextBox
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding Worldmgr}" />
+                                    Text="{Binding ZtWorldMgr}" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="GameMgr" />
+                                    Text="Game" />
                                 <TextBox
                                     Grid.Row="2"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding Gamemgr}" />
+                                    Text="{Binding BfGameMgr}" />
                                 <TextBlock
                                     Grid.Row="3"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="ScenarioMgr" />
+                                    Text="Scenario" />
                                 <TextBox
                                     Grid.Row="3"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding Scenariomgr}" />
+                                    Text="{Binding ZtScenarioMgr}" />
                                 <TextBlock
                                     Grid.Row="4"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="ScriptMgr" />
+                                    Text="Script" />
                                 <TextBox
                                     Grid.Row="4"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding Scriptmgr}" />
+                                    Text="{Binding BfScriptMgr}" />
                                 <TextBlock
                                     Grid.Row="5"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="SoundMgr" />
+                                    Text="Sound" />
                                 <TextBox
                                     Grid.Row="5"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding Soundmgr}" />
+                                    Text="{Binding BfSoundMgr}" />
                                 <TextBlock
                                     Grid.Row="6"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="TerrainMgr" />
+                                    Text="Terrain" />
                                 <TextBox
                                     Grid.Row="6"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding Terrainmgr}" />
+                                    Text="{Binding ZtAdvTerrainMgr}" />
                             </Grid>
                         </Expander>
 
