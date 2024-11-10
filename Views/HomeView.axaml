@@ -188,6 +188,110 @@
                             </Grid>
                         </Expander>
 
+                        <!--  Debug Settings Section  -->
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            Header="Debug Settings"
+                            IsExpanded="False">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Log Cutoff" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding LogCutoff}" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Send Logfile" />
+                                <CheckBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    IsChecked="{Binding SendLogfile}" />
+
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Send Debugger" />
+                                <CheckBox
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    IsChecked="{Binding SendDebugger}" />
+
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Delta Log1" />
+                                <TextBox
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding DeltaLog1}" />
+
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Delta Log0" />
+                                <TextBox
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding DeltaLog0}" />
+
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Draw FPS" />
+                                <CheckBox
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    IsChecked="{Binding DrawFps}" />
+
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Draw FPS X" />
+                                <TextBox
+                                    Grid.Row="6"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding DrawFpsX}" />
+
+                                <TextBlock
+                                    Grid.Row="7"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Draw FPS Y" />
+                                <TextBox
+                                    Grid.Row="7"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding DrawFpsY}" />
+                            </Grid>
+                        </Expander>
+
                         <!--  User Settings Section  -->
                         <Expander
                             HorizontalAlignment="Stretch"
