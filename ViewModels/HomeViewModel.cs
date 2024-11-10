@@ -34,6 +34,24 @@ namespace PandaLdr.ViewModels
         [ObservableProperty]
         private int _drawRate;
 
+        // Debug Settings
+        [ObservableProperty]
+        private string _logCutoff;
+        [ObservableProperty]
+        private bool _sendLogfile;
+        [ObservableProperty]
+        private bool _sendDebugger;
+        [ObservableProperty]
+        private string _deltaLog1;
+        [ObservableProperty]
+        private string _deltaLog0;
+        [ObservableProperty]
+        private bool _drawFps;
+        [ObservableProperty]
+        private string _drawFpsX;
+        [ObservableProperty]
+        private string _drawFpsY;
+
         // Manager Settings Section
         [ObservableProperty]
         private string _aiMgr;
