@@ -34,6 +34,22 @@ namespace PandaLdr.ViewModels
         [ObservableProperty]
         private int _drawRate;
 
+        // Language Settings Section
+        [ObservableProperty]
+        private string _lang;
+        [ObservableProperty]
+        private string _sublang;
+
+        // Dependency Settings Section
+        [ObservableProperty]
+        private string _res;
+        [ObservableProperty]
+        private string _langDep;
+
+        // Resource Settings Section
+        [ObservableProperty]
+        private string _path;
+
         // User Settings Section
         [ObservableProperty]
         private string _lastFile;
@@ -159,6 +175,21 @@ namespace PandaLdr.ViewModels
         private string _lastWindowY;
         [ObservableProperty]
         private string _progressCalls;
+
+        // Scenario Settings Section
+        [ObservableProperty]
+        private string _tutorial;
+        [ObservableProperty]
+        private string _ba;
+        [ObservableProperty]
+        private string _cg;
+        [ObservableProperty]
+        private string _gc;
+        [ObservableProperty]
+        private string _cn;
+        [ObservableProperty]
+        private string _bb;
+
 
         private string[] parseResolution(string resolution)
         {
