@@ -22,7 +22,7 @@ namespace PandaLdr.ViewModels
         [ObservableProperty]
         private string _oztVersion = "0.1.0";
 
-        // INI Configuration
+        //------------------------- INI Configuration
 
         // Display Settings
         [ObservableProperty]
@@ -33,6 +33,22 @@ namespace PandaLdr.ViewModels
         private int _updateRate;
         [ObservableProperty]
         private int _drawRate;
+
+        // Manager Settings Section
+        [ObservableProperty]
+        private string _aiMgr;
+        [ObservableProperty]
+        private string _ztWorldMgr;
+        [ObservableProperty]
+        private string _bfGameMgr;
+        [ObservableProperty]
+        private string _ztScenarioMgr;
+        [ObservableProperty]
+        private string _bgScriptMgr;
+        [ObservableProperty]
+        private string _bfSoundMgr;
+        [ObservableProperty]
+        private string _ztAdvTerrainMgr;
 
         // Language Settings Section
         [ObservableProperty]
@@ -293,6 +309,26 @@ namespace PandaLdr.ViewModels
             string ShowUserEntityWarningStr = data["user"]["showUserEntityWarning"];
             ShowUserEntityWarning = Convert.ToBoolean(int.Parse(ShowUserEntityWarningStr));
 
+            // Manager Settings
+            AiMgr = data["mgr"]["aimgr"];
+            ZtWorldMgr = data["mgr"]["worldmgr"];
+            BfGameMgr = data["mgr"]["gamemgr"];
+            ZtScenarioMgr = data["mgr"]["scenariomgr"];
+            BgScriptMgr = data["mgr"]["scriptmgr"];
+            BfSoundMgr = data["mgr"]["soundmgr"];
+            ZtAdvTerrainMgr = data["mgr"]["terrainmgr"];
+
+            // Language Settings
+            Lang = data["language"]["lang"];
+            Sublang = data["language"]["sublang"];
+
+            // Dependency Settings
+            Res = data["lib"]["res"];
+            LangDep = data["lib"]["lang"];
+
+            // Resource Settings
+            Path = data["resource"]["path"];
+
             // Advanced Settings
             Drag = data["advanced"]["drag"];
             Click = data["advanced"]["click"];
@@ -362,7 +398,13 @@ namespace PandaLdr.ViewModels
             LastWindowY = data["UI"]["lastWindowY"];
             ProgressCalls = data["UI"]["progresscalls"];
 
-
+            // Scenario Settings
+            Tutorial = data["scenario"]["tutorial"];
+            Ba = data["scenario"]["ba"];
+            Cg = data["scenario"]["cg"];
+            Gc = data["scenario"]["gc"];
+            Cn = data["scenario"]["cn"];
+            Bb = data["scenario"]["bb"];
         }
     }
 }
