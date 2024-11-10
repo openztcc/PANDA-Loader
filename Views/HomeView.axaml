@@ -193,7 +193,7 @@
                             HorizontalAlignment="Stretch"
                             Header="Debug Settings"
                             IsExpanded="False">
-                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
                                 <TextBlock
                                     Grid.Row="0"
                                     Grid.Column="0"

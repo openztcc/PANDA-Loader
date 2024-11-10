@@ -327,6 +327,19 @@ namespace PandaLdr.ViewModels
             string ShowUserEntityWarningStr = data["user"]["showUserEntityWarning"];
             ShowUserEntityWarning = Convert.ToBoolean(int.Parse(ShowUserEntityWarningStr));
 
+            // Debug Settings
+            LogCutoff = data["debug"]["logCutoff"];
+            string SendLogfileStr = data["debug"]["sendLogfile"];
+            SendLogfile = Convert.ToBoolean(int.Parse(SendLogfileStr));
+            string SendDebuggerStr = data["debug"]["sendDebugger"];
+            SendDebugger = Convert.ToBoolean(int.Parse(SendDebuggerStr));
+            DeltaLog1 = data["debug"]["deltaLog1"];
+            DeltaLog0 = data["debug"]["deltaLog0"];
+            string DrawFpsStr = data["debug"]["drawfps"];
+            DrawFps = Convert.ToBoolean(int.Parse(DrawFpsStr));
+            DrawFpsX = data["debug"]["drawfpsx"];
+            DrawFpsY = data["debug"]["drawfpsy"];
+
             // Manager Settings
             AiMgr = data["mgr"]["aimgr"];
             ZtWorldMgr = data["mgr"]["worldmgr"];
