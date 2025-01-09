@@ -11,16 +11,16 @@ namespace PandaLdr.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
-        private readonly ISettingsService _settingsService;
-
         [ObservableProperty]
         private bool _isPaneOpen = true;
 
         [ObservableProperty]
-        private ViewModelBase _currentPage = new HomeViewModel();
+        private ViewModelBase _currentPage;
 
         [ObservableProperty]
         private ListItemTemplate? _selectedListItem;
+
+        private readonly ISettingsService _settingsService;
 
         // Override the setter of the SelectedListItem property to create an instance of the selected ViewModel
         partial void OnSelectedListItemChanged(ListItemTemplate? value)
@@ -32,15 +32,16 @@ namespace PandaLdr.ViewModels
                 CurrentPage = (ViewModelBase)instance;
             }
             else return;
-
-            _settingsService = new IniService("settings.ini");
-            SaveCommand = new RelayCommand(() => _settingsService.SaveIni(new IniData()));
         }
 
         public MainWindowViewModel()
         {
-            _settingsService = new IniService("settings.ini");
-            SaveCommand = new RelayCommand(() => _settingsService.SaveIni(new IniData()));
+        }
+
+        public MainWindowViewModel(ISettingsService settingsService)
+        {
+            _settingsService = settingsService;
+            CurrentPage = new HomeViewModel(settingsService);
         }
 
         public ObservableCollection<ListItemTemplate> Items { get; } = new()

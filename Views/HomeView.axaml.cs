@@ -8,7 +8,13 @@ namespace PandaLdr.Views
 {
     public partial class HomeView : UserControl
     {
-        private string _path;
+        private string? _path;
+
+        public HomeView()
+        {
+            InitializeComponent();
+        }
+        
         public HomeView(string path)
         {
             InitializeComponent();

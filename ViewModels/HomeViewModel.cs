@@ -16,32 +16,36 @@ namespace PandaLdr.ViewModels
     public partial class HomeViewModel : ViewModelBase
     {
         private readonly ISettingsService _settingsService;
-        private string _modPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate";
-        private string _mapPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\maps";
-        private string _zooIniPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.ini";
+        private readonly string _modPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate";
+        private readonly string _mapPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\maps";
 
-        public HomeViewModel()
+
+        [ObservableProperty]
+        private int? _installedModCount;
+        [ObservableProperty]
+        private int? _installedMapCount;
+        [ObservableProperty]
+        private string? _pandaVersion;
+        [ObservableProperty]
+        private string? _oztVersion = "0.1.0";
+
+        public HomeViewModel(ISettingsService settingsService)
         {
+            // gets the number of installed mods in the dlupdate folder
             InstalledModCount = ArchiveMgr.GetArchives(_modPath).Count;
             Console.WriteLine("Installed mods: " + InstalledModCount);
 
+            // gets the number of installed maps in the maps folder
             InstalledMapCount = MapMgr.GetMaps(_mapPath).Count;
             Console.WriteLine("Installed maps: " + InstalledMapCount);
 
+            // panda version
             PandaVersion = "0.1.0";
 
-            _settingsService = new IniService(_zooIniPath);
+            _settingsService = settingsService;
             LoadIni();
         }
 
-        [ObservableProperty]
-        private int _installedModCount;
-        [ObservableProperty]
-        private int _installedMapCount;
-        [ObservableProperty]
-        private string _pandaVersion;
-        [ObservableProperty]
-        private string _oztVersion = "0.1.0";
 
         //------------------------- INI Configuration
 
@@ -57,193 +61,193 @@ namespace PandaLdr.ViewModels
 
         // Debug Settings
         [ObservableProperty]
-        private string _logCutoff;
+        private string? _logCutoff;
         [ObservableProperty]
-        private bool _sendLogfile;
+        private bool? _sendLogfile;
         [ObservableProperty]
-        private bool _sendDebugger;
+        private bool? _sendDebugger;
         [ObservableProperty]
-        private string _deltaLog1;
+        private string? _deltaLog1;
         [ObservableProperty]
-        private string _deltaLog0;
+        private string? _deltaLog0;
         [ObservableProperty]
-        private bool _drawFps;
+        private bool? _drawFps;
         [ObservableProperty]
-        private string _drawFpsX;
+        private string? _drawFpsX;
         [ObservableProperty]
-        private string _drawFpsY;
+        private string? _drawFpsY;
 
         // Manager Settings Section
         [ObservableProperty]
-        private string _aiMgr;
+        private string? _aiMgr;
         [ObservableProperty]
-        private string _ztWorldMgr;
+        private string? _ztWorldMgr;
         [ObservableProperty]
-        private string _bfGameMgr;
+        private string? _bfGameMgr;
         [ObservableProperty]
-        private string _ztScenarioMgr;
+        private string? _ztScenarioMgr;
         [ObservableProperty]
-        private string _bfScriptMgr;
+        private string? _bfScriptMgr;
         [ObservableProperty]
-        private string _bfSoundMgr;
+        private string? _bfSoundMgr;
         [ObservableProperty]
-        private string _ztAdvTerrainMgr;
+        private string? _ztAdvTerrainMgr;
 
         // Language Settings Section
         [ObservableProperty]
-        private string _lang;
+        private string? _lang;
         [ObservableProperty]
-        private string _sublang;
+        private string? _sublang;
 
         // Dependency Settings Section
         [ObservableProperty]
-        private string _res;
+        private string? _res;
         [ObservableProperty]
-        private string _langDep;
+        private string? _langDep;
 
         // Resource Settings Section
         [ObservableProperty]
-        private string _path;
+        private string? _path;
 
         // User Settings Section
         [ObservableProperty]
-        private string _lastFile;
+        private string? _lastFile;
         [ObservableProperty]
-        private string _unlockEntity0;
+        private string? _unlockEntity0;
         [ObservableProperty]
-        private string _unlockCount;
+        private string? _unlockCount;
         [ObservableProperty]
-        private string _unlockEntity1;
+        private string? _unlockEntity1;
         [ObservableProperty]
-        private string _unlockEntity2;
+        private string? _unlockEntity2;
         [ObservableProperty]
-        private bool _showUserEntityWarning;
+        private bool? _showUserEntityWarning;
 
         // Advanced Settings Section
         [ObservableProperty]
-        private string _drag;
+        private string? _drag;
         [ObservableProperty]
-        private string _click;
+        private string? _click;
         [ObservableProperty]
-        private string _normal;
+        private string? _normal;
         [ObservableProperty]
-        private string _level;
+        private string? _level;
         [ObservableProperty]
-        private bool _loadHalfAnimations;
+        private bool? _loadHalfAnimations;
         [ObservableProperty]
-        private bool _use8BitSound;
+        private bool? _use8BitSound;
         [ObservableProperty]
-        private bool _developerModeEnabled;
+        private bool? _developerModeEnabled;
 
         // Map Settings Section
         [ObservableProperty]
-        private string _mapX;
+        private string? _mapX;
         [ObservableProperty]
-        private string _mapY;
+        private string? _mapY;
 
         // UI Settings Section
         [ObservableProperty]
-        private bool _useAlternateCursors;
+        private bool? _useAlternateCursors;
         [ObservableProperty]
-        private string _tooltipDelay;
+        private string? _tooltipDelay;
         [ObservableProperty]
-        private string _tooltipDuration;
+        private string? _tooltipDuration;
         [ObservableProperty]
-        private string _messageDisplay;
+        private string? _messageDisplay;
         [ObservableProperty]
-        private string _mouseScrollThreshold;
+        private string? _mouseScrollThreshold;
         [ObservableProperty]
-        private string _mouseScrollDelay;
+        private string? _mouseScrollDelay;
         [ObservableProperty]
-        private string _mouseScrollX;
+        private string? _mouseScrollX;
         [ObservableProperty]
-        private string _mouseScrollY;
+        private string? _mouseScrollY;
         [ObservableProperty]
-        private string _keyScrollX;
+        private string? _keyScrollX;
         [ObservableProperty]
-        private string _keyScrollY;
+        private string? _keyScrollY;
         [ObservableProperty]
-        private string _minimumMessageInterval;
+        private string? _minimumMessageInterval;
         [ObservableProperty]
-        private string _defaultEditCharLimit;
+        private string? _defaultEditCharLimit;
         [ObservableProperty]
-        private bool _noMenuMusic;  
+        private bool? _noMenuMusic;  
         [ObservableProperty]
-        private string _menuMusic;
+        private string? _menuMusic;
         [ObservableProperty]
-        private string _helpType;
+        private string? _helpType;
         [ObservableProperty]
-        private bool _playMovie;
+        private bool? _playMovie;
         [ObservableProperty]
-        private string _movieVolume1;
+        private string? _movieVolume1;
         [ObservableProperty]
-        private bool _playSecondMovie;
+        private bool? _playSecondMovie;
         [ObservableProperty]
-        private string _movieVolume2;
+        private string? _movieVolume2;
         [ObservableProperty]
-        private string _maxShortTooltipWidth;
+        private string? _maxShortTooltipWidth;
         [ObservableProperty]
-        private string _maxLongTooltipWidth;
+        private string? _maxLongTooltipWidth;
         [ObservableProperty]
-        private string _progressLeft;
+        private string? _progressLeft;
         [ObservableProperty]
-        private string _progressTop;
+        private string? _progressTop;
         [ObservableProperty]
-        private string _progressRight;
+        private string? _progressRight;
         [ObservableProperty]
-        private string _progressBottom;
+        private string? _progressBottom;
         [ObservableProperty]
-        private string _progressRed;
+        private string? _progressRed;
         [ObservableProperty]
-        private string _progressGreen;
+        private string? _progressGreen;
         [ObservableProperty]
-        private string _progressBlue;
+        private string? _progressBlue;
         [ObservableProperty]
-        private string _progressShadowXOffset;
+        private string? _progressShadowXOffset;
         [ObservableProperty]
-        private string _progressShadowYOffset;
+        private string? _progressShadowYOffset;
         [ObservableProperty]
-        private string _progressShadowRed;
+        private string? _progressShadowRed;
         [ObservableProperty]
-        private string _progressShadowGreen;
+        private string? _progressShadowGreen;
         [ObservableProperty]
-        private string _progressShadowBlue;
+        private string? _progressShadowBlue;
         [ObservableProperty]
-        private string _completedExhibitAttenuation;
+        private string? _completedExhibitAttenuation;
         [ObservableProperty]
-        private string _msStartingCash;
+        private string? _msStartingCash;
         [ObservableProperty]
-        private string _msCashIncrement;
+        private string? _msCashIncrement;
         [ObservableProperty]
-        private string _msMinCash;
+        private string? _msMinCash;
         [ObservableProperty]
-        private string _msMaxCash;
+        private string? _msMaxCash;
         [ObservableProperty]
-        private bool _startedFirstTutorial;
+        private bool? _startedFirstTutorial;
         [ObservableProperty]
-        private bool _startedDinoTutorial;
+        private bool? _startedDinoTutorial;
         [ObservableProperty]
-        private bool _startedAquaTutorial;
+        private bool? _startedAquaTutorial;
         [ObservableProperty]
-        private string _lastWindowX;
+        private string? _lastWindowX;
         [ObservableProperty]
-        private string _lastWindowY;
+        private string? _lastWindowY;
         [ObservableProperty]
-        private string _progressCalls;
+        private string? _progressCalls;
 
         // Scenario Settings Section
         [ObservableProperty]
-        private string _tutorial;
+        private string? _tutorial;
         [ObservableProperty]
-        private string _ba;
+        private string? _ba;
         [ObservableProperty]
-        private string _cg;
+        private string? _cg;
         [ObservableProperty]
-        private string _gc;
+        private string? _gc;
         [ObservableProperty]
-        private string _cn;
+        private string? _cn;
         [ObservableProperty]
-        private string _bb;
+        private string? _bb;
 
 
         public RelayCommand SaveCommand => new RelayCommand(SaveIni);

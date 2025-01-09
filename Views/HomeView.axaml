@@ -9,6 +9,10 @@
     d:DesignWidth="800"
     x:DataType="vm:HomeViewModel"
     mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:HomeViewModel />
+    </Design.DataContext>
+
     <UserControl.Styles>
         <Style Selector="Button.LaunchHover:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="#E59E5C" />
