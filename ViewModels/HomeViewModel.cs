@@ -15,7 +15,7 @@ namespace PandaLdr.ViewModels
     }
     public partial class HomeViewModel : ViewModelBase
     {
-        private readonly ISettingsService _settingsService;
+        private readonly ISettingsService? _settingsService;
         private readonly string _modPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate";
         private readonly string _mapPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\maps";
 
@@ -28,6 +28,11 @@ namespace PandaLdr.ViewModels
         private string? _pandaVersion;
         [ObservableProperty]
         private string? _oztVersion = "0.1.0";
+
+        public HomeViewModel() 
+        {
+
+        }
 
         public HomeViewModel(ISettingsService settingsService)
         {

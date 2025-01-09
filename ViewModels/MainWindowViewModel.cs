@@ -12,15 +12,15 @@ namespace PandaLdr.ViewModels
     public partial class MainWindowViewModel : ViewModelBase
     {
         [ObservableProperty]
-        private bool _isPaneOpen = true;
+        private bool? _isPaneOpen = true;
 
         [ObservableProperty]
-        private ViewModelBase _currentPage;
+        private ViewModelBase? _currentPage;
 
         [ObservableProperty]
         private ListItemTemplate? _selectedListItem;
 
-        private readonly ISettingsService _settingsService;
+        private readonly ISettingsService? _settingsService;
 
         // Override the setter of the SelectedListItem property to create an instance of the selected ViewModel
         partial void OnSelectedListItemChanged(ListItemTemplate? value)
@@ -36,6 +36,11 @@ namespace PandaLdr.ViewModels
 
         public MainWindowViewModel()
         {
+            if (_settingsService is null)
+            {
+                throw new InvalidOperationException("Settings service is null");
+            }
+            CurrentPage = new HomeViewModel(_settingsService);
         }
 
         public MainWindowViewModel(ISettingsService settingsService)
