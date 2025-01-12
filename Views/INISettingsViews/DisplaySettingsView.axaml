@@ -4,5 +4,72 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PandaLdr.DisplaySettingsView">
-  Welcome to Avalonia!
+                              <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Full Screen" />
+                                <CheckBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    IsChecked="{Binding FullScreen}" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Resolution" />
+                                <ComboBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    SelectedIndex="{Binding Resolution}">
+                                    <ComboBoxItem Content="800x600" />
+                                    <ComboBoxItem Content="1024x768" />
+                                    <ComboBoxItem Content="1280x1024" />
+                                    <ComboBoxItem Content="1600x1200" />
+                                    <ComboBoxItem Content="1920x1080" />
+                                    <ComboBoxItem Content="2560x1440" />
+                                    <ComboBoxItem Content="3840x2160" />
+                                </ComboBox>
+
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Update Rate" />
+                                <ComboBox
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    SelectedIndex="{Binding UpdateRate}">
+                                    <ComboBoxItem Content="60" />
+                                    <ComboBoxItem Content="30" />
+                                    <ComboBoxItem Content="20" />
+                                    <ComboBoxItem Content="15" />
+                                </ComboBox>
+
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Draw Rate" />
+                                <ComboBox
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    SelectedIndex="{Binding DrawRate}">
+                                    <ComboBoxItem Content="60" />
+                                    <ComboBoxItem Content="30" />
+                                    <ComboBoxItem Content="20" />
+                                    <ComboBoxItem Content="15" />
+                                </ComboBox>
+                            </Grid>
+
 </UserControl>

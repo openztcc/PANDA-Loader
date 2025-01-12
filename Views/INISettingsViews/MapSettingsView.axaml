@@ -4,5 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PandaLdr.MapSettingsView">
-  Welcome to Avalonia!
+                              <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Map X" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding MapX}" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Map Y" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding MapY}" />
+                            </Grid>
+
 </UserControl>

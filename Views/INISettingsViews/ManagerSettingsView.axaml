@@ -3,104 +3,85 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="PandaLdr.DebugSettingsView">
-              <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
-
-                                  <TextBlock
+             x:Class="PandaLdr.ManagerSettingsView">
+                              <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock
                                     Grid.Row="0"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="Log Cutoff" />
+                                    Text="AI" />
                                 <TextBox
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding LogCutoff}" />
-
+                                    Text="{Binding AiMgr}" />
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="Send Logfile" />
-                                <CheckBox
+                                    Text="World" />
+                                <TextBox
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    IsChecked="{Binding SendLogfile}" />
-
+                                    Text="{Binding ZtWorldMgr}" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="Send Debugger" />
-                                <CheckBox
+                                    Text="Game" />
+                                <TextBox
                                     Grid.Row="2"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    IsChecked="{Binding SendDebugger}" />
-
+                                    Text="{Binding BfGameMgr}" />
                                 <TextBlock
                                     Grid.Row="3"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="Delta Log1" />
+                                    Text="Scenario" />
                                 <TextBox
                                     Grid.Row="3"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding DeltaLog1}" />
-
+                                    Text="{Binding ZtScenarioMgr}" />
                                 <TextBlock
                                     Grid.Row="4"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="Delta Log0" />
+                                    Text="Script" />
                                 <TextBox
                                     Grid.Row="4"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding DeltaLog0}" />
-
+                                    Text="{Binding BfScriptMgr}" />
                                 <TextBlock
                                     Grid.Row="5"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="Draw FPS" />
-                                <CheckBox
+                                    Text="Sound" />
+                                <TextBox
                                     Grid.Row="5"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    IsChecked="{Binding DrawFps}" />
-
+                                    Text="{Binding BfSoundMgr}" />
                                 <TextBlock
                                     Grid.Row="6"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Text="Draw FPS X" />
+                                    Text="Terrain" />
                                 <TextBox
                                     Grid.Row="6"
                                     Grid.Column="1"
                                     Margin="0,5,0,5"
-                                    Text="{Binding DrawFpsX}" />
-
-                                <TextBlock
-                                    Grid.Row="7"
-                                    Grid.Column="0"
-                                    Margin="0,0,10,0"
-                                    VerticalAlignment="Center"
-                                    Text="Draw FPS Y" />
-                                <TextBox
-                                    Grid.Row="7"
-                                    Grid.Column="1"
-                                    Margin="0,5,0,5"
-                                    Text="{Binding DrawFpsY}" />
+                                    Text="{Binding ZtAdvTerrainMgr}" />
                             </Grid>
 
 </UserControl>

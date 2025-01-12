@@ -4,5 +4,90 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PandaLdr.AdvancedSettingsView">
-  Welcome to Avalonia!
+                              <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Drag" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Drag}" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Click" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Click}" />
+
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Normal" />
+                                <TextBox
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Normal}" />
+
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Level" />
+                                <TextBox
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    Text="{Binding Level}" />
+
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Load Half Animations" />
+                                <CheckBox
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    IsChecked="{Binding LoadHalfAnimations}" />
+
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Use 8 Bit Sound" />
+                                <CheckBox
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    IsChecked="{Binding Use8BitSound}" />
+
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Grid.Column="0"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Text="Developer Mode Enabled" />
+                                <CheckBox
+                                    Grid.Row="6"
+                                    Grid.Column="1"
+                                    Margin="0,5,0,5"
+                                    IsChecked="{Binding DeveloperModeEnabled}" />
+                            </Grid>
+
 </UserControl>
