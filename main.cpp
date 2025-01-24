@@ -1,9 +1,11 @@
-#include <QGuiApplication>
+#include <QCoreApplication>
 #include <QQmlApplicationEngine>
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QCoreApplication app(argc, argv);
+    // connects both functions
+    // QObject::connect(&interactor, &UserInteractor::phraseTyped, &firefox, &Firefox::browse);
 
     QQmlApplicationEngine engine;
     QObject::connect(
@@ -13,6 +15,5 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.loadFromModule("PandaLdr", "Main");
-
     return app.exec();
 }
