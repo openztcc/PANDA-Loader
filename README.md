@@ -13,8 +13,7 @@ PANDA = Project and Animal Loader.
 ## Tentative Prerequisites
 
 - Zoo Tycoon 1 or Zoo Tycoon 2
-- Windows 7 or greater
-- .NET 8.0 Runtime
+- Windows 10 or greater
 
 ## License
 
