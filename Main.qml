@@ -101,6 +101,12 @@ ApplicationWindow {
                     colorization: 1.0
                     colorizationColor: "#424940"
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: console.log("Notifications clicked")
+                }
             }
 
         }
@@ -149,12 +155,25 @@ ApplicationWindow {
                         Material.background: "#376a3e"
                         Material.foreground: "#d4e8d1"
                         text: "Launch"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: console.log("Launch clicked")
+                        }
+
                     }
 
                     Button {
                         text: "Install OpenZT"
                         Material.foreground: "#376a3e"
                         Material.background: "#9cd49f"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: console.log("Install OpenZT clicked")
+                        }
                     }
 
                     Item {
@@ -169,11 +188,11 @@ ApplicationWindow {
                 width: parent.width
                 height: parent.height
 
-                ColumnLayout {
-                    width: parent.width
-                    height: parent.height
-                    Material.background: "#000"
-                }
+                // ColumnLayout {
+                //     width: parent.width
+                //     height: parent.height
+                //     Material.background: "#000"
+                // }
             }
         }
 

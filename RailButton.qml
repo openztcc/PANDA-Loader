@@ -21,6 +21,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onClicked: root.clicked()
+        cursorShape: Qt.PointingHandCursor
 
         Column {
             anchors.centerIn: parent
