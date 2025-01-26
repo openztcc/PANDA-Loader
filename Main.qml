@@ -66,9 +66,10 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
 
+            // Appbar label
             Label {
                 id: toolbarLabel
-                text: "PANDA"
+                text: "PANDA Loader"
                 font.pixelSize: 14
                 color: "#424940"
                 Layout.alignment: Qt.AlignHCenter
@@ -78,6 +79,7 @@ ApplicationWindow {
                Layout.fillWidth: true
            }
 
+            // Notification button
             Item {
                 Layout.alignment: Qt.AlignRight
                 Layout.fillHeight: true
@@ -108,7 +110,7 @@ ApplicationWindow {
         id: mainContent
         width: parent.width - navRail.width
         height: parent.height - toolbar.height
-        Material.background: Material.LightGreen
+        Material.background: "#9daa9e"
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         padding: 6
@@ -117,9 +119,12 @@ ApplicationWindow {
             width: parent.width
 
             Rectangle {
-                Material.background: Material.Green
                 width: parent.width
                 height: 150
+
+                Image {
+
+                }
             }
 
             Rectangle {
