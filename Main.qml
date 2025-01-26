@@ -123,7 +123,16 @@ ApplicationWindow {
                 height: 150
 
                 Image {
+                    id: bgImage
+                    source: "qrc:/images/launch_bg.jpg"
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectCrop
 
+                    MultiEffect {
+                        source: bgImage
+                        anchors.fill: bgImage
+                        saturation: 0.0
+                    }
                 }
             }
 
