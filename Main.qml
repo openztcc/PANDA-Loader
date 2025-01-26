@@ -26,14 +26,15 @@ ApplicationWindow {
                 anchors.fill: parent
                 spacing: 16
 
-                ToolButton {
-                    text: qsTr("🏠 Home")
-                    checkable: true
+                RailButton {
+                    text: qsTr("Home")
+                    icon: "home"
+                    fg: "#fff"
+                    bg: Material.Green
                 }
 
-                ToolButton {
-                    text: qsTr("Settings")
-                    checkable: true
+                RailButton {
+                    text: qsTr("")
                 }
 
                 ToolButton {
