@@ -1,23 +1,26 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import QtQuick.Controls.Material
+import QtQuick.Effects
 
 ApplicationWindow {
-    width: 640
-    height: 480
+    width: 800
+    height: 675
     visible: true
     title: qsTr("PANDA")
 
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
 
+    // Navigation Rail
     Drawer {
         width: 80
         height: parent.height
         id: navRail
         edge: Qt.LeftEdge
         modal: false  // Keep it always open
+        interactive: false // prevents from closing when click away
         Component.onCompleted: navRail.open()
 
         contentItem: Rectangle {
@@ -49,29 +52,69 @@ ApplicationWindow {
         }
     }
 
+    // Appbar
+    ToolBar {
+        id: toolbar
+        Material.background: "#f7fbf2"
+        width: parent.width - navRail.width
+        anchors.right: parent.right
+        RowLayout {
+            anchors.fill: parent
+            spacing: 16
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Label {
+                id: toolbarLabel
+                text: "PANDA"
+                font.pixelSize: 14
+                color: "#424940"
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            Item {
+               Layout.fillWidth: true
+           }
+
+            Item {
+                Layout.alignment: Qt.AlignRight
+                Layout.fillHeight: true
+                Layout.rightMargin: 10
+                implicitWidth: 40
+                ToolButton {
+                    id: notif
+                    icon.source: "qrc:/icons/notifications.svg"
+                    Layout.alignment: Qt.AlignRight
+                    width: 40
+                    height: 40
+                    anchors.verticalCenter: parent.verticalCenter
+                    onClicked: navRail.open()
+                }
+
+                MultiEffect {
+                    source: notif
+                    anchors.fill: notif
+                    colorization: 1.0
+                    colorizationColor: "#424940"
+                }
+            }
+
+        }
+    }
+
     Pane {
         id: mainContent
         width: parent.width - navRail.width
-        height: parent.height
+        height: parent.height - toolbar.height
         Material.background: Material.LightGreen
         anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        padding: 6
 
         Column {
             width: parent.width
-            ToolBar {
-                Material.background: Material.Light
-                width: parent.width
-                Row {
-                    spacing: 16
-                    ToolButton {
-                        onClicked: navRail.open()
-                    }
-                    Label {
-                        text: "PANDA"
-                        font.pixelSize: 24
-                    }
-                }
-            }
 
             Rectangle {
                 Material.background: Material.Green
