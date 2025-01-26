@@ -12,6 +12,7 @@ ApplicationWindow {
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
 
+    // Navigation Rail
     Drawer {
         width: 80
         height: parent.height
@@ -49,29 +50,35 @@ ApplicationWindow {
         }
     }
 
+    // Appbar
+    ToolBar {
+        id: toolbar
+        Material.background: Material.Light
+        width: parent.width - navRail.width
+        anchors.right: parent.right
+        Row {
+            spacing: 16
+            ToolButton {
+                onClicked: navRail.open()
+            }
+            Label {
+                text: "PANDA"
+                font.pixelSize: 24
+            }
+        }
+    }
+
     Pane {
         id: mainContent
         width: parent.width - navRail.width
-        height: parent.height
+        height: parent.height - toolbar.height
         Material.background: Material.LightGreen
         anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        padding: 6
 
         Column {
             width: parent.width
-            ToolBar {
-                Material.background: Material.Light
-                width: parent.width
-                Row {
-                    spacing: 16
-                    ToolButton {
-                        onClicked: navRail.open()
-                    }
-                    Label {
-                        text: "PANDA"
-                        font.pixelSize: 24
-                    }
-                }
-            }
 
             Rectangle {
                 Material.background: Material.Green
