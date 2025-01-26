@@ -66,9 +66,10 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
 
+            // Appbar label
             Label {
                 id: toolbarLabel
-                text: "PANDA"
+                text: "PANDA Loader"
                 font.pixelSize: 14
                 color: "#424940"
                 Layout.alignment: Qt.AlignHCenter
@@ -78,6 +79,7 @@ ApplicationWindow {
                Layout.fillWidth: true
            }
 
+            // Notification button
             Item {
                 Layout.alignment: Qt.AlignRight
                 Layout.fillHeight: true
@@ -108,23 +110,70 @@ ApplicationWindow {
         id: mainContent
         width: parent.width - navRail.width
         height: parent.height - toolbar.height
-        Material.background: Material.LightGreen
+        Material.background: "#9daa9e"
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         padding: 6
+        spacing: 12
 
         Column {
-            width: parent.width
+            anchors.fill: parent
 
             Rectangle {
-                Material.background: Material.Green
                 width: parent.width
                 height: 150
+
+                Image {
+                    id: bgImage
+                    source: "qrc:/images/launch_bg.jpg"
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectCrop
+
+                    MultiEffect {
+                        source: bgImage
+                        anchors.fill: bgImage
+                        saturation: 0.0
+                    }
+                }
+
+                RowLayout {
+                    width: parent.width
+                    height: 70
+                    spacing: 8
+                    anchors.bottom: parent.bottom
+
+
+                    Item { Layout.fillWidth: true }  // Spacer to push buttons to the right
+
+                    Button {
+                        Material.background: "#376a3e"
+                        Material.foreground: "#d4e8d1"
+                        text: "Launch"
+                    }
+
+                    Button {
+                        text: "Install OpenZT"
+                        Material.foreground: "#376a3e"
+                        Material.background: "#9cd49f"
+                    }
+
+                    Item {
+                        Layout.preferredWidth: 12
+                    }
+                }
+
             }
 
-            Rectangle {
+            RowLayout {
+                Layout.topMargin: 5
                 width: parent.width
                 height: parent.height
+
+                ColumnLayout {
+                    width: parent.width
+                    height: parent.height
+                    Material.background: "#000"
+                }
             }
         }
 
