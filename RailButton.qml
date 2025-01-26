@@ -35,9 +35,10 @@ Item {
                 // animate
                 Behavior on color { ColorAnimation { duration: 70 } }
 
-                anchors.horizontalCenter: parent.horizontalCenter
 
                 SvgIcon {
+                    bgWidth: parent.width
+                    bgHeight: parent.height
                     icon: root.icon
                 }
             }
