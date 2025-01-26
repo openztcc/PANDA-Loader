@@ -17,6 +17,15 @@ qt_add_qml_module(appPandaLdr
     VERSION 1.0
     QML_FILES
         Main.qml
+        QML_FILES RailButton.qml
+)
+
+qt_add_resources(appPandaLdr "resources"
+    PREFIX "/"
+    FILES
+        icons/mods.svg
+        icons/about.svg
+        icons/exit_app.svg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
@@ -24,27 +25,24 @@ ApplicationWindow {
             anchors.fill: parent
             Column {
                 anchors.fill: parent
-                spacing: 16
+                anchors.topMargin: 30
+                spacing: 20
 
-                ToolButton {
-                    text: qsTr("🏠 Home")
-                    checkable: true
+                RailButton {
+                    text: qsTr("Home")
+                    icon: "qrc:/icons/mods.svg"
+                    onClicked: console.log("Home clicked")
                 }
 
-                ToolButton {
-                    text: qsTr("Settings")
-                    checkable: true
-                }
-
-                ToolButton {
+                RailButton {
                     text: qsTr("About")
-                    checkable: true
+                    icon: "qrc:/icons/about.svg"
                 }
 
-                Item { height: 16 } // Spacer
-
-                ToolButton {
+                // exit button at bottom
+                RailButton {
                     text: qsTr("Exit")
+                    icon: "qrc:/icons/exit_app.svg"
                     onClicked: Qt.quit()
                 }
             }
