@@ -114,9 +114,10 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         padding: 6
+        spacing: 12
 
         Column {
-            width: parent.width
+            anchors.fill: parent
 
             Rectangle {
                 width: parent.width
@@ -138,7 +139,7 @@ ApplicationWindow {
                 RowLayout {
                     width: parent.width
                     height: 70
-                    spacing: 4
+                    spacing: 8
                     anchors.bottom: parent.bottom
 
 
@@ -155,13 +156,24 @@ ApplicationWindow {
                         Material.foreground: "#376a3e"
                         Material.background: "#9cd49f"
                     }
+
+                    Item {
+                        Layout.preferredWidth: 12
+                    }
                 }
 
             }
 
-            Rectangle {
+            RowLayout {
+                Layout.topMargin: 5
                 width: parent.width
                 height: parent.height
+
+                ColumnLayout {
+                    width: parent.width
+                    height: parent.height
+                    Material.background: "#000"
+                }
             }
         }
 
