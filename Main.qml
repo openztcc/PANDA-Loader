@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import QtQuick.Controls.Material
+import QtQuick.Effects
 
 ApplicationWindow {
     width: 800
@@ -18,6 +20,7 @@ ApplicationWindow {
         id: navRail
         edge: Qt.LeftEdge
         modal: false  // Keep it always open
+        interactive: false // prevents from closing when click away
         Component.onCompleted: navRail.open()
 
         contentItem: Rectangle {
@@ -55,21 +58,49 @@ ApplicationWindow {
         Material.background: "#f7fbf2"
         width: parent.width - navRail.width
         anchors.right: parent.right
-        Row {
+        RowLayout {
+            anchors.fill: parent
             spacing: 16
 
-            ToolButton {
-                onClicked: navRail.open()
+            Item {
+                Layout.fillWidth: true
             }
+
             Label {
+                id: toolbarLabel
                 text: "PANDA"
                 font.pixelSize: 14
                 color: "#424940"
+                Layout.alignment: Qt.AlignHCenter
             }
 
-            Image {
+            Item {
+               Layout.fillWidth: true
+           }
 
+            Item {
+                Layout.alignment: Qt.AlignRight
+                Layout.fillHeight: true
+                Layout.rightMargin: 10
+                implicitWidth: 40
+                ToolButton {
+                    id: notif
+                    icon.source: "qrc:/icons/notifications.svg"
+                    Layout.alignment: Qt.AlignRight
+                    width: 40
+                    height: 40
+                    anchors.verticalCenter: parent.verticalCenter
+                    onClicked: navRail.open()
+                }
+
+                MultiEffect {
+                    source: notif
+                    anchors.fill: notif
+                    colorization: 1.0
+                    colorizationColor: "#424940"
+                }
             }
+
         }
     }
 

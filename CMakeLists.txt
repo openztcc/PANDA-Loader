@@ -27,6 +27,7 @@ qt_add_resources(appPandaLdr "resources"
         icons/mods.svg
         icons/about.svg
         icons/exit_app.svg
+        icons/notifications.svg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
