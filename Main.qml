@@ -134,6 +134,29 @@ ApplicationWindow {
                         saturation: 0.0
                     }
                 }
+
+                RowLayout {
+                    width: parent.width
+                    height: 70
+                    spacing: 4
+                    anchors.bottom: parent.bottom
+
+
+                    Item { Layout.fillWidth: true }  // Spacer to push buttons to the right
+
+                    Button {
+                        Material.background: "#376a3e"
+                        Material.foreground: "#d4e8d1"
+                        text: "Launch"
+                    }
+
+                    Button {
+                        text: "Install OpenZT"
+                        Material.foreground: "#376a3e"
+                        Material.background: "#9cd49f"
+                    }
+                }
+
             }
 
             Rectangle {
