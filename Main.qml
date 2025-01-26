@@ -4,8 +4,8 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 
 ApplicationWindow {
-    width: 640
-    height: 480
+    width: 800
+    height: 675
     visible: true
     title: qsTr("PANDA")
 
