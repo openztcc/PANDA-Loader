@@ -18,6 +18,7 @@ qt_add_qml_module(appPandaLdr
     QML_FILES
         Main.qml
         QML_FILES RailButton.qml
+        QML_FILES SvgIcon.qml
 )
 
 qt_add_resources(appPandaLdr "resources"

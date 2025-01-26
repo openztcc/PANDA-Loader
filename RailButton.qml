@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
-import QtQuick.Effects
 
 Item {
     id: root
@@ -38,21 +37,8 @@ Item {
 
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                Image {
-                    id: railImg
-                    anchors.centerIn: parent
-                    source: root.icon
-                    width: 24
-                    height: 24
-                    fillMode: Image.PreserveAspectFit
-                    // color: root.fg ? root.fg : "#d4e8d1"
-                }
-
-                MultiEffect {
-                    source: railImg
-                    anchors.fill: railImg
-                    colorization: 1.0
-                    colorizationColor: "#d4e8d1"
+                SvgIcon {
+                    icon: root.icon
                 }
             }
 

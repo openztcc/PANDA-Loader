@@ -53,17 +53,23 @@ ApplicationWindow {
     // Appbar
     ToolBar {
         id: toolbar
-        Material.background: Material.Light
+        Material.background: "#f7fbf2"
         width: parent.width - navRail.width
         anchors.right: parent.right
         Row {
             spacing: 16
+
             ToolButton {
                 onClicked: navRail.open()
             }
             Label {
                 text: "PANDA"
-                font.pixelSize: 24
+                font.pixelSize: 14
+                color: "#424940"
+            }
+
+            Image {
+
             }
         }
     }
