@@ -313,9 +313,12 @@ ApplicationWindow {
 
                         Text {
                             text: model.name
-                            anchors.centerIn: parent
                             color: "#000" 
                             font.pixelSize: 14
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
                         }
 
                         MouseArea {
