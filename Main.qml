@@ -270,21 +270,21 @@ ApplicationWindow {
 
             }
 
-            Rectangle {
-                id: modListArea
-                Layout.fillWidth: true
-                Layout.preferredHeight: 50
-                anchors.top: actionBar.bottom
-                color: "#f7fbf2"
-                radius: 0
+            // Rectangle {
+            //     id: modListArea
+            //     Layout.fillWidth: true
+            //     Layout.preferredHeight: 50
+            //     anchors.top: actionBar.bottom
+            //     color: "#f7fbf2"
+            //     radius: 0
 
-                Text {
-                    text: "Mods"
-                    anchors.centerIn: parent
-                    color: "#000"
-                    font.pixelSize: 14
-                }
-            }
+            //     Text {
+            //         text: "Mods"
+            //         anchors.centerIn: parent
+            //         color: "#000"
+            //         font.pixelSize: 14
+            //     }
+            // }
 
             RowLayout {
                 // mods list
@@ -320,23 +320,19 @@ ApplicationWindow {
                         ListElement { name: "Mod 20" }
                     }
 
-                    delegate: Rectangle {  
+                    delegate: Pane {  
                         width: ListView.view.width
                         height: 50
-                        color: "#f7fbf2"
-                        radius: 0
+                        Material.background: "#f7fbf2"
+                        padding: 12
 
-                        Item {
-                            anchors.fill: parent
-                            Text {
-                                text: model.name
-                                color: "#000" 
-                                font.pixelSize: 14
-                                anchors.left: parent.left
-                                anchors.leftMargin: 10
-                                horizontalAlignment: Text.AlignLeft
-                                verticalAlignment: parent.verticalCenter
-                            }
+                        Label {
+                            text: model.name
+                            font.pixelSize: 14
+                            anchors.left: parent.left
+                            anchors.leftMargin: 16
+                            anchors.verticalCenter: parent.verticalCenter
+                            horizontalAlignment: Text.AlignLeft
                         }
 
                         MouseArea {
