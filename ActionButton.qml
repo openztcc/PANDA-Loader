@@ -8,7 +8,7 @@ Item {
     property string fg: "#3a4b3a"
     property string icon: "No icon"
     property string text: ""
-    implicitWidth: 56
+    implicitWidth: 50
     implicitHeight: parent.height
     signal clicked()
 
@@ -17,9 +17,9 @@ Item {
         height: parent.height
         radius: 0
         color: if (hoverArea.containsPress) {
-            return Qt.lighter(root.color)
+            return Qt.lighter(root.color, 0.8)
         } else if (hoverArea.containsMouse) {
-            return Qt.darker(root.color)
+            return Qt.darker(root.color, 0.01)
         } else {
             return root.color
         }
@@ -27,6 +27,8 @@ Item {
 
 
         Image {
+            width: 20
+            height: 20
             id: iconImage
             source: root.icon
             anchors.centerIn: parent
@@ -34,18 +36,9 @@ Item {
 
         MultiEffect {
             source: iconImage
-            anchors.fill: root
+            anchors.fill: iconImage
             colorization: 1.0
-            colorizationColor: root.fg
-        }
-
-        Text {
-            text: root.text
-            font.pixelSize: 10
-            color: "#3a4b3a"
-            horizontalAlignment: Text.AlignHCenter
-            anchors.bottom: parent.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
+            colorizationColor: "#3a4b3a"
         }
     }
 

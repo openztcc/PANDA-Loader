@@ -217,7 +217,7 @@ ApplicationWindow {
                     }
 
                     ActionButton {
-                        icon: "qrc:/icons/remove.svg"
+                        icon: "qrc:/icons/delete.svg"
                         text: "Remove"
                         onClicked: console.log("Remove clicked")
                     }

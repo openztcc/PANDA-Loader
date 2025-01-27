@@ -30,6 +30,9 @@ qt_add_resources(appPandaLdr "resources"
         icons/about.svg
         icons/exit_app.svg
         icons/notifications.svg
+        icons/add.svg
+        icons/delete.svg
+        icons/refresh.svg
         images/launch_bg.jpg
 )
 
