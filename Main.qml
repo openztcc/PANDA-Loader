@@ -324,6 +324,21 @@ ApplicationWindow {
                             onClicked: console.log("Mod clicked:", model.name)
                         }
                     }
+
+                    ScrollBar.vertical: ScrollBar {
+                        policy: ScrollBar.AsNeeded
+                        width: 8
+                        // background: Rectangle {
+                        //     color: "#289662" 
+                        //     radius: 4
+                        // }
+
+                        contentItem: Rectangle {
+                            color: "#486d48"  
+                            radius: 4
+                            opacity: vScroll.hovered ? 1.0 : 0.7 
+                        }
+                    }
                 }
 
                 // mod details
