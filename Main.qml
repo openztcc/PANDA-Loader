@@ -323,8 +323,16 @@ ApplicationWindow {
                     delegate: Pane {  
                         width: ListView.view.width
                         height: 50
-                        Material.background: "#f7fbf2"
+                        Material.background: if (modArea.containsPress) {
+                            return Qt.lighter("#f7fbf2", 0.8)
+                        } else if (modArea.containsMouse) {
+                            return Qt.darker("#f7fbf2", 0.01)
+                        } else {
+                            return "#f7fbf2"
+                        }
                         padding: 12
+
+                        signal clicked()
 
                         Label {
                             text: model.name
@@ -336,9 +344,11 @@ ApplicationWindow {
                         }
 
                         MouseArea {
+                            id: modArea
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: console.log("Mod clicked:", model.name)
+                            hoverEnabled: true
                         }
                     }
 
