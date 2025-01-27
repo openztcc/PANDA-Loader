@@ -183,7 +183,7 @@ ApplicationWindow {
 
             }
 
-            // action bar (add, remove, refresh, filter, search)
+            // main content area
             RowLayout {
                 id: actionBar
                 width: parent.width
@@ -191,63 +191,61 @@ ApplicationWindow {
                 Material.background: "#f7fbf2"
                 anchors.top: bgImage.bottom
 
-
+                // action bar (add, remove, refresh, filter, search)
                 RowLayout {
                     Layout.topMargin: 6
+                    Layout.preferredHeight: 30
 
-                    anchors.top: actionBar.top
-                        Button {
-                            text: "Add"
-                            Material.background: "#376a3e"
-                            Material.foreground: "#d4e8d1"
+                    // align top
+                    Layout.alignment: Qt.AlignTop
+                    // Button {
+                    //     text: "Add"
+                    //     Material.background: "#376a3e"
+                    //     Material.foreground: "#d4e8d1"
 
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: console.log("Add clicked")
-                            }
-                        }
+                    //     MouseArea {
+                    //         anchors.fill: parent
+                    //         cursorShape: Qt.PointingHandCursor
+                    //         onClicked: console.log("Add clicked")
+                    //     }
+                    // }
 
-                        Button {
-                            text: "Remove"
-                            Material.background: "#376a3e"
-                            Material.foreground: "#d4e8d1"
+                    ActionButton {
+                        icon: "qrc:/icons/add.svg"
+                        text: "Add"
+                        onClicked: console.log("Add clicked")
+                    }
 
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: console.log("Remove clicked")
-                            }
-                        }
-
-                        Button {
-                            text: "Refresh"
-                            Material.background: "#376a3e"
-                            Material.foreground: "#d4e8d1"
-
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: console.log("Refresh clicked")
-                            }
-                        }
+                    ActionButton {
+                        icon: "qrc:/icons/remove.svg"
+                        text: "Remove"
+                        onClicked: console.log("Remove clicked")
+                    }
+                    
+                    ActionButton {
+                        icon: "qrc:/icons/refresh.svg"
+                        text: "Refresh"
+                        onClicked: console.log("Refresh clicked")
+                    }
 
                         ComboBox {
                             id: editableDropdown
-                            width: 250
+                            Layout.preferredHeight: 40
+                            Layout.preferredWidth: 100
                             editable: true  // Allows typing new values
 
                             model: ["Red", "Green", "Blue"]
 
                             onAccepted: {
-                                console.log("User entered:", editableDropdown.text)
+                                console.log("User entered:", editableDropdown.currentText)
                             }
                         }
 
                         TextField {
                             id: searchField
                             placeholderText: "Search"
-                            width: 200
+                            Layout.preferredHeight: 40
+                            Layout.preferredWidth: 200
                             Material.background: "#f7fbf2"
                             Material.foreground: "#424940"
 
