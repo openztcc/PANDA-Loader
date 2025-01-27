@@ -280,6 +280,7 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     anchors.top: actionBar.bottom
+                    clip: true
 
                     model: ListModel {
                         ListElement { name: "Mod 1" }
