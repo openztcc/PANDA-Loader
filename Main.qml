@@ -15,7 +15,7 @@ ApplicationWindow {
 
     // Navigation Rail
     Drawer {
-        width: 80
+        width: 70
         height: parent.height
         id: navRail
         edge: Qt.LeftEdge
@@ -198,17 +198,6 @@ ApplicationWindow {
 
                     // align top
                     Layout.alignment: Qt.AlignTop
-                    // Button {
-                    //     text: "Add"
-                    //     Material.background: "#376a3e"
-                    //     Material.foreground: "#d4e8d1"
-
-                    //     MouseArea {
-                    //         anchors.fill: parent
-                    //         cursorShape: Qt.PointingHandCursor
-                    //         onClicked: console.log("Add clicked")
-                    //     }
-                    // }
 
                     ActionButton {
                         icon: "qrc:/icons/add.svg"
@@ -228,33 +217,43 @@ ApplicationWindow {
                         onClicked: console.log("Refresh clicked")
                     }
 
-                        ComboBox {
-                            id: editableDropdown
-                            Layout.preferredHeight: 40
-                            Layout.preferredWidth: 100
-                            editable: true  // Allows typing new values
+                    ComboBox {
+                        id: editableDropdown
+                        Layout.preferredHeight: 40
+                        Layout.preferredWidth: 100
+                        editable: true  // Allows typing new values
 
-                            model: ["Red", "Green", "Blue"]
+                        model: ["Red", "Green", "Blue"]
 
-                            onAccepted: {
-                                console.log("User entered:", editableDropdown.currentText)
-                            }
+                        background: Rectangle {
+                            color: "#f7fbf2"
+                            radius: 0
                         }
 
-                        TextField {
-                            id: searchField
-                            placeholderText: "Search"
-                            Layout.preferredHeight: 40
-                            Layout.preferredWidth: 200
-                            Material.background: "#f7fbf2"
-                            Material.foreground: "#424940"
-
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: console.log("Search clicked")
-                            }
+                        onAccepted: {
+                            console.log("User entered:", editableDropdown.currentText)
                         }
+                    }
+
+                    TextField {
+                        id: searchField
+                        placeholderText: "Search"
+                        Layout.preferredHeight: 40
+                        Layout.preferredWidth: 200
+                        Material.background: "#f7fbf2"
+                        Material.foreground: "#424940"
+                        
+                        background: Rectangle {
+                            color: "#f7fbf2"
+                            radius: 0
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: console.log("Search clicked")
+                        }
+                    }
 
 
 
