@@ -183,17 +183,87 @@ ApplicationWindow {
 
             }
 
+            // action bar (add, remove, refresh, filter, search)
             RowLayout {
-                Layout.topMargin: 5
+                id: actionBar
                 width: parent.width
                 height: parent.height
+                Material.background: "#f7fbf2"
+                anchors.top: bgImage.bottom
 
-                // ColumnLayout {
-                //     width: parent.width
-                //     height: parent.height
-                //     Material.background: "#000"
-                // }
-            }
+
+                RowLayout {
+                    Layout.topMargin: 6
+
+                    anchors.top: actionBar.top
+                        Button {
+                            text: "Add"
+                            Material.background: "#376a3e"
+                            Material.foreground: "#d4e8d1"
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: console.log("Add clicked")
+                            }
+                        }
+
+                        Button {
+                            text: "Remove"
+                            Material.background: "#376a3e"
+                            Material.foreground: "#d4e8d1"
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: console.log("Remove clicked")
+                            }
+                        }
+
+                        Button {
+                            text: "Refresh"
+                            Material.background: "#376a3e"
+                            Material.foreground: "#d4e8d1"
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: console.log("Refresh clicked")
+                            }
+                        }
+
+                        ComboBox {
+                            id: editableDropdown
+                            width: 250
+                            editable: true  // Allows typing new values
+
+                            model: ["Red", "Green", "Blue"]
+
+                            onAccepted: {
+                                console.log("User entered:", editableDropdown.text)
+                            }
+                        }
+
+                        TextField {
+                            id: searchField
+                            placeholderText: "Search"
+                            width: 200
+                            Material.background: "#f7fbf2"
+                            Material.foreground: "#424940"
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: console.log("Search clicked")
+                            }
+                        }
+
+
+
+                    }
+
+                }
+
         }
 
     }
