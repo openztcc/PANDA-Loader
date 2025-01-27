@@ -122,12 +122,16 @@ ApplicationWindow {
         padding: 6
         spacing: 12
 
-        Column {
-            anchors.fill: parent
+        ColumnLayout {
+            Layout.preferredWidth: 400
+            Layout.fillHeight: true // remaining height
+            Layout.fillWidth: true
 
             Rectangle {
-                width: parent.width
+                id: launchArea
+                Layout.fillWidth: true
                 height: 150
+                anchors.top: parent.top
 
                 Image {
                     id: bgImage
@@ -189,31 +193,33 @@ ApplicationWindow {
                 width: parent.width
                 height: parent.height
                 Material.background: "#f7fbf2"
-                anchors.top: bgImage.bottom
+                anchors.top: launchArea.bottom
 
                 // action bar (add, remove, refresh, filter, search)
                 RowLayout {
                     Layout.topMargin: 6
                     Layout.preferredHeight: 30
-
                     // align top
                     Layout.alignment: Qt.AlignTop
 
                     ActionButton {
                         icon: "qrc:/icons/add.svg"
                         text: "Add"
+                        Layout.preferredHeight: 40
                         onClicked: console.log("Add clicked")
                     }
 
                     ActionButton {
                         icon: "qrc:/icons/delete.svg"
                         text: "Remove"
+                        Layout.preferredHeight: 40
                         onClicked: console.log("Remove clicked")
                     }
                     
                     ActionButton {
                         icon: "qrc:/icons/refresh.svg"
                         text: "Refresh"
+                        Layout.preferredHeight: 40
                         onClicked: console.log("Refresh clicked")
                     }
 
@@ -257,9 +263,57 @@ ApplicationWindow {
 
 
 
-                    }
-
                 }
+
+
+            }
+
+            // mods list
+
+            ListView {
+                id: modsList
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.topMargin: 6
+
+                model: ListModel {
+                    ListElement { name: "Mod 1" }
+                    ListElement { name: "Mod 2" }
+                    ListElement { name: "Mod 3" }
+                    ListElement { name: "Mod 4" }
+                    ListElement { name: "Mod 5" }
+                    ListElement { name: "Mod 6" }
+                    ListElement { name: "Mod 7" }
+                    ListElement { name: "Mod 8" }
+                    ListElement { name: "Mod 9" }
+                    ListElement { name: "Mod 10" }
+                    ListElement { name: "Mod 11" }
+                    ListElement { name: "Mod 12" }
+                    ListElement { name: "Mod 13" }
+                    ListElement { name: "Mod 14" }
+                    ListElement { name: "Mod 15" }
+                    ListElement { name: "Mod 16" }
+                    ListElement { name: "Mod 17" }
+                    ListElement { name: "Mod 18" }
+                    ListElement { name: "Mod 19" }
+                    ListElement { name: "Mod 20" }
+                }
+
+                delegate: Rectangle {  
+                    width: ListView.view.width
+                    height: 50
+                    color: "#f7fbf2"
+                    radius: 0
+
+                    Text {
+                        text: model.name
+                        anchors.centerIn: parent
+                        color: "#000" 
+                        font.pixelSize: 14
+                    }
+                }
+            }
+
 
         }
 
