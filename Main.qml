@@ -15,7 +15,7 @@ ApplicationWindow {
 
     // Navigation Rail
     Drawer {
-        width: 80
+        width: 70
         height: parent.height
         id: navRail
         edge: Qt.LeftEdge
@@ -101,6 +101,12 @@ ApplicationWindow {
                     colorization: 1.0
                     colorizationColor: "#424940"
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: console.log("Notifications clicked")
+                }
             }
 
         }
@@ -149,12 +155,25 @@ ApplicationWindow {
                         Material.background: "#376a3e"
                         Material.foreground: "#d4e8d1"
                         text: "Launch"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: console.log("Launch clicked")
+                        }
+
                     }
 
                     Button {
                         text: "Install OpenZT"
                         Material.foreground: "#376a3e"
                         Material.background: "#9cd49f"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: console.log("Install OpenZT clicked")
+                        }
                     }
 
                     Item {
@@ -164,17 +183,84 @@ ApplicationWindow {
 
             }
 
+            // main content area
             RowLayout {
-                Layout.topMargin: 5
+                id: actionBar
                 width: parent.width
                 height: parent.height
+                Material.background: "#f7fbf2"
+                anchors.top: bgImage.bottom
 
-                ColumnLayout {
-                    width: parent.width
-                    height: parent.height
-                    Material.background: "#000"
+                // action bar (add, remove, refresh, filter, search)
+                RowLayout {
+                    Layout.topMargin: 6
+                    Layout.preferredHeight: 30
+
+                    // align top
+                    Layout.alignment: Qt.AlignTop
+
+                    ActionButton {
+                        icon: "qrc:/icons/add.svg"
+                        text: "Add"
+                        onClicked: console.log("Add clicked")
+                    }
+
+                    ActionButton {
+                        icon: "qrc:/icons/delete.svg"
+                        text: "Remove"
+                        onClicked: console.log("Remove clicked")
+                    }
+                    
+                    ActionButton {
+                        icon: "qrc:/icons/refresh.svg"
+                        text: "Refresh"
+                        onClicked: console.log("Refresh clicked")
+                    }
+
+                    ComboBox {
+                        id: editableDropdown
+                        Layout.preferredHeight: 40
+                        Layout.preferredWidth: 100
+                        editable: true  // Allows typing new values
+
+                        model: ["Red", "Green", "Blue"]
+
+                        background: Rectangle {
+                            color: "#f7fbf2"
+                            radius: 0
+                        }
+
+                        onAccepted: {
+                            console.log("User entered:", editableDropdown.currentText)
+                        }
+                    }
+
+                    TextField {
+                        id: searchField
+                        placeholderText: "Search"
+                        Layout.preferredHeight: 40
+                        Layout.preferredWidth: 200
+                        Material.background: "#f7fbf2"
+                        Material.foreground: "#424940"
+                        
+                        background: Rectangle {
+                            color: "#f7fbf2"
+                            radius: 0
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: console.log("Search clicked")
+                        }
+                    }
+
+
+
+                    }
+
                 }
-            }
+
         }
 
     }
