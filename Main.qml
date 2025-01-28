@@ -321,11 +321,13 @@ ApplicationWindow {
                                 id: headCheck
                                 anchors.right: parent.right
                                 anchors.rightMargin: 10
+                                Material.accent: "#376a3e"
+                                checked: true
                             }
                         }
                     }
 
-                    ListView {
+                    ListView {                        
                         id: modsList
                         Layout.fillWidth: true
                         Layout.fillHeight: true
@@ -487,6 +489,15 @@ ApplicationWindow {
 
                 }
 
+            // status bar
+            Rectangle {
+                Layout.bottomMargin: -5
+                Layout.rightMargin: -5
+                Layout.leftMargin: -5
+                Layout.preferredHeight: 30
+                Layout.fillWidth: true
+                Material.background: "#f7fbf2"
+            }
 
         }
 
