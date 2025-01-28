@@ -217,7 +217,7 @@ ApplicationWindow {
                         Layout.preferredHeight: 40
                         onClicked: console.log("Remove clicked")
                     }
-                    
+
                     ActionButton {
                         icon: "qrc:/icons/refresh.svg"
                         text: "Refresh"
@@ -250,7 +250,7 @@ ApplicationWindow {
                         Layout.fillWidth: true
                         Material.background: "#f7fbf2"
                         Material.foreground: "#424940"
-                        
+
                         background: Rectangle {
                             color: "#f7fbf2"
                             radius: 0
@@ -411,11 +411,6 @@ ApplicationWindow {
                             }
 
                         }
-                        MouseArea {
-                            id: modArea
-                            hoverEnabled: true
-                        }
-
                     }
 
                     ScrollBar.vertical: ScrollBar {
@@ -423,14 +418,14 @@ ApplicationWindow {
                         visible: flickableView.moving || flickableView.dragging
                         width: 8
                         // background: Rectangle {
-                        //     color: "#289662" 
+                        //     color: "#289662"
                         //     radius: 4
                         // }
 
                         contentItem: Rectangle {
-                            color: "#486d48"  
+                            color: "#486d48"
                             radius: 4
-                            opacity: vScroll.hovered ? 1.0 : 0.7 
+                            opacity: vScroll.hovered ? 1.0 : 0.7
                         }
                     }
                 }
