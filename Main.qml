@@ -289,146 +289,183 @@ ApplicationWindow {
             RowLayout {
                 // mods list
                 Layout.topMargin: -4
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                ListView {
-                    id: modsList
+                ColumnLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    anchors.top: actionBar.bottom
-                    clip: true
 
-                    model: ListModel {
-                        ListElement { name: "Mod 1" }
-                        ListElement { name: "Mod 2" }
-                        ListElement { name: "Mod 3" }
-                        ListElement { name: "Mod 4" }
-                        ListElement { name: "Mod 5" }
-                        ListElement { name: "Mod 6" }
-                        ListElement { name: "Mod 7" }
-                        ListElement { name: "Mod 8" }
-                        ListElement { name: "Mod 9" }
-                        ListElement { name: "Mod 10" }
-                        ListElement { name: "Mod 11" }
-                        ListElement { name: "Mod 12" }
-                        ListElement { name: "Mod 13" }
-                        ListElement { name: "Mod 14" }
-                        ListElement { name: "Mod 15" }
-                        ListElement { name: "Mod 16" }
-                        ListElement { name: "Mod 17" }
-                        ListElement { name: "Mod 18" }
-                        ListElement { name: "Mod 19" }
-                        ListElement { name: "Mod 20" }
-                    }
+                    Rectangle {
+                        id: listHead
+                        Layout.preferredHeight: 50
+                        Layout.fillWidth: true
+                        Layout.bottomMargin: -5
+                        color: "#e3e8dd"
 
-                    delegate: Rectangle {
-                        id: modPane
-                        width: ListView.view.width
-                        height: 75
-
-                        Rectangle {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-                            height: 1
-                            color: "#c1c9be"
-                        }
-
-                        Pane {
+                        RowLayout {
                             anchors.fill: parent
-                            Material.background:  modArea.containsPress ? Qt.lighter("#f7fbf2", 0.8) : modArea.containsMouse ? Qt.darker("#f7fbf2", 0.01) : "#f7fbf2"
-                            padding: 12
-                            anchors.bottomMargin: 1
 
-                            signal clicked()
-
-                            contentItem: RowLayout {
-                                id: modMeta
-                                spacing: 12
-                                Rectangle {
-                                    id: modImg
-                                    width: 44
-                                    height: 30
-                                    color: "#BCD0C3"
-                                }
-
-                                ColumnLayout {
-
-                                    Layout.fillWidth: true
-                                    spacing: 3
-
-                                    // category
-                                    Label {
-                                        text: "Buildings"
-                                        font.pixelSize: 10
-                                    }
-
-                                    // name of mod
-                                    Label {
-                                        text: model.name
-                                        font.pixelSize: 12
-                                        color: "#000"
-                                    }
-
-                                    // author(s)
-                                    Label {
-                                        text: "by Goosifer"
-                                        font.pixelSize: 10
-                                    }
-                                }
-
-                                Item {
-                                    Layout.fillWidth: true
-                                }
-
-                                CheckBox {
-                                    id: modCheck
-                                    z: 1
-                                    Layout.alignment: Qt.AlignRight
-                                    Layout.rightMargin: -15
-                                    Layout.preferredWidth: 20
-                                    checked: true
-                                    Material.accent: "#376a3e"
-                                    enabled: true
-                                    onCheckedChanged: {
-                                        console.log("Checkbox changed:", model.name, checked)
-                                    }
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        event.accepted = true;
-                                    }
-                                    propagateComposedEvents: false
-                                }
-                            }
-                            MouseArea {
-                                id: modMetaArea
-                                anchors.fill: modMeta
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: console.log("Mod clicked:", model.name)
-                                hoverEnabled: true
+                            Text {
+                                text: "Mod Name"
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
                             }
 
+                            Text {
+                                text: "Enabled"
+                                anchors.right: headCheck.left
+                            }
+
+                            CheckBox {
+                                id: headCheck
+                                anchors.right: parent.right
+                                anchors.rightMargin: 10
+                            }
                         }
                     }
 
-                    ScrollBar.vertical: ScrollBar {
-                        policy: ScrollBar.AsNeeded
-                        visible: flickableView.moving || flickableView.dragging
-                        width: 8
-                        // background: Rectangle {
-                        //     color: "#289662"
-                        //     radius: 4
-                        // }
+                    ListView {
+                        id: modsList
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
 
-                        contentItem: Rectangle {
-                            color: "#486d48"
-                            radius: 4
-                            opacity: vScroll.hovered ? 1.0 : 0.7
+                        clip: true
+
+                        model: ListModel {
+                            ListElement { name: "Mod 1" }
+                            ListElement { name: "Mod 2" }
+                            ListElement { name: "Mod 3" }
+                            ListElement { name: "Mod 4" }
+                            ListElement { name: "Mod 5" }
+                            ListElement { name: "Mod 6" }
+                            ListElement { name: "Mod 7" }
+                            ListElement { name: "Mod 8" }
+                            ListElement { name: "Mod 9" }
+                            ListElement { name: "Mod 10" }
+                            ListElement { name: "Mod 11" }
+                            ListElement { name: "Mod 12" }
+                            ListElement { name: "Mod 13" }
+                            ListElement { name: "Mod 14" }
+                            ListElement { name: "Mod 15" }
+                            ListElement { name: "Mod 16" }
+                            ListElement { name: "Mod 17" }
+                            ListElement { name: "Mod 18" }
+                            ListElement { name: "Mod 19" }
+                            ListElement { name: "Mod 20" }
+                        }
+
+                        delegate: Rectangle {
+                            id: modPane
+                            width: ListView.view.width
+                            height: 75
+
+                            Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                height: 1
+                                color: "#c1c9be"
+                            }
+
+                            Pane {
+                                anchors.fill: parent
+                                Material.background:  modArea.containsPress ? Qt.lighter("#f7fbf2", 0.8) : modArea.containsMouse ? Qt.darker("#f7fbf2", 0.01) : "#f7fbf2"
+                                padding: 12
+                                anchors.bottomMargin: 1
+
+                                signal clicked()
+
+                                contentItem: RowLayout {
+                                    id: modMeta
+                                    spacing: 12
+                                    Rectangle {
+                                        id: modImg
+                                        width: 44
+                                        height: 30
+                                        color: "#BCD0C3"
+                                    }
+
+                                    ColumnLayout {
+
+                                        Layout.fillWidth: true
+                                        spacing: 3
+
+                                        // category
+                                        Label {
+                                            text: "Buildings"
+                                            font.pixelSize: 10
+                                        }
+
+                                        // name of mod
+                                        Label {
+                                            text: model.name
+                                            font.pixelSize: 12
+                                            color: "#000"
+                                        }
+
+                                        // author(s)
+                                        Label {
+                                            text: "by Goosifer"
+                                            font.pixelSize: 10
+                                        }
+                                    }
+
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
+
+                                    CheckBox {
+                                        id: modCheck
+                                        z: 1
+                                        Layout.alignment: Qt.AlignRight
+                                        Layout.rightMargin: -15
+                                        Layout.preferredWidth: 20
+                                        checked: true
+                                        Material.accent: "#376a3e"
+                                        enabled: true
+                                        onCheckedChanged: {
+                                            console.log("Checkbox changed:", model.name, checked)
+                                        }
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            event.accepted = true;
+                                        }
+                                        propagateComposedEvents: false
+                                    }
+                                }
+                                MouseArea {
+                                    id: modArea
+                                    anchors.fill: modMeta
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: console.log("Mod clicked:", model.name)
+                                    hoverEnabled: true
+                                }
+
+                            }
+                        }
+
+                        ScrollBar.vertical: ScrollBar {
+                            policy: ScrollBar.AsNeeded
+                            visible: flickableView.moving || flickableView.dragging
+                            width: 8
+                            // background: Rectangle {
+                            //     color: "#289662"
+                            //     radius: 4
+                            // }
+
+                            contentItem: Rectangle {
+                                color: "#486d48"
+                                radius: 4
+                                opacity: vScroll.hovered ? 1.0 : 0.7
+                            }
                         }
                     }
                 }
+
 
                 // mod details
                 Rectangle {
