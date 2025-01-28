@@ -341,7 +341,9 @@ ApplicationWindow {
 
                             signal clicked()
 
-                            RowLayout {
+                            contentItem: RowLayout {
+                                id: modMeta
+                                spacing: 12
                                 Rectangle {
                                     id: modImg
                                     width: 44
@@ -350,8 +352,8 @@ ApplicationWindow {
                                 }
 
                                 ColumnLayout {
-                                    anchors.left: modImg.right
-                                    anchors.leftMargin: 16
+
+                                    Layout.fillWidth: true
                                     spacing: 3
 
                                     // category
@@ -374,17 +376,46 @@ ApplicationWindow {
                                     }
                                 }
 
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                CheckBox {
+                                    id: modCheck
+                                    z: 1
+                                    Layout.alignment: Qt.AlignRight
+                                    Layout.rightMargin: -15
+                                    Layout.preferredWidth: 20
+                                    checked: true
+                                    Material.accent: "#376a3e"
+                                    enabled: true
+                                    onCheckedChanged: {
+                                        console.log("Checkbox changed:", model.name, checked)
+                                    }
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        event.accepted = true;
+                                    }
+                                    propagateComposedEvents: false
+                                }
+                            }
+                            MouseArea {
+                                id: modMetaArea
+                                anchors.fill: modMeta
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: console.log("Mod clicked:", model.name)
+                                hoverEnabled: true
                             }
 
                         }
-
                         MouseArea {
                             id: modArea
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: console.log("Mod clicked:", model.name)
                             hoverEnabled: true
                         }
+
                     }
 
                     ScrollBar.vertical: ScrollBar {
