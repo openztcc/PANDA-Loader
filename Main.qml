@@ -320,37 +320,63 @@ ApplicationWindow {
                         ListElement { name: "Mod 20" }
                     }
 
-                    delegate: Pane {  
+                    delegate: Rectangle {
                         id: modPane
                         width: ListView.view.width
                         height: 70
-                        Material.background: if (modArea.containsPress) {
-                            return Qt.lighter("#f7fbf2", 0.8)
-                        } else if (modArea.containsMouse) {
-                            return Qt.darker("#f7fbf2", 0.01)
-                        } else {
-                            return "#f7fbf2"
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: 1
+                            color: "#c1c9be"
                         }
-                        padding: 12
 
-                        signal clicked()
+                        Pane {
+                            anchors.fill: parent
+                            Material.background:  modArea.containsPress ? Qt.lighter("#f7fbf2", 0.8) : modArea.containsMouse ? Qt.darker("#f7fbf2", 0.01) : "#f7fbf2"
+                            padding: 12
+                            anchors.bottomMargin: 1
 
-                        RowLayout {
-                            Rectangle {
-                                id: modImg
-                                width: 44
-                                height: 30
-                                color: "#BCD0C3"
-                            }
+                            signal clicked()
 
-                            Label {
-                                text: model.name
-                                font.pixelSize: 14
-                                anchors.left: modImg.right
-                                anchors.leftMargin: 16
+                            RowLayout {
+                                Layout.bottomMargin: 2
+                                Rectangle {
+                                    id: modImg
+                                    width: 44
+                                    height: 30
+                                    color: "#BCD0C3"
+                                }
 
-                                anchors.verticalCenter: modPane.verticalCenter
-                                horizontalAlignment: Text.AlignLeft
+                                ColumnLayout {
+                                    anchors.left: modImg.right
+                                    anchors.leftMargin: 16
+
+                                    // category
+                                    Label {
+                                        text: "Buildings"
+                                        font.pixelSize: 10
+                                    }
+
+                                    // name of mod
+                                    Label {
+                                        text: model.name
+                                        font.pixelSize: 14
+                                        color: "#000"
+
+                                        anchors.verticalCenter: modPane.verticalCenter
+                                        horizontalAlignment: Text.AlignLeft
+                                    }
+
+                                    // author(s)
+                                    Label {
+                                        text: "by Goosifer"
+                                        font.pixelSize: 10
+                                    }
+                                }
+
                             }
 
                         }
