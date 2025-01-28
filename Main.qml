@@ -329,6 +329,7 @@ ApplicationWindow {
                         id: modsList
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        boundsBehavior: Flickable.StopAtBounds
 
                         clip: true
 
