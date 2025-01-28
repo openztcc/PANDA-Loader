@@ -321,8 +321,9 @@ ApplicationWindow {
                     }
 
                     delegate: Pane {  
+                        id: modPane
                         width: ListView.view.width
-                        height: 50
+                        height: 70
                         Material.background: if (modArea.containsPress) {
                             return Qt.lighter("#f7fbf2", 0.8)
                         } else if (modArea.containsMouse) {
@@ -334,13 +335,24 @@ ApplicationWindow {
 
                         signal clicked()
 
-                        Label {
-                            text: model.name
-                            font.pixelSize: 14
-                            anchors.left: parent.left
-                            anchors.leftMargin: 16
-                            anchors.verticalCenter: parent.verticalCenter
-                            horizontalAlignment: Text.AlignLeft
+                        RowLayout {
+                            Rectangle {
+                                id: modImg
+                                width: 44
+                                height: 30
+                                color: "#BCD0C3"
+                            }
+
+                            Label {
+                                text: model.name
+                                font.pixelSize: 14
+                                anchors.left: modImg.right
+                                anchors.leftMargin: 16
+
+                                anchors.verticalCenter: modPane.verticalCenter
+                                horizontalAlignment: Text.AlignLeft
+                            }
+
                         }
 
                         MouseArea {
