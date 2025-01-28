@@ -1,7 +1,8 @@
 #include "PUtilties.h"
-#include <QProcess>
-#include <QMutex>
-#include <QString>
+
+namespace {
+    QMutex mutex;
+}
 
 namspace PUtilities
 {
