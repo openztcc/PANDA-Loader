@@ -10,6 +10,7 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appPandaLdr
     main.cpp
+    PUtilties.h PUtilties.cpp
 )
 
 qt_add_qml_module(appPandaLdr
@@ -22,6 +23,7 @@ qt_add_qml_module(appPandaLdr
         RESOURCES images/launch_bg.jpg
         QML_FILES ActionButton.qml
         QML_FILES ModItem.qml
+        SOURCES PUtilties.h PUtilties.cpp
 )
 
 qt_add_resources(appPandaLdr "resources"
