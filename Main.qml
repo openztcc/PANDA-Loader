@@ -323,7 +323,7 @@ ApplicationWindow {
                     delegate: Rectangle {
                         id: modPane
                         width: ListView.view.width
-                        height: 70
+                        height: 75
 
                         Rectangle {
                             anchors.left: parent.left
@@ -342,7 +342,6 @@ ApplicationWindow {
                             signal clicked()
 
                             RowLayout {
-                                Layout.bottomMargin: 2
                                 Rectangle {
                                     id: modImg
                                     width: 44
@@ -353,6 +352,7 @@ ApplicationWindow {
                                 ColumnLayout {
                                     anchors.left: modImg.right
                                     anchors.leftMargin: 16
+                                    spacing: 3
 
                                     // category
                                     Label {
@@ -363,11 +363,8 @@ ApplicationWindow {
                                     // name of mod
                                     Label {
                                         text: model.name
-                                        font.pixelSize: 14
+                                        font.pixelSize: 12
                                         color: "#000"
-
-                                        anchors.verticalCenter: modPane.verticalCenter
-                                        horizontalAlignment: Text.AlignLeft
                                     }
 
                                     // author(s)
