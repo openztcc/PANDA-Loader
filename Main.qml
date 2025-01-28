@@ -127,6 +127,7 @@ ApplicationWindow {
             Layout.fillWidth: true
             anchors.fill: parent
 
+            // launch area
             Rectangle {
                 id: launchArea
                 Layout.fillWidth: true
@@ -281,7 +282,7 @@ ApplicationWindow {
             //     Text {
             //         text: "Mods"
             //         anchors.centerIn: parent
-            //         color: "#000"
+            //         color: "#424940"
             //         font.pixelSize: 14
             //     }
             // }
@@ -404,7 +405,7 @@ ApplicationWindow {
                                         Label {
                                             text: model.name
                                             font.pixelSize: 12
-                                            color: "#000"
+                                            color: "#424940"
                                         }
 
                                         // author(s)
@@ -482,7 +483,7 @@ ApplicationWindow {
                     Text {
                         text: "Mod details"
                         anchors.centerIn: parent
-                        color: "#000"
+                        color: "#424940"
                         font.pixelSize: 14
                     }
                 }
@@ -497,6 +498,18 @@ ApplicationWindow {
                 Layout.preferredHeight: 30
                 Layout.fillWidth: true
                 Material.background: "#f7fbf2"
+
+                Text {
+                    id: statusLabel
+                    text: "Status: " + statusLabel.model
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: "#424940"
+                    font.pixelSize: 10
+
+                    property string model: "No status to show"
+                }
             }
 
         }
