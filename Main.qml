@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
 import QtQuick.Effects
+import ozt.panda.PState 1.0
 
 ApplicationWindow {
     width: 800
@@ -164,8 +165,9 @@ ApplicationWindow {
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: console.log("Launch clicked")
+                            onClicked: PState.launchZT()
                         }
+
 
                     }
 
