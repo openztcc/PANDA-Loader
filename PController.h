@@ -20,7 +20,7 @@ public:
         ModAuthorRole,
         ModDescriptionRole,
         ModPathRole,
-        ModEnabledRole
+        ModEnabledRole,
         ModCategoryRole,
         ModTagsRole
     };
