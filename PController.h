@@ -14,6 +14,17 @@ class PController : public QAbstractListModel
     Q_P
 public:
     explicit PController(QObject *parent = nullptr);
+
+    enum {
+        ModTitleRole = Qt::UserRole + 1,
+        ModAuthorRole,
+        ModDescriptionRole,
+        ModPathRole,
+        ModEnabledRole
+        ModCategoryRole,
+        ModTagsRole
+    };
+
     int currentlySelectedMod() const;
     int modCount() const;
     void addMod(const QString &modName);
