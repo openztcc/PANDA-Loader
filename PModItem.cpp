@@ -5,7 +5,16 @@ PModItem::PModItem() {}
 
 PModItem::PModItem(QObject *parent)
 {
+    m_mod_index = 0;
+    m_mod_title = "";
+    m_mod_author = "";
+    m_mod_description = "";
+    m_mod_path = QUrl();
+    m_mod_enabled = false;
+    m_mod_category = "";
+    m_mod_tags = "";
 
+    
 }
 
 int PModItem::modIndex() const

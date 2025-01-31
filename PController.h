@@ -7,6 +7,7 @@ concerns itself with the mods list and operations over other classes from the UI
 #include <QObject>
 #include <QAbstractListModel>
 
+
 class PController : public QAbstractListModel
 {
     Q_OBJECT
@@ -27,7 +28,7 @@ public:
 
     int currentlySelectedMod() const;
     int modCount() const;
-    void addMod(const QString &modName);
+    void addMod(const std::unordered_map<QString, PModItem> &modName);
     void removeMod(int index);
     void selectMod(int index);
     void deselectMod();
@@ -46,7 +47,7 @@ signals:
     void modDeselected();
 
 private:
-    QList<QString> m_mods;
+    std::unordered_map<QString, PModItem> m_mods;
     int m_currentIndex;
 };
 

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <qqml.h>
 #include <QUrl>
+#include "PModItem.h"
+#include <std::unordered_map>
 
 // This class contains all meta data in context of a single mod item.
 
@@ -66,6 +68,7 @@ private:
     bool m_mod_enabled;
     QString m_mod_category;
     QString m_mod_tags;
+    std::unordered_map<QString, PModItem> m_mods;
 };
 
 #endif // PMODITEM_H
