@@ -3,6 +3,8 @@
 #include "PState.h"
 #include <QObject>
 #include <QJSValue>
+#include "PController.h"
+#include <QQmlContext>
 
 int main(int argc, char *argv[])
 {
@@ -11,6 +13,9 @@ int main(int argc, char *argv[])
 
     PState *p_state = new PState(&app);
     qmlRegisterSingletonInstance("ozt.panda.PState", 1, 0, "PState", p_state);
+
+    PController controller;
+    engine.rootContext()->setContextProperty("modController", &controller);
 
     QObject::connect(
         &engine,
