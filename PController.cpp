@@ -15,9 +15,9 @@ int PController::modCount() const
     return m_mods_list.size();
 }
 
-void PController::addMod(const PModItem &mod)
+void PController::addMod(QSharedPointer<PModItem> mod)
 {
-    m_mods_list.append(new PModItem(mod));
+    m_mods_list.append(QSharedPointer<PModItem>(mod));
     emit modAdded(m_mods_list.size());
 }
 

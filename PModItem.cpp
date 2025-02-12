@@ -31,11 +31,6 @@ void PModItem::setmodIndex(int newModIndex)
     emit modIndexChanged();
 }
 
-void PModItem::modIndexChanged()
-{
-    emit modIndexChanged();
-}
-
 QString PModItem::modTitle() const
 {
     return m_mod_title;

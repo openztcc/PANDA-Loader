@@ -8,6 +8,7 @@ concerns itself with the mods list and operations over other classes from the UI
 #include <QAbstractListModel>
 #include <QList>
 #include "PModItem.h"
+#include <QSharedPointer>
 
 class PModItem;
 
@@ -19,6 +20,7 @@ class PController : public QAbstractListModel
 
 public:
     explicit PController(QObject *parent = nullptr);
+    // ~PController();
 
     enum {
         ModTitleRole = Qt::UserRole + 1,
@@ -32,14 +34,13 @@ public:
 
     int currentlySelectedMod() const;
     int modCount() const;
-    void addMod(const PModItem &mod);
+    void addMod(QSharedPointer<PModItem>);
     void removeMod(int index);
     void selectMod(int index);
     void deselectMod();
     void clearSlection();
 
     PController();
-    ~PController();
     virtual int rowCount(const QModelIndex &parent) const override;
     virtual QVariant data(const QModelIndex &index, int role) const override;
     virtual QHash<int, QByteArray> roleNames() const override;
@@ -51,7 +52,7 @@ signals:
     void modDeselected();
 
 private:
-    QList<PModItem*> m_mods_list;
+    QList<QSharedPointer<PModItem>> m_mods_list;
     int m_currentIndex;
 };
 

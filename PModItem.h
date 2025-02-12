@@ -6,8 +6,9 @@
 
 // This class contains all meta data in context of a single mod item.
 
-class PModItem
+class PModItem : public QObject
 {
+    Q_OBJECT
     QML_ELEMENT
 
     Q_PROPERTY(int modIndex READ modIndex WRITE setmodIndex NOTIFY modIndexChanged)
