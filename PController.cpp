@@ -17,7 +17,10 @@ int PController::modCount() const
 
 void PController::addMod(QSharedPointer<PModItem> mod)
 {
+    beginInsertRows(QModelIndex(), m_mods_list.size(), m_mods_list.size());
     m_mods_list.append(mod);
+    endInsertRows();
+
     emit modAdded(m_mods_list.size());
 }
 
@@ -47,7 +50,7 @@ void PController::clearSelection()
 int PController::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return m_mods_list.length();
+    return m_mods_list.size();
 }
 
 QVariant PController::data(const QModelIndex &index, int role) const
@@ -97,7 +100,10 @@ QHash<int, QByteArray> PController::roleNames() const
 void PController::loadMods()
 {
     // Placeholder for loading mods; dynamic sqlite query later
-
+    beginResetModel();
+    // Clear existing mods
+    m_mods_list.clear();
+    
     PModItem *mod = new PModItem(this);
     mod->setmodTitle("Mod 1");
     mod->setmodAuthor("Author 1");
@@ -117,4 +123,16 @@ void PController::loadMods()
     mod2->setmodCategory("Category 2");
     mod2->setmodTags("Tag 4, Tag 5, Tag 6");
     addMod(QSharedPointer<PModItem>::create(mod2));
+
+    PModItem *mod3 = new PModItem(this);
+    mod3->setmodTitle("Mod 3");
+    mod3->setmodAuthor("Author 3");
+    mod3->setmodDescription("Description 3");
+    mod3->setmodPath(QUrl("file:///path/to/mod3"));
+    mod3->setmodEnabled(true);
+    mod3->setmodCategory("Category 3");
+    mod3->setmodTags("Tag 7, Tag 8, Tag 9");
+    addMod(QSharedPointer<PModItem>::create(mod3));
+
+    endResetModel();
 }
