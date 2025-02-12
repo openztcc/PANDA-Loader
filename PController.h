@@ -6,13 +6,17 @@ concerns itself with the mods list and operations over other classes from the UI
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QList>
+#include "PModItem.h"
 
+class PModItem;
 
 class PController : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int currentlySelectedMod READ currentlySelectedMod NOTIFY modSelected)
+    Q_PROPERTY(int modCount READ modCount NOTIFY modAdded)
 
-    Q_P
 public:
     explicit PController(QObject *parent = nullptr);
 
@@ -28,7 +32,7 @@ public:
 
     int currentlySelectedMod() const;
     int modCount() const;
-    void addMod(const std::unordered_map<QString, PModItem> &modName);
+    void addMod(const PModItem &mod);
     void removeMod(int index);
     void selectMod(int index);
     void deselectMod();
@@ -47,7 +51,7 @@ signals:
     void modDeselected();
 
 private:
-    std::unordered_map<QString, PModItem> m_mods;
+    QList<PModItem*> m_mods_list;
     int m_currentIndex;
 };
 

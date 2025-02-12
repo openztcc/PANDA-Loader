@@ -12,18 +12,18 @@ int PController::currentlySelectedMod() const
 
 int PController::modCount() const
 {
-    return m_mods.size();
+    return m_mods_list.size();
 }
 
-void PController::addMod(const std::unordered_map<QString, PModItem> &modName)
+void PController::addMod(const PModItem &mod)
 {
-    m_mods.insert(modName);
-    emit modAdded(m_mods.size());
+    m_mods_list.append(new PModItem(mod));
+    emit modAdded(m_mods_list.size());
 }
 
 void PController::removeMod(int index)
 {
-    m_mods.erase(index);
+    m_mods_list.removeAt(index);
     emit modRemoved(index);
 }
 

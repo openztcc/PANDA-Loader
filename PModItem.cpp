@@ -1,7 +1,7 @@
 #include "PModItem.h"
 
 // TODO: Implement the PModItem constructor
-PModItem::PModItem() {}
+// PModItem::PModItem() {}
 
 PModItem::PModItem(QObject *parent)
 {
@@ -28,6 +28,11 @@ void PModItem::setmodIndex(int newModIndex)
         return;
 
     m_mod_index = newModIndex;
+    emit modIndexChanged();
+}
+
+void PModItem::modIndexChanged()
+{
     emit modIndexChanged();
 }
 
