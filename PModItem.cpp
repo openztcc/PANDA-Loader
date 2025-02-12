@@ -17,6 +17,15 @@ PModItem::PModItem(QObject *parent)
     
 }
 
+PModItem::PModItem(const QString &title, const QString &author, const QString &desc, 
+    const QUrl &path, bool enabled, const QString &category, const QString &tags, QObject *parent) 
+: QObject(parent), 
+m_mod_title(title), m_mod_author(author), m_mod_description(desc),
+m_mod_path(path), m_mod_enabled(enabled), m_mod_category(category), m_mod_tags(tags)
+{
+}
+
+
 int PModItem::modIndex() const
 {
     return m_mod_index;

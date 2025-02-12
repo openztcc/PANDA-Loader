@@ -104,35 +104,14 @@ void PController::loadMods()
     // Clear existing mods
     m_mods_list.clear();
     
-    PModItem *mod = new PModItem(this);
-    mod->setmodTitle("Mod 1");
-    mod->setmodAuthor("Author 1");
-    mod->setmodDescription("Description 1");
-    mod->setmodPath(QUrl("file:///path/to/mod1"));
-    mod->setmodEnabled(true);
-    mod->setmodCategory("Category 1");
-    mod->setmodTags("Tag 1, Tag 2, Tag 3");
-    addMod(QSharedPointer<PModItem>::create(mod));
+    QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create("Mod 1", "Author 1", "Description 1", QUrl("file:///path/to/mod1"), true, "Category 1", "Tag 1, Tag 2, Tag 3");
+    addMod(mod);
 
-    PModItem *mod2 = new PModItem(this);
-    mod2->setmodTitle("Mod 2");
-    mod2->setmodAuthor("Author 2");
-    mod2->setmodDescription("Description 2");
-    mod2->setmodPath(QUrl("file:///path/to/mod2"));
-    mod2->setmodEnabled(true);
-    mod2->setmodCategory("Category 2");
-    mod2->setmodTags("Tag 4, Tag 5, Tag 6");
-    addMod(QSharedPointer<PModItem>::create(mod2));
+    QSharedPointer<PModItem> mod2 = QSharedPointer<PModItem>::create("Mod 2", "Author 2", "Description 2", QUrl("file:///path/to/mod2"), true, "Category 2", "Tag 4, Tag 5, Tag 6");
+    addMod(mod2);
 
-    PModItem *mod3 = new PModItem(this);
-    mod3->setmodTitle("Mod 3");
-    mod3->setmodAuthor("Author 3");
-    mod3->setmodDescription("Description 3");
-    mod3->setmodPath(QUrl("file:///path/to/mod3"));
-    mod3->setmodEnabled(true);
-    mod3->setmodCategory("Category 3");
-    mod3->setmodTags("Tag 7, Tag 8, Tag 9");
-    addMod(QSharedPointer<PModItem>::create(mod3));
+    QSharedPointer<PModItem> mod3 = QSharedPointer<PModItem>::create("Mod 3", "Author 3", "Description 3", QUrl("file:///path/to/mod3"), true, "Category 3", "Tag 7, Tag 8, Tag 9");
+    addMod(mod3);
 
     endResetModel();
 }

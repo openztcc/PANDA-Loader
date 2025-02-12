@@ -21,7 +21,9 @@ class PModItem : public QObject
     Q_PROPERTY(QString modTags READ modTags WRITE setmodTags NOTIFY modTagsChanged)
 public:
     explicit PModItem(QObject *parent = nullptr);
-
+    PModItem(const QString &title, const QString &author, const QString &desc, 
+        const QUrl &path, bool enabled, const QString &category, const QString &tags, QObject *parent = nullptr);
+        
     int modIndex() const;
     void setmodIndex(int newModIndex);
 
