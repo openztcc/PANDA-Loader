@@ -97,6 +97,24 @@ QHash<int, QByteArray> PController::roleNames() const
 void PController::loadMods()
 {
     // Placeholder for loading mods; dynamic sqlite query later
-    addMod(QSharedPointer<PModItem>::create(new PModItem(this)));
-    addMod(QSharedPointer<PModItem>::create(new PModItem(this)));
+
+    PModItem *mod = new PModItem(this);
+    mod->setmodTitle("Mod 1");
+    mod->setmodAuthor("Author 1");
+    mod->setmodDescription("Description 1");
+    mod->setmodPath(QUrl("file:///path/to/mod1"));
+    mod->setmodEnabled(true);
+    mod->setmodCategory("Category 1");
+    mod->setmodTags("Tag 1, Tag 2, Tag 3");
+    addMod(QSharedPointer<PModItem>::create(mod));
+
+    PModItem *mod2 = new PModItem(this);
+    mod2->setmodTitle("Mod 2");
+    mod2->setmodAuthor("Author 2");
+    mod2->setmodDescription("Description 2");
+    mod2->setmodPath(QUrl("file:///path/to/mod2"));
+    mod2->setmodEnabled(true);
+    mod2->setmodCategory("Category 2");
+    mod2->setmodTags("Tag 4, Tag 5, Tag 6");
+    addMod(QSharedPointer<PModItem>::create(mod2));
 }
