@@ -44,12 +44,33 @@ void PController::clearSlection()
 
 int PController::rowCount(const QModelIndex &parent) const
 {
-
+    Q_UNUSED(parent);
+    return m_mods_list.length();
 }
 
 QVariant PController::data(const QModelIndex &index, int role) const
 {
-
+    if (index.isValid() && index.row() >= 0 && index.row() < m_mods_list.length())
+    {
+        QSharedPointer<PModItem> mod = m_mods_list[index.row()];
+        switch ((Role) role)
+        {
+            case ModTitleRole:
+                return mod->modTitle();
+            case ModAuthorRole:
+                return mod->modAuthor();
+            case ModDescriptionRole:
+                return mod->modDescription();
+            case ModPathRole:
+                return mod->modPath();
+            case ModEnabledRole:
+                return mod->modEnabled();
+            case ModCategoryRole:
+                return mod->modCategory();
+            case ModTagsRole:
+                return mod->modTags();
+        }
+    }
 }
 
 // Maps the roles to the data

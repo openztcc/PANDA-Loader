@@ -22,7 +22,7 @@ public:
     explicit PController(QObject *parent = nullptr);
     // ~PController();
 
-    enum {
+    enum Role {
         ModTitleRole = Qt::UserRole + 1,
         ModAuthorRole,
         ModDescriptionRole,
