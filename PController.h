@@ -38,7 +38,8 @@ public:
     void removeMod(int index);
     void selectMod(int index);
     void deselectMod();
-    void clearSlection();
+    void clearSelection();
+    void loadMods();
 
     PController();
     virtual int rowCount(const QModelIndex &parent) const override;

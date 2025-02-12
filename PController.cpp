@@ -1,8 +1,8 @@
 #include "PController.h"
 
-PController::PController(QObject *parent)
+PController::PController(QObject *parent) : QAbstractListModel(parent), m_currentIndex(-1)
 {
-
+    loadMods();
 }
 
 int PController::currentlySelectedMod() const
@@ -17,7 +17,7 @@ int PController::modCount() const
 
 void PController::addMod(QSharedPointer<PModItem> mod)
 {
-    m_mods_list.append(QSharedPointer<PModItem>(mod));
+    m_mods_list.append(mod);
     emit modAdded(m_mods_list.size());
 }
 
@@ -29,7 +29,8 @@ void PController::removeMod(int index)
 
 void PController::selectMod(int index)
 {
-
+    m_currentIndex = index;
+    emit modSelected(index);
 }
 
 void PController::deselectMod()
@@ -37,9 +38,10 @@ void PController::deselectMod()
 
 }
 
-void PController::clearSlection()
+void PController::clearSelection()
 {
-
+    m_currentIndex = -1;
+    emit modDeselected();
 }
 
 int PController::rowCount(const QModelIndex &parent) const
@@ -71,6 +73,9 @@ QVariant PController::data(const QModelIndex &index, int role) const
                 return mod->modTags();
         }
     }
+
+    // Return empty if the index is invalid
+    return QVariant();
 }
 
 // Maps the roles to the data
@@ -87,4 +92,11 @@ QHash<int, QByteArray> PController::roleNames() const
     roles[ModTagsRole] = "modTags";
 
     return roles;
+}
+
+void PController::loadMods()
+{
+    // Placeholder for loading mods; dynamic sqlite query later
+    addMod(QSharedPointer<PModItem>::create(new PModItem(this)));
+    addMod(QSharedPointer<PModItem>::create(new PModItem(this)));
 }
