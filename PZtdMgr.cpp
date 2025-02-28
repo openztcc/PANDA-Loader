@@ -135,3 +135,34 @@ bool PZtdMgr::isZtdFile(const QString &filePath)
     return filePath.endsWith(".ztd");
 }
 
+// Opens a file inside a ztd and returns its data
+bool PZtdMgr::openFileInZtd(const QString &ztdFilePath, const QString &fileNameToOpen, QByteArray &fileData) 
+{
+    // Open the ztd file
+    QuaZip zip(ztdFilePath);
+    if (!zip.open(QuaZip::mdUnzip)) {
+        return false; // Failed to open ztd file
+    }
+
+    // Set the current file to the one we want to open
+    if (!zip.setCurrentFile(fileNameToOpen)) {
+        zip.close();
+        return false; // Failed to set current file
+    }
+
+    // Open the file inside the ztd
+    QuaZipFile file(&zip);
+    if (!file.open(QIODevice::ReadOnly)) {
+        zip.close();
+        return false; // Failed to open file in ztd (in stream)
+    }
+
+    // Read the data from the file
+    fileData = file.readAll();
+
+    // Close the files
+    file.close();
+    zip.close();
+
+    return true;
+}

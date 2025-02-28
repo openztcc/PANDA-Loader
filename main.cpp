@@ -11,12 +11,15 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
+    // Register the PState singleton
     PState *p_state = new PState(&app);
     qmlRegisterSingletonInstance("ozt.panda.PState", 1, 0, "PState", p_state);
 
+    // Register the PController singleton
     PController controller;
     engine.rootContext()->setContextProperty("modController", &controller);
 
+    // Load the main QML file
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
