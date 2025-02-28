@@ -28,6 +28,9 @@ qt_add_qml_module(appPandaLdr
         PState.cpp
         SOURCES PController.h PController.cpp
         SOURCES PModItem.h PModItem.cpp
+        SOURCES PZtdMgr PZtdMgr.cpp
+        SOURCES PConfigMgr.h PConfigMgr.cpp
+        SOURCES PDatabaseMgr.h PDatabaseMgr.cpp
 )
 
 qt_add_resources(appPandaLdr "resources"

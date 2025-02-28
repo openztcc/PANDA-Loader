@@ -1,0 +1,13 @@
+#ifndef PZTDMGR
+#define PZTDMGR
+
+#include <QObject>
+
+class PZtdMgr
+{
+    Q_OBJECT
+public:
+    PZtdMgr();
+};
+
+#endif // PZTDMGR
