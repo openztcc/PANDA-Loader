@@ -9,17 +9,17 @@ class PZtdMgr
 public:
     PZtdMgr();
     ~PZtdMgr();
-    bool extractZtd(const QString &ztdFilePath, const QString &outputDir);
+    bool hasZtdFiles(const QString &zipFilePath);
     bool addFileToZtd(const QString &ztdFilePath, const QString &filePathToAdd);
-    bool removeFileFromZtd(const QString &ztdFilePath, const QString &fileNameToRemove);
-    bool listFilesInZtd(const QString &ztdFilePath, QStringList &fileList);
-    bool createZtd(const QString &ztdFilePath, const QStringList &filesToAdd);
-    bool moveZtdFile(const QString &ztdFilePath, const QString &fileNameToMove, const QString &newFileName);
-    bool renameZtdFile(const QString &ztdFilePath, const QString &oldFileName, const QString &newFileName);
-    bool copyZtdFile(const QString &ztdFilePath, const QString &fileNameToCopy, const QString &newFileName);
+    // TODO: will need below functions for combine/separate feature later
+    // bool removeFileFromZtd(const QString &ztdFilePath, const QString &fileNameToRemove);
+    // bool listFilesInZtd(const QString &ztdFilePath, QStringList &fileList);
+    // bool createZtd(const QString &ztdFilePath, const QStringList &filesToAdd);
+    bool moveZtdFile(const QString &ztdFilePath, const QString &newLocation);
+    bool renameZtdFile(const QString &oldFilePath, const QString &newFileName);
+    bool copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCopyPath);
 
 private:
-    void closeZtd();
     bool isZtdFile(const QString &filePath);
 };
 
