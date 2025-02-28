@@ -1,14 +1,11 @@
 #ifndef PZTDMGR
 #define PZTDMGR
 
-#include <QObject>
 #include <quazip/quazip.h>
 #include <quazip/quazipfile.h>
-#include "PConfigMgr.h"
 
 class PZtdMgr
 {
-    Q_OBJECT
 public:
     PZtdMgr();
     ~PZtdMgr();
@@ -22,10 +19,6 @@ public:
     bool copyZtdFile(const QString &ztdFilePath, const QString &fileNameToCopy, const QString &newFileName);
 
 private:
-    PConfigMgr m_configMgr;
-    QuaZip m_zip;
-    QuaZipFile m_zipFile;
-
     void closeZtd();
     bool isZtdFile(const QString &filePath);
 };

@@ -1,7 +1,6 @@
 #ifndef PCONFIGMGR_H
 #define PCONFIGMGR_H
 
-#include <QObject>
 #include <toml++/toml.h>
 #include "PZtdMgr.h"
 #include <QSettings>
@@ -9,7 +8,6 @@
 
 class PConfigMgr
 {
-    Q_OBJECT
 public:
     PConfigMgr();
     ~PConfigMgr();
