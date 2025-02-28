@@ -31,6 +31,8 @@ qt_add_qml_module(appPandaLdr
         SOURCES PZtdMgr PZtdMgr.cpp
         SOURCES PConfigMgr.h PConfigMgr.cpp
         SOURCES PDatabaseMgr.h PDatabaseMgr.cpp
+        SOURCES tests/PTestZtdMgr.cpp
+        RESOURCES tests/test_data/empty.ztd tests/test_data/invalid.ztd tests/test_data/invalid_no_ext tests/test_data/test.txt tests/test_data/valid.ztd
 )
 
 qt_add_resources(appPandaLdr "resources"
