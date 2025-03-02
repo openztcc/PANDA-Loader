@@ -122,28 +122,29 @@ bool PZtdMgr::copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCo
 }
 
 // Validates if a file is a ztd file and is readable
-bool PZtdMgr::isZtdFile(const QString &filePath) 
+int PZtdMgr::isZtdFile(const QString &filePath)
 {
     // Does file exist?
     if (!QFile::exists(filePath)) {
-        return false; // File does not exist
+        return 1; // File does not exist
+    }
+
+    // Make sure it has a .ztd extension first
+    if (!filePath.endsWith(".ztd")) {
+        return 2; // Wrong extension
     }
 
     QuaZip zip(filePath);
-    // Check if empty
-    if (!zip.goToFirstFile()) {
-        zip.close();
-        return false; // Empty file
-    }
-
-    // Is it a zip file?
+    // Is it a zip file? (and open file)
+    // 1. Probably empty
+    // 2. Not a valid zip file
     if (!zip.open(QuaZip::mdUnzip)) {
-        zip.close();
-        return false; // Not a zip file
+        return 3; // Not a zip file
     }
 
     // Verify it has ztd extension
-    return filePath.endsWith(".ztd");
+    zip.close();
+    return 0;
 }
 
 // Opens a file inside a ztd and returns its data

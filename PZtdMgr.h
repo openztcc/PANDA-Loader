@@ -20,7 +20,7 @@ public:
     static bool renameZtdFile(const QString &oldFilePath, const QString &newFileName);
     static bool copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCopyPath);
     static bool openFileInZtd(const QString &ztdFilePath, const QString &fileNameToOpen, QByteArray &fileData);
-    static bool isZtdFile(const QString &filePath);
+    static int isZtdFile(const QString &filePath);
 };
 
 #endif // PZTDMGR
