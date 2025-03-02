@@ -18,8 +18,8 @@ qt_add_executable(appPandaLdr
 )
 
 include_directories(
-    /libs/quazip/include
-    /libs/tomlplusplus
+    ${CMAKE_SOURCE_DIR}/libs/quazip/include
+    ${CMAKE_SOURCE_DIR}/libs/tomlplusplus
 )
 link_directories(/libs/quazip/lib)
 
