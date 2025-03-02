@@ -76,6 +76,11 @@ bool PZtdMgr::addFileToZtd(const QString &ztdFilePath, const QString &filePathTo
 }
 
 // TODO: Find more efficient method of removing files from ztd
+bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileToRemove)
+{
+    // TODO: implement this
+    return 0;
+}
 
 // Moves a ztd file from one location on disk to another
 bool PZtdMgr::moveZtdFile(const QString &ztdFilePath, const QString &newLocation) 
