@@ -19,9 +19,12 @@ qt_add_executable(appPandaLdr
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/include
-    ${CMAKE_SOURCE_DIR}/libs/tomlplusplus
 )
-link_directories(/libs/quazip/lib)
+link_directories(
+    ${CMAKE_SOURCE_DIR}/libs/quazip/lib
+)
+add_library(tomlplusplus INTERFACE)
+target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
 
 qt_add_qml_module(appPandaLdr
     URI PandaLdr
@@ -70,7 +73,7 @@ set_target_properties(appPandaLdr PROPERTIES
 )
 
 target_link_libraries(appPandaLdr
-    PRIVATE Qt6::Quick QuaZip::QuaZip Qt6::Sql
+    PRIVATE Qt6::Quick QuaZip::QuaZip Qt6::Sql tomlplusplus
 )
 
 include(GNUInstallDirs)

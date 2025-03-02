@@ -45,7 +45,9 @@ bool PConfigMgr::updateMetaConfig(const QString &ztdFilePath, const toml::table 
     }
 
     // Update the meta configuration in the temporary ztd
-    QByteArray tomlData = toml::format(config).c_str();
+    std::ostringstream oss;
+    oss << config;
+    QByteArray tomlData = QByteArray::fromStdString(oss.str());
     if (!PZtdMgr::addFileToZtd(tempZtdPath, m_metaConfigName)) {
         QFile::remove(tempZtdPath); // Clean up temporary file
         return false; // Failed to update the meta config
@@ -110,7 +112,9 @@ bool PConfigMgr::addMetaConfig(const QString &ztdFilePath, const toml::table &co
     }
 
     // Add the meta configuration to the temporary ztd
-    QByteArray tomlData = toml::format(config).c_str();
+    std::ostringstream oss;
+    oss << config;
+    QByteArray tomlData = QByteArray::fromStdString(oss.str());
     if (!PZtdMgr::addFileToZtd(tempZtdPath, m_metaConfigName)) {
         QFile::remove(tempZtdPath); // Clean up temporary file
         return false; // Failed to add the meta config
@@ -139,7 +143,7 @@ toml::table PConfigMgr::getZooIniConfig(const QString &iniPath)
 
     // Iterate through all keys in the ini file and add them to the toml table
     for (const QString &key : settings.allKeys()) {
-        config[key.toStdString()] = settings.value(key).toString().toStdString();
+        config.insert_or_assign(key.toStdString(), toml::value(settings.value(key).toString().toStdString()));
     }
 
     return config;
@@ -150,14 +154,17 @@ bool PConfigMgr::updateZooIniConfig(const QString &iniPath, const toml::table &c
 {
     // Check if the ini file exists
     if (!QFile::exists(iniPath)) {
-        return false; // Return false if the ini file does not exist
+        return false;
     }
 
     // Write the new configuration to the ini file
     QSettings settings(iniPath, QSettings::IniFormat);
 
     for (const auto &[key, value] : config) {
-        settings.setValue(QString::fromStdString(key), QString::fromStdString(value.as_string().value_or("")));
+        const auto* str_value = value.as_string();
+        std::string str = str_value ? str_value->get() : "";
+
+        settings.setValue(QString::fromStdString(std::string(key)), QString::fromStdString(str));
     }
 
     return true;

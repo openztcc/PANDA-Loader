@@ -3,6 +3,7 @@
 
 #include "quazip.h"
 #include "quazipfile.h"
+#include "quazipnewinfo.h"
 
 class PZtdMgr
 {
@@ -12,7 +13,7 @@ public:
     static bool hasZtdFiles(const QString &zipFilePath);
     static bool addFileToZtd(const QString &ztdFilePath, const QString &filePathToAdd);
     // TODO: will need below functions for combine/separate feature later
-    // bool removeFileFromZtd(const QString &ztdFilePath, const QString &fileNameToRemove);
+    static bool removeFileFromZtd(const QString &ztdFilePath, const QString &fileNameToRemove);
     // bool listFilesInZtd(const QString &ztdFilePath, QStringList &fileList);
     // bool createZtd(const QString &ztdFilePath, const QStringList &filesToAdd);
     static bool moveZtdFile(const QString &ztdFilePath, const QString &newLocation);
