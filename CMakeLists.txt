@@ -73,7 +73,7 @@ set_target_properties(appPandaLdr PROPERTIES
 )
 
 target_link_libraries(appPandaLdr
-    PRIVATE Qt6::Quick QuaZip::QuaZip Qt6::Sql tomlplusplus
+    PRIVATE Qt6::Quick ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a Qt6::Sql tomlplusplus
 )
 
 include(GNUInstallDirs)
