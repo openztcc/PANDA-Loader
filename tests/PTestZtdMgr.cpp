@@ -13,8 +13,8 @@ private slots:
     // void testMoveZtdFile();
     // void testRenameZtdFile_data();
     // void testRenameZtdFile();
-    // void testCopyZtdFile_data();
-    // void testCopyZtdFile();
+    void testCopyZtdFile_data();
+    void testCopyZtdFile();
     // void testOpenFileInZtd_data();
     // void testOpenFileInZtd();
 };
@@ -44,6 +44,22 @@ void PTestZtdMgr::testIsZtdFile_data()
     QTest::newRow("non-existent file") << testDataDir + "nonexistent.ztd" << 1;
 }
 
+void PTestZtdMgr::testCopyZtdFile_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<QString>("ztdOutputCopyPath");
+    QTest::addColumn<bool>("expectedResult");
+
+    // Test case 1: Provided ztd file does not exist
+    QTest::newRow("non-existent ztd file") << testDataDir + "nonexistent.ztd" << testDataDir + "nonexistent_copy.ztd" << false;
+
+    // Test case 2: Copying ztd file to non-existent directory
+    QTest::newRow("non-existent directory") << testDataDir + "valid.ztd" << testDataDir + "nonexistent_dir/valid.ztd" << false;
+
+    // Test case 3: Copying ztd file to existing directory
+    QTest::newRow("existing directory") << testDataDir + "valid.ztd" << testDataDir + "valid_copy.ztd" << true;
+}
+
 void PTestZtdMgr::testIsZtdFile()
 {
     QFETCH(QString, zipFilePath);
@@ -52,6 +68,38 @@ void PTestZtdMgr::testIsZtdFile()
     int result = PZtdMgr::isZtdFile(zipFilePath);
     QCOMPARE (result, expectedResult);
 }
+
+void PTestZtdMgr::testCopyZtdFile()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(QString, ztdOutputCopyPath);
+    QFETCH(bool, expectedResult);
+
+    // Ensure source file exists before testing
+    QFile sourceFile(ztdFilePath);
+    if (!sourceFile.exists()) {
+        QVERIFY(expectedResult == false);
+        return;
+    }
+
+    // Run copy function
+    bool result = PZtdMgr::copyZtdFile(ztdFilePath, ztdOutputCopyPath);
+
+    // Check expected result
+    QCOMPARE(result, expectedResult);
+
+    // Verify file was copied successfully
+    QFile copiedFile(ztdOutputCopyPath);
+    if (expectedResult) {
+        QVERIFY(copiedFile.exists());
+        QVERIFY(sourceFile.size() == copiedFile.size());
+
+        // Clean up: remove copied file after test
+        copiedFile.remove();
+    }
+}
+
+
 
 QTEST_MAIN(PTestZtdMgr)
 #include "PTestZtdMgr.moc"
