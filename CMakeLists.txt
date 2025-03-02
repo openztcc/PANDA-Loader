@@ -44,8 +44,6 @@ qt_add_qml_module(appPandaLdr
         SOURCES PZtdMgr.h PZtdMgr.cpp
         SOURCES PConfigMgr.h PConfigMgr.cpp
         SOURCES PDatabaseMgr.h PDatabaseMgr.cpp
-        SOURCES tests/PTestZtdMgr.cpp
-        # RESOURCES tests/test_data/empty.ztd tests/test_data/invalid.ztd tests/test_data/invalid_no_ext tests/test_data/test.txt tests/test_data/valid.ztd
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -83,15 +81,34 @@ install(TARGETS appPandaLdr
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# # Set up unit tests
+# Set up unit tests
 
-# qt_add_executable(testPandaLdr
-#     tests/PTestZtdMgr.cpp
-#     tests/test_data/empty.ztd tests/test_data/invalid.ztd tests/test_data/invalid_no_ext tests/test_data/test.txt tests/test_data/valid.ztd
-# )
+enable_testing()
 
-# target_link_libraries(testPandaLdr
-#     PRIVATE Qt6::Test QuaZip::QuaZip
-# )
+# add the main project modules
+# creates the test exe
+qt_add_executable(testPandaLdr
+    tests/PTestZtdMgr.cpp
+    PZtdMgr.h PZtdMgr.cpp
+    PConfigMgr.h PConfigMgr.cpp
+    PDatabaseMgr.h PDatabaseMgr.cpp
+)
 
-# add_test(NAME testPandaLdr COMMAND testPandaLdr)
+# link the required libraries
+target_link_libraries(testPandaLdr
+    PRIVATE
+        Qt6::Test
+        Qt6::Core
+        Qt6::Sql
+        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+        tomlplusplus
+)
+
+# add test data as resource
+add_custom_command(TARGET testPandaLdr POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/test_data
+    ${CMAKE_BINARY_DIR}/test_data
+)
+
+add_test(NAME testPandaLdr COMMAND testPandaLdr)
