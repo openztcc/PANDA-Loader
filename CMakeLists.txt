@@ -4,14 +4,24 @@ project(PandaLdr VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick Test Sql)
 
 qt_standard_project_setup(REQUIRES 6.5)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/libs/quazip/cmake")
+
+find_package(QuaZip REQUIRED)
 
 qt_add_executable(appPandaLdr
     main.cpp
     PState.h PState.cpp
 )
+
+include_directories(
+    /libs/quazip/include
+    /libs/tomlplusplus
+)
+link_directories(/libs/quazip/lib)
 
 qt_add_qml_module(appPandaLdr
     URI PandaLdr
@@ -28,11 +38,11 @@ qt_add_qml_module(appPandaLdr
         PState.cpp
         SOURCES PController.h PController.cpp
         SOURCES PModItem.h PModItem.cpp
-        SOURCES PZtdMgr PZtdMgr.cpp
+        SOURCES PZtdMgr.h PZtdMgr.cpp
         SOURCES PConfigMgr.h PConfigMgr.cpp
         SOURCES PDatabaseMgr.h PDatabaseMgr.cpp
         SOURCES tests/PTestZtdMgr.cpp
-        RESOURCES tests/test_data/empty.ztd tests/test_data/invalid.ztd tests/test_data/invalid_no_ext tests/test_data/test.txt tests/test_data/valid.ztd
+        # RESOURCES tests/test_data/empty.ztd tests/test_data/invalid.ztd tests/test_data/invalid_no_ext tests/test_data/test.txt tests/test_data/valid.ztd
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -60,7 +70,7 @@ set_target_properties(appPandaLdr PROPERTIES
 )
 
 target_link_libraries(appPandaLdr
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick QuaZip::QuaZip Qt6::Sql
 )
 
 include(GNUInstallDirs)
@@ -69,3 +79,16 @@ install(TARGETS appPandaLdr
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# # Set up unit tests
+
+# qt_add_executable(testPandaLdr
+#     tests/PTestZtdMgr.cpp
+#     tests/test_data/empty.ztd tests/test_data/invalid.ztd tests/test_data/invalid_no_ext tests/test_data/test.txt tests/test_data/valid.ztd
+# )
+
+# target_link_libraries(testPandaLdr
+#     PRIVATE Qt6::Test QuaZip::QuaZip
+# )
+
+# add_test(NAME testPandaLdr COMMAND testPandaLdr)

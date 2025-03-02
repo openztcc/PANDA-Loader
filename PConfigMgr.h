@@ -1,7 +1,7 @@
 #ifndef PCONFIGMGR_H
 #define PCONFIGMGR_H
 
-#include <toml++/toml.h>
+#include "toml.hpp"
 #include "PZtdMgr.h"
 #include <QSettings>
 #include <QDir>

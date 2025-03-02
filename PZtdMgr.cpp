@@ -1,4 +1,4 @@
-#include "PZtdMgr"
+#include "PZtdMgr.h"
 
 PZtdMgr::PZtdMgr() 
 {
@@ -124,7 +124,7 @@ bool PZtdMgr::isZtdFile(const QString &filePath)
         return false; // File does not exist
     }
 
-    Quazip zip(filePath);
+    QuaZip zip(filePath);
     // Check if empty
     if (!zip.goToFirstFile()) {
         zip.close();
