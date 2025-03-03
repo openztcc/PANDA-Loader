@@ -15,8 +15,8 @@ private slots:
     void testRenameZtdFile();
     void testCopyZtdFile_data();
     void testCopyZtdFile();
-    // void testOpenFileInZtd_data();
-    // void testOpenFileInZtd();
+    void testOpenFileInZtd_data();
+    void testOpenFileInZtd();
 };
 
 // Statics
@@ -173,6 +173,50 @@ void PTestZtdMgr::testCopyZtdFile_data()
     QTest::newRow("existing directory") << testDataDir + "valid.ztd" << testDataDir + "valid_copy.ztd" << true;
 }
 
+void PTestZtdMgr::testRenameZtdFile_data()
+{
+    QTest::addColumn<QString>("oldFilePath");
+    QTest::addColumn<QString>("newFileName");
+    QTest::addColumn<bool>("expectedResult");
+
+    // Test case 1: Provided ztd file does not exist
+    QTest::newRow("non-existent ztd file") << testDataDir + "nonexistent.ztd" << "nonexistent.ztd" << false;
+
+    // Test case 2: Renaming ztd file to existing directory
+    QTest::newRow("existing directory") << testDataDir + "valid.ztd" << "valid_rename.ztd" << true;
+}
+
+void PTestZtdMgr::testRenameZtdFile()
+{
+    QFETCH(QString, oldFilePath);
+    QFETCH(QString, newFileName);
+    QFETCH(bool, expectedResult);
+
+    // Ensure source file exists before testing
+    QFile sourceFile(oldFilePath);
+    if (!sourceFile.exists()) {
+        QVERIFY(expectedResult == false);
+        return;
+    }
+
+    // Run rename function
+    bool result = PZtdMgr::renameZtdFile(oldFilePath, newFileName);
+
+    // Check expected result
+    QCOMPARE(result, expectedResult);
+
+    // Verify file was renamed successfully
+    if (expectedResult) {
+        QString newFilePath = QFileInfo(oldFilePath).absolutePath() + "/" + newFileName;
+        QFile renamedFile(newFilePath);
+        QVERIFY(renamedFile.exists());
+        QVERIFY(sourceFile.size() == renamedFile.size());
+
+        // Clean up: remove renamed file after test
+        renamedFile.remove();
+    }
+}
+
 void PTestZtdMgr::testCopyZtdFile()
 {
     QFETCH(QString, ztdFilePath);
@@ -203,6 +247,53 @@ void PTestZtdMgr::testCopyZtdFile()
     }
 }
 
+void PTestZtdMgr::testOpenFileInZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<QString>("fileNameToOpen");
+    QTest::addColumn<bool>("expectedResult");
+
+    // Test case 1: Provided ztd file does not exist
+    QTest::newRow("non-existent ztd file") << testDataDir + "nonexistent.ztd" << "nonexistent.txt" << false;
+
+    // Test case 2: Provided ztd file exists but file does not
+    QTest::newRow("non-existent file") << testDataDir + "valid.ztd" << "nonexistent.txt" << false;
+
+    // Test case 3: Provided ztd file and file exist
+    QTest::newRow("valid ztd and file") << testDataDir + "valid.ztd" << "new_file.txt" << true;
+}
+
+void PTestZtdMgr::testOpenFileInZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(QString, fileNameToOpen);
+    QFETCH(bool, expectedResult);
+
+    // Make sure the source ztd file exists
+    QFile sourceFile(ztdFilePath);
+    if (!sourceFile.exists()) {
+        QVERIFY(expectedResult == false);
+        return;
+    }
+
+    // Run the function
+    QByteArray fileData;
+    bool result = PZtdMgr::openFileInZtd(ztdFilePath, fileNameToOpen, fileData);
+
+    // Validate the function result
+    QCOMPARE(result, expectedResult);
+
+    // Validate the file data
+    QString expectedFileData = "test";
+    if (expectedResult) {
+        QVERIFY(fileData == expectedFileData.toUtf8());
+    }
+
+    // If the file was expected to be found, verify its data
+    if (expectedResult) {
+        QVERIFY(!fileData.isEmpty());
+    }
+}
 
 
 QTEST_MAIN(PTestZtdMgr)
