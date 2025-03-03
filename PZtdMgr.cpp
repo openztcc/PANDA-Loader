@@ -42,6 +42,7 @@ bool PZtdMgr::hasZtdFiles(const QString &zipFilePath)
 }
 
 // TODO: Find more efficient method of adding files to ztd?
+// TODO: Fix bug where it adds a duplicate file if it already exists
 bool PZtdMgr::addFileToZtd(const QString &ztdFilePath, const QString &filePathToAdd) 
 {
     if (PZtdMgr::isZtdFile(ztdFilePath) != 0) {

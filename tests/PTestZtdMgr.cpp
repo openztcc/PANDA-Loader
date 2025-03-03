@@ -9,10 +9,10 @@ private slots:
     void testIsZtdFile();
     void testAddFileToZtd_data();
     void testAddFileToZtd();
-    // void testMoveZtdFile_data();
-    // void testMoveZtdFile();
-    // void testRenameZtdFile_data();
-    // void testRenameZtdFile();
+    void testMoveZtdFile_data();
+    void testMoveZtdFile();
+    void testRenameZtdFile_data();
+    void testRenameZtdFile();
     void testCopyZtdFile_data();
     void testCopyZtdFile();
     // void testOpenFileInZtd_data();
@@ -103,6 +103,57 @@ void PTestZtdMgr::testAddFileToZtd()
         QVERIFY(found);
 
         zip.close();
+    }
+}
+
+void PTestZtdMgr::testMoveZtdFile_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<QString>("newLocation");
+    QTest::addColumn<bool>("expectedResult");
+
+    // Test case 1: Provided ztd file does not exist
+    QTest::newRow("non-existent ztd file") << testDataDir + "nonexistent.ztd" << testDataDir + "test_dir/nonexistent.ztd" << false;
+
+    // Test case 2: Moving ztd file to non-existent directory
+    QTest::newRow("non-existent directory") << testDataDir + "valid.ztd" << testDataDir + "nonexistent_dir/valid.ztd" << false;
+
+    // Test case 3: Moving ztd file to existing directory
+    QTest::newRow("existing directory") << testDataDir + "valid.ztd" << testDataDir + "test_dir/valid.ztd" << true;
+}
+
+void PTestZtdMgr::testMoveZtdFile()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(QString, newLocation);
+    QFETCH(bool, expectedResult);
+
+    // Ensure source file exists before testing
+    QFile sourceFile(ztdFilePath);
+    if (!sourceFile.exists()) {
+        QVERIFY(expectedResult == false);
+        return;
+    }
+
+    // Run move function
+    bool result = PZtdMgr::moveZtdFile(ztdFilePath, newLocation);
+
+    // Copy the file back to original location if move was successful
+    if (result) {
+        QVERIFY(QFile::copy(newLocation, ztdFilePath));
+    }
+
+    // Check expected result
+    QCOMPARE(result, expectedResult);
+
+    // Verify file was moved successfully
+    if (expectedResult) {
+        QFile movedFile(newLocation);
+        QVERIFY(movedFile.exists());
+        QVERIFY(sourceFile.size() == movedFile.size());
+
+        // Clean up: remove moved file after test
+        movedFile.remove();
     }
 }
 
