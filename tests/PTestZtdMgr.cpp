@@ -7,8 +7,8 @@ class PTestZtdMgr : public QObject
 private slots:
     void testIsZtdFile_data();
     void testIsZtdFile();
-    // void testAddFileToZtd_data();
-    // void testAddFileToZtd();
+    void testAddFileToZtd_data();
+    void testAddFileToZtd();
     // void testMoveZtdFile_data();
     // void testMoveZtdFile();
     // void testRenameZtdFile_data();
@@ -44,6 +44,68 @@ void PTestZtdMgr::testIsZtdFile_data()
     QTest::newRow("non-existent file") << testDataDir + "nonexistent.ztd" << 1;
 }
 
+void PTestZtdMgr::testIsZtdFile()
+{
+    QFETCH(QString, zipFilePath);
+    QFETCH(int, expectedResult);
+
+    int result = PZtdMgr::isZtdFile(zipFilePath);
+    QCOMPARE (result, expectedResult);
+}
+
+void PTestZtdMgr::testAddFileToZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<QString>("filePathToAdd");
+    QTest::addColumn<bool>("expectedResult");
+
+    // Test case 1: Valid ztd file and valid file to add
+    QTest::newRow("valid ztd and file") << testDataDir + "valid.ztd" << testDataDir + "new_file.txt" << true;
+
+    // Test case 2: Valid ztd file and non-existent file to add
+    QTest::newRow("valid ztd and non-existent file") << testDataDir + "valid.ztd" << testDataDir + "nonexistent.txt" << false;
+
+    // Test case 3: Non-existent ztd file and valid file to add
+    QTest::newRow("non-existent ztd and file") << testDataDir + "nonexistent.ztd" << testDataDir + "new_file.txt" << false;
+
+    // Test case 4: Non-existent ztd file and non-existent file to add
+    QTest::newRow("non-existent ztd and non-existent file") << testDataDir + "nonexistent.ztd" << testDataDir + "nonexistent.txt" << false;
+}
+
+void PTestZtdMgr::testAddFileToZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(QString, filePathToAdd);
+    QFETCH(bool, expectedResult);
+
+    // Run add function
+    bool result = PZtdMgr::addFileToZtd(ztdFilePath, filePathToAdd);
+
+    // Check expected result
+    QCOMPARE(result, expectedResult);
+
+    // Verify file was added successfully
+    if (expectedResult) {
+        QuaZip zip(ztdFilePath);
+        QVERIFY(zip.open(QuaZip::mdUnzip));
+
+        bool found = false;
+        QString expectedFileName = QFileInfo(filePathToAdd).fileName();  // Extract the correct file name
+
+        while (zip.goToNextFile()) {
+            QString fileName = zip.getCurrentFileName();
+            if (fileName == expectedFileName) {  // Compare only the filename
+                found = true;
+                break;
+            }
+        }
+
+        QVERIFY(found);
+
+        zip.close();
+    }
+}
+
 void PTestZtdMgr::testCopyZtdFile_data()
 {
     QTest::addColumn<QString>("ztdFilePath");
@@ -58,15 +120,6 @@ void PTestZtdMgr::testCopyZtdFile_data()
 
     // Test case 3: Copying ztd file to existing directory
     QTest::newRow("existing directory") << testDataDir + "valid.ztd" << testDataDir + "valid_copy.ztd" << true;
-}
-
-void PTestZtdMgr::testIsZtdFile()
-{
-    QFETCH(QString, zipFilePath);
-    QFETCH(int, expectedResult);
-
-    int result = PZtdMgr::isZtdFile(zipFilePath);
-    QCOMPARE (result, expectedResult);
 }
 
 void PTestZtdMgr::testCopyZtdFile()

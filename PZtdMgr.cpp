@@ -41,45 +41,239 @@ bool PZtdMgr::hasZtdFiles(const QString &zipFilePath)
     return hasZtd;
 }
 
+// TODO: Find more efficient method of adding files to ztd?
 bool PZtdMgr::addFileToZtd(const QString &ztdFilePath, const QString &filePathToAdd) 
 {
-    // Open the ztd file
+    if (PZtdMgr::isZtdFile(ztdFilePath) != 0) {
+        return false; // Not a valid ZTD file
+    }
+
     QuaZip zip(ztdFilePath);
-    if (!zip.open(QuaZip::mdAppend)) {
-        return false; // Failed to open ztd file
-    }
-
-    // Add the file to the ztd
-    QuaZipFile file(&zip);
-    if (!file.open(QIODevice::WriteOnly, QuaZipNewInfo(filePathToAdd))) {
+    if (!zip.open(QuaZip::mdAdd)) {
         zip.close();
-        return false; // Failed to open file in ztd (in stream)
+        return false; // Failed to open ZTD file
     }
 
-    // Read the file to add and write it to the ztd
-    QFile sourceFile(filePathToAdd);
-    if (!sourceFile.open(QIODevice::ReadOnly)) {
-        file.close();
+    // Check if input file exists
+    if (!QFile::exists(filePathToAdd)) {
         zip.close();
-        return false; // Failed to open source file
+        return false; // File does not exist
     }
 
-    QByteArray data = sourceFile.readAll();
-    file.write(data);
-    
-    // Close the files
-    sourceFile.close();
-    file.close();
+    QuaZipFile outputFile(&zip);
+    QuaZipNewInfo newFileInfo(QFileInfo(filePathToAdd).fileName(), filePathToAdd);
+    if (!outputFile.open(QIODevice::WriteOnly, newFileInfo)) {
+        zip.close();
+        return false; // Failed to open output file
+    }
+
+    QFile inputFile(filePathToAdd);
+    if (!inputFile.open(QIODevice::ReadOnly)) {
+        outputFile.close();
+        zip.close();
+        return false; // Failed to open input file
+    }
+
+    QByteArray data = inputFile.readAll();
+    inputFile.close();
+
+    outputFile.write(data);
+    outputFile.close();
     zip.close();
 
     return true;
 }
 
-// TODO: Find more efficient method of removing files from ztd
-bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileToRemove)
+// Extracts all files from a ztd file to a temporary directory
+bool PZtdMgr::extractFilesFromZtd(const QString &ztdFilePath, const QString &tempDirPath)
 {
-    // TODO: implement this
-    return 0;
+    QuaZip zip(ztdFilePath);
+    if (!zip.open(QuaZip::mdUnzip)) {
+        qDebug() << "Failed to open ZTD file for extraction: " << zip.getZipError();
+        return false;
+    }
+
+    QDir tempDir(tempDirPath);
+    if (!tempDir.exists()) {
+        tempDir.mkpath(".");
+    }
+
+    for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile()) {
+        QString fileName = zip.getCurrentFileName();
+        QString fullPath = tempDir.filePath(fileName);
+
+        QuaZipFile zipFile(&zip);
+        if (!zipFile.open(QIODevice::ReadOnly)) {
+            qDebug() << "Failed to open file in ZTD: " << fileName;
+            continue;
+        }
+
+        QFile outFile(fullPath);
+        if (!outFile.open(QIODevice::WriteOnly)) {
+            qDebug() << "Failed to create temp file: " << fullPath;
+            zipFile.close();
+            continue;
+        }
+
+        outFile.write(zipFile.readAll());
+        zipFile.close();
+        outFile.close();
+    }
+
+    zip.close();
+    return true;
+}
+
+// Replaces a file in a directory with new data
+bool PZtdMgr::replaceFileInDir(const QString &tempDirPath, const QString &filePathToAdd)
+{
+    QString fileName = QFileInfo(filePathToAdd).fileName();
+    QString destPath = QDir(tempDirPath).filePath(fileName);
+
+    if (QFile::exists(destPath)) {
+        QFile::remove(destPath);
+    }
+
+    return QFile::copy(filePathToAdd, destPath);
+}
+
+// Creates a ztd file from a directory
+bool PZtdMgr::createZtdFromDir(const QString &ztdFilePath, const QString &tempDirPath)
+{
+    // Ensure parent directory exists
+    QFileInfo ztdFileInfo(ztdFilePath);
+    QDir parentDir = ztdFileInfo.absoluteDir();
+    if (!parentDir.exists()) {
+        qDebug() << "Creating missing directory:" << parentDir.absolutePath();
+        if (!parentDir.mkpath(".")) {
+            qDebug() << "Failed to create parent directory!";
+            return false;
+        }
+    }
+
+    // Ensure temp directory exists
+    QDir tempDir(tempDirPath);
+    if (!tempDir.exists()) {
+        qDebug() << "Temp directory does not exist: " << tempDirPath;
+        return false;
+    }
+
+    // Delete old ZTD if it exists
+    if (QFile::exists(ztdFilePath)) {
+        QFile::remove(ztdFilePath);
+    }
+
+    QString fileName = QFileInfo(ztdFilePath).fileName();
+    QuaZip newZip(fileName);
+    if (!newZip.open(QuaZip::mdCreate)) {
+        qDebug() << "Failed to create new ZTD file: " << newZip.getZipError();
+        return false;
+    }
+
+    // Get file list with proper filtering
+    QStringList fileList = tempDir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+    for (const QString &fileName : fileList) {
+        QString fullPath = tempDir.filePath(fileName);
+
+        QuaZipFile newFile(&newZip);
+        if (!newFile.open(QIODevice::WriteOnly, QuaZipNewInfo(fileName))) {
+            qDebug() << "Failed to write file to ZTD: " << fileName << " Error:" << newFile.getZipError();
+            continue;
+        }
+
+        QFile file(fullPath);
+        if (!file.open(QIODevice::ReadOnly)) {
+            qDebug() << "Failed to open temp file: " << fullPath;
+            newFile.close();
+            continue;
+        }
+
+        newFile.write(file.readAll());
+        file.close();
+        newFile.close();
+    }
+
+    newZip.close();
+    return true;
+}
+
+
+// Checks if a file exists in a ztd
+bool PZtdMgr::fileExistsInZtd(const QString &ztdFilePath, const QString &fileNameToCheck)
+{
+    QuaZip zip(ztdFilePath);
+    if (!zip.open(QuaZip::mdUnzip)) {
+        qDebug() << "Failed to open ZTD for reading: " << zip.getZipError();
+        return false;
+    }
+
+    for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile()) {
+        if (zip.getCurrentFileName() == fileNameToCheck) {
+            zip.close();
+            return true;
+        }
+    }
+
+    zip.close();
+    return false;
+}
+
+// TODO: Find more efficient method of removing files from ztd
+bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileNameToRemove)
+{
+    QString tempZtdPath = ztdFilePath + ".tmp";  // Temporary file
+
+    QuaZip oldZip(ztdFilePath);
+    QuaZip newZip(tempZtdPath);
+
+    if (!oldZip.open(QuaZip::mdUnzip)) {
+        qDebug() << "Failed to open ZTD file for reading: " << oldZip.getZipError();
+        return false;
+    }
+
+    if (!newZip.open(QuaZip::mdCreate)) {
+        qDebug() << "Failed to create new ZTD file: " << newZip.getZipError();
+        oldZip.close();
+        return false;
+    }
+
+    QuaZipFile oldFile(&oldZip);
+    QuaZipFile newFile(&newZip);
+
+    for (bool more = oldZip.goToFirstFile(); more; more = oldZip.goToNextFile()) {
+        QString existingFileName = oldZip.getCurrentFileName();
+        if (existingFileName == fileNameToRemove) {
+            qDebug() << "Removing file from ZTD: " << fileNameToRemove;
+            continue;  // Skip this file (remove it)
+        }
+
+        if (!oldFile.open(QIODevice::ReadOnly)) {
+            qDebug() << "Failed to read existing file: " << existingFileName;
+            continue;
+        }
+
+        QByteArray data = oldFile.readAll();
+        oldFile.close();
+
+        if (!newFile.open(QIODevice::WriteOnly, QuaZipNewInfo(existingFileName))) {
+            qDebug() << "Failed to write existing file: " << existingFileName;
+            continue;
+        }
+
+        newFile.write(data);
+        newFile.close();
+    }
+
+    oldZip.close();
+    newZip.close();
+
+    // Replace the old archive with the new one
+    if (!QFile::remove(ztdFilePath) || !QFile::rename(tempZtdPath, ztdFilePath)) {
+        qDebug() << "Failed to replace old ZTD file!";
+        return false;
+    }
+
+    return true;
 }
 
 // Moves a ztd file from one location on disk to another

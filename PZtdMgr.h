@@ -4,6 +4,8 @@
 #include "quazip.h"
 #include "quazipfile.h"
 #include "quazipnewinfo.h"
+#include <QDir>
+#include <QUuid>
 
 class PZtdMgr
 {
@@ -21,6 +23,11 @@ public:
     static bool copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCopyPath);
     static bool openFileInZtd(const QString &ztdFilePath, const QString &fileNameToOpen, QByteArray &fileData);
     static int isZtdFile(const QString &filePath);
+    static bool fileExistsInZtd(const QString &ztdFilePath, const QString &fileNameToCheck);
+private:
+    static bool extractFilesFromZtd(const QString &ztdFilePath, const QString &tempDir);
+    static bool replaceFileInDir(const QString &tempDirPath, const QString &filePathToAdd);
+    static bool createZtdFromDir(const QString &ztdFilePath, const QString &tempDirPath);
 };
 
 #endif // PZTDMGR
