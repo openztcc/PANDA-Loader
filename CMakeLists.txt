@@ -87,7 +87,9 @@ enable_testing()
 
 # add the main project modules
 # creates the test exe
-qt_add_executable(testPandaLdr
+
+# ------------- PTestZtdMgr -------------
+qt_add_executable(testZtdMgr
     tests/PTestZtdMgr.cpp
     PZtdMgr.h PZtdMgr.cpp
     PConfigMgr.h PConfigMgr.cpp
@@ -95,7 +97,7 @@ qt_add_executable(testPandaLdr
 )
 
 # link the required libraries
-target_link_libraries(testPandaLdr
+target_link_libraries(testZtdMgr
     PRIVATE
         Qt6::Test
         Qt6::Core
@@ -105,10 +107,35 @@ target_link_libraries(testPandaLdr
 )
 
 # add test data as resource
-add_custom_command(TARGET testPandaLdr POST_BUILD
+add_custom_command(TARGET testZtdMgr POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/tests/test_data
     ${CMAKE_BINARY_DIR}/test_data
 )
 
-add_test(NAME testPandaLdr COMMAND testPandaLdr)
+# ------------- PTestConfigMgr -------------
+qt_add_executable(testConfigMgr
+    tests/PTestConfigMgr.cpp
+    PConfigMgr.h PConfigMgr.cpp
+    PZtdMgr.h PZtdMgr.cpp
+)
+
+# link the required libraries
+target_link_libraries(testConfigMgr
+    PRIVATE
+        Qt6::Test
+        Qt6::Core
+        Qt6::Sql
+        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+        tomlplusplus
+)
+
+# add test data as resource
+add_custom_command(TARGET testConfigMgr POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/test_data
+    ${CMAKE_BINARY_DIR}/test_data
+)
+
+add_test(NAME testZtdMgr COMMAND testZtdMgr)
+add_test(NAME testConfigMgr COMMAND testConfigMgr)
