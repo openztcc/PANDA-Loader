@@ -53,18 +53,31 @@ void PTestConfigMgr::testGetMetaConfig()
         QString v = PConfigMgr::getKeyValue(k, config);
         if (k == "authors" || k == "tags") {
             qDebug() << "[" << k << "] =";
-            toml::array arr = value.as_array();
-            for (const auto &item : arr) {
-                qDebug() << "[" << k << "] = " << item.as_string()->get();
+
+            // grab array of values
+            if (auto arr = value.as_array()) {
+                for (const auto &item : *arr) {
+                    qDebug() << "\t" << QString::fromStdString(item.as_string()->get());
+                }
             }
+
             continue;
         } else if (k == "dependencies") {
             qDebug () << "[ Dependencies ] =";
-            toml::table depTable = value.as_table();
-            for (const auto &[depKey, depValue] : depTable) {
-                QString depK = QString::fromStdString(static_cast<std::string>(depKey));
-                QString depV = QString::fromStdString(depValue.as_string()->get());
-                qDebug() << "[" << depKey << "] = " << depK << " : " << depV;
+
+            // parse dictionary and print key/value pairs
+            if (auto depTable = value.as_table()) {
+                if (depTable->empty()) {
+                    qDebug() << "\t\"\"";
+                    continue;
+                }
+                for (const auto &[depKey, depValue] : *depTable) {
+                    QString depK = QString::fromStdString(static_cast<std::string>(depKey));
+                    if (auto depStr = depValue.as_string()) {
+                        QString depV = QString::fromStdString(depStr->get());
+                        qDebug() << "\t" << depV;
+                    }
+                }
             }
             continue;
         }
