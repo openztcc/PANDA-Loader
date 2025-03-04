@@ -11,11 +11,11 @@ class PConfigMgr
 public:
     PConfigMgr();
     ~PConfigMgr();
-    toml::table getMetaConfig(const QString &ztdFilePath);
+    static toml::table getMetaConfig(const QString &ztdFilePath);
     static QString getKeyValue(const QString &key, const toml::table &config);
-    bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
-    bool removeMetaConfig(const QString &ztdFilePath);
-    bool addMetaConfig(const QString &ztdFilePath, const toml::table &config);
+    static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
+    static bool removeMetaConfig(const QString &ztdFilePath);
+    static bool addMetaConfig(const QString &ztdFilePath, const toml::table &config);
     toml::table getZooIniConfig(const QString &iniPath);
     bool updateZooIniConfig(const QString &iniPath, const toml::table &config);
     bool removeZooIniConfig(const QString &iniPath);

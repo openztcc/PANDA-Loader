@@ -57,6 +57,12 @@ bool PConfigMgr::updateMetaConfig(const QString &ztdFilePath, const toml::table 
         return false; // Failed to copy the ztd file
     }
 
+    // Remove the old meta configuration in ztd
+    if (!PConfigMgr::removeMetaConfig(tempZtdPath)) {
+        QFile::remove(tempZtdPath); // Clean up temporary file
+        return false; // Failed to remove the old meta config
+    }
+
     // Update the meta configuration in the temporary ztd
     std::ostringstream oss;
     oss << config;
@@ -96,41 +102,6 @@ bool PConfigMgr::removeMetaConfig(const QString &ztdFilePath)
     if (!PZtdMgr::removeFileFromZtd(tempZtdPath, m_metaConfigName)) {
         QFile::remove(tempZtdPath); // Clean up temporary file
         return false; // Failed to remove the meta config
-    }
-
-    // Replace the original ztd with the temporary one
-    if (!PZtdMgr::moveZtdFile(tempZtdPath, ztdFilePath)) {
-        QFile::remove(tempZtdPath); // Clean up temporary file
-        return false; // Failed to replace the original ztd
-    }
-
-    return true;
-}
-
-// Adds a meta configuration to a ztd file
-// TODO: Test if this adds the config correctly
-bool PConfigMgr::addMetaConfig(const QString &ztdFilePath, const toml::table &config)
-{
-    // Check if the ztd file exists
-    if (!PZtdMgr::isZtdFile(ztdFilePath)) {
-        return false; // Ztd file does not exist or is not valid
-    }
-
-    // Create a temporary file to store the new ztd with the added config
-    QString tempZtdPath = ztdFilePath + ".tmp";
-
-    // Copy the original ztd to the temporary file
-    if (!PZtdMgr::copyZtdFile(ztdFilePath, tempZtdPath)) {
-        return false; // Failed to copy the ztd file
-    }
-
-    // Add the meta configuration to the temporary ztd
-    std::ostringstream oss;
-    oss << config;
-    QByteArray tomlData = QByteArray::fromStdString(oss.str());
-    if (!PZtdMgr::addFileToZtd(tempZtdPath, m_metaConfigName)) {
-        QFile::remove(tempZtdPath); // Clean up temporary file
-        return false; // Failed to add the meta config
     }
 
     // Replace the original ztd with the temporary one
