@@ -25,6 +25,19 @@ toml::table PConfigMgr::getMetaConfig(const QString &ztdFilePath)
     return config;
 }
 
+// Get a key value from a toml table
+QString PConfigMgr::getKeyValue(const QString &key, const toml::table &config)
+{
+    // Find value in table
+    if (auto it = config.find(key.toStdString()); it != config.end()) {
+        if (auto strVal = it->second.as_string()) {
+            return QString::fromStdString(strVal->get());
+        }
+    }
+
+    return QString("");
+}
+
 // Updates the meta configuration in a ztd file
 // TODO: Test if this updates the config correctly
 // - Possible issue with old config not being removed

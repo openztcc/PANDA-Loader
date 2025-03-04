@@ -12,6 +12,7 @@ public:
     PConfigMgr();
     ~PConfigMgr();
     toml::table getMetaConfig(const QString &ztdFilePath);
+    static QString getKeyValue(const QString &key, const toml::table &config);
     bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     bool removeMetaConfig(const QString &ztdFilePath);
     bool addMetaConfig(const QString &ztdFilePath, const toml::table &config);
