@@ -22,7 +22,7 @@ public:
     static bool renameZtdFile(const QString &oldFilePath, const QString &newFileName);
     static bool copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCopyPath);
     static bool openFileInZtd(const QString &ztdFilePath, const QString &fileNameToOpen, QByteArray &fileData);
-    static int isZtdFile(const QString &filePath);
+    static bool isZtdFile(const QString &filePath);
     static bool fileExistsInZtd(const QString &ztdFilePath, const QString &fileNameToCheck);
 private:
     static bool extractFilesFromZtd(const QString &ztdFilePath, const QString &tempDir);

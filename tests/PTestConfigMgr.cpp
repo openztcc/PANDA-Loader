@@ -105,6 +105,9 @@ void PTestConfigMgr::testUpdateMetaConfig_data()
 
     QTest::newRow("valid meta.toml") << testDataDir + "config_update_valid.ztd" << validConfig << true;
     QTest::newRow("invalid meta.toml") << testDataDir + "config_update_invalid.ztd" << invalidConfig << false;
+
+    validConfig.clear();
+    invalidConfig.clear();
 }
 
 void PTestConfigMgr::testUpdateMetaConfig()

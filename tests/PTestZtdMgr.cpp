@@ -25,32 +25,32 @@ QString testDataDir = QFINDTESTDATA("test_data/");
 void PTestZtdMgr::testIsZtdFile_data()
 {
     QTest::addColumn<QString>("zipFilePath");
-    QTest::addColumn<int>("expectedResult");
+    QTest::addColumn<bool>("expectedResult");
 
 
     // Test case 1: Valid ztd file
-    QTest::newRow("valid ztd file") << testDataDir + "valid.ztd" << 0;
+    QTest::newRow("valid ztd file") << testDataDir + "valid.ztd" << true;
 
     // Test case 2: Invalid ztd file (not a zip)
-    QTest::newRow("invalid ztd file") << testDataDir + "invalid.ztd" << 3;
+    QTest::newRow("invalid ztd file") << testDataDir + "invalid.ztd" << false;
 
     // Test case 3: Invalid ztd file (no ztd extension)
-    QTest::newRow("invalid ztd file no extension") << testDataDir + "invalid_no_ext" << 2;
+    QTest::newRow("invalid ztd file no extension") << testDataDir + "invalid_no_ext" << false;
 
     // Test case 4: Invalid ztd file (empty)
-    QTest::newRow("invalid ztd file empty") << testDataDir + "empty.ztd" << 3;
+    QTest::newRow("invalid ztd file empty") << testDataDir + "empty.ztd" << false;
 
     // Test case 3: Non-existent file
-    QTest::newRow("non-existent file") << testDataDir + "nonexistent.ztd" << 1;
+    QTest::newRow("non-existent file") << testDataDir + "nonexistent.ztd" << false;
 }
 
 void PTestZtdMgr::testIsZtdFile()
 {
     QFETCH(QString, zipFilePath);
-    QFETCH(int, expectedResult);
+    QFETCH(bool, expectedResult);
 
     int result = PZtdMgr::isZtdFile(zipFilePath);
-    QCOMPARE (result, expectedResult);
+    QCOMPARE(result, expectedResult);
 }
 
 void PTestZtdMgr::testAddFileToZtd_data()
