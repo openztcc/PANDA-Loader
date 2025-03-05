@@ -7,10 +7,10 @@ class PTestConfigMgr : public QObject
 private slots:
     void testGetMetaConfig_data();
     void testGetMetaConfig();
-    // void testUpdateMetaConfig_data();
-    // void testUpdateMetaConfig();
-    // void testRemoveMetaConfig_data();
-    // void testRemoveMetaConfig();
+    void testUpdateMetaConfig_data();
+    void testUpdateMetaConfig();
+    void testRemoveMetaConfig_data();
+    void testRemoveMetaConfig();
     // void testAddMetaConfig_data();
     // void testAddMetaConfig();
     // void testGetZooIniConfig_data();
@@ -82,6 +82,76 @@ void PTestConfigMgr::testGetMetaConfig()
             continue;
         }
         qDebug() << "[" << k << "] = " << v;
+    }
+}
+
+void PTestConfigMgr::testUpdateMetaConfig_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<toml::table>("config");
+    QTest::addColumn<bool>("expected");
+
+    // Valid TOML table
+    toml::table validConfig;
+    validConfig.insert_or_assign("authors", toml::array{"Goosifer", "Finn"});
+    validConfig.insert_or_assign("tags", toml::array{"tag1", "tag2"});
+    validConfig.insert_or_assign("dependencies", toml::table{{"dep1", "1.0.0"}, {"dep2", "2.0.0"}});
+
+    // Invalid TOML table (wrong types)
+    toml::table invalidConfig;
+    invalidConfig.insert_or_assign("authors", "Not an array");  // Wrong type (should be array)
+    invalidConfig.insert_or_assign("tags", toml::array{"tag1", 123}); // Mixed types
+    invalidConfig.insert_or_assign("dependencies", toml::table{{"dep1", 1.0}}); // Wrong type (should be string)
+
+    QTest::newRow("valid meta.toml") << testDataDir + "config_update_valid.ztd" << validConfig << true;
+    QTest::newRow("invalid meta.toml") << testDataDir + "config_update_invalid.ztd" << invalidConfig << false;
+}
+
+void PTestConfigMgr::testUpdateMetaConfig()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(toml::table, config);
+    QFETCH(bool, expected);
+
+    // Perform update
+    bool result = PConfigMgr::updateMetaConfig(ztdFilePath, config);
+    QVERIFY(result == expected);
+
+    // Did it update correctly?
+    if (expected) {
+        try {
+            toml::table newConfig = toml::parse_file(ztdFilePath.toStdString());
+
+            // Check if matching
+            QVERIFY(newConfig == config);
+        } catch (const toml::parse_error &e) {
+            QFAIL(("TOML file parsing failed after update: " + std::string(e.what())).c_str());
+        }
+    }
+}
+
+void PTestConfigMgr::testRemoveMetaConfig_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("remove meta.toml") << testDataDir + "config_remove_valid.ztd" << true;
+    QTest::newRow("remove non-existent meta.toml") << testDataDir + "config_remove_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testRemoveMetaConfig()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Perform removal
+    bool result = PConfigMgr::removeMetaConfig(ztdFilePath);
+    QVERIFY(result == expected);
+
+    // Check if it was removed
+    if (expected) {
+        toml::table config = PConfigMgr::getMetaConfig(ztdFilePath);
+        QVERIFY(config.empty());
     }
 }
 

@@ -15,17 +15,8 @@ public:
     static QString getKeyValue(const QString &key, const toml::table &config);
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);
-    static bool addMetaConfig(const QString &ztdFilePath, const toml::table &config);
     toml::table getZooIniConfig(const QString &iniPath);
     bool updateZooIniConfig(const QString &iniPath, const toml::table &config);
     bool removeZooIniConfig(const QString &iniPath);
-
-private:
-    PZtdMgr m_ztdMgr;
-    QSettings m_settings;
-    const QString m_zooIniName = "zoo.ini";
-    const QString m_metaConfigName = "meta.toml";
-    const QString m_configDirPath = QDir::homePath() + "/.config/PandaLdr/"; // temporary
-    const QString m_metaConfigDirPath = m_configDirPath + "meta_configs/"; // temporary
 };
-    #endif // PCONFIGMGR_H
+#endif // PCONFIGMGR_H

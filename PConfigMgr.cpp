@@ -1,5 +1,10 @@
 #include "PConfigMgr.h"
 
+const QString m_zooIniName = "zoo.ini";
+const QString m_metaConfigName = "meta.toml";
+const QString m_configDirPath = QDir::homePath() + "/.config/PandaLdr/"; // temporary
+const QString m_metaConfigDirPath = m_configDirPath + "meta_configs/"; // temporary
+
 PConfigMgr::PConfigMgr() {}
 
 PConfigMgr::~PConfigMgr() {}
