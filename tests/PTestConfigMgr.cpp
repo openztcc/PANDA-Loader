@@ -38,8 +38,7 @@ void PTestConfigMgr::testGetMetaConfig()
     QFETCH(QString, ztdFilePath);
     QFETCH(bool, expected);
 
-    PConfigMgr configMgr;
-    toml::table config = configMgr.getMetaConfig(ztdFilePath);
+    toml::table config = PConfigMgr::getMetaConfig(ztdFilePath);
     
     if (expected) {
         QVERIFY(!config.empty());
@@ -83,6 +82,8 @@ void PTestConfigMgr::testGetMetaConfig()
         }
         qDebug() << "[" << k << "] = " << v;
     }
+
+    config.clear();
 }
 
 void PTestConfigMgr::testUpdateMetaConfig_data()
@@ -93,11 +94,13 @@ void PTestConfigMgr::testUpdateMetaConfig_data()
 
     // Valid TOML table
     toml::table validConfig;
-    validConfig.insert_or_assign("authors", toml::array{"Goosifer", "Finn"});
-    validConfig.insert_or_assign("tags", toml::array{"tag1", "tag2"});
-    validConfig.insert_or_assign("dependencies", toml::table{{"dep1", "1.0.0"}, {"dep2", "2.0.0"}});
-
-    // Invalid TOML table (wrong types)
+    validConfig.insert_or_assign("authors", toml::array{std::string("Goosifer"), std::string("Finn")});
+    validConfig.insert_or_assign("tags", toml::array{std::string("tag1"), std::string("tag2")});
+    validConfig.insert_or_assign("dependencies", toml::table{
+        {std::string("dep1"), std::string("1.0.0")},
+        {std::string("dep2"), std::string("2.0.0")}
+    });
+        // Invalid TOML table (wrong types)
     toml::table invalidConfig;
     invalidConfig.insert_or_assign("authors", "Not an array");  // Wrong type (should be array)
     invalidConfig.insert_or_assign("tags", toml::array{"tag1", 123}); // Mixed types
@@ -127,10 +130,14 @@ void PTestConfigMgr::testUpdateMetaConfig()
 
             // Check if matching
             QVERIFY(newConfig == config);
+            newConfig.clear();
         } catch (const toml::parse_error &e) {
             QFAIL(("TOML file parsing failed after update: " + std::string(e.what())).c_str());
         }
     }
+
+    // Clean up
+    config.clear();
 }
 
 void PTestConfigMgr::testRemoveMetaConfig_data()

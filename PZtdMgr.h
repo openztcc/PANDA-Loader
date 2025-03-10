@@ -28,6 +28,7 @@ private:
     static bool extractFilesFromZtd(const QString &ztdFilePath, const QString &tempDir);
     static bool replaceFileInDir(const QString &tempDirPath, const QString &filePathToAdd);
     static bool createZtdFromDir(const QString &ztdFilePath, const QString &tempDirPath);
+    static bool removeFileFromDir(const QString &dir);
 };
 
 #endif // PZTDMGR

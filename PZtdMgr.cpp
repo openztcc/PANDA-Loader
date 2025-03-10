@@ -45,26 +45,30 @@ bool PZtdMgr::hasZtdFiles(const QString &zipFilePath)
 // TODO: Fix bug where it adds a duplicate file if it already exists
 bool PZtdMgr::addFileToZtd(const QString &ztdFilePath, const QString &filePathToAdd) 
 {
-    if (PZtdMgr::isZtdFile(ztdFilePath) != 0) {
+    if (!PZtdMgr::isZtdFile(ztdFilePath)) {
+        qDebug() << "addFileToZtd: Not a valid ZTD file: " << ztdFilePath;
         return false; // Not a valid ZTD file
     }
 
     QuaZip zip(ztdFilePath);
     if (!zip.open(QuaZip::mdAdd)) {
         zip.close();
+        qDebug() << "addFileToZtd: Failed to open ZTD file: " << zip.getZipError();
         return false; // Failed to open ZTD file
     }
 
     // Check if input file exists
-    if (!QFile::exists(filePathToAdd)) {
-        zip.close();
-        return false; // File does not exist
-    }
+    // NOTE: Need to address when file is in memory vs on disk
+    // if (!QFile::exists(filePathToAdd)) {
+    //     zip.close();
+    //     return false; // File does not exist
+    // }
 
     QuaZipFile outputFile(&zip);
     QuaZipNewInfo newFileInfo(QFileInfo(filePathToAdd).fileName(), filePathToAdd);
     if (!outputFile.open(QIODevice::WriteOnly, newFileInfo)) {
         zip.close();
+        qDebug() << "addFileToZtd: Failed to open output file: " << outputFile.getZipError();
         return false; // Failed to open output file
     }
 
@@ -72,6 +76,7 @@ bool PZtdMgr::addFileToZtd(const QString &ztdFilePath, const QString &filePathTo
     if (!inputFile.open(QIODevice::ReadOnly)) {
         outputFile.close();
         zip.close();
+        qDebug() << "addFileToZtd: Failed to open input file: " << filePathToAdd;
         return false; // Failed to open input file
     }
 
@@ -205,6 +210,7 @@ bool PZtdMgr::fileExistsInZtd(const QString &ztdFilePath, const QString &fileNam
     QuaZip zip(ztdFilePath);
     if (!zip.open(QuaZip::mdUnzip)) {
         qDebug() << "Failed to open ZTD for reading: " << zip.getZipError();
+        zip.close();
         return false;
     }
 
@@ -223,18 +229,33 @@ bool PZtdMgr::fileExistsInZtd(const QString &ztdFilePath, const QString &fileNam
 bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileNameToRemove)
 {
     QString tempZtdPath = ztdFilePath + ".tmp";  // Temporary file
+    bool fileRemoved = false;
+
+    // Guarantee the temp file does not exist
+    QFile::remove(tempZtdPath);
 
     QuaZip oldZip(ztdFilePath);
     QuaZip newZip(tempZtdPath);
 
     if (!oldZip.open(QuaZip::mdUnzip)) {
         qDebug() << "Failed to open ZTD file for reading: " << oldZip.getZipError();
+        oldZip.close();
+        newZip.close();
         return false;
     }
 
     if (!newZip.open(QuaZip::mdCreate)) {
         qDebug() << "Failed to create new ZTD file: " << newZip.getZipError();
         oldZip.close();
+        newZip.close();
+        return false;
+    }
+
+    // Validate ztd file
+    if (!PZtdMgr::isZtdFile(ztdFilePath)) {
+        qDebug() << "Not a valid ZTD file: " << ztdFilePath;
+        oldZip.close();
+        newZip.close();
         return false;
     }
 
@@ -245,6 +266,7 @@ bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileN
         QString existingFileName = oldZip.getCurrentFileName();
         if (existingFileName == fileNameToRemove) {
             qDebug() << "Removing file from ZTD: " << fileNameToRemove;
+            fileRemoved = true;
             continue;  // Skip this file (remove it)
         }
 
@@ -265,16 +287,29 @@ bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileN
         newFile.close();
     }
 
-    oldZip.close();
-    newZip.close();
+    // Close handles if they are open
+    if (oldZip.isOpen()) {
+        oldZip.close();
+    }
+    if (newZip.isOpen()) {
+        newZip.close();
+    }
 
-    // Replace the old archive with the new one
-    if (!QFile::remove(ztdFilePath) || !QFile::rename(tempZtdPath, ztdFilePath)) {
-        qDebug() << "Failed to replace old ZTD file!";
+    // Remove the old archive
+    if (!QFile::remove(ztdFilePath)) {
+        qDebug() << "Failed to remove old ZTD file. Exists?" << QFile::exists(ztdFilePath);
         return false;
     }
 
-    return true;
+    // Replace the old archive with the new one
+    if (!QFile::rename(tempZtdPath, ztdFilePath)) {
+        qDebug() << "Failed to replace old ZTD file with new one";
+        qDebug() << "Temp ZTD: " << tempZtdPath;
+        qDebug() << "New ZTD: " << ztdFilePath;
+        return false;
+    }
+
+    return fileRemoved;
 }
 
 // Moves a ztd file from one location on disk to another
@@ -348,6 +383,7 @@ bool PZtdMgr::openFileInZtd(const QString &ztdFilePath, const QString &fileNameT
     // Open the ztd file
     QuaZip zip(ztdFilePath);
     if (!zip.open(QuaZip::mdUnzip)) {
+        zip.close();
         return false; // Failed to open ztd file
     }
 
@@ -360,6 +396,7 @@ bool PZtdMgr::openFileInZtd(const QString &ztdFilePath, const QString &fileNameT
     // Open the file inside the ztd
     QuaZipFile file(&zip);
     if (!file.open(QIODevice::ReadOnly)) {
+        file.close();
         zip.close();
         return false; // Failed to open file in ztd (in stream)
     }
@@ -372,4 +409,16 @@ bool PZtdMgr::openFileInZtd(const QString &ztdFilePath, const QString &fileNameT
     zip.close();
 
     return true;
+}
+
+// Removes a file from a directory
+bool PZtdMgr::removeFileFromDir(const QString &file) 
+{
+    // Check if file exists
+    if (!QFile::exists(file)) {
+        return false; // File does not exist
+    }
+
+    // Remove the file
+    return QFile::remove(file);
 }
