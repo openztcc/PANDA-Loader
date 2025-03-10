@@ -4,14 +4,27 @@ project(PandaLdr VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick Test Sql)
 
 qt_standard_project_setup(REQUIRES 6.5)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/libs/quazip/cmake")
+
+find_package(QuaZip REQUIRED)
 
 qt_add_executable(appPandaLdr
     main.cpp
     PState.h PState.cpp
 )
+
+include_directories(
+    ${CMAKE_SOURCE_DIR}/libs/quazip/include
+)
+link_directories(
+    ${CMAKE_SOURCE_DIR}/libs/quazip/lib
+)
+add_library(tomlplusplus INTERFACE)
+target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
 
 qt_add_qml_module(appPandaLdr
     URI PandaLdr
@@ -28,6 +41,9 @@ qt_add_qml_module(appPandaLdr
         PState.cpp
         SOURCES PController.h PController.cpp
         SOURCES PModItem.h PModItem.cpp
+        SOURCES PZtdMgr.h PZtdMgr.cpp
+        SOURCES PConfigMgr.h PConfigMgr.cpp
+        SOURCES PDatabaseMgr.h PDatabaseMgr.cpp
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -55,7 +71,7 @@ set_target_properties(appPandaLdr PROPERTIES
 )
 
 target_link_libraries(appPandaLdr
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a Qt6::Sql tomlplusplus
 )
 
 include(GNUInstallDirs)
@@ -64,3 +80,62 @@ install(TARGETS appPandaLdr
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# Set up unit tests
+
+enable_testing()
+
+# add the main project modules
+# creates the test exe
+
+# ------------- PTestZtdMgr -------------
+qt_add_executable(testZtdMgr
+    tests/PTestZtdMgr.cpp
+    PZtdMgr.h PZtdMgr.cpp
+    PConfigMgr.h PConfigMgr.cpp
+    PDatabaseMgr.h PDatabaseMgr.cpp
+)
+
+# link the required libraries
+target_link_libraries(testZtdMgr
+    PRIVATE
+        Qt6::Test
+        Qt6::Core
+        Qt6::Sql
+        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+        tomlplusplus
+)
+
+# add test data as resource
+add_custom_command(TARGET testZtdMgr POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/test_data
+    ${CMAKE_BINARY_DIR}/test_data
+)
+
+# ------------- PTestConfigMgr -------------
+qt_add_executable(testConfigMgr
+    tests/PTestConfigMgr.cpp
+    PConfigMgr.h PConfigMgr.cpp
+    PZtdMgr.h PZtdMgr.cpp
+)
+
+# link the required libraries
+target_link_libraries(testConfigMgr
+    PRIVATE
+        Qt6::Test
+        Qt6::Core
+        Qt6::Sql
+        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+        tomlplusplus
+)
+
+# add test data as resource
+add_custom_command(TARGET testConfigMgr POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/test_data
+    ${CMAKE_BINARY_DIR}/test_data
+)
+
+add_test(NAME testZtdMgr COMMAND testZtdMgr)
+add_test(NAME testConfigMgr COMMAND testConfigMgr)
