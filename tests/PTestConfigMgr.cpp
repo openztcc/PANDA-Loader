@@ -51,36 +51,36 @@ void PTestConfigMgr::testGetMetaConfig()
         QString k = QString::fromStdString(static_cast<std::string>(key));
         QString v = PConfigMgr::getKeyValue(k, config);
         if (k == "authors" || k == "tags") {
-            qDebug() << "[" << k << "] =";
+            // qDebug() << "[" << k << "] =";
 
             // grab array of values
             if (auto arr = value.as_array()) {
                 for (const auto &item : *arr) {
-                    qDebug() << "\t" << QString::fromStdString(item.as_string()->get());
+                    // qDebug() << "\t" << QString::fromStdString(item.as_string()->get());
                 }
             }
 
             continue;
         } else if (k == "dependencies") {
-            qDebug () << "[ Dependencies ] =";
+            // qDebug () << "[ Dependencies ] =";
 
             // parse dictionary and print key/value pairs
             if (auto depTable = value.as_table()) {
                 if (depTable->empty()) {
-                    qDebug() << "\t\"\"";
+                    // qDebug() << "\t\"\"";
                     continue;
                 }
                 for (const auto &[depKey, depValue] : *depTable) {
                     QString depK = QString::fromStdString(static_cast<std::string>(depKey));
                     if (auto depStr = depValue.as_string()) {
                         QString depV = QString::fromStdString(depStr->get());
-                        qDebug() << "\t" << depV;
+                        // qDebug() << "\t" << depV;
                     }
                 }
             }
             continue;
         }
-        qDebug() << "[" << k << "] = " << v;
+        // qDebug() << "[" << k << "] = " << v;
     }
 
     config.clear();
@@ -94,13 +94,11 @@ void PTestConfigMgr::testUpdateMetaConfig_data()
 
     // Valid TOML table
     toml::table validConfig;
-    validConfig.insert_or_assign("authors", toml::array{std::string("Goosifer"), std::string("Finn")});
-    validConfig.insert_or_assign("tags", toml::array{std::string("tag1"), std::string("tag2")});
-    validConfig.insert_or_assign("dependencies", toml::table{
-        {std::string("dep1"), std::string("1.0.0")},
-        {std::string("dep2"), std::string("2.0.0")}
-    });
-        // Invalid TOML table (wrong types)
+    validConfig.insert_or_assign("authors", toml::array{"Goosifer", "Finn"});
+    validConfig.insert_or_assign("tags", toml::array{"tag1", "tag2"});
+    validConfig.insert_or_assign("dependencies", toml::table{{"dep1", "1.0.0"}, {"dep2", "2.0.0"}});
+
+    // Invalid TOML table (wrong types)
     toml::table invalidConfig;
     invalidConfig.insert_or_assign("authors", "Not an array");  // Wrong type (should be array)
     invalidConfig.insert_or_assign("tags", toml::array{"tag1", 123}); // Mixed types
@@ -123,14 +121,23 @@ void PTestConfigMgr::testUpdateMetaConfig()
     bool result = PConfigMgr::updateMetaConfig(ztdFilePath, config);
     QVERIFY(result == expected);
 
+    QString correctMeta = R"(  
+        [authors]
+        authors = ["Goosifer", "Finn"]
+        tags = ["tag1", "tag2"]
+        
+        [dependencies]
+        dep1 = "1.0.0"
+        dep2 = "2.0.0"
+    )";
+
     // Did it update correctly?
     if (expected) {
         try {
-            toml::table newConfig = toml::parse_file(ztdFilePath.toStdString());
+            toml::table newConfig = PConfigMgr::getMetaConfig(ztdFilePath);
 
             // Check if matching
-            QVERIFY(newConfig == config);
-            newConfig.clear();
+            QVERIFY(newConfig == toml::parse(correctMeta.toStdString()));
         } catch (const toml::parse_error &e) {
             QFAIL(("TOML file parsing failed after update: " + std::string(e.what())).c_str());
         }

@@ -55,37 +55,61 @@ bool PConfigMgr::updateMetaConfig(const QString &ztdFilePath, const toml::table 
         return false; // Ztd file does not exist or is not valid
     }
 
-    // // Create a temporary file to store the new ztd with the updated config
-    // QString tempZtdPath = ztdFilePath + ".tmp";
+    QString metaConfigPath = QDir::tempPath() + "/" + m_metaConfigName;
+    QString tempZtdPath = QDir::tempPath() + "/" + QUuid::createUuid().toString() + ".ztd";
 
-    // // Copy the original ztd to the temporary file
-    // if (!PZtdMgr::copyZtdFile(ztdFilePath, tempZtdPath)) {
-    //     qDebug() << "Failed to copy ztd file";
-    //     return false; // Failed to copy the ztd file
-    // }
-
-    // Remove the old meta configuration in ztd
-    if (!PConfigMgr::removeMetaConfig(ztdFilePath)) {
-        qDebug() << "Failed to remove old meta config from ztd";
-        return false; // Failed to remove the old meta config
+    // Copy the original ztd to the temporary file
+    if (!PZtdMgr::copyZtdFile(ztdFilePath, tempZtdPath)) {
+        qDebug() << "Failed to copy ztd file";
+        qDebug() << "From " << ztdFilePath << " to " << tempZtdPath;
+        return false; // Failed to copy the ztd file
     }
 
-    // Update the meta configuration in the temporary ztd
-    std::ostringstream oss;
-    oss << config;
-    QByteArray tomlData = QByteArray::fromStdString(oss.str());
-    if (!PZtdMgr::addFileToZtd(ztdFilePath, m_metaConfigName)) {
+    // if meta.toml already exists, remove it
+    if (PZtdMgr::fileExistsInZtd(tempZtdPath, m_metaConfigName)) {
+        if (!PZtdMgr::removeFileFromZtd(tempZtdPath, m_metaConfigName)) {
+            qDebug() << "Failed to remove old meta config from ztd";
+            return false; // Failed to remove the old meta config
+        }
+    }
+
+    // Create a temporary file to store the new meta config
+    QFile tempMeta(metaConfigPath);
+    if (!tempMeta.open(QIODevice::WriteOnly)) {
+        qDebug() << "Failed to create temporary meta config file";
+        tempMeta.remove(); // Cleanup temp file
+        return false; // Failed to create temporary meta config file
+    }
+    std::stringstream ss;
+    
+    ss << config;
+    QString tomlStr = QString::fromStdString(ss.str());
+    tempMeta.write(tomlStr.toUtf8());
+    tempMeta.close();
+    
+    // Add the TOML file to the ZTD archive
+    if (!PZtdMgr::addFileToZtd(tempZtdPath, metaConfigPath)) {
         qDebug() << "Failed to add new meta config to ztd";
-        oss.clear();
-        return false; // Failed to update the meta config
+        tempMeta.remove(); // Cleanup temp file
+        return false;
     }
 
-    // // Replace the original ztd with the temporary one
-    // if (!PZtdMgr::moveZtdFile(tempZtdPath, ztdFilePath)) {
-    //     qDebug() << "Failed to replace old ztd file";
-    //     QFile::remove(tempZtdPath); // Clean up temporary file
-    //     return false; // Failed to replace the original ztd
-    // }
+    // Remove old ztd file
+    if (!QFile::remove(ztdFilePath)) {
+        qDebug() << "Failed to remove old ztd file";
+        tempMeta.remove(); // Cleanup temp file
+        return false;
+    }
+
+    // Replace the original ztd with the temporary one
+    if (!QFile::rename(tempZtdPath, ztdFilePath)) {
+        qDebug() << "Failed to replace old ztd file";
+        tempMeta.remove(); // Cleanup temp file
+        return false; // Failed to replace the original ztd
+    }
+
+    tempMeta.remove(); // Cleanup temp file
+    QFile::remove(metaConfigPath); // Cleanup temp file
 
     return true;
 }
