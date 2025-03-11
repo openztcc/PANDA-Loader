@@ -91,3 +91,50 @@ bool PDatabaseMgr::deleteMod(const QString &modId) {
 
     return true;
 }
+
+bool PDatabaseMgr::updateMod(const QString &modId, const QString &key, const QString &value) {
+    QSqlQuery query(m_db);
+    query.prepare("UPDATE mods SET " + key + " = :value WHERE mod_id = :mod_id");
+    query.bindValue(":value", value);
+    query.bindValue(":mod_id", modId);
+
+    if (!query.exec()) {
+        qDebug() << "Failed to update mod: " << query.lastError();
+        return false;
+    }
+
+    return true;
+}
+
+bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &dependency) {
+    QSqlQuery query(m_db);
+    query.prepare("INSERT INTO dependencies (mod_id, name, min_version, optional, ordering, link) "
+                  "VALUES (:mod_id, :name, :min_version, :optional, :ordering, :link)");
+    query.bindValue(":mod_id", modId);
+    query.bindValue(":name", dependency.name);
+    query.bindValue(":min_version", dependency.min_version);
+    query.bindValue(":optional", dependency.optional);
+    query.bindValue(":ordering", dependency.ordering);
+    query.bindValue(":link", dependency.link);
+
+    if (!query.exec()) {
+        qDebug() << "Failed to add dependency: " << query.lastError();
+        return false;
+    }
+
+    return true;
+}
+
+bool PDatabaseMgr::removeDependency(const QString &modId, const QString &dependencyId) {
+    QSqlQuery query(m_db);
+    query.prepare("DELETE FROM dependencies WHERE mod_id = :mod_id AND dependency_id = :dependency_id");
+    query.bindValue(":mod_id", modId);
+    query.bindValue(":dependency_id", dependencyId);
+
+    if (!query.exec()) {
+        qDebug() << "Failed to remove dependency: " << query.lastError();
+        return false;
+    }
+
+    return true;
+}
