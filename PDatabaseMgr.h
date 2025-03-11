@@ -26,7 +26,7 @@ public:
     void closeDatabase();
     bool createTables();
     bool insertMod(const QString &name, const QString &desc, const std::vector<QString> &authors, 
-                   const QString &version, const QString &path, bool enabled, const QString &tags,
+                   const QString &version, const QString &path, bool enabled, const std::vector<QString> &tags,
                    const QString &modId, std::vector<PDependency> &dependencies);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);
