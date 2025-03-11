@@ -39,9 +39,9 @@ bool PDatabaseMgr::createTables() {
     return true;
 }
 
-bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const std::vector<QString> &authors, 
-                             const QString &version, const QString &path, bool enabled, const std::vector<QString> &tags,
-                             const QString &modId, std::vector<PDependency> &dependencies) {
+bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
+                             const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
+                             const QString &modId, const QVector<PDependency> &dependencies) {
     QSqlQuery query(m_db);
     query.prepare("INSERT INTO mods (title, author, description, path, enabled, tags, version, mod_id) "
                   "VALUES (:title, :author, :description, :path, :enabled, :tags, :version, :mod_id)");

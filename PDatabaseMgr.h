@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
+#include <QVector>
+#include <QStringList>
 
 class PDatabaseMgr : public QObject
 {
@@ -25,9 +28,9 @@ public:
     bool openDatabase();
     void closeDatabase();
     bool createTables();
-    bool insertMod(const QString &name, const QString &desc, const std::vector<QString> &authors, 
-                   const QString &version, const QString &path, bool enabled, const std::vector<QString> &tags,
-                   const QString &modId, std::vector<PDependency> &dependencies);
+    bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
+                   const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
+                   const QString &modId, const QVector<PDependency> &dependencies);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);
     bool addDependency(const QString &modId, const PDependency &dependency);
@@ -72,5 +75,9 @@ private:
         
     
 };
+
+// Declare metatypes
+Q_DECLARE_METATYPE(PDatabaseMgr::PDependency)
+Q_DECLARE_METATYPE(QVector<PDatabaseMgr::PDependency>)
 
 #endif // PDATABASEMGR_H

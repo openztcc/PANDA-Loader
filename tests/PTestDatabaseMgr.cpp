@@ -1,4 +1,5 @@
-#include <QTest/QTest>
+#include <QtTest/QtTest>
+#include <QVector>
 #include "../PDatabaseMgr.h"
 
 class PTestDatabaseMgr : public QObject
@@ -21,59 +22,59 @@ void PTestDatabaseMgr::testInsertMod_data()
 {
     QTest::addColumn<QString>("name");
     QTest::addColumn<QString>("desc");
-    QTest::addColumn<std::vector<QString>>("authors");
+    QTest::addColumn<QVector<QString>>("authors");
     QTest::addColumn<QString>("version");
     QTest::addColumn<QString>("path");
     QTest::addColumn<bool>("enabled");
-    QTest::addColumn<std::vector<QString>>("tags");
+    QTest::addColumn<QVector<QString>>("tags");
     QTest::addColumn<QString>("modId");
-    QTest::addColumn<std::vector<PDatabaseMgr::PDependency>>("dependencies");
+    QTest::addColumn<QVector<PDatabaseMgr::PDependency>>("dependencies");
     QTest::addColumn<bool>("expectedResult");
 
     // Test case 1: Insert valid mod
-    std::vector<PDatabaseMgr::PDependency> deps;
+    QVector<PDatabaseMgr::PDependency> deps;
     deps.push_back({"mod_id", "name", "min_version", false, "ordering", "link"});
-    QTest::newRow("valid mod") << "mod_name" << "mod_desc" << std::vector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << std::vector<QString>{"tag1", "tag2"} << "mod_id" << deps << true;
+    QTest::newRow("valid mod") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << true;
 
     // Test case 2: Insert mod with no dependencies
-    QTest::newRow("no dependencies") << "mod_name" << "mod_desc" << std::vector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << std::vector<QString>{"tag1", "tag2"} << "mod_id" << std::vector<PDatabaseMgr::PDependency>{} << true;
+    QTest::newRow("no dependencies") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << QVector<PDatabaseMgr::PDependency>{} << true;
 
     // Test case 3: Insert mod with no tags
-    QTest::newRow("no tags") << "mod_name" << "mod_desc" << std::vector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << std::vector<QString>{} << "mod_id" << deps << true;
+    QTest::newRow("no tags") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{} << "mod_id" << deps << true;
 
     // Test case 4: Insert mod with no authors
-    QTest::newRow("no authors") << "mod_name" << "mod_desc" << std::vector<QString>{} << "1.0.0" << testDataDir + "valid.ztd" << true << std::vector<QString>{"tag1", "tag2"} << "mod_id" << deps << true;
+    QTest::newRow("no authors") << "mod_name" << "mod_desc" << QVector<QString>{} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << true;
 
     // Test case 5: Insert mod with no tags, authors, or dependencies
-    QTest::newRow("no tags, authors, or dependencies") << "mod_name" << "mod_desc" << std::vector<QString>{} << "1.0.0" << testDataDir + "valid.ztd" << true << std::vector<QString>{} << "mod_id" << std::vector<PDatabaseMgr::PDependency>{} << true;
+    QTest::newRow("no tags, authors, or dependencies") << "mod_name" << "mod_desc" << QVector<QString>{} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{} << "mod_id" << QVector<PDatabaseMgr::PDependency>{} << true;
 
     // Test case 6: Insert mod with no path
-    QTest::newRow("no path") << "mod_name" << "mod_desc" << std::vector<QString>{"author1", "author2"} << "1.0.0" << "" << true << std::vector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
+    QTest::newRow("no path") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << "" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
 
     // Test case 7: Insert mod with no version
-    QTest::newRow("no version") << "mod_name" << "mod_desc" << std::vector<QString>{"author1", "author2"} << "" << testDataDir + "valid.ztd" << true << std::vector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
+    QTest::newRow("no version") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
 
     // Test case 8: Insert mod with no name
-    QTest::newRow("no name") << "" << "mod_desc" << std::vector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << std::vector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
+    QTest::newRow("no name") << "" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
 
     // Test case 9: Insert mod with no modId
-    QTest::newRow("no modId") << "mod_name" << "mod_desc" << std::vector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << std::vector<QString>{"tag1", "tag2"} << "" << deps << false;
+    QTest::newRow("no modId") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "" << deps << false;
 
     // Test case 10: Insert mod with no description
-    QTest::newRow("no description") << "mod_name" << "" << std::vector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << std::vector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
+    QTest::newRow("no description") << "mod_name" << "" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
 }
 
 void PTestDatabaseMgr::testInsertMod()
 {
     QFETCH(QString, name);
     QFETCH(QString, desc);
-    QFETCH(std::vector<QString>, authors);
+    QFETCH(QVector<QString>, authors);
     QFETCH(QString, version);
     QFETCH(QString, path);
     QFETCH(bool, enabled);
-    QFETCH(std::vector<QString>, tags);
+    QFETCH(QVector<QString>, tags);
     QFETCH(QString, modId);
-    QFETCH(std::vector<PDatabaseMgr::PDependency>, dependencies);
+    QFETCH(QVector<PDatabaseMgr::PDependency>, dependencies);
     QFETCH(bool, expectedResult);
 
     PDatabaseMgr dbMgr;
@@ -107,7 +108,7 @@ void PTestDatabaseMgr::testDeleteMod()
     QVERIFY(dbMgr.openDatabase());
     QVERIFY(dbMgr.createTables());
 
-    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", std::vector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, std::vector<QString>{"tag1", "tag2"}, "mod_id", std::vector<PDatabaseMgr::PDependency>{}));
+    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "mod_id", QVector<PDatabaseMgr::PDependency>{}));
 
     bool result = dbMgr.deleteMod(modId);
     QCOMPARE(result, expectedResult);
@@ -140,7 +141,7 @@ void PTestDatabaseMgr::testUpdateMod()
     QVERIFY(dbMgr.openDatabase());
     QVERIFY(dbMgr.createTables());
 
-    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", std::vector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, std::vector<QString>{"tag1", "tag2"}, "mod_id", std::vector<PDatabaseMgr::PDependency>{}));
+    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "mod_id", QVector<PDatabaseMgr::PDependency>{}));
 
     bool result = dbMgr.updateMod(modId, key, value);
     QCOMPARE(result, expectedResult);
@@ -183,7 +184,7 @@ void PTestDatabaseMgr::testAddDependency()
     QVERIFY(dbMgr.openDatabase());
     QVERIFY(dbMgr.createTables());
 
-    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", std::vector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, std::vector<QString>{"tag1", "tag2"}, "mod_id", std::vector<PDatabaseMgr::PDependency>{}));
+    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "mod_id", QVector<PDatabaseMgr::PDependency>{}));
 
     bool result = dbMgr.addDependency(modId, dependency);
     QCOMPARE(result, expectedResult);
