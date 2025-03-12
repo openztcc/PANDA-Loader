@@ -14,6 +14,8 @@ private slots:
     void testUpdateMod();
     void testAddDependency_data();
     void testAddDependency();
+    void testRemoveDependency_data();
+    void testRemoveDependency();
 };
 
 QString testDataDir = QFINDTESTDATA("test_data/");
@@ -217,19 +219,76 @@ void PTestDatabaseMgr::testAddDependency()
     QCOMPARE(result, expectedResult);
 
     // Make sure the dependency was added
-    QSqlQuery query(dbMgr.m_db);
-    query.prepare("SELECT COUNT(*) FROM dependencies WHERE mod_id = :mod_id AND dependency_id = :dependency_id");
-    query.bindValue(":mod_id", modId);
-    query.bindValue(":dependency_id", dependency.modId);
-    query.exec();
-    query.next();
-    bool dependencyExists = query.value(0).toInt() > 0;
+    bool dependencyExists = dbMgr.doesDependencyExist(modId, dependency.dependencyId);
 
     QCOMPARE(dependencyExists, expectedResult);
 
     // Clean up
     dbMgr.deleteMod(uniqueModId);
     dbMgr.removeDependency(modId, dependency.modId);
+
+    dbMgr.closeDatabase();
+}
+
+void PTestDatabaseMgr::testRemoveDependency_data()
+{
+    QTest::addColumn<QString>("modId");
+    QTest::addColumn<QString>("dependencyId");
+    QTest::addColumn<bool>("expectedResult");
+
+    // Test case 1: Remove valid dependency
+    QTest::newRow("valid dependency") << "mod_id" << "dep_id" << true;
+
+    // Test case 2: Remove non-existent dependency
+    QTest::newRow("non-existent dependency") << "mod_id" << "non-existent" << false;
+}
+
+void PTestDatabaseMgr::testRemoveDependency()
+{
+    QFETCH(QString, modId);
+    QFETCH(QString, dependencyId);
+    QFETCH(bool, expectedResult);
+
+    PDatabaseMgr dbMgr;
+    QVERIFY(dbMgr.openDatabase());
+    QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
+
+    // Create a mod to add dependency to
+    PMod mod;
+    mod.title = "mod_name";
+    mod.description = "mod_desc";
+    mod.authors = {"author1", "author2"};
+    mod.version = "1.0.0";
+    mod.path = testDataDir + "valid.ztd";
+    mod.enabled = true;
+    mod.tags = {"tag1", "tag2"};
+    mod.mod_id = uniqueModId;
+    mod.dependencies = {};
+
+    QVERIFY(dbMgr.insertMod(mod));
+
+    // Add a dependency to the mod
+    PDatabaseMgr::PDependency dependency;
+    dependency.dependencyId = dependencyId;
+    dependency.modId = modId;
+    dependency.name = "name";
+    dependency.min_version = "min_version";
+    dependency.optional = false;
+    dependency.ordering = "ordering";
+    dependency.link = "link";
+
+    QVERIFY(dbMgr.addDependency(modId, dependency));
+
+    bool result = dbMgr.removeDependency(modId, dependencyId);
+    QCOMPARE(result, expectedResult);
+
+    // Make sure the dependency was removed
+    bool dependencyExists = dbMgr.doesDependencyExist(modId, dependencyId);
+
+    QCOMPARE(dependencyExists, !expectedResult);
+
+    // Clean up
+    dbMgr.deleteMod(uniqueModId);
 
     dbMgr.closeDatabase();
 }
