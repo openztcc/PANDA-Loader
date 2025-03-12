@@ -9,11 +9,7 @@
 #include <QFile>
 #include <QQmlEngine>
 #include "PModItem.h"
-#include <QVector>
-#include "PZtdMgr.h"
-#include "PDatabaseMgr.h"
-#include "PConfigMgr.h"
-#include "toml.hpp"
+#include <QDir>
 
 // static functions
 
@@ -22,21 +18,20 @@ class PState : public QObject {
     QML_ELEMENT
     QML_SINGLETON
 
-    Q_PROPERTY(QString m_path READ getPath WRITE setPath NOTIFY pathChanged)
+    Q_PROPERTY(QString m_path READ getGamePath WRITE setGamePath NOTIFY pathChanged)
 public:
     explicit PState(QObject *parent = nullptr);
     Q_INVOKABLE int launchZT();
+    QString getGamePath();
+    void setGamePath(QString);
+    QStringList getZtdList();
 
 signals:
     void pathChanged();
-    QString getPath();
-    void setPath(QString);
-    static void loadMods();
-
 private:
     QString m_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
+    QString m_resource_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     QVector<PModItem> m_mods;
-    QStringList getZtdList();
 };
 
 #endif // PSTATE_H

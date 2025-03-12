@@ -9,6 +9,13 @@ concerns itself with the mods list and operations over other classes from the UI
 #include <QList>
 #include "PModItem.h"
 #include <QSharedPointer>
+#include "PState.h"
+#include <QStringList>
+#include <QVector>
+#include "PZtdMgr.h"
+#include "PDatabaseMgr.h"
+#include "PConfigMgr.h"
+#include "toml.hpp"
 
 class PModItem;
 
@@ -39,6 +46,7 @@ public:
     void deselectMod();
     void clearSelection();
     void loadMods();
+    void addState(PState *state);
 
     virtual int rowCount(const QModelIndex &parent) const override;
     virtual QVariant data(const QModelIndex &index, int role) const override;
@@ -53,6 +61,7 @@ signals:
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;
     int m_currentIndex;
+    PState *m_state;
 };
 
 #endif // PCONTROLLER_H

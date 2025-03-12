@@ -18,6 +18,9 @@ int main(int argc, char *argv[])
 
     // Register the PController singleton
     PController controller;
+    controller.addState(p_state);
+    controller.loadMods();
+    
     engine.rootContext()->setContextProperty("modController", &controller);
     engine.addImportPath("F:/QT/6.8.1/mingw_64/qml");
 
