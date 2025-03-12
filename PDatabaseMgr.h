@@ -33,6 +33,7 @@ public:
 
     struct PDependency
     {
+        QString dependencyId;
         QString modId;
         QString name;
         QString min_version;

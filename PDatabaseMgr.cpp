@@ -225,9 +225,13 @@ bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &depend
     query.prepare("INSERT INTO dependencies (mod_id, dependency_id, name, min_version, optional, ordering, link) "
                   "VALUES (:mod_id, :dependency_id, :name, :min_version, :optional, :ordering, :link)");
     
-    if (dependency.modId.isEmpty()) {
+    if (dependency.modId.isEmpty() || modId.isEmpty() || dependency.modId == modId) {
         qDebug() << "Dependency modId is empty";
         return false;
+    }
+    else {
+        query.bindValue(":mod_id", modId);
+        query.bindValue(":dependency_id", dependency.modId);
     }
 
     if (dependency.name.isEmpty()) {
