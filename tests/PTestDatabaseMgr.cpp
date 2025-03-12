@@ -156,7 +156,9 @@ void PTestDatabaseMgr::testUpdateMod()
 
     PDatabaseMgr dbMgr;
     QVERIFY(dbMgr.openDatabase());
-    QVERIFY(dbMgr.createTables());
+
+    // Remove any previous mod with the same modId
+    dbMgr.deleteMod(modId);
 
     QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "update.mod_id", QVector<PDatabaseMgr::PDependency>{}));
 
