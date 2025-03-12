@@ -139,7 +139,7 @@ void PTestDatabaseMgr::testUpdateMod_data()
     QTest::addColumn<bool>("expectedResult");
 
     // Test case 1: Update valid mod
-    QTest::newRow("valid mod") << "mod_name" << "title" << "new_title" << true;
+    QTest::newRow("valid mod") << "update.mod_id" << "title" << "new_title" << true;
 
     // Test case 2: Update non-existent mod
     QTest::newRow("non-existent mod") << "non-existent" << "title" << "new_title" << false;
@@ -156,12 +156,13 @@ void PTestDatabaseMgr::testUpdateMod()
     QVERIFY(dbMgr.openDatabase());
     QVERIFY(dbMgr.createTables());
 
-    QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
-
-    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "mod_id", QVector<PDatabaseMgr::PDependency>{}));
+    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "update.mod_id", QVector<PDatabaseMgr::PDependency>{}));
 
     bool result = dbMgr.updateMod(modId, key, value);
     QCOMPARE(result, expectedResult);
+
+    // Clean up
+    dbMgr.deleteMod(modId);
 
     dbMgr.closeDatabase();
 }
