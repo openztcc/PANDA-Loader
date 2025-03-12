@@ -17,6 +17,19 @@ public:
     PDatabaseMgr();
     ~PDatabaseMgr();
 
+    struct PMod
+    {
+        QString title;
+        QString author;
+        QString description;
+        QString path;
+        bool enabled;
+        QString category;
+        QStringList tags;
+        QString version;
+        QString mod_id;
+    };
+
     struct PDependency
     {
         QString modId;
@@ -33,10 +46,12 @@ public:
     bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
                    const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
                    const QString &modId, const QVector<PDependency> &dependencies);
+    bool insertMod(const PMod &mod);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);
     bool addDependency(const QString &modId, const PDependency &dependency);
     bool removeDependency(const QString &modId, const QString &dependencyId);
+    QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();
     QSqlQuery orderBy(const QString &query);
