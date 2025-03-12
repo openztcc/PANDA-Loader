@@ -1,7 +1,7 @@
 #include "PDatabaseMgr.h"
 
 PDatabaseMgr::PDatabaseMgr() {
-    m_dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QDir::separator() + m_dbName;
+    m_dbPath = QCoreApplication::applicationDirPath() + QDir::separator() + m_dbName;
     // remove old connection
     if (QSqlDatabase::contains(m_dbPath)) {
         QSqlDatabase::removeDatabase(m_dbPath);
@@ -87,20 +87,8 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
     }
 
     // Insert dependencies
-    for (const auto &dep : dependencies) {
-        query.prepare("INSERT INTO dependencies (mod_id, name, min_version, optional, ordering, link) "
-                      "VALUES (:mod_id, :name, :min_version, :optional, :ordering, :link)");
-        query.bindValue(":mod_id", modId);
-        query.bindValue(":name", dep.name);
-        query.bindValue(":min_version", dep.min_version);
-        query.bindValue(":optional", dep.optional);
-        query.bindValue(":ordering", dep.ordering);
-        query.bindValue(":link", dep.link);
-
-        if (!query.exec()) {
-            qDebug() << "Failed to insert dependency: " << query.lastError();
-            return false;
-        }
+    if (!addDependency(modId, dependencies)) {
+        return false;
     }
 
     return true;
@@ -135,6 +123,11 @@ bool PDatabaseMgr::updateMod(const QString &modId, const QString &key, const QSt
 
 bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &dependency) {
     QSqlQuery query(m_db);
+    // Connect mod_id to dependency_id
+    query.prepare("INSERT INTO mods_dependencies (mod_id, dependency_id) "
+                  "VALUES (:mod_id, :dependency_id)");
+
+    // Insert main dependency data into dependencies table
     query.prepare("INSERT INTO dependencies (mod_id, name, min_version, optional, ordering, link) "
                   "VALUES (:mod_id, :name, :min_version, :optional, :ordering, :link)");
     query.bindValue(":mod_id", modId);

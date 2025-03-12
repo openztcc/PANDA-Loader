@@ -7,8 +7,8 @@
 #include <QSqlError>
 #include <QVector>
 #include <QStringList>
-#include <QStandardPaths>
 #include <QDir>
+#include <QCoreApplication>
 
 class PDatabaseMgr : public QObject
 {
