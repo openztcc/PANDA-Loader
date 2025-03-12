@@ -31,7 +31,7 @@ public:
     struct PMod
     {
         QString title;
-        QString author;
+        QString authors;
         QString description;
         QString path;
         bool enabled;

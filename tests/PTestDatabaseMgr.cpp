@@ -33,7 +33,7 @@ void PTestDatabaseMgr::testInsertMod_data()
     QTest::addColumn<bool>("expectedResult");
 
     QVector<PDatabaseMgr::PDependency> deps;
-    deps.push_back({"mod_id", "name", "min_version", false, "ordering", "link"});
+    deps.push_back({"mod_id", "dep_id", "name", "min_version", false, "ordering", "link"});
 
     // valid case
     QTest::newRow("valid mod") 
@@ -176,19 +176,19 @@ void PTestDatabaseMgr::testAddDependency_data()
     QTest::addColumn<bool>("expectedResult");
 
     // Test case 1: Add valid dependency
-    QTest::newRow("valid dependency") << "mod_id" << PDatabaseMgr::PDependency{"dep_id", "name", "min_version", false, "ordering", "link"} << true;
+    QTest::newRow("valid dependency") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "name", "min_version", false, "ordering", "link"} << true;
 
     // Test case 3: Add dependency with no name
-    QTest::newRow("no name") << "mod_id" << PDatabaseMgr::PDependency{"dep_id", "", "min_version", false, "ordering", "link"} << true;
+    QTest::newRow("no name") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "", "min_version", false, "ordering", "link"} << true;
 
     // Test case 4: Add dependency with no min_version
-    QTest::newRow("no min_version") << "mod_id" << PDatabaseMgr::PDependency{"dep_id", "name", "", false, "ordering", "link"} << true;
+    QTest::newRow("no min_version") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "name", "", false, "ordering", "link"} << true;
 
     // Test case 5: Add dependency with no ordering
-    QTest::newRow("no ordering") << "mod_id" << PDatabaseMgr::PDependency{"dep_id", "name", "min_version", false, "", "link"} << true;
+    QTest::newRow("no ordering") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "name", "min_version", false, "", "link"} << true;
 
     // Test case 6: Add dependency with no link
-    QTest::newRow("no link") << "mod_id" << PDatabaseMgr::PDependency{"dep_id", "name", "min_version", false, "ordering", ""} << true;
+    QTest::newRow("no link") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "name", "min_version", false, "ordering", ""} << true;
 }
 
 void PTestDatabaseMgr::testAddDependency()
@@ -202,7 +202,7 @@ void PTestDatabaseMgr::testAddDependency()
     QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
     // Create a mod to add dependency to
-    PMod mod;
+    PDatabaseMgr::PMod mod;
     mod.title = "mod_name";
     mod.description = "mod_desc";
     mod.authors = {"author1", "author2"};
@@ -254,7 +254,7 @@ void PTestDatabaseMgr::testRemoveDependency()
     QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
     // Create a mod to add dependency to
-    PMod mod;
+    PDatabaseMgr::PMod mod;
     mod.title = "mod_name";
     mod.description = "mod_desc";
     mod.authors = {"author1", "author2"};
