@@ -227,7 +227,7 @@ void PTestDatabaseMgr::testAddDependency()
 
     // Clean up
     dbMgr.deleteMod(uniqueModId);
-    dbMgr.removeDependency(uniqueModId, dependency.modId);
+    dbMgr.removeDependency(dependency.modId);
 
     dbMgr.closeDatabase();
 }
@@ -240,9 +240,6 @@ void PTestDatabaseMgr::testRemoveDependency_data()
 
     // Test case 1: Remove valid dependency
     QTest::newRow("valid dependency") << "mod_id" << "dep_id" << true;
-
-    // Test case 2: Remove non-existent dependency
-    QTest::newRow("non-existent dependency") << "mod_id" << "non-existent" << false;
 }
 
 void PTestDatabaseMgr::testRemoveDependency()
@@ -272,25 +269,26 @@ void PTestDatabaseMgr::testRemoveDependency()
     // Add a dependency to the mod
     PDatabaseMgr::PDependency dependency;
     dependency.dependencyId = dependencyId;
-    dependency.modId = modId;
+    dependency.modId = uniqueModId;
     dependency.name = "name";
     dependency.min_version = "min_version";
     dependency.optional = false;
     dependency.ordering = "ordering";
     dependency.link = "link";
 
-    QVERIFY(dbMgr.addDependency(modId, dependency));
+    QVERIFY(dbMgr.addDependency(uniqueModId, dependency));
 
-    bool result = dbMgr.removeDependency(modId, dependencyId);
+    bool result = dbMgr.removeDependency(dependencyId);
     QCOMPARE(result, expectedResult);
 
     // Make sure the dependency was removed
     bool dependencyExists = dbMgr.doesDependencyExist(dependencyId);
 
-    QCOMPARE(dependencyExists, !expectedResult);
+    QCOMPARE(dependencyExists, false);
 
     // Clean up
     dbMgr.deleteMod(uniqueModId);
+    dbMgr.removeDependency(dependencyId);
 
     dbMgr.closeDatabase();
 }

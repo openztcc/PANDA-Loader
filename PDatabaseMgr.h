@@ -52,7 +52,7 @@ public:
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);
     bool addDependency(const QString &modId, const PDependency &dependency);
-    bool removeDependency(const QString &modId, const QString &dependencyId);
+    bool removeDependency(const QString &dependencyId);
     QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();

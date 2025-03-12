@@ -225,7 +225,7 @@ bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &depend
     query.prepare("INSERT INTO dependencies (mod_id, dependency_id, name, min_version, optional, ordering, link) "
                   "VALUES (:mod_id, :dependency_id, :name, :min_version, :optional, :ordering, :link)");
     
-    if (dependency.modId.isEmpty() || modId.isEmpty() || dependency.modId == modId) {
+    if (dependency.modId.isEmpty() || modId.isEmpty() || dependency.dependencyId.isEmpty()) {
         qDebug() << "Dependency modId is empty";
         return false;
     }
@@ -277,10 +277,13 @@ bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &depend
     return true;
 }
 
-bool PDatabaseMgr::removeDependency(const QString &modId, const QString &dependencyId) {
+
+//TODO: Fix so it removes dependency from mod, not just dependencies table
+bool PDatabaseMgr::removeDependency(const QString &dependencyId) {
     QSqlQuery query(m_db);
-    query.prepare("DELETE FROM dependencies WHERE mod_id = :mod_id AND dependency_id = :dependency_id");
-    query.bindValue(":mod_id", modId);
+
+    // Remove the dependency from dependencies table
+    query.prepare("DELETE FROM dependencies WHERE dependency_id = :dependency_id");
     query.bindValue(":dependency_id", dependencyId);
 
     if (!query.exec()) {
