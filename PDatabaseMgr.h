@@ -45,6 +45,9 @@ public:
 
 
 private:
+    bool doesModExist(const QString &modId);
+    bool doesDependencyExist(const QString &modId, const QString &dependencyId);
+    bool doesKeyExist(const QString &modId, const QString &key);
     QSqlDatabase m_db;
     const QString m_dbName = "panda-ldr.padb";
     QString m_dbPath;

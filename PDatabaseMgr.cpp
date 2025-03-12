@@ -232,3 +232,59 @@ bool PDatabaseMgr::removeDependency(const QString &modId, const QString &depende
 
     return true;
 }
+
+bool PDatabaseMgr::doesModExist(const QString &modId) {
+    QSqlQuery query(m_db);
+    query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id");
+    query.bindValue(":mod_id", modId);
+
+    if (!query.exec()) {
+        qDebug() << "Error running query: " << query.lastError();
+        return false;
+    }
+
+    if (query.next()) {
+        int count = query.value(0).toInt();
+        if (count == 0) {
+            return false;
+        }
+    }
+    else {
+        qDebug() << "Error getting mod_id count: " << query.lastError();
+        return false;
+    }
+
+    return true;
+}
+
+bool PDatabaseMgr::doesDependencyExist(const QString &modId, const QString &dependencyId) {
+    QSqlQuery query(m_db);
+    
+    // Check if mod exists
+    if (!doesModExist(modId)) {
+        return false;
+    }
+
+    // Check if dependency exists
+    query.prepare("SELECT COUNT(*) FROM dependencies WHERE mod_id = :mod_id AND dependency_id = :dependency_id");
+    query.bindValue(":mod_id", modId);
+    query.bindValue(":dependency_id", dependencyId);
+
+    if (!query.exec()) {
+        qDebug() << "Error running query: " << query.lastError();
+        return false;
+    }
+
+    if (query.next()) {
+        int count = query.value(0).toInt();
+        if (count == 0) {
+            return false;
+        }
+    }
+    else {
+        qDebug() << "Error getting dependency count: " << query.lastError();
+        return false;
+    }
+
+    return true;
+}
