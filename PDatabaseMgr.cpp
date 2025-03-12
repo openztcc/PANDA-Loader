@@ -185,6 +185,18 @@ bool PDatabaseMgr::deleteMod(const QString &modId) {
 
 bool PDatabaseMgr::updateMod(const QString &modId, const QString &key, const QString &value) {
     QSqlQuery query(m_db);
+
+    // Check if mod exists
+    if (!doesModExist(modId)) {
+        return false;
+    }
+
+    // Check if key exists
+    if (!doesKeyExist(modId, key)) {
+        return false;
+    }
+
+    // Update the mod
     query.prepare("UPDATE mods SET " + key + " = :value WHERE mod_id = :mod_id");
     query.bindValue(":value", value);
     query.bindValue(":mod_id", modId);
@@ -283,6 +295,37 @@ bool PDatabaseMgr::doesDependencyExist(const QString &modId, const QString &depe
     }
     else {
         qDebug() << "Error getting dependency count: " << query.lastError();
+        return false;
+    }
+
+    return true;
+}
+
+bool PDatabaseMgr::doesKeyExist(const QString &modId, const QString &key) {
+    QSqlQuery query(m_db);
+    
+    // Check if mod exists
+    if (!doesModExist(modId)) {
+        return false;
+    }
+
+    // Check if key exists
+    query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id AND " + key + " IS NOT NULL");
+    query.bindValue(":mod_id", modId);
+
+    if (!query.exec()) {
+        qDebug() << "Error running query: " << query.lastError();
+        return false;
+    }
+
+    if (query.next()) {
+        int count = query.value(0).toInt();
+        if (count == 0) {
+            return false;
+        }
+    }
+    else {
+        qDebug() << "Error getting key count: " << query.lastError();
         return false;
     }
 
