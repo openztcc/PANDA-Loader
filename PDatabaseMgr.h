@@ -17,6 +17,17 @@ public:
     PDatabaseMgr();
     ~PDatabaseMgr();
 
+    struct PDependency
+    {
+        QString dependencyId;
+        QString modId;
+        QString name;
+        QString min_version;
+        bool optional;
+        QString ordering;
+        QString link;
+    };
+
     struct PMod
     {
         QString title;
@@ -29,17 +40,6 @@ public:
         QString version;
         QString mod_id;
         QVector<PDependency> dependencies;
-    };
-
-    struct PDependency
-    {
-        QString dependencyId;
-        QString modId;
-        QString name;
-        QString min_version;
-        bool optional;
-        QString ordering;
-        QString link;
     };
 
     bool openDatabase();
