@@ -7,6 +7,8 @@
 #include <QSqlError>
 #include <QVector>
 #include <QStringList>
+#include <QStandardPaths>
+#include <QDir>
 
 class PDatabaseMgr : public QObject
 {
@@ -44,7 +46,8 @@ public:
 
 private:
     QSqlDatabase m_db;
-    const QString m_dbName = "PandaLdr.db";
+    const QString m_dbName = "panda-ldr.padb";
+    QString m_dbPath;
     const QString m_tableName = "mods";
     const QString m_createTableQuery = 
         "CREATE TABLE IF NOT EXISTS mods ("

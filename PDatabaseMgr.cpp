@@ -1,8 +1,13 @@
 #include "PDatabaseMgr.h"
 
 PDatabaseMgr::PDatabaseMgr() {
+    m_dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QDir::separator() + m_dbName;
+    // remove old connection
+    if (QSqlDatabase::contains(m_dbPath)) {
+        QSqlDatabase::removeDatabase(m_dbPath);
+    }
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName(m_dbName);
+    m_db.setDatabaseName(m_dbPath);
 
     if (!openDatabase()) {
         qDebug() << "Failed to open database";
@@ -12,9 +17,31 @@ PDatabaseMgr::PDatabaseMgr() {
 PDatabaseMgr::~PDatabaseMgr() {}
 
 bool PDatabaseMgr::openDatabase() {
+
     if (!m_db.open()) {
         qDebug() << "Failed to open database: " << m_db.lastError();
         return false;
+    }
+
+    // Check if any tables exist
+    QSqlQuery query(m_db);
+    query.exec("SELECT COUNT(*) FROM sqlite_master WHERE type='table'");
+
+    bool isNewDatabase = true;
+
+    if (query.next()) {
+        int tableCount = query.value(0).toInt();
+        if (tableCount > 0) {
+            isNewDatabase = false;
+        }
+    } else {
+        qDebug() << "Error checking for existing tables:" << query.lastError().text();
+        return false;
+    }
+
+    if (isNewDatabase) {
+        qDebug() << "Database is brand new, initializing tables...";
+        return createTables();
     }
 
     return true;
