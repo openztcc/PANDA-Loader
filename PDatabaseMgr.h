@@ -28,6 +28,7 @@ public:
         QStringList tags;
         QString version;
         QString mod_id;
+        QVector<PDependency> dependencies;
     };
 
     struct PDependency

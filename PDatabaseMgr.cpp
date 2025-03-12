@@ -147,6 +147,10 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
     return true;
 }
 
+bool PDatabaseMgr::insertMod(const PMod &mod) {
+    return insertMod(mod.title, mod.description, {mod.author}, mod.version, mod.path, mod.enabled, mod.tags, mod.mod_id, mod.dependencies);
+}
+
 bool PDatabaseMgr::deleteMod(const QString &modId) {
     QSqlQuery query(m_db);
     
