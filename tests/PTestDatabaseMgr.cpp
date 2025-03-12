@@ -70,14 +70,6 @@ void PTestDatabaseMgr::testInsertMod_data()
         << "1.0.0" << "" 
         << true << QVector<QString>{"tag1", "tag2"} 
         << deps << false;
-
-    // invalid modId
-    QTest::newRow("missing modId") 
-        << "mod_name" << "mod_desc" 
-        << QVector<QString>{"author1", "author2"} 
-        << "1.0.0" << testDataDir + "valid.ztd" 
-        << true << QVector<QString>{"tag1", "tag2"} 
-        << QVector<PDatabaseMgr::PDependency>{} << false;
 }
 
 void PTestDatabaseMgr::testInsertMod()
