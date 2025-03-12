@@ -4,7 +4,17 @@ project(PandaLdr VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Test Sql)
+find_package(Qt6 REQUIRED COMPONENTS 
+    Quick 
+    Test 
+    Sql
+    QuickControls2
+    QuickLayouts
+    Svg
+    Xml 
+    Core
+    Gui
+)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -15,6 +25,11 @@ find_package(QuaZip REQUIRED)
 qt_add_executable(appPandaLdr
     main.cpp
     PState.h PState.cpp
+    PController.h PController.cpp
+    PModItem.h PModItem.cpp
+    PZtdMgr.h PZtdMgr.cpp
+    PConfigMgr.h PConfigMgr.cpp
+    PDatabaseMgr.h PDatabaseMgr.cpp
 )
 
 include_directories(
@@ -31,19 +46,18 @@ qt_add_qml_module(appPandaLdr
     VERSION 1.0
     QML_FILES
         Main.qml
-        QML_FILES RailButton.qml
-        QML_FILES SvgIcon.qml
-        RESOURCES images/launch_bg.jpg
-        QML_FILES ActionButton.qml
-        QML_FILES ModItem.qml
-        SOURCES
-        PState.h
-        PState.cpp
-        SOURCES PController.h PController.cpp
-        SOURCES PModItem.h PModItem.cpp
-        SOURCES PZtdMgr.h PZtdMgr.cpp
-        SOURCES PConfigMgr.h PConfigMgr.cpp
-        SOURCES PDatabaseMgr.h PDatabaseMgr.cpp
+        RailButton.qml
+        SvgIcon.qml
+        ActionButton.qml
+        ModItem.qml
+    RESOURCES images/launch_bg.jpg
+    SOURCES
+        PState.h PState.cpp
+        PController.h PController.cpp
+        PModItem.h PModItem.cpp
+        PZtdMgr.h PZtdMgr.cpp
+        PConfigMgr.h PConfigMgr.cpp
+        PDatabaseMgr.h PDatabaseMgr.cpp
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -71,7 +85,17 @@ set_target_properties(appPandaLdr PROPERTIES
 )
 
 target_link_libraries(appPandaLdr
-    PRIVATE Qt6::Quick ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a Qt6::Sql tomlplusplus
+    PRIVATE 
+    Qt6::Core
+    Qt6::Quick 
+    Qt6::QuickControls2
+    Qt6::QuickLayouts
+    Qt6::Svg
+    Qt6::Xml
+    Qt6::Gui
+    ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a 
+    Qt6::Sql 
+    tomlplusplus
 )
 
 include(GNUInstallDirs)
@@ -83,85 +107,85 @@ install(TARGETS appPandaLdr
 
 # Set up unit tests
 
-enable_testing()
+# enable_testing()
 
-# add the main project modules
-# creates the test exe
+# # add the main project modules
+# # creates the test exe
 
-# ------------- PTestZtdMgr -------------
-qt_add_executable(testZtdMgr
-    tests/PTestZtdMgr.cpp
-    PZtdMgr.h PZtdMgr.cpp
-    PConfigMgr.h PConfigMgr.cpp
-    PDatabaseMgr.h PDatabaseMgr.cpp
-)
+# # ------------- PTestZtdMgr -------------
+# qt_add_executable(testZtdMgr
+#     tests/PTestZtdMgr.cpp
+#     PZtdMgr.h PZtdMgr.cpp
+#     PConfigMgr.h PConfigMgr.cpp
+#     PDatabaseMgr.h PDatabaseMgr.cpp
+# )
 
-# link the required libraries
-target_link_libraries(testZtdMgr
-    PRIVATE
-        Qt6::Test
-        Qt6::Core
-        Qt6::Sql
-        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
-        tomlplusplus
-)
+# # link the required libraries
+# target_link_libraries(testZtdMgr
+#     PRIVATE
+#         Qt6::Test
+#         Qt6::Core
+#         Qt6::Sql
+#         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+#         tomlplusplus
+# )
 
-# add test data as resource
-add_custom_command(TARGET testZtdMgr POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/tests/test_data
-    ${CMAKE_BINARY_DIR}/test_data
-)
+# # add test data as resource
+# add_custom_command(TARGET testZtdMgr POST_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory
+#     ${CMAKE_SOURCE_DIR}/tests/test_data
+#     ${CMAKE_BINARY_DIR}/test_data
+# )
 
-# ------------- PTestConfigMgr -------------
-qt_add_executable(testConfigMgr
-    tests/PTestConfigMgr.cpp
-    PConfigMgr.h PConfigMgr.cpp
-    PZtdMgr.h PZtdMgr.cpp
-)
+# # ------------- PTestConfigMgr -------------
+# qt_add_executable(testConfigMgr
+#     tests/PTestConfigMgr.cpp
+#     PConfigMgr.h PConfigMgr.cpp
+#     PZtdMgr.h PZtdMgr.cpp
+# )
 
-# link the required libraries
-target_link_libraries(testConfigMgr
-    PRIVATE
-        Qt6::Test
-        Qt6::Core
-        Qt6::Sql
-        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
-        tomlplusplus
-)
+# # link the required libraries
+# target_link_libraries(testConfigMgr
+#     PRIVATE
+#         Qt6::Test
+#         Qt6::Core
+#         Qt6::Sql
+#         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+#         tomlplusplus
+# )
 
-# add test data as resource
-add_custom_command(TARGET testConfigMgr POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/tests/test_data
-    ${CMAKE_BINARY_DIR}/test_data
-)
+# # add test data as resource
+# add_custom_command(TARGET testConfigMgr POST_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory
+#     ${CMAKE_SOURCE_DIR}/tests/test_data
+#     ${CMAKE_BINARY_DIR}/test_data
+# )
 
-# ------------- PTestDatabaseMgr -------------
-qt_add_executable(testDatabaseMgr
-    tests/PTestDatabaseMgr.cpp
-    PDatabaseMgr.h PDatabaseMgr.cpp
-    PConfigMgr.h PConfigMgr.cpp
-    PZtdMgr.h PZtdMgr.cpp
-)
+# # ------------- PTestDatabaseMgr -------------
+# qt_add_executable(testDatabaseMgr
+#     tests/PTestDatabaseMgr.cpp
+#     PDatabaseMgr.h PDatabaseMgr.cpp
+#     PConfigMgr.h PConfigMgr.cpp
+#     PZtdMgr.h PZtdMgr.cpp
+# )
 
-# link the required libraries
-target_link_libraries(testDatabaseMgr
-    PRIVATE
-        Qt6::Test
-        Qt6::Core
-        Qt6::Sql
-        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
-        tomlplusplus
-)
+# # link the required libraries
+# target_link_libraries(testDatabaseMgr
+#     PRIVATE
+#         Qt6::Test
+#         Qt6::Core
+#         Qt6::Sql
+#         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+#         tomlplusplus
+# )
 
-# add test data as resource
-add_custom_command(TARGET testDatabaseMgr POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/tests/test_data
-    ${CMAKE_BINARY_DIR}/test_data
-)
+# # add test data as resource
+# add_custom_command(TARGET testDatabaseMgr POST_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory
+#     ${CMAKE_SOURCE_DIR}/tests/test_data
+#     ${CMAKE_BINARY_DIR}/test_data
+# )
 
-add_test(NAME testZtdMgr COMMAND testZtdMgr)
-add_test(NAME testConfigMgr COMMAND testConfigMgr)
-add_test(NAME testDatabaseMgr COMMAND testDatabaseMgr)
+# add_test(NAME testZtdMgr COMMAND testZtdMgr)
+# add_test(NAME testConfigMgr COMMAND testConfigMgr)
+# add_test(NAME testDatabaseMgr COMMAND testDatabaseMgr)

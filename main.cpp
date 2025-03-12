@@ -5,6 +5,7 @@
 #include <QJSValue>
 #include "PController.h"
 #include <QQmlContext>
+#include <QQmlEngine>
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
     // Register the PController singleton
     PController controller;
     engine.rootContext()->setContextProperty("modController", &controller);
+    engine.addImportPath("F:/QT/6.8.1/mingw_64/qml");
 
     // Load the main QML file
     QObject::connect(
