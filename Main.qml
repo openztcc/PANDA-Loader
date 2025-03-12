@@ -413,7 +413,7 @@ ApplicationWindow {
 
                                         // author(s)
                                         Label {
-                                            text: "by Goosifer"
+                                            text: "by " + model.modAuthor
                                             font.pixelSize: 10
                                         }
                                     }

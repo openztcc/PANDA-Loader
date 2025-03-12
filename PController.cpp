@@ -116,8 +116,33 @@ void PController::loadMods()
         toml::table config = PConfigMgr::getMetaConfig(ztd);
         qDebug() << "Got meta config";
         mod->setmodTitle(PConfigMgr::getKeyValue("name", config));
-        qDebug() << "Set title" << PConfigMgr::getKeyValue("title", config);
-        mod->setmodAuthor(PConfigMgr::getKeyValue("authors", config));
+        qDebug() << "Set title" << PConfigMgr::getKeyValue("name", config);
+        
+        // Get list of authors from config to string
+        QString authors;
+        if (auto authorsArr = config["authors"].as_array())
+        {
+            if (authorsArr->empty())
+            {
+                authors = "Unknown";
+            }
+            else if (authorsArr->size() == 1)
+            {
+                authors = QString::fromStdString(authorsArr->at(0).as_string()->get());
+            }
+            else
+            {
+                QStringList authorList;
+
+                for (const auto &author : *authorsArr)
+                {
+                    authorList.append(QString::fromStdString(author.as_string()->get()));
+                }
+
+                authors = authorList.mid(0, authorList.size() - 1).join(", ") + " and " + authorList.last();
+            }
+        }
+        mod->setmodAuthor(authors);
         mod->setmodDescription(PConfigMgr::getKeyValue("description", config));
         mod->setmodPath(QUrl::fromLocalFile(ztd));
         mod->setmodEnabled(true);
