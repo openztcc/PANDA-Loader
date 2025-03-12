@@ -111,12 +111,11 @@ void PController::loadMods()
     {
         qDebug() << "Loading mod: " << ztd;
         // Load mod from ZTD file
-        QSharedPointer<PModItem> mod;
+        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create();
         qDebug() << "Created mod";
         toml::table config = PConfigMgr::getMetaConfig(ztd);
         qDebug() << "Got meta config";
-        qDebug() << "Title: " << PConfigMgr::getKeyValue("title", config);
-        mod->setmodTitle(PConfigMgr::getKeyValue("title", config));
+        mod->setmodTitle(PConfigMgr::getKeyValue("name", config));
         qDebug() << "Set title" << PConfigMgr::getKeyValue("title", config);
         mod->setmodAuthor(PConfigMgr::getKeyValue("authors", config));
         mod->setmodDescription(PConfigMgr::getKeyValue("description", config));
