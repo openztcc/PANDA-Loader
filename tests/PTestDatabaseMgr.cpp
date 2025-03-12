@@ -27,41 +27,57 @@ void PTestDatabaseMgr::testInsertMod_data()
     QTest::addColumn<QString>("path");
     QTest::addColumn<bool>("enabled");
     QTest::addColumn<QVector<QString>>("tags");
-    QTest::addColumn<QString>("modId");
     QTest::addColumn<QVector<PDatabaseMgr::PDependency>>("dependencies");
     QTest::addColumn<bool>("expectedResult");
 
-    // Test case 1: Insert valid mod
     QVector<PDatabaseMgr::PDependency> deps;
     deps.push_back({"mod_id", "name", "min_version", false, "ordering", "link"});
-    QTest::newRow("valid mod") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << true;
 
-    // Test case 2: Insert mod with no dependencies
-    QTest::newRow("no dependencies") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << QVector<PDatabaseMgr::PDependency>{} << true;
+    // valid case
+    QTest::newRow("valid mod") 
+        << "mod_name" << "mod_desc" 
+        << QVector<QString>{"author1", "author2"} 
+        << "1.0.0" << testDataDir + "valid.ztd" 
+        << true << QVector<QString>{"tag1", "tag2"} 
+        << deps << true;
 
-    // Test case 3: Insert mod with no tags
-    QTest::newRow("no tags") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{} << "mod_id" << deps << true;
+    // valid case with optional fields empty
+    QTest::newRow("valid mod (no authors/tags/dependencies)") 
+        << "mod_name" << "mod_desc" 
+        << QVector<QString>{} 
+        << "1.0.0" << testDataDir + "valid.ztd" 
+        << true << QVector<QString>{} 
+        << QVector<PDatabaseMgr::PDependency>{} << true;
 
-    // Test case 4: Insert mod with no authors
-    QTest::newRow("no authors") << "mod_name" << "mod_desc" << QVector<QString>{} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << true;
+    // missing required fields (name, version, path, modId)
+    QTest::newRow("missing name") 
+        << "" << "mod_desc" 
+        << QVector<QString>{"author1", "author2"} 
+        << "1.0.0" << testDataDir + "valid.ztd" 
+        << true << QVector<QString>{"tag1", "tag2"} 
+        << deps << false;
 
-    // Test case 5: Insert mod with no tags, authors, or dependencies
-    QTest::newRow("no tags, authors, or dependencies") << "mod_name" << "mod_desc" << QVector<QString>{} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{} << "mod_id" << QVector<PDatabaseMgr::PDependency>{} << true;
+    QTest::newRow("missing version") 
+        << "mod_name" << "mod_desc" 
+        << QVector<QString>{"author1", "author2"} 
+        << "" << testDataDir + "valid.ztd" 
+        << true << QVector<QString>{"tag1", "tag2"} 
+        << deps << false;
 
-    // Test case 6: Insert mod with no path
-    QTest::newRow("no path") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << "" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
+    QTest::newRow("missing path") 
+        << "mod_name" << "mod_desc" 
+        << QVector<QString>{"author1", "author2"} 
+        << "1.0.0" << "" 
+        << true << QVector<QString>{"tag1", "tag2"} 
+        << deps << false;
 
-    // Test case 7: Insert mod with no version
-    QTest::newRow("no version") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
-
-    // Test case 8: Insert mod with no name
-    QTest::newRow("no name") << "" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
-
-    // Test case 9: Insert mod with no modId
-    QTest::newRow("no modId") << "mod_name" << "mod_desc" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "" << deps << false;
-
-    // Test case 10: Insert mod with no description
-    QTest::newRow("no description") << "mod_name" << "" << QVector<QString>{"author1", "author2"} << "1.0.0" << testDataDir + "valid.ztd" << true << QVector<QString>{"tag1", "tag2"} << "mod_id" << deps << false;
+    // invalid modId
+    QTest::newRow("missing modId") 
+        << "mod_name" << "mod_desc" 
+        << QVector<QString>{"author1", "author2"} 
+        << "1.0.0" << testDataDir + "valid.ztd" 
+        << true << QVector<QString>{"tag1", "tag2"} 
+        << QVector<PDatabaseMgr::PDependency>{} << false;
 }
 
 void PTestDatabaseMgr::testInsertMod()
@@ -73,19 +89,22 @@ void PTestDatabaseMgr::testInsertMod()
     QFETCH(QString, path);
     QFETCH(bool, enabled);
     QFETCH(QVector<QString>, tags);
-    QFETCH(QString, modId);
     QFETCH(QVector<PDatabaseMgr::PDependency>, dependencies);
     QFETCH(bool, expectedResult);
+
+    // unique modId for each test case
+    QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
     PDatabaseMgr dbMgr;
     QVERIFY(dbMgr.openDatabase());
     QVERIFY(dbMgr.createTables());
 
-    bool result = dbMgr.insertMod(name, desc, authors, version, path, enabled, tags, modId, dependencies);
+    bool result = dbMgr.insertMod(name, desc, authors, version, path, enabled, tags, uniqueModId, dependencies);
     QCOMPARE(result, expectedResult);
 
     dbMgr.closeDatabase();
 }
+
 
 void PTestDatabaseMgr::testDeleteMod_data()
 {

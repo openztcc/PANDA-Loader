@@ -70,6 +70,13 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
                              const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
                              const QString &modId, const QVector<PDependency> &dependencies) {
     QSqlQuery query(m_db);
+
+    // Check for missing required fields
+    if (name.isEmpty() || version.isEmpty() || path.isEmpty() || modId.isEmpty()) {
+        qDebug() << "Missing required fields for mod insert";
+        return false;
+    }
+    
     query.prepare("INSERT INTO mods (title, author, description, path, enabled, tags, version, mod_id) "
                   "VALUES (:title, :author, :description, :path, :enabled, :tags, :version, :mod_id)");
     query.bindValue(":title", name);
@@ -87,8 +94,15 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
     }
 
     // Insert dependencies
-    if (!addDependency(modId, dependencies)) {
-        return false;
+    if (!dependencies.isEmpty()) {
+        for (const PDependency &dependency : dependencies) {
+            if (!addDependency(modId, dependency)) {
+                return false;
+            }
+        }
+    }
+    else {
+        // 
     }
 
     return true;
@@ -123,14 +137,12 @@ bool PDatabaseMgr::updateMod(const QString &modId, const QString &key, const QSt
 
 bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &dependency) {
     QSqlQuery query(m_db);
-    // Connect mod_id to dependency_id
-    query.prepare("INSERT INTO mods_dependencies (mod_id, dependency_id) "
-                  "VALUES (:mod_id, :dependency_id)");
-
-    // Insert main dependency data into dependencies table
-    query.prepare("INSERT INTO dependencies (mod_id, name, min_version, optional, ordering, link) "
-                  "VALUES (:mod_id, :name, :min_version, :optional, :ordering, :link)");
+    
+    // Insert dependency data into dependencies table
+    query.prepare("INSERT INTO dependencies (mod_id, dependency_id, name, min_version, optional, ordering, link) "
+                  "VALUES (:mod_id, :dependency_id, :name, :min_version, :optional, :ordering, :link)");
     query.bindValue(":mod_id", modId);
+    query.bindValue(":dependency_id", dependency.modId);  // Use the dependency.modId as dependency_id
     query.bindValue(":name", dependency.name);
     query.bindValue(":min_version", dependency.min_version);
     query.bindValue(":optional", dependency.optional);
