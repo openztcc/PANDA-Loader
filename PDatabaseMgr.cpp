@@ -76,18 +76,57 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         qDebug() << "Missing required fields for mod insert";
         return false;
     }
-    
+
     query.prepare("INSERT INTO mods (title, author, description, path, enabled, tags, version, mod_id) "
                   "VALUES (:title, :author, :description, :path, :enabled, :tags, :version, :mod_id)");
+    
+    // Bind required values
     query.bindValue(":title", name);
-    query.bindValue(":author", authors.join(", "));
-    query.bindValue(":description", desc);
-    query.bindValue(":path", path);
-    query.bindValue(":enabled", enabled);
-    query.bindValue(":tags", tags.join(", "));
     query.bindValue(":version", version);
     query.bindValue(":mod_id", modId);
+    query.bindValue(":path", path);
+    
+    // add authors to author field
+    if (!authors.isEmpty()) {
+        query.bindValue(":author", authors.join(", "));
+    }
+    else {
+        query.bindValue(":author", "");
+    }
 
+    // add description to description field
+    if (!desc.isEmpty()) {
+        query.bindValue(":description", desc);
+    }
+    else {
+        query.bindValue(":description", "");
+    }
+
+    // add path to path field
+    if (!path.isEmpty()) {
+        query.bindValue(":path", path);
+    }
+    else {
+        query.bindValue(":path", "");
+    }
+
+    // add enabled to enabled field
+    if (enabled) {
+        query.bindValue(":enabled", 1);
+    }
+    else {
+        query.bindValue(":enabled", 0);
+    }
+
+    // add tags to tags field
+    if (!tags.isEmpty()) {
+        query.bindValue(":tags", tags.join(", "));
+    }
+    else {
+        query.bindValue(":tags", "");
+    }
+
+    // Execute the query
     if (!query.exec()) {
         qDebug() << "Failed to insert mod: " << query.lastError();
         return false;
