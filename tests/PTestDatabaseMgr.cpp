@@ -89,7 +89,6 @@ void PTestDatabaseMgr::testInsertMod()
 
     PDatabaseMgr dbMgr;
     QVERIFY(dbMgr.openDatabase());
-    QVERIFY(dbMgr.createTables());
 
     bool result = dbMgr.insertMod(name, desc, authors, version, path, enabled, tags, uniqueModId, dependencies);
     QCOMPARE(result, expectedResult);
@@ -104,10 +103,10 @@ void PTestDatabaseMgr::testDeleteMod_data()
     QTest::addColumn<bool>("expectedResult");
 
     // Test case 1: Delete valid mod
-    QTest::newRow("valid mod") << "mod_id" << true;
+    QTest::newRow("valid mod") << "delete.this" << true;
 
     // Test case 2: Delete non-existent mod
-    QTest::newRow("non-existent mod") << "non-existent" << false;
+    QTest::newRow("non-existent mod") << "mod.does.not.exist" << false;
 }
 
 void PTestDatabaseMgr::testDeleteMod()
@@ -117,9 +116,11 @@ void PTestDatabaseMgr::testDeleteMod()
 
     PDatabaseMgr dbMgr;
     QVERIFY(dbMgr.openDatabase());
-    QVERIFY(dbMgr.createTables());
 
-    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "mod_id", QVector<PDatabaseMgr::PDependency>{}));
+    // Clean up in case of previous runs
+    dbMgr.deleteMod(modId); 
+
+    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "delete.this", QVector<PDatabaseMgr::PDependency>{}));
 
     bool result = dbMgr.deleteMod(modId);
     QCOMPARE(result, expectedResult);

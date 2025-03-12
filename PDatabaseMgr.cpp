@@ -149,6 +149,29 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
 
 bool PDatabaseMgr::deleteMod(const QString &modId) {
     QSqlQuery query(m_db);
+    
+    // Check if mod exists
+    query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id");
+    query.bindValue(":mod_id", modId);
+    if (!query.exec()) {
+        qDebug() << "Error running query: " << query.lastError();
+        return false;
+    }
+
+    // Get the mod_id count
+    if (query.next()) {
+        int count = query.value(0).toInt();
+        if (count == 0) {
+            qDebug() << "Mod does not exist";
+            return false;
+        }
+    }
+    else {
+        qDebug() << "Error getting mod_id count: " << query.lastError();
+        return false;
+    }
+
+    // Delete the mod
     query.prepare("DELETE FROM mods WHERE mod_id = :mod_id");
     query.bindValue(":mod_id", modId);
 
