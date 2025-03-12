@@ -215,17 +215,55 @@ bool PDatabaseMgr::updateMod(const QString &modId, const QString &key, const QSt
 
 bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &dependency) {
     QSqlQuery query(m_db);
+
+    // Check if mod exists
+    if (!doesModExist(modId)) {
+        return false;
+    }
     
     // Insert dependency data into dependencies table
     query.prepare("INSERT INTO dependencies (mod_id, dependency_id, name, min_version, optional, ordering, link) "
                   "VALUES (:mod_id, :dependency_id, :name, :min_version, :optional, :ordering, :link)");
-    query.bindValue(":mod_id", modId);
-    query.bindValue(":dependency_id", dependency.modId);  // Use the dependency.modId as dependency_id
-    query.bindValue(":name", dependency.name);
-    query.bindValue(":min_version", dependency.min_version);
-    query.bindValue(":optional", dependency.optional);
-    query.bindValue(":ordering", dependency.ordering);
-    query.bindValue(":link", dependency.link);
+    
+    if (dependency.modId.isEmpty()) {
+        qDebug() << "Dependency modId is empty";
+        return false;
+    }
+
+    if (dependency.name.isEmpty()) {
+        query.bindValue(":name", "");
+    } 
+    else {
+        query.bindValue(":name", dependency.name);
+    }
+
+    if (dependency.min_version.isEmpty()) {
+        query.bindValue(":min_version", "");
+    } 
+    else {
+        query.bindValue(":min_version", dependency.min_version);
+    }
+
+    if (dependency.optional) {
+        query.bindValue(":optional", 1);
+    } 
+    else {
+        query.bindValue(":optional", 0);
+    }
+
+    if (dependency.ordering.isEmpty()) {
+        query.bindValue(":ordering", "");
+    } 
+    else {
+        query.bindValue(":ordering", dependency.ordering);
+    }
+
+    if (dependency.link.isEmpty()) {
+        query.bindValue(":link", "");
+    } 
+    else {
+        query.bindValue(":link", dependency.link);
+    }
 
     if (!query.exec()) {
         qDebug() << "Failed to add dependency: " << query.lastError();

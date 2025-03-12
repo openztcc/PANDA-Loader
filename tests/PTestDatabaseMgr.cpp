@@ -200,9 +200,9 @@ void PTestDatabaseMgr::testAddDependency()
 
     PDatabaseMgr dbMgr;
     QVERIFY(dbMgr.openDatabase());
-    QVERIFY(dbMgr.createTables());
+    QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
-    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "mod_id", QVector<PDatabaseMgr::PDependency>{}));
+    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, uniqueModId, QVector<PDatabaseMgr::PDependency>{}));
 
     bool result = dbMgr.addDependency(modId, dependency);
     QCOMPARE(result, expectedResult);
