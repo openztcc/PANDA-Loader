@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
+#include <QVector>
+#include <QStringList>
+#include <QDir>
+#include <QCoreApplication>
 
 class PDatabaseMgr : public QObject
 {
@@ -14,6 +19,7 @@ public:
 
     struct PDependency
     {
+        QString dependencyId;
         QString modId;
         QString name;
         QString min_version;
@@ -22,26 +28,46 @@ public:
         QString link;
     };
 
+    struct PMod
+    {
+        QString title;
+        QString authors;
+        QString description;
+        QString path;
+        bool enabled;
+        QString category;
+        QStringList tags;
+        QString version;
+        QString mod_id;
+        QVector<PDependency> dependencies;
+    };
+
     bool openDatabase();
     void closeDatabase();
     bool createTables();
-    bool insertMod(const QString &name, const QString &desc, const std::vector<QString> &authors, 
-                   const QString &version, const QString &path, bool enabled, const QString &tags,
-                   const QString &modId, std::vector<PDependency> &dependencies);
+    bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
+                   const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
+                   const QString &modId, const QVector<PDependency> &dependencies);
+    bool insertMod(const PMod &mod);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);
     bool addDependency(const QString &modId, const PDependency &dependency);
-    bool removeDependency(const QString &modId, const QString &dependencyId);
+    bool removeDependency(const QString &dependencyId);
+    QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();
     QSqlQuery orderBy(const QString &query);
     QSqlQuery searchMods(const QString &searchTerm);
     QSqlQuery getModByPk(const QString &modId);
 
+    bool doesModExist(const QString &modId);
+    bool doesDependencyExist(const QString &dependencyId);
+    bool doesKeyExist(const QString &modId, const QString &key);
 
 private:
     QSqlDatabase m_db;
-    const QString m_dbName = "PandaLdr.db";
+    const QString m_dbName = "panda-ldr.padb";
+    QString m_dbPath;
     const QString m_tableName = "mods";
     const QString m_createTableQuery = 
         "CREATE TABLE IF NOT EXISTS mods ("
@@ -72,5 +98,9 @@ private:
         
     
 };
+
+// Declare metatypes
+Q_DECLARE_METATYPE(PDatabaseMgr::PDependency)
+Q_DECLARE_METATYPE(QVector<PDatabaseMgr::PDependency>)
 
 #endif // PDATABASEMGR_H
