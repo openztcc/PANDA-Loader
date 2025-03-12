@@ -61,7 +61,7 @@ public:
     QSqlQuery getModByPk(const QString &modId);
 
     bool doesModExist(const QString &modId);
-    bool doesDependencyExist(const QString &modId, const QString &dependencyId);
+    bool doesDependencyExist(const QString &dependencyId);
     bool doesKeyExist(const QString &modId, const QString &key);
 
 private:

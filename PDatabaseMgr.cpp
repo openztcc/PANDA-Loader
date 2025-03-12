@@ -315,17 +315,11 @@ bool PDatabaseMgr::doesModExist(const QString &modId) {
     return true;
 }
 
-bool PDatabaseMgr::doesDependencyExist(const QString &modId, const QString &dependencyId) {
+bool PDatabaseMgr::doesDependencyExist(const QString &dependencyId) {
     QSqlQuery query(m_db);
-    
-    // Check if mod exists
-    if (!doesModExist(modId)) {
-        return false;
-    }
 
     // Check if dependency exists
-    query.prepare("SELECT COUNT(*) FROM dependencies WHERE mod_id = :mod_id AND dependency_id = :dependency_id");
-    query.bindValue(":mod_id", modId);
+    query.prepare("SELECT COUNT(*) FROM dependencies WHERE dependency_id = :dependency_id");
     query.bindValue(":dependency_id", dependencyId);
 
     if (!query.exec()) {

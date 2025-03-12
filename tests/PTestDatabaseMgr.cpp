@@ -217,17 +217,17 @@ void PTestDatabaseMgr::testAddDependency()
 
     QVERIFY(dbMgr.insertMod(mod));
 
-    bool result = dbMgr.addDependency(modId, dependency);
+    bool result = dbMgr.addDependency(uniqueModId, dependency);
     QCOMPARE(result, expectedResult);
 
     // Make sure the dependency was added
-    bool dependencyExists = dbMgr.doesDependencyExist(modId, dependency.dependencyId);
+    bool dependencyExists = dbMgr.doesDependencyExist(dependency.dependencyId);
 
     QCOMPARE(dependencyExists, expectedResult);
 
     // Clean up
     dbMgr.deleteMod(uniqueModId);
-    dbMgr.removeDependency(modId, dependency.modId);
+    dbMgr.removeDependency(uniqueModId, dependency.modId);
 
     dbMgr.closeDatabase();
 }
@@ -285,7 +285,7 @@ void PTestDatabaseMgr::testRemoveDependency()
     QCOMPARE(result, expectedResult);
 
     // Make sure the dependency was removed
-    bool dependencyExists = dbMgr.doesDependencyExist(modId, dependencyId);
+    bool dependencyExists = dbMgr.doesDependencyExist(dependencyId);
 
     QCOMPARE(dependencyExists, !expectedResult);
 
