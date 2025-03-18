@@ -1,12 +1,12 @@
 #include "PController.h"
 
-PController::PController(QObject *parent) : QAbstractListModel(parent), m_currentIndex(-1), m_state(new PState())
+PController::PController(QObject *parent) : QAbstractListModel(parent), m_currentMod(nullptr), m_state(nullptr)
 {
 }
 
-int PController::currentlySelectedMod() const
+QSharedPointer<PModItem> PController::currentlySelectedMod() const
 {
-    return m_currentIndex;
+    return m_currentMod;
 }
 
 int PController::modCount() const
@@ -20,19 +20,39 @@ void PController::addMod(QSharedPointer<PModItem> mod)
     m_mods_list.append(mod);
     endInsertRows();
 
-    emit modAdded(m_mods_list.size());
+    emit modAdded(mod);
 }
 
-void PController::removeMod(int index)
+void PController::removeMod(QSharedPointer<PModItem> mod)
 {
+    int index = m_mods_list.indexOf(mod);
+    if (index == -1)
+    {
+        return;
+    }
+
+    beginRemoveRows(QModelIndex(), index, index);
     m_mods_list.removeAt(index);
-    emit modRemoved(index);
+    endRemoveRows();
+
+    emit modRemoved(mod);
 }
 
 void PController::selectMod(int index)
 {
-    m_currentIndex = index;
-    emit modSelected(index);
+    if (index < 0 || index >= m_mods_list.size())
+    {
+        return;
+    }
+
+    m_currentMod = m_mods_list[index];
+    if (!m_currentMod)
+    {
+        qDebug() << "Current mod is null";
+        return;
+    }
+    qDebug() << "Emitting modSelected signal: " << m_currentMod->modTitle();
+    emit modSelected(m_currentMod);
 }
 
 void PController::deselectMod()
@@ -42,7 +62,6 @@ void PController::deselectMod()
 
 void PController::clearSelection()
 {
-    m_currentIndex = -1;
     emit modDeselected();
 }
 

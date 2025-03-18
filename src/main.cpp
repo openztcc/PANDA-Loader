@@ -6,6 +6,8 @@
 #include "PController.h"
 #include <QQmlContext>
 #include <QQmlEngine>
+#include "PModItem.h"
+#include "PController.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +16,7 @@ int main(int argc, char *argv[])
 
     // Register the PState singleton
     PState *p_state = new PState(&app);
-    qmlRegisterSingletonInstance("ozt.panda.PState", 1, 0, "PState", p_state);
+    qmlRegisterSingletonInstance("PandaLdr", 1, 0, "PState", p_state);
 
     // Register the PController singleton
     PController controller;
@@ -23,6 +25,11 @@ int main(int argc, char *argv[])
     
     engine.rootContext()->setContextProperty("modController", &controller);
     engine.addImportPath("F:/QT/6.8.1/mingw_64/qml");
+    engine.addImportPath(QCoreApplication::applicationDirPath() + "/ui");
+
+    // Register QML types
+    qmlRegisterType<PModItem>("PandaLdr", 1, 0, "PModItem");
+    qmlRegisterType<PController>("PandaLdr", 1, 0, "PController");
 
     // Load the main QML file
     QObject::connect(

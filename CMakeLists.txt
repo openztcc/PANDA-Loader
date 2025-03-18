@@ -23,13 +23,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/libs/quazip/cmake")
 find_package(QuaZip REQUIRED)
 
 qt_add_executable(appPandaLdr
-    main.cpp
-    PState.h PState.cpp
-    PController.h PController.cpp
-    PModItem.h PModItem.cpp
-    PZtdMgr.h PZtdMgr.cpp
-    PConfigMgr.h PConfigMgr.cpp
-    PDatabaseMgr.h PDatabaseMgr.cpp
+    src/main.cpp
+    src/PState.cpp src/PState.h
+    src/PController.cpp src/PController.h
+    src/PModItem.cpp src/PModItem.h
+    src/PZtdMgr.cpp src/PZtdMgr.h
+    src/PConfigMgr.cpp src/PConfigMgr.h
+    src/PDatabaseMgr.cpp src/PDatabaseMgr.h
 )
 
 include_directories(
@@ -39,25 +39,34 @@ link_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib
 )
 add_library(tomlplusplus INTERFACE)
-target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
+target_include_directories(
+    tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include
+)
 
+target_include_directories(
+    appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/src
+)
+
+qt_policy(SET QTP0004 NEW)
 qt_add_qml_module(appPandaLdr
     URI PandaLdr
     VERSION 1.0
     QML_FILES
-        Main.qml
-        RailButton.qml
-        SvgIcon.qml
-        ActionButton.qml
-        ModItem.qml
+        ui/Main.qml
+        ui/RailButton.qml
+        ui/SvgIcon.qml
+        ui/ActionButton.qml
+        ui/ModItem.qml
+        ui/InfoPane.qml
+        ui/InfoPaneItem.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
-        PState.h PState.cpp
-        PController.h PController.cpp
-        PModItem.h PModItem.cpp
-        PZtdMgr.h PZtdMgr.cpp
-        PConfigMgr.h PConfigMgr.cpp
-        PDatabaseMgr.h PDatabaseMgr.cpp
+        src/PState.cpp src/PState.h
+        src/PController.cpp src/PController.h
+        src/PModItem.cpp src/PModItem.h
+        src/PZtdMgr.cpp src/PZtdMgr.h
+        src/PConfigMgr.cpp src/PConfigMgr.h
+        src/PDatabaseMgr.cpp src/PDatabaseMgr.h
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -70,6 +79,8 @@ qt_add_resources(appPandaLdr "resources"
         icons/add.svg
         icons/delete.svg
         icons/refresh.svg
+        icons/author.svg
+        icons/path.svg
         images/launch_bg.jpg
 )
 
