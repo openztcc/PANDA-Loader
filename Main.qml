@@ -338,31 +338,7 @@ ApplicationWindow {
                         Layout.fillHeight: true
                         boundsBehavior: Flickable.StopAtBounds
                         model: modController
-
                         clip: true
-
-                        // model: ListModel {
-                        //     ListElement { name: "Mod 1" }
-                        //     ListElement { name: "Mod 2" }
-                        //     ListElement { name: "Mod 3" }
-                        //     ListElement { name: "Mod 4" }
-                        //     ListElement { name: "Mod 5" }
-                        //     ListElement { name: "Mod 6" }
-                        //     ListElement { name: "Mod 7" }
-                        //     ListElement { name: "Mod 8" }
-                        //     ListElement { name: "Mod 9" }
-                        //     ListElement { name: "Mod 10" }
-                        //     ListElement { name: "Mod 11" }
-                        //     ListElement { name: "Mod 12" }
-                        //     ListElement { name: "Mod 13" }
-                        //     ListElement { name: "Mod 14" }
-                        //     ListElement { name: "Mod 15" }
-                        //     ListElement { name: "Mod 16" }
-                        //     ListElement { name: "Mod 17" }
-                        //     ListElement { name: "Mod 18" }
-                        //     ListElement { name: "Mod 19" }
-                        //     ListElement { name: "Mod 20" }
-                        // }
 
                         delegate: Rectangle {
                             id: modPane
