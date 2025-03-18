@@ -24,12 +24,15 @@ Item {
 
             SvgIcon {
                 id: infoPaneItemIcon
-                icon: iconImg
+                icon: infoPaneItem.iconImg
                 iconWidth: 24
                 iconHeight: 24
                 bgWidth: 24
                 bgHeight: 24
-                color: "#d4e8d1"
+                color: "#424940"
+                Layout.alignment: Qt.AlignTop
+                Layout.leftMargin: 15
+                Layout.topMargin: 15
             }
 
             ColumnLayout {
@@ -37,15 +40,20 @@ Item {
                 spacing: 3
 
                 Label {
-                    text: fieldName
+                    text: infoPaneItem.fieldName
                     font.pixelSize: 10
                 }
 
                 Label {
-                    text: innerComponent ? innerComponent : "No text"
+                    text: infoPaneItem.innerComponent ? infoPaneItem.innerComponent : "No text"
                     font.pixelSize: 12
                     color: "#424940"
+                    clip: true
                 }
+            }
+
+            Item {
+                Layout.fillWidth: true
             }
         }
     }
