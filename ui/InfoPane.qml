@@ -15,40 +15,62 @@ Item {
         color: "#e5e9e1"
         radius: 0
         anchors.fill: parent
+        width: parent.width
         
         // Item to create a padding
-        Item {
-            anchors.fill: parent 
-            anchors.margins: 12
+        ColumnLayout {
+            anchors.margins: 10
+            anchors.fill: parent
+            Layout.fillWidth: true
+            spacing: 10
+
             // mod title
             Text {
                 id: modDetailsText
                 text: infoPane.targetComponent ? infoPane.targetComponent.modTitle : "No mod selected"
-                anchors.top: parent.top
                 color: "#424940"
                 font.pixelSize: 16
                 font.bold: true
-                anchors.bottomMargin: 10
+                Layout.fillWidth: true
+                Layout.preferredHeight: contentHeight
+                lineHeight: 18
+                lineHeightMode: Text.FixedHeight
+                Layout.alignment: Qt.AlignTop
             }
 
             // description
             Text {
                 id: modDetailsDesc
                 text: infoPane.targetComponent ? infoPane.targetComponent.modDescription : "No description"
-                anchors.top: modDetailsText.bottom
                 color: "#424940"
                 font.pixelSize: 12
                 wrapMode: Text.WordWrap
-                width: parent.width
-                anchors.bottomMargin: 15
+                Layout.fillWidth: true
+                Layout.preferredHeight: contentHeight
+                lineHeight: 14
+                lineHeightMode: Text.FixedHeight
+                Layout.alignment: Qt.AlignTop
             }
 
             // authors
             InfoPaneItem {
                 fieldName: "Authors"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modAuthors : "No authors"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modAuthor : "No authors"
                 iconImg: "qrc:/icons/author.svg"
-                anchors.top: modDetailsDesc.bottom
+                Layout.fillWidth: true
+            }
+
+            // mod path
+            InfoPaneItem {
+                fieldName: "Path"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modPath : "No path"
+                iconImg: "qrc:/icons/path.svg"
+                Layout.fillWidth: true
+            }
+
+            // without this content is spread too wide
+            Item {
+                Layout.fillHeight: true
             }
         }
 
