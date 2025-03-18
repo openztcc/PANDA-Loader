@@ -79,6 +79,8 @@ qt_add_resources(appPandaLdr "resources"
         icons/add.svg
         icons/delete.svg
         icons/refresh.svg
+        icons/author.svg
+        icons/path.svg
         images/launch_bg.jpg
 )
 
