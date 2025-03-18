@@ -2,20 +2,21 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
+import ozt.panda 1.0
 
 Item {
     id: modItem
     property var controller: null
-    property var model: null
+    property var modelObject: null
     anchors.fill: parent
-    
+
     Pane {
         anchors.fill: parent
         Material.background: modArea.containsPress ? Qt.lighter("#f7fbf2", 0.8) : 
                              modArea.containsMouse ? Qt.darker("#f7fbf2", 0.01) : "#f7fbf2"
         padding: 12
         anchors.bottomMargin: 1
-        signal: clicked()
+        signal clicked()
         
         contentItem: RowLayout {
             id: modMeta
@@ -33,18 +34,18 @@ Item {
                 spacing: 3
                 // category
                 Label {
-                    text: modItem.model && modItem.model.modCategory ? modItem.model.modCategory : "Uncategorized"
+                    text: modItem.modelObject && modItem.modelObject.modCategory ? modItem.modelObject.modCategory : "Uncategorized"
                     font.pixelSize: 10
                 }
                 // name of mod
                 Label {
-                    text: modItem.model && modItem.model.modTitle ? modItem.model.modTitle : "No title"
+                    text: modItem.modelObject && modItem.modelObject.modTitle ? modItem.modelObject.modTitle : "No title"
                     font.pixelSize: 12
                     color: "#424940"
                 }
                 // author(s)
                 Label {
-                    text: "by " + (modItem.model && modItem.model.modAuthor ? modItem.model.modAuthor : "Unknown")
+                    text: "by " + (modItem.modelObject && modItem.modelObject.modAuthor ? modItem.modelObject.modAuthor : "Unknown")
                     font.pixelSize: 10
                 }
             }
@@ -64,8 +65,8 @@ Item {
                 Material.accent: "#376a3e"
                 enabled: true
                 onCheckedChanged: {
-                    if (modItem.model) {
-                        console.log("Checkbox changed:", modItem.model.modTitle, checked)
+                    if (modItem.modelObject) {
+                        console.log("Checkbox changed:", modItem.modelObject.modTitle, checked)
                     }
                 }
                 
@@ -85,11 +86,11 @@ Item {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                if (modItem.controller && modItem.model) {
-                    modItem.controller.modClicked(modItem.model)
-                    console.log("Mod clicked:", modItem.model.modTitle);
+                if (modItem.controller && modItem.modelObject) {
+                    modItem.controller.selectMod(modItem.modelObject)
+                    console.log("Mod clicked:", modItem.modelObject.modTitle);
                     if (modDetailsText) {
-                        modDetailsText.text = modItem.model.modDescription || "No description available";
+                        modDetailsText.text = modItem.modelObject.modDescription || "No description available";
                     }
                 }
             }

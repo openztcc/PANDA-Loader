@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
     engine.addImportPath("F:/QT/6.8.1/mingw_64/qml");
 
     // Register QML types
-    qmlRegisterType<PModItem>("ozt.panda.PModItem", 1, 0, "PModItem");
-    qmlRegisterType<PController>("ozt.panda.PController", 1, 0, "PController");
+    qmlRegisterUncreatableType<PModItem>("ozt.panda", 1, 0, "PModItem", "Cannot create PModItem objects directly");
+    qmlRegisterUncreatableType<PController>("ozt.panda", 1, 0, "PController", "Cannot create PController objects directly");
 
     // Load the main QML file
     QObject::connect(

@@ -343,7 +343,7 @@ ApplicationWindow {
                             ModItem {
                                 id: modItems
                                 controller: modController
-                                model: model
+                                modelObject: model
                             }
                         }
 
