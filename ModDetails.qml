@@ -6,15 +6,16 @@ import QtQuick.Controls.Material
 Item {
     id: modDetails
     property string text: "No text"
-    Layout.preferredWidth: 300
+    implicitWidth: 300
     Layout.fillHeight: true
-    anchors.top: actionBar.bottom
 
     Rectangle {
         id: modDetailsPane
         color: "#f7fbf2"
         radius: 0
+        anchors.fill: parent
 
+        // mod title
         Text {
             id: modDetailsText
             text: ""

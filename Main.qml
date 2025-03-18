@@ -367,9 +367,10 @@ ApplicationWindow {
 
 
                 // mod details
-
-
+                ModDetails {
                 }
+
+            }
 
             // status bar
             Rectangle {
