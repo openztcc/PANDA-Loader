@@ -1,0 +1,8 @@
+module PandaLdr
+Main 1.0 Main.qml
+RailButton 1.0 RailButton.qml
+SvgIcon 1.0 SvgIcon.qml
+ActionButton 1.0 ActionButton.qml
+ModItem 1.0 ModItem.qml
+InfoPane 1.0 InfoPane.qml
+InfoPaneItem 1.0 InfoPaneItem.qml

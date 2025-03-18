@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
 import QtQuick.Effects
-import ozt.panda.PState 1.0
+import PandaLdr 1.0
 
 ApplicationWindow {
     width: 800
@@ -367,7 +367,7 @@ ApplicationWindow {
 
 
                 // mod details
-                ModDetails {
+                InfoPane {
                 }
 
             }

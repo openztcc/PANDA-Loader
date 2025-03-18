@@ -10,6 +10,7 @@
 #include <QQmlEngine>
 #include "PModItem.h"
 #include <QDir>
+#include <QtQml/qqmlregistration.h>
 
 // static functions
 

@@ -3,6 +3,7 @@
 
 #include <qqml.h>
 #include <QUrl>
+#include <QtQml/qqmlregistration.h>
 
 // This class contains all meta data in context of a single mod item.
 

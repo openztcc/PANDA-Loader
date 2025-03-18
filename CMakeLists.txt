@@ -24,31 +24,30 @@ find_package(QuaZip REQUIRED)
 
 qt_add_executable(appPandaLdr
     src/main.cpp
-    src/PState.h
-    src/PController.h
-    src/PModItem.h
-    src/PZtdMgr.h
-    src/PConfigMgr.h
-    src/PDatabaseMgr.h
-# src/PState.h src/PState.cpp
-    # src/PController.h src/PController.cpp
-    # src/PModItem.h src/PModItem.cpp
-    # src/PZtdMgr.h src/PZtdMgr.cpp
-    # src/PConfigMgr.h src/PConfigMgr.cpp
-    # src/PDatabaseMgr.h src/PDatabaseMgr.cpp
+    src/PState.cpp src/PState.h
+    src/PController.cpp src/PController.h
+    src/PModItem.cpp src/PModItem.h
+    src/PZtdMgr.cpp src/PZtdMgr.h
+    src/PConfigMgr.cpp src/PConfigMgr.h
+    src/PDatabaseMgr.cpp src/PDatabaseMgr.h
 )
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/include
-    ${CMAKE_SOURCE_DIR}/src 
-    ${CMAKE_SOURCE_DIR}/ui
 )
 link_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib
 )
 add_library(tomlplusplus INTERFACE)
-target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
+target_include_directories(
+    tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include
+)
 
+target_include_directories(
+    appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/src
+)
+
+qt_policy(SET QTP0004 NEW)
 qt_add_qml_module(appPandaLdr
     URI PandaLdr
     VERSION 1.0
@@ -58,15 +57,16 @@ qt_add_qml_module(appPandaLdr
         ui/SvgIcon.qml
         ui/ActionButton.qml
         ui/ModItem.qml
-        ui/ModDetails.qml
+        ui/InfoPane.qml
+        ui/InfoPaneItem.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
-        src/PState.cpp
-        src/PController.cpp
-        src/PModItem.cpp
-        src/PZtdMgr.cpp
-        src/PConfigMgr.cpp
-        src/PDatabaseMgr.cpp
+        src/PState.cpp src/PState.h
+        src/PController.cpp src/PController.h
+        src/PModItem.cpp src/PModItem.h
+        src/PZtdMgr.cpp src/PZtdMgr.h
+        src/PConfigMgr.cpp src/PConfigMgr.h
+        src/PDatabaseMgr.cpp src/PDatabaseMgr.h
 )
 
 qt_add_resources(appPandaLdr "resources"

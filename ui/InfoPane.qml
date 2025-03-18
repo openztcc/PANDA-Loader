@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Controls.Material
 
 Item {
-    id: modDetails
+    id: infoPane
     property string text: "No text"
     implicitWidth: 300
     Layout.fillHeight: true
