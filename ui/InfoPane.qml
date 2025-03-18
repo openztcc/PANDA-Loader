@@ -12,7 +12,7 @@ Item {
 
     Rectangle {
         id: modDetailsPane
-        color: "#f7fbf2"
+        color: "#e5e9e1"
         radius: 0
         anchors.fill: parent
         
@@ -27,6 +27,8 @@ Item {
                 anchors.top: parent.top
                 color: "#424940"
                 font.pixelSize: 16
+                font.bold: true
+                anchors.bottomMargin: 10
             }
 
             // description
@@ -38,6 +40,7 @@ Item {
                 font.pixelSize: 12
                 wrapMode: Text.WordWrap
                 width: parent.width
+                anchors.bottomMargin: 15
             }
 
             // authors

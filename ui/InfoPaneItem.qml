@@ -8,6 +8,8 @@ Item {
     property string fieldName: "No field name"
     property var innerComponent: null
     property var iconImg: null
+    width: parent ? parent.width : 300
+    height: 50
 
     Rectangle {
         id: infoPaneItemRoot
