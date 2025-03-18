@@ -368,6 +368,8 @@ ApplicationWindow {
 
                 // mod details
                 InfoPane {
+                    id: infoPane
+                    targetComponent: currentModSelected  
                 }
 
             }

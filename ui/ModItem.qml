@@ -9,6 +9,7 @@ Item {
     property var controller: null
     property var modelObject: null
     anchors.fill: parent
+    signal selectedMod(var mod)
 
     Pane {
         anchors.fill: parent
@@ -16,7 +17,6 @@ Item {
                              modArea.containsMouse ? Qt.darker("#f7fbf2", 0.01) : "#f7fbf2"
         padding: 12
         anchors.bottomMargin: 1
-        signal clicked()
         
         contentItem: RowLayout {
             id: modMeta
@@ -87,11 +87,11 @@ Item {
             cursorShape: Qt.PointingHandCursor
             onClicked: {
                 if (modItem.controller && modItem.modelObject) {
-                    modItem.controller.selectMod(modItem.modelObject)
+                    currentModSelected = modItem.modelObject;
                     console.log("Mod clicked:", modItem.modelObject.modTitle);
-                    if (modDetailsText) {
-                        modDetailsText.text = modItem.modelObject.modDescription || "No description available";
-                    }
+                    // if (modDetailsText) {
+                    //     modDetailsText.text = modItem.modelObject.modDescription || "No description available";
+                    // }
                 }
             }
             hoverEnabled: true

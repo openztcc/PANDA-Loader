@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
     engine.addImportPath(QCoreApplication::applicationDirPath() + "/ui");
 
     // Register QML types
-    // qmlRegisterType<PModItem>("PandaLdr", 1, 0, "PModItem");
-    // qmlRegisterType<PController>("PandaLdr", 1, 0, "PController");
+    qmlRegisterType<PModItem>("PandaLdr", 1, 0, "PModItem");
+    qmlRegisterType<PController>("PandaLdr", 1, 0, "PController");
 
     // Load the main QML file
     QObject::connect(
