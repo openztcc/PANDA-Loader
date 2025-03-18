@@ -15,19 +15,44 @@ Item {
         color: "#f7fbf2"
         radius: 0
         anchors.fill: parent
+        
+        // Item to create a padding
+        Item {
+            anchors.fill: parent 
+            anchors.margins: 12
+            // mod title
+            Text {
+                id: modDetailsText
+                text: infoPane.targetComponent ? infoPane.targetComponent.modTitle : "No mod selected"
+                anchors.top: parent.top
+                color: "#424940"
+                font.pixelSize: 16
+            }
 
-        // mod title
-        Text {
-            id: modDetailsText
-            text: targetComponent ? targetComponent.modTitle : "No mod selected"
-            anchors.centerIn: parent
-            color: "#424940"
-            font.pixelSize: 14
+            // description
+            Text {
+                id: modDetailsDesc
+                text: infoPane.targetComponent ? infoPane.targetComponent.modDescription : "No description"
+                anchors.top: modDetailsText.bottom
+                color: "#424940"
+                font.pixelSize: 12
+                wrapMode: Text.WordWrap
+                width: parent.width
+            }
+
+            // authors
+            InfoPaneItem {
+                fieldName: "Authors"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modAuthors : "No authors"
+                iconImg: "qrc:/icons/author.svg"
+                anchors.top: modDetailsDesc.bottom
+            }
         }
+
     }
 
     // Connections {
-    //     target: targetComponent
+    //     target: infoPane.targetComponent
     //     onSelectedMod: (mod) => {
     //         modDetailsText.text = mod.modTitle
     //         console.log("Selected mod: " + mod.modTitle)
