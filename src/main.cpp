@@ -6,6 +6,8 @@
 #include "PController.h"
 #include <QQmlContext>
 #include <QQmlEngine>
+#include "PModItem.h"
+#include "PController.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +25,7 @@ int main(int argc, char *argv[])
     
     engine.rootContext()->setContextProperty("modController", &controller);
     engine.addImportPath("F:/QT/6.8.1/mingw_64/qml");
+    engine.addImportPath(QCoreApplication::applicationDirPath() + "/ui");
 
     // Register QML types
     qmlRegisterUncreatableType<PModItem>("ozt.panda", 1, 0, "PModItem", "Cannot create PModItem objects directly");

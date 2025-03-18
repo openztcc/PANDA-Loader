@@ -23,17 +23,25 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/libs/quazip/cmake")
 find_package(QuaZip REQUIRED)
 
 qt_add_executable(appPandaLdr
-    main.cpp
-    PState.h PState.cpp
-    PController.h PController.cpp
-    PModItem.h PModItem.cpp
-    PZtdMgr.h PZtdMgr.cpp
-    PConfigMgr.h PConfigMgr.cpp
-    PDatabaseMgr.h PDatabaseMgr.cpp
+    src/main.cpp
+    src/PState.h
+    src/PController.h
+    src/PModItem.h
+    src/PZtdMgr.h
+    src/PConfigMgr.h
+    src/PDatabaseMgr.h
+# src/PState.h src/PState.cpp
+    # src/PController.h src/PController.cpp
+    # src/PModItem.h src/PModItem.cpp
+    # src/PZtdMgr.h src/PZtdMgr.cpp
+    # src/PConfigMgr.h src/PConfigMgr.cpp
+    # src/PDatabaseMgr.h src/PDatabaseMgr.cpp
 )
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/include
+    ${CMAKE_SOURCE_DIR}/src 
+    ${CMAKE_SOURCE_DIR}/ui
 )
 link_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib
@@ -45,20 +53,20 @@ qt_add_qml_module(appPandaLdr
     URI PandaLdr
     VERSION 1.0
     QML_FILES
-        Main.qml
-        RailButton.qml
-        SvgIcon.qml
-        ActionButton.qml
-        ModItem.qml
+        ui/Main.qml
+        ui/RailButton.qml
+        ui/SvgIcon.qml
+        ui/ActionButton.qml
+        ui/ModItem.qml
+        ui/ModDetails.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
-        PState.h PState.cpp
-        PController.h PController.cpp
-        PModItem.h PModItem.cpp
-        PZtdMgr.h PZtdMgr.cpp
-        PConfigMgr.h PConfigMgr.cpp
-        PDatabaseMgr.h PDatabaseMgr.cpp
-        QML_FILES ModDetails.qml
+        src/PState.cpp
+        src/PController.cpp
+        src/PModItem.cpp
+        src/PZtdMgr.cpp
+        src/PConfigMgr.cpp
+        src/PDatabaseMgr.cpp
 )
 
 qt_add_resources(appPandaLdr "resources"
