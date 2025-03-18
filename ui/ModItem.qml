@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
-import ozt.panda 1.0
+import PandaLdr 1.0
 
 Item {
     id: modItem
