@@ -367,22 +367,7 @@ ApplicationWindow {
 
 
                 // mod details
-                Rectangle {
-                    id: modDetails
-                    Layout.preferredWidth: 300
-                    Layout.fillHeight: true
-                    anchors.top: actionBar.bottom
-                    color: "#f7fbf2"
-                    radius: 0
 
-                    Text {
-                        id: modDetailsText
-                        text: ""
-                        anchors.centerIn: parent
-                        color: "#424940"
-                        font.pixelSize: 14
-                    }
-                }
 
                 }
 

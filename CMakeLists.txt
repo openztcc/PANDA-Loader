@@ -58,7 +58,7 @@ qt_add_qml_module(appPandaLdr
         PZtdMgr.h PZtdMgr.cpp
         PConfigMgr.h PConfigMgr.cpp
         PDatabaseMgr.h PDatabaseMgr.cpp
-        QML_FILES IPContainer.qml
+        QML_FILES ModDetails.qml
 )
 
 qt_add_resources(appPandaLdr "resources"
