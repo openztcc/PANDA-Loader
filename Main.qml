@@ -275,22 +275,6 @@ ApplicationWindow {
 
             }
 
-            // Rectangle {
-            //     id: modListArea
-            //     Layout.fillWidth: true
-            //     Layout.preferredHeight: 50
-            //     anchors.top: actionBar.bottom
-            //     color: "#f7fbf2"
-            //     radius: 0
-
-            //     Text {
-            //         text: "Mods"
-            //         anchors.centerIn: parent
-            //         color: "#424940"
-            //         font.pixelSize: 14
-            //     }
-            // }
-
             RowLayout {
                 // mods list
                 Layout.topMargin: -4
@@ -332,6 +316,7 @@ ApplicationWindow {
                         }
                     }
 
+                    // mod list view
                     ListView {                        
                         id: modsList
                         Layout.fillWidth: true
@@ -354,7 +339,12 @@ ApplicationWindow {
                                 color: "#c1c9be"
                             }
 
-                            
+                            // mod list item
+                            ModItem {
+                                id: modItems
+                                controller: modController
+                                model: model
+                            }
                         }
 
                         ScrollBar.vertical: ScrollBar {

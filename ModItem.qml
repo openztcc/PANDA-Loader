@@ -1,56 +1,59 @@
 import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Material
 
 Item {
-    property string text: "No text"
+    id: modItem
+    property var controller: null
+    property var model: null
     anchors.fill: parent
-
+    
     Pane {
         anchors.fill: parent
-        Material.background:  modArea.containsPress ? Qt.lighter("#f7fbf2", 0.8) : modArea.containsMouse ? Qt.darker("#f7fbf2", 0.01) : "#f7fbf2"
+        Material.background: modArea.containsPress ? Qt.lighter("#f7fbf2", 0.8) : 
+                             modArea.containsMouse ? Qt.darker("#f7fbf2", 0.01) : "#f7fbf2"
         padding: 12
         anchors.bottomMargin: 1
-
-        signal clicked()
-
+        signal: clicked()
+        
         contentItem: RowLayout {
             id: modMeta
             spacing: 12
+            
             Rectangle {
                 id: modImg
                 width: 44
                 height: 30
                 color: "#BCD0C3"
             }
-
+            
             ColumnLayout {
-
                 Layout.fillWidth: true
                 spacing: 3
-
                 // category
                 Label {
-                    text: "Buildings"
+                    text: modItem.model && modItem.model.modCategory ? modItem.model.modCategory : "Uncategorized"
                     font.pixelSize: 10
                 }
-
                 // name of mod
                 Label {
-                    text: model.modTitle
+                    text: modItem.model && modItem.model.modTitle ? modItem.model.modTitle : "No title"
                     font.pixelSize: 12
                     color: "#424940"
                 }
-
                 // author(s)
                 Label {
-                    text: "by " + model.modAuthor
+                    text: "by " + (modItem.model && modItem.model.modAuthor ? modItem.model.modAuthor : "Unknown")
                     font.pixelSize: 10
                 }
             }
-
+            
             Item {
                 Layout.fillWidth: true
             }
-
+            
+            // disable checkbox
             CheckBox {
                 id: modCheck
                 z: 1
@@ -61,32 +64,36 @@ Item {
                 Material.accent: "#376a3e"
                 enabled: true
                 onCheckedChanged: {
-                    console.log("Checkbox changed:", model.modTitle, checked)
+                    if (modItem.model) {
+                        console.log("Checkbox changed:", modItem.model.modTitle, checked)
+                    }
                 }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    event.accepted = true;
+                
+                // Prevent click propagation to parent MouseArea
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        modCheck.toggle()
+                        mouse.accepted = true
+                    }
                 }
-                propagateComposedEvents: false
             }
         }
+        
         MouseArea {
             id: modArea
-            anchors.fill: modMeta
+            anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                modController.selectMod(index);
-                console.log("Mod clicked:", model.modTitle);
-
-                modDetailsText.text = model.modDescription;
+                if (modItem.controller && modItem.model) {
+                    modItem.controller.modClicked(modItem.model)
+                    console.log("Mod clicked:", modItem.model.modTitle);
+                    if (modDetailsText) {
+                        modDetailsText.text = modItem.model.modDescription || "No description available";
+                    }
+                }
             }
             hoverEnabled: true
         }
-
     }
-
 }
-
