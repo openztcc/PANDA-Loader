@@ -59,7 +59,7 @@ Item {
                 id: modCheck
                 z: 1
                 Layout.alignment: Qt.AlignRight
-                Layout.rightMargin: -15
+                Layout.rightMargin: -3
                 Layout.preferredWidth: 20
                 checked: true
                 Material.accent: "#376a3e"
