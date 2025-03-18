@@ -22,7 +22,7 @@ class PModItem;
 class PController : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(int currentlySelectedMod READ currentlySelectedMod NOTIFY modSelected)
+    Q_PROPERTY(QSharedPointer<PModItem> currentMod READ currentlySelectedMod NOTIFY modSelected)
     Q_PROPERTY(int modCount READ modCount NOTIFY modAdded)
 
 public:
@@ -38,11 +38,11 @@ public:
         ModTagsRole
     };
 
-    int currentlySelectedMod() const;
+    Q_INVOKABLE QSharedPointer<PModItem> currentlySelectedMod() const;
     int modCount() const;
     void addMod(QSharedPointer<PModItem>);
-    void removeMod(int index);
-    void selectMod(int index);
+    void removeMod(QSharedPointer<PModItem>);
+    Q_INVOKABLE void selectMod(int index);
     void deselectMod();
     void clearSelection();
     void loadMods();
@@ -53,14 +53,14 @@ public:
     virtual QHash<int, QByteArray> roleNames() const override;
 
 signals:
-    void modAdded(int index);
-    void modRemoved(int index);
-    void modSelected(int index);
+    void modAdded(QSharedPointer<PModItem>);
+    void modRemoved(QSharedPointer<PModItem>);
+    void modSelected(QSharedPointer<PModItem>);
     void modDeselected();
 
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;
-    int m_currentIndex;
+    QSharedPointer<PModItem> m_currentMod;
     PState *m_state;
 };
 

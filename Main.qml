@@ -14,6 +14,8 @@ ApplicationWindow {
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
 
+    property var currentModSelected: null
+
     // Navigation Rail
     Drawer {
         width: 70
@@ -448,7 +450,12 @@ ApplicationWindow {
                                     id: modArea
                                     anchors.fill: modMeta
                                     cursorShape: Qt.PointingHandCursor
-                                    onClicked: console.log("Mod clicked:", model.modTitle)
+                                    onClicked: {
+                                        modController.selectMod(index);
+                                        console.log("Mod clicked:", model.modTitle);
+
+                                        modDetailsText.text = model.modDescription;
+                                    }
                                     hoverEnabled: true
                                 }
 
@@ -484,7 +491,8 @@ ApplicationWindow {
                     radius: 0
 
                     Text {
-                        text: "Mod details"
+                        id: modDetailsText
+                        text: ""
                         anchors.centerIn: parent
                         color: "#424940"
                         font.pixelSize: 14
