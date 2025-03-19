@@ -32,6 +32,17 @@ Item {
             }
         }
 
+        onTextChanged: {
+                    if (searchField.text == "by:" ||
+                        searchField.text == "category:" ||
+                        searchField.text == "disabled:" ||
+                        searchField.text == "enabled:") {
+                        searchField.currentBgColor = "#424940"  // Change the property value
+                    } else {
+                        searchField.currentBgColor = "#f7fbf2"  // Reset to default
+                    }
+                }
+
         // MouseArea {
         //     anchors.fill: parent
         //     cursorShape: Qt.PointingHandCursor
