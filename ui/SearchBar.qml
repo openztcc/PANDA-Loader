@@ -40,15 +40,6 @@ Item {
                 visible: searchBar.isTagOpen
                 anchors.verticalCenter: parent.verticalCenter
             }
-
-            TextInput {
-                id: userInput
-                color: "#424940"
-                font.pixelSize: 16
-                width: parent.width - (searchBar.isTagOpen ? activeFilterTag.width + 15 : 0)
-                focus: true
-                text: ""
-            }
         }
 
         onFocusChanged: {
