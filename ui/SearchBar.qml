@@ -17,8 +17,20 @@ Item {
         readOnly: false
 
         background: Rectangle {
+            id: searchFieldBg
             color: "#f7fbf2"
             radius: 0
+        }
+
+        FilterTag {
+            id: searchFieldTag
+            text: "by:"
+            visible: false
+            onClicked: {
+                searchField.text = "by:"
+                searchFieldTag.visible = false
+                searchFieldBg.color = "#f7fbf2"
+            }
         }
 
         onFocusChanged: {
@@ -37,9 +49,9 @@ Item {
                         searchField.text == "category:" ||
                         searchField.text == "disabled:" ||
                         searchField.text == "enabled:") {
-                        searchField.currentBgColor = "#424940"  // Change the property value
+                        searchFieldBg.color = "#424940"  // Reset to default
                     } else {
-                        searchField.currentBgColor = "#f7fbf2"  // Reset to default
+                        searchFieldBg.color = "#f7fbf2"  // Reset to default
                     }
                 }
 
