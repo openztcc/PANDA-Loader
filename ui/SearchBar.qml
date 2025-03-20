@@ -83,13 +83,14 @@ Item {
         // Key handling
         Keys.onPressed: function(event) {
             // Allow Escape key to clear filter
-            if (event.key === Qt.Key_Escape && searchBar.isTagOpen) {
+            if (event.key === Qt.Key_Escape) {
                 searchBar.isTagOpen = false
                 searchBar.activeFilter = ""
                 searchField.text = ""
                 event.accepted = true
                 searchField.leftPadding = 8
-                // activeFilterTag.filter = ""
+                // remove focus from search field
+                searchField.focus = false
             }
 
             // Delete filter tag when backspace is pressed
