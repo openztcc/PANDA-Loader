@@ -19,7 +19,7 @@ Item {
         placeholderTextColor: "#424940"
         anchors.fill: parent
         readOnly: false
-        leftPadding: searchBar.isTagOpen ? (activeFilterTag.width + 38) : 8
+        leftPadding: searchBar.isTagOpen ? activeFilterTag.width + 15 : 8
 
         background: Rectangle {
             id: searchFieldBg
@@ -46,7 +46,7 @@ Item {
                 id: userInput
                 color: "#424940"
                 font.pixelSize: 16
-                width: parent.width - (searchBar.isTagOpen ? activeFilterTag.width + 38 : 0)
+                width: parent.width - (searchBar.isTagOpen ? activeFilterTag.width + 15 : 0)
                 focus: true
                 text: ""
             }
@@ -64,33 +64,17 @@ Item {
         }
 
         onTextChanged: {
-            if (text === "by:") {
-                searchBar.activeFilter = "by:";
+            if (text === "by:" || text === "category:" || text === "disabled:" || text === "enabled:") {
+                searchBar.activeFilter = text;
                 searchBar.isTagOpen = true;
-                searchField.leftPadding = activeFilterTag.width + 38
-                searchField.text = ""
-            }
-            else if (text === "category:") {
-                searchBar.activeFilter = "category:";
-                searchBar.isTagOpen = true;
-                searchField.text = ""
-                searchField.leftPadding = activeFilterTag.width + 38
-            }
-            else if (text === "disabled:") {
-                searchBar.activeFilter = "disabled:";
-                searchBar.isTagOpen = true;
-                searchField.text = ""
-                searchField.leftPadding = activeFilterTag.width + 38
-            }
-            else if (text === "enabled:") {
-                searchBar.activeFilter = "enabled:";
-                searchBar.isTagOpen = true;
-                searchField.text = ""
-                searchField.leftPadding = activeFilterTag.width + 38
+                searchField.text = "";
+
+                // Defer padding update until layout updates
+                Qt.callLater(() => {
+                    searchField.leftPadding = activeFilterTag.width + 15; // Adjust padding dynamically
+                });
             }
         }
-
-
 
         // timer to allow backspace to work without immediately clearing filter
         // Timer {
@@ -115,6 +99,13 @@ Item {
                 event.accepted = true
                 searchField.leftPadding = 8
                 // activeFilterTag.filter = ""
+            }
+
+            // Delete filter tag when backspace is pressed
+            if (event.key === Qt.Key_Backspace && searchBar.isTagOpen && searchField.text === "") {
+                searchBar.isTagOpen = false
+                searchBar.activeFilter = ""
+                searchField.leftPadding = 8
             }
         }
 

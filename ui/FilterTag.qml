@@ -3,7 +3,7 @@ import QtQuick.Layouts
 
 Item {
     id: filterTag
-    width: implicitWidth // width based on content size
+    width: tagText.implicitWidth + 2 // width based on content size
     height: 20
 
     required property string filter
