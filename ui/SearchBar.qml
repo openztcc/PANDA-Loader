@@ -34,7 +34,6 @@ Item {
             anchors.leftMargin: 5
             anchors.rightMargin: 5
 
-            // Filter Tag inside the TextField
             FilterTag {
                 id: activeFilterTag
                 filter: searchBar.activeFilter
@@ -69,9 +68,10 @@ Item {
                 searchBar.isTagOpen = true;
                 searchField.text = "";
 
-                // Defer padding update until layout updates
+                // wait until frame update to change padding
+                // TODO: remove...might not be effective
                 Qt.callLater(() => {
-                    searchField.leftPadding = activeFilterTag.width + 15; // Adjust padding dynamically
+                    searchField.leftPadding = activeFilterTag.width + 15;
                 });
             }
         }
