@@ -11,6 +11,21 @@ Item {
     property bool isTagOpen: false
     property string activeFilter: ""
 
+    // signals
+    signal filterByAuthor()
+    signal filterByCategory()
+    signal filterByDisabled()
+    signal filterByEnabled()
+
+    MouseArea {
+        id: backgroundMouseArea
+        anchors.fill: parent.parent
+        propagateComposedEvents: true // Allow clicks to pass through when needed
+        onClicked: {
+            searchField.focus = false;
+        }
+    }
+
     TextField {
         id: searchField
         placeholderText: "Search"
@@ -64,6 +79,17 @@ Item {
                 Qt.callLater(() => {
                     searchField.leftPadding = activeFilterTag.width + 15;
                 });
+            }
+
+            // emit signals for filtering
+            if (text === "by:") {
+                searchBar.filterByAuthor();
+            } else if (text === "category:") {
+                searchBar.filterByCategory();
+            } else if (text === "disabled:") {
+                searchBar.filterByDisabled();
+            } else if (text === "enabled:") {
+                searchBar.filterByEnabled();
             }
         }
 
