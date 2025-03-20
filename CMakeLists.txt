@@ -59,6 +59,8 @@ qt_add_qml_module(appPandaLdr
         ui/ModItem.qml
         ui/InfoPane.qml
         ui/InfoPaneItem.qml
+        ui/SearchBar.qml
+        ui/FilterTag.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         src/PState.cpp src/PState.h

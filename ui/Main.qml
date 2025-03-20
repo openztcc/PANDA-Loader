@@ -248,28 +248,9 @@ ApplicationWindow {
                         }
                     }
 
-                    TextField {
-                        id: searchField
-                        placeholderText: "Search"
-                        Layout.preferredHeight: 40
-                        Layout.fillWidth: true
-                        Material.background: "#f7fbf2"
-                        Material.foreground: "#424940"
+                    SearchBar {
 
-                        background: Rectangle {
-                            color: "#f7fbf2"
-                            radius: 0
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: console.log("Search clicked")
-                        }
                     }
-
-
-
                 }
 
 
