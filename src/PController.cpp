@@ -128,6 +128,12 @@ void PController::loadMods()
     // Load mods from ztds
     loadModsFromZTDs(ztdList);
 
+    // Open db
+    PDatabaseMgr db;
+    db.openDatabase();
+    // Get all mods from database
+    QSqlQuery query = db.getAllMods();
+
     // Add mods to list
     for (const QString &ztd : ztdList)
     {

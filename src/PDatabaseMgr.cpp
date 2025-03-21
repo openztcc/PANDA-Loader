@@ -374,3 +374,10 @@ bool PDatabaseMgr::doesKeyExist(const QString &modId, const QString &key) {
 
     return true;
 }
+
+QSqlQuery PDatabaseMgr::getAllMods() {
+    QSqlQuery query(m_db);
+    query.prepare("SELECT * FROM mods");
+    query.exec();
+    return query;
+}
