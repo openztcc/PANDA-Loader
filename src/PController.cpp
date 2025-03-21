@@ -134,60 +134,23 @@ void PController::loadMods()
     // Get all mods from database
     QSqlQuery query = db.getAllMods();
 
-    // Add mods to list
-    for (const QString &ztd : ztdList)
+    // Iterate through the results and create PModItem objects
+    while (query.next())
     {
-        qDebug() << "Loading mod: " << ztd;
-        // Load mod from ZTD file
+        qDebug() << "Loading mod from database: " << query.value("title").toString();
         QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create();
-        qDebug() << "Created mod";
-        toml::table config = PConfigMgr::getMetaConfig(ztd);
-        qDebug() << "Got meta config";
-        mod->setmodTitle(PConfigMgr::getKeyValue("name", config));
-        qDebug() << "Set title" << PConfigMgr::getKeyValue("name", config);
-        
-        // Get list of authors from config to string
-        QString authors;
-        if (auto authorsArr = config["authors"].as_array())
-        {
-            if (authorsArr->empty())
-            {
-                authors = "Unknown";
-            }
-            else if (authorsArr->size() == 1)
-            {
-                authors = QString::fromStdString(authorsArr->at(0).as_string()->get());
-            }
-            else
-            {
-                QStringList authorList;
-
-                for (const auto &author : *authorsArr)
-                {
-                    authorList.append(QString::fromStdString(author.as_string()->get()));
-                }
-
-                authors = authorList.mid(0, authorList.size() - 1).join(", ") + " and " + authorList.last();
-            }
-        }
-        mod->setmodAuthor(authors);
-        mod->setmodDescription(PConfigMgr::getKeyValue("description", config));
-        mod->setmodPath(QUrl::fromLocalFile(ztd));
-        mod->setmodEnabled(true);
-        mod->setmodCategory(PConfigMgr::getKeyValue("category", config));
-        mod->setmodTags(PConfigMgr::getKeyValue("tags", config));
+        mod->setmodTitle(query.value("title").toString());
+        mod->setmodAuthor(query.value("authors").toString());
+        mod->setmodDescription(query.value("description").toString());
+        mod->setmodPath(QUrl::fromLocalFile(query.value("path").toString()));
+        mod->setmodEnabled(query.value("enabled").toBool());
+        mod->setmodCategory(query.value("category").toString());
+        mod->setmodTags(query.value("tags").toString());
         addMod(mod);
     }
-    
-    // QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create("Mod 1", "Author 1", "Description 1", QUrl("file:///path/to/mod1"), true, "Category 1", "Tag 1, Tag 2, Tag 3");
-    // addMod(mod);
 
-    // QSharedPointer<PModItem> mod2 = QSharedPointer<PModItem>::create("Mod 2", "Author 2", "Description 2", QUrl("file:///path/to/mod2"), true, "Category 2", "Tag 4, Tag 5, Tag 6");
-    // addMod(mod2);
-
-    // QSharedPointer<PModItem> mod3 = QSharedPointer<PModItem>::create("Mod 3", "Author 3", "Description 3", QUrl("file:///path/to/mod3"), true, "Category 3", "Tag 7, Tag 8, Tag 9");
-    // addMod(mod3);
-
+    db.closeDatabase();
+    qDebug() << "Loaded mods from database";
     endResetModel();
 }
 
