@@ -115,6 +115,9 @@ Item {
                 searchField.leftPadding = 8
                 // remove focus from search field
                 searchField.focus = false
+                // update signals
+                searchBar.searchTextChanged("");
+                searchBar.filterBy("");
             }
 
             // Delete filter tag when backspace is pressed
@@ -122,6 +125,8 @@ Item {
                 searchBar.isTagOpen = false
                 searchBar.activeFilter = ""
                 searchField.leftPadding = 8
+                // update signals
+                searchBar.filterBy("");
             }
         }
 

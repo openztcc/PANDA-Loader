@@ -393,7 +393,6 @@ QSqlQuery PDatabaseMgr::getAllMods() {
 }
 
 // Return results within orderBy filter and searchTerm
-// TODO: Remove orderBy query function and merge with searchMods
 // TODO: Handle case where searchTerm is empty or just spaces, should return all mods
 // in this filter
 QSqlQuery PDatabaseMgr::searchMods(const QString &orderBy, const QString &searchTerm) {
