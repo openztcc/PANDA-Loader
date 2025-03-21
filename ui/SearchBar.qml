@@ -12,10 +12,8 @@ Item {
     property string activeFilter: ""
 
     // signals
-    signal filterByAuthor()
-    signal filterByCategory()
-    signal filterByDisabled()
-    signal filterByEnabled()
+    signal filterBy(filter: string)
+    signal searchTextChanged(text: string)
 
     MouseArea {
         id: backgroundMouseArea
@@ -72,6 +70,14 @@ Item {
             if (text === "by:" || text === "category:" || text === "disabled:" || text === "enabled:") {
                 searchBar.activeFilter = text;
                 searchBar.isTagOpen = true;
+
+                // send signals for filtering
+                if (text === "by:") {
+                    searchBar.filterBy("author");
+                } else {
+                    searchBar.filterBy(text.slice(0, -1)); // remove the colon
+                }
+
                 searchField.text = "";
 
                 // wait until frame update to change padding
@@ -79,17 +85,10 @@ Item {
                 Qt.callLater(() => {
                     searchField.leftPadding = activeFilterTag.width + 15;
                 });
-            }
-
-            // emit signals for filtering
-            if (text === "by:") {
-                searchBar.filterByAuthor();
-            } else if (text === "category:") {
-                searchBar.filterByCategory();
-            } else if (text === "disabled:") {
-                searchBar.filterByDisabled();
-            } else if (text === "enabled:") {
-                searchBar.filterByEnabled();
+            } 
+            else {
+                // emit signal for text change
+                searchBar.searchTextChanged(text);
             }
         }
 
@@ -117,6 +116,9 @@ Item {
                 searchField.leftPadding = 8
                 // remove focus from search field
                 searchField.focus = false
+                // update signals
+                searchBar.searchTextChanged("");
+                searchBar.filterBy("");
             }
 
             // Delete filter tag when backspace is pressed
@@ -124,6 +126,8 @@ Item {
                 searchBar.isTagOpen = false
                 searchBar.activeFilter = ""
                 searchField.leftPadding = 8
+                // update signals
+                searchBar.filterBy("");
             }
         }
 

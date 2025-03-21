@@ -264,3 +264,44 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
     db.closeDatabase();
     qDebug() << "Loaded mods from ZTDs";
 }
+
+// Updates the mod list based on the order and search term for filtering and live search
+void PController::updateModList(QString orderBy, QString searchTerm) 
+{
+    // Placeholder for updating mod list; dynamic sqlite query later
+    beginResetModel();
+    // Clear existing mods
+    m_mods_list.clear();
+
+    // Open db
+    PDatabaseMgr db;
+    db.openDatabase();
+
+    QSqlQuery query;
+
+    // Checks on orderBy and searchTerm
+    if (orderBy.isEmpty() && searchTerm.isEmpty()) {
+        query = db.getAllMods();
+    }
+    else {
+        query = db.searchMods(orderBy, searchTerm);
+    }
+
+    // Iterate through the results and create PModItem objects
+    while (query.next())
+    {
+        qDebug() << "Loading mod from database: " << query.value("title").toString();
+        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create();
+        mod->setmodTitle(query.value("title").toString());
+        mod->setmodAuthor(query.value("author").toString());
+        mod->setmodDescription(query.value("description").toString());
+        mod->setmodPath(QUrl::fromLocalFile(query.value("path").toString()));
+        mod->setmodEnabled(query.value("enabled").toBool());
+        mod->setmodCategory(query.value("category").toString());
+        mod->setmodTags(query.value("tags").toString());
+        addMod(mod);
+    }
+    db.closeDatabase();
+    qDebug() << "Updated mod list from database";
+    endResetModel();
+}
