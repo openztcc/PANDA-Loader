@@ -140,7 +140,7 @@ void PController::loadMods()
         qDebug() << "Loading mod from database: " << query.value("title").toString();
         QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create();
         mod->setmodTitle(query.value("title").toString());
-        mod->setmodAuthor(query.value("authors").toString());
+        mod->setmodAuthor(query.value("author").toString());
         mod->setmodDescription(query.value("description").toString());
         mod->setmodPath(QUrl::fromLocalFile(query.value("path").toString()));
         mod->setmodEnabled(query.value("enabled").toBool());
