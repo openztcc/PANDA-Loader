@@ -56,7 +56,7 @@ public:
     QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();
-    QSqlQuery searchMods(const QString &orderBy, const QString &searchTerm);
+    QSqlQuery searchMods(const QString &propertyName, const QString &searchTerm);
     QSqlQuery getModByPk(const QString &modId);
 
     bool doesModExist(const QString &modId);

@@ -395,17 +395,19 @@ QSqlQuery PDatabaseMgr::getAllMods() {
 // Return results within orderBy filter and searchTerm
 // TODO: Handle case where searchTerm is empty or just spaces, should return all mods
 // in this filter
-QSqlQuery PDatabaseMgr::searchMods(const QString &orderBy, const QString &searchTerm) {
+QSqlQuery PDatabaseMgr::searchMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query(m_db);
 
-    QString orderByClause = orderBy;
+    QString property = propertyName;
 
     // Default order by title if not specified
-    if (orderByClause.isEmpty()) {
-        orderByClause = "title"; 
+    if (property.isEmpty()) {
+        property = "title"; 
     }
 
-    query.prepare("SELECT * FROM mods WHERE title LIKE :searchTerm ORDER BY " + orderByClause);
+    qDebug() << "Searching mods with order by: " << property << " and search term: " << searchTerm;
+
+    query.prepare("SELECT * FROM mods WHERE :orderByClause LIKE :searchTerm ORDER BY title");
     query.bindValue(":searchTerm", "%" + searchTerm + "%");
     query.exec();
     return query;
