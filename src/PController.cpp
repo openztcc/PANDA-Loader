@@ -169,7 +169,10 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
 {
     // open database
     PDatabaseMgr db;
-    db.openDatabase();
+    if (!db.openDatabase()) {
+        qDebug() << "Failed to open database for loading mods from ZTDs";
+        return; // Failed to open database
+    }
 
     // Insert mods into database
     for (const QString &ztd : ztdList)
