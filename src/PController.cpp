@@ -125,6 +125,9 @@ void PController::loadMods()
     // Load mods from directory
     QStringList ztdList = m_state->getZtdList();
 
+    // Load mods from ztds
+    loadModsFromZTDs(ztdList);
+
     // Add mods to list
     for (const QString &ztd : ztdList)
     {
@@ -194,6 +197,11 @@ void PController::loadModsFromDatabase()
 }
 
 // Grabs mods from ZTDs and stores them in database
+// TODO: Add any errors to a list of errors to display to user
+// TODO: Add a check to see if mod already exists in database
+// TODO: Add meta.toml file to ztd if it doesn't exist
+// TODO: If meta.toml does not exist, add to list of errors for user
+// TODO: Let user decide if it's a duplicate or not
 void PController::loadModsFromZTDs(const QStringList &ztdList)
 {
     // open database
@@ -225,7 +233,20 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             // Get meta config from ztd
             toml::table config = PConfigMgr::getMetaConfig(ztd);
 
-            // Get values from config
+            // Grab mod_id from config
+            mod.mod_id = PConfigMgr::getKeyValue("mod_id", config);
+            if (mod.mod_id.isEmpty()) {
+                mod.mod_id = QUuid::createUuid().toString();
+            }
+
+            // Check if mod_id already exists in database
+            // TODO: Let user decide if it's a duplicate or not
+            if (db.doesModExist(mod.mod_id)) {
+                qDebug() << "Mod already exists in database: " << mod.mod_id;
+                continue; // Skip this mod
+            }
+
+            // Get other values from config
             mod.title = PConfigMgr::getKeyValue("name", config);
             if (mod.title.isEmpty()) {
                 mod.title = "Unknown";
@@ -265,14 +286,14 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
                 mod.version = "1.0.0";
             }
 
-            mod.mod_id = PConfigMgr::getKeyValue("mod_id", config);
-            if (mod.mod_id.isEmpty()) {
-                mod.mod_id = QUuid::createUuid().toString();
-            }
 
         }
 
         db.insertMod(mod);
 
     }
+
+    // close database
+    db.closeDatabase();
+    qDebug() << "Loaded mods from ZTDs";
 }
