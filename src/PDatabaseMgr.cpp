@@ -399,12 +399,14 @@ QSqlQuery PDatabaseMgr::getAllMods() {
 QSqlQuery PDatabaseMgr::searchMods(const QString &orderBy, const QString &searchTerm) {
     QSqlQuery query(m_db);
 
+    QString orderByClause = orderBy;
+
     // Default order by title if not specified
-    if (orderBy.isEmpty()) {
-        orderBy = "title"; 
+    if (orderByClause.isEmpty()) {
+        orderByClause = "title"; 
     }
 
-    query.prepare("SELECT * FROM mods WHERE title LIKE :searchTerm ORDER BY " + orderBy);
+    query.prepare("SELECT * FROM mods WHERE title LIKE :searchTerm ORDER BY " + orderByClause);
     query.bindValue(":searchTerm", "%" + searchTerm + "%");
     query.exec();
     return query;
