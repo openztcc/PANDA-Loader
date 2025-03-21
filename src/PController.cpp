@@ -283,6 +283,9 @@ void PController::updateModList(QString orderBy, QString searchTerm)
     if (orderBy.isEmpty() && searchTerm.isEmpty()) {
         query = db.getAllMods();
     }
+    else if (orderBy.isEmpty() && !searchTerm.isEmpty()) {
+        query = db.searchMods("title", searchTerm);
+    }
     else {
         query = db.searchMods(orderBy, searchTerm);
     }
