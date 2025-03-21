@@ -407,9 +407,14 @@ QSqlQuery PDatabaseMgr::searchMods(const QString &propertyName, const QString &s
 
     qDebug() << "Searching mods with order by: " << property << " and search term: " << searchTerm;
 
-    query.prepare("SELECT * FROM mods WHERE :orderByClause LIKE :searchTerm ORDER BY title");
+    QString queryStr = QString("SELECT * FROM mods WHERE %1 LIKE :searchTerm ORDER BY title").arg(propertyName);
+    query.prepare(queryStr);
     query.bindValue(":searchTerm", "%" + searchTerm + "%");
-    query.exec();
+    
+    if (!query.exec()) {
+        qDebug() << "Error running search query: " << query.lastError().text();
+    }
+
     return query;
 }
 
