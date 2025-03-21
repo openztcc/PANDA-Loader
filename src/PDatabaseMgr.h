@@ -59,6 +59,7 @@ public:
     QSqlQuery orderBy(const QString &query);
     QSqlQuery searchMods(const QString &searchTerm);
     QSqlQuery getModByPk(const QString &modId);
+    QString getDbName() const { return m_dbName; }
 
     bool doesModExist(const QString &modId);
     bool doesDependencyExist(const QString &dependencyId);
