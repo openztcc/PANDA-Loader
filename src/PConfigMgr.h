@@ -13,6 +13,7 @@ public:
     ~PConfigMgr();
     static toml::table getMetaConfig(const QString &ztdFilePath);
     static QString getKeyValue(const QString &key, const toml::table &config);
+    static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);
     toml::table getZooIniConfig(const QString &iniPath);
