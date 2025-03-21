@@ -190,12 +190,6 @@ void PController::addState(PState *state)
     m_state = state;
 }
 
-// Grabs mods from SQLite database and adds them to the list to be displayed
-void PController::loadModsFromDatabase()
-{
-    // Placeholder for loading mods from database
-}
-
 // Grabs mods from ZTDs and stores them in database
 // TODO: Add any errors to a list of errors to display to user
 // TODO: Add a check to see if mod already exists in database
