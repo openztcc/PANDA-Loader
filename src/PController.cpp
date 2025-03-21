@@ -235,7 +235,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
                 mod.tags = {"Unknown"};
             }
 
-            mod.category = tags[0];
+            mod.category = mod.tags[0];
             if (mod.category.isEmpty()) {
                 mod.category = "Unknown";
             }
