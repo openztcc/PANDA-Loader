@@ -279,6 +279,7 @@ void PController::updateModList(QString orderBy, QString searchTerm)
 
     QSqlQuery query;
 
+    // Checks on orderBy and searchTerm
     if (orderBy.isEmpty() && searchTerm.isEmpty()) {
         query = db.getAllMods();
     }
@@ -292,6 +293,7 @@ void PController::updateModList(QString orderBy, QString searchTerm)
         query = db.orderBy(orderBy);
         query = db.searchMods(searchTerm);
     }
+
     // Iterate through the results and create PModItem objects
     while (query.next())
     {
