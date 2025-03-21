@@ -70,7 +70,6 @@ Item {
             if (text === "by:" || text === "category:" || text === "disabled:" || text === "enabled:") {
                 searchBar.activeFilter = text;
                 searchBar.isTagOpen = true;
-                searchField.text = "";
 
                 // send signals for filtering
                 if (text === "by:") {
@@ -78,6 +77,8 @@ Item {
                 } else {
                     searchBar.filterBy(text.slice(0, -1)); // remove the colon
                 }
+
+                searchField.text = "";
 
                 // wait until frame update to change padding
                 // TODO: remove...might not be effective
