@@ -31,12 +31,12 @@ public:
     struct PMod
     {
         QString title;
-        QString authors;
+        QVector<QString> authors;
         QString description;
         QString path;
         bool enabled;
         QString category;
-        QStringList tags;
+        QVector<QString> tags;
         QString version;
         QString mod_id;
         QVector<PDependency> dependencies;
@@ -47,7 +47,7 @@ public:
     bool createTables();
     bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
                    const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
-                   const QString &modId, const QVector<PDependency> &dependencies);
+                     const QString category, const QString &modId, const QVector<PDependency> &dependencies);
     bool insertMod(const PMod &mod);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);

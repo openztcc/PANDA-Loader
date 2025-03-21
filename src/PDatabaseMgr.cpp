@@ -68,7 +68,8 @@ bool PDatabaseMgr::createTables() {
 
 bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
                              const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
-                             const QString &modId, const QVector<PDependency> &dependencies) {
+                             const QString category, const QString &modId, const QVector<PDependency> &dependencies) 
+                             {
     QSqlQuery query(m_db);
 
     // Check for missing required fields
@@ -77,8 +78,8 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         return false;
     }
 
-    query.prepare("INSERT INTO mods (title, author, description, path, enabled, tags, version, mod_id) "
-                  "VALUES (:title, :author, :description, :path, :enabled, :tags, :version, :mod_id)");
+    query.prepare("INSERT INTO mods (title, author, description, path, enabled, tags, category, version, mod_id) "
+                  "VALUES (:title, :author, :description, :path, :enabled, :tags, :category, :version, :mod_id)");
     
     // Bind required values
     query.bindValue(":title", name);
@@ -126,6 +127,14 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         query.bindValue(":tags", "");
     }
 
+    // add category to category field
+    if (!tags.isEmpty()) {
+        query.bindValue(":category", category);
+    }
+    else {
+        query.bindValue(":category", "Uncategorized");
+    }
+
     // Execute the query
     if (!query.exec()) {
         qDebug() << "Failed to insert mod: " << query.lastError();
@@ -147,8 +156,9 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
     return true;
 }
 
+// TODO: Fix tags so they insert as a list
 bool PDatabaseMgr::insertMod(const PMod &mod) {
-    return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.path, mod.enabled, mod.tags, mod.mod_id, mod.dependencies);
+    return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.path, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies);
 }
 
 bool PDatabaseMgr::deleteMod(const QString &modId) {
@@ -373,4 +383,11 @@ bool PDatabaseMgr::doesKeyExist(const QString &modId, const QString &key) {
     }
 
     return true;
+}
+
+QSqlQuery PDatabaseMgr::getAllMods() {
+    QSqlQuery query(m_db);
+    query.prepare("SELECT * FROM mods");
+    query.exec();
+    return query;
 }
