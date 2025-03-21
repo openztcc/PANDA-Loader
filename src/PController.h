@@ -4,17 +4,22 @@
 /* This controller class will manipulate the state of the application. Mainly, it
 concerns itself with the mods list and operations over other classes from the UI. */
 
+// Qt includes
 #include <QObject>
 #include <QAbstractListModel>
 #include <QList>
-#include "PModItem.h"
 #include <QSharedPointer>
-#include "PState.h"
 #include <QStringList>
 #include <QVector>
+
+// Project includes
+#include "PModItem.h"
+#include "PState.h"
 #include "PZtdMgr.h"
 #include "PDatabaseMgr.h"
 #include "PConfigMgr.h"
+
+// Third-party includes
 #include "toml.hpp"
 
 class PModItem;

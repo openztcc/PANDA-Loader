@@ -203,26 +203,21 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
     // Insert mods into database
     for (const QString &ztd : ztdList)
     {
+        // Get meta config from ztd
         toml::table config = PConfigMgr::getMetaConfig(ztd);
-        QString title = PConfigMgr::getKeyValue("name", config);
-        QString authors = PConfigMgr::getKeyValue("authors", config);
-        QString description = PConfigMgr::getKeyValue("description", config);
-        QString mod_id = PConfigMgr::getKeyValue("mod_id", config);
-        QString version = PConfigMgr::getKeyValue("version", config);
-        QString path = ztd;
-        bool enabled = true; // Default to true
-        QString category = PConfigMgr::getKeyValue("category", config);
-        QString tags = PConfigMgr::getKeyValue("tags", config);
 
-        db.insertMod(title, // name of the mod
-                     description, // description
-                     authors.split(", "), // list of authors
-                     version, // version of the mod
-                     path, // file location
-                     enabled, // is it enabled or not
-                     tags.split(", "), // list of tags (aka collections)
-                     authors[0] + "." + title, // modId
-                     {}
-                    );
+        // Get values from config
+        PDatabaseMgr::PMod mod;
+        mod.title = PConfigMgr::getKeyValue("name", config);
+        mod.authors = PConfigMgr::getKeyValueAsList("authors", config);
+        mod.description = PConfigMgr::getKeyValue("description", config);
+        mod.path = ztd;
+        mod.enabled = true;
+        mod.category = PConfigMgr::getKeyValue("category", config);
+        mod.tags = PConfigMgr::getKeyValueAsList("tags", config);
+        mod.version = PConfigMgr::getKeyValue("version", config);
+        mod.mod_id = PConfigMgr::getKeyValue("mod_id", config);
+
+        db.insertMod(mod);
     }
 }

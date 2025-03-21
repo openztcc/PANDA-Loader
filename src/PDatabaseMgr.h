@@ -31,12 +31,12 @@ public:
     struct PMod
     {
         QString title;
-        QString authors;
+        QVector<QString> authors;
         QString description;
         QString path;
         bool enabled;
         QString category;
-        QStringList tags;
+        QVector<QString> tags;
         QString version;
         QString mod_id;
         QVector<PDependency> dependencies;
