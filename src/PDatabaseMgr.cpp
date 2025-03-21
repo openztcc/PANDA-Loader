@@ -391,3 +391,32 @@ QSqlQuery PDatabaseMgr::getAllMods() {
     query.exec();
     return query;
 }
+
+// Return results within orderBy filter
+QSqlQuery PDatabaseMgr::orderBy(const QString &query) {
+    QSqlQuery sqlQuery(m_db);
+    sqlQuery.prepare("SELECT * FROM mods ORDER BY " + query);
+    sqlQuery.exec();
+    return sqlQuery;
+}
+
+// Return results within orderBy filter and searchTerm
+// TODO: Remove orderBy query function and merge with searchMods
+// TODO: Handle case where searchTerm is empty or just spaces, should return all mods
+// in this filter
+QSqlQuery PDatabaseMgr::searchMods(const QString &orderBy, const QString &searchTerm) {
+    QSqlQuery query(m_db);
+    query.prepare("SELECT * FROM mods WHERE title LIKE :searchTerm ORDER BY " + orderBy);
+    query.bindValue(":searchTerm", "%" + searchTerm + "%");
+    query.exec();
+    return query;
+}
+
+// Return mod by primary key
+QSqlQuery PDatabaseMgr::getModByPk(const QString &modId) {
+    QSqlQuery query(m_db);
+    query.prepare("SELECT * FROM mods WHERE mod_id = :mod_id");
+    query.bindValue(":mod_id", modId);
+    query.exec();
+    return query;
+}
