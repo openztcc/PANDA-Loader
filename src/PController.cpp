@@ -287,11 +287,10 @@ void PController::updateModList(QString orderBy, QString searchTerm)
         query = db.orderBy(orderBy);
     }
     else if (orderBy.isEmpty() && !searchTerm.isEmpty()) {
-        query = db.searchMods(searchTerm);
+        query = db.searchMods(orderBy, searchTerm);
     }
     else {
-        query = db.orderBy(orderBy);
-        query = db.searchMods(searchTerm);
+        query = db.searchMods(orderBy, searchTerm);
     }
 
     // Iterate through the results and create PModItem objects
