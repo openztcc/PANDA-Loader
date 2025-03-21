@@ -186,3 +186,43 @@ void PController::addState(PState *state)
 {
     m_state = state;
 }
+
+// Grabs mods from SQLite database and adds them to the list to be displayed
+void PController::loadModsFromDatabase()
+{
+    // Placeholder for loading mods from database
+}
+
+// Grabs mods from ZTDs and stores them in database
+void PController::loadModsFromZTDs(const QStringList &ztdList)
+{
+    // open database
+    PDatabaseMgr db;
+    db.openDatabase();
+
+    // Insert mods into database
+    for (const QString &ztd : ztdList)
+    {
+        toml::table config = PConfigMgr::getMetaConfig(ztd);
+        QString title = PConfigMgr::getKeyValue("name", config);
+        QString authors = PConfigMgr::getKeyValue("authors", config);
+        QString description = PConfigMgr::getKeyValue("description", config);
+        QString mod_id = PConfigMgr::getKeyValue("mod_id", config);
+        QString version = PConfigMgr::getKeyValue("version", config);
+        QString path = ztd;
+        bool enabled = true; // Default to true
+        QString category = PConfigMgr::getKeyValue("category", config);
+        QString tags = PConfigMgr::getKeyValue("tags", config);
+
+        db.insertMod(title, // name of the mod
+                     description, // description
+                     authors.split(", "), // list of authors
+                     version, // version of the mod
+                     path, // file location
+                     enabled, // is it enabled or not
+                     tags.split(", "), // list of tags (aka collections)
+                     authors[0] + "." + title, // modId
+                     {}
+                    );
+    }
+}

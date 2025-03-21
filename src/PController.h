@@ -46,6 +46,8 @@ public:
     void deselectMod();
     void clearSelection();
     void loadMods();
+    void loadModsFromDatabase();
+    void loadModsFromZTDs(const QStringList &ztdList);
     void addState(PState *state);
 
     virtual int rowCount(const QModelIndex &parent) const override;
