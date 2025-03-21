@@ -56,7 +56,6 @@ public:
     QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();
-    QSqlQuery orderBy(const QString &query);
     QSqlQuery searchMods(const QString &orderBy, const QString &searchTerm);
     QSqlQuery getModByPk(const QString &modId);
 

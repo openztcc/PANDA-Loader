@@ -257,13 +257,11 @@ ApplicationWindow {
 
                         onFilterBy: (filter) => {
                             console.log("Filter by:", filter)
-                            // call filter function here
                             searchBar.orderBy = filter
                         }
 
                         onSearchTextChanged: (text) => {
                             console.log("Search text changed:", text)
-                            // call search function here
                             searchBar.searchTerm = text
                             modController.updateModList(searchBar.orderBy, searchBar.searchTerm)
                         }
