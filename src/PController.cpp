@@ -206,9 +206,19 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
         PDatabaseMgr::PMod mod;
 
         // Check if config exists
-        if (!PZtdMgr::fileExistsInZtd(ztd, m_metaConfigName)) {
+        if (!PZtdMgr::fileExistsInZtd(ztd, "meta.toml")) {
             qDebug() << "No meta config found in ztd: " << ztd;
-            continue; // Skip this ZTD file
+            
+            // Insert mod with blank values
+            mod.title = "Unknown";
+            mod.authors = {"Unknown"};
+            mod.description = "No description found";
+            mod.path = ztd;
+            mod.enabled = true;
+            mod.category = "Unknown";
+            mod.tags = {"Unknown"};
+            mod.version = "1.0.0";
+            mod.mod_id = QUuid::createUuid().toString();
         }
         else {
 
@@ -217,14 +227,48 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
 
             // Get values from config
             mod.title = PConfigMgr::getKeyValue("name", config);
+            if (mod.title.isEmpty()) {
+                mod.title = "Unknown";
+            }
+
             mod.authors = PConfigMgr::getKeyValueAsList("authors", config);
+            if (mod.authors.isEmpty()) {
+                mod.authors = {"Unknown"};
+            }
+
             mod.description = PConfigMgr::getKeyValue("description", config);
+            if (mod.description.isEmpty()) {
+                mod.description = "No description found";
+            }
+
             mod.path = ztd;
             mod.enabled = true;
-            mod.category = PConfigMgr::getKeyValue("category", config);
+
             mod.tags = PConfigMgr::getKeyValueAsList("tags", config);
+            // remove "All" from tags if it exists
+            mod.tags.removeAll("All");
+            if (mod.tags.isEmpty()) {
+                mod.tags = {"Unknown"};
+            }
+
+            mod.category = tags[0];
+            if (mod.category.isEmpty()) {
+                mod.category = "Unknown";
+            }
+
+            if (mod.category.isEmpty()) {
+                mod.category = "Unknown";
+            }
+
             mod.version = PConfigMgr::getKeyValue("version", config);
+            if (mod.version.isEmpty()) {
+                mod.version = "1.0.0";
+            }
+
             mod.mod_id = PConfigMgr::getKeyValue("mod_id", config);
+            if (mod.mod_id.isEmpty()) {
+                mod.mod_id = QUuid::createUuid().toString();
+            }
 
         }
 
