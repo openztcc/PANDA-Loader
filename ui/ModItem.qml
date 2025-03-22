@@ -85,6 +85,7 @@ Item {
             id: modArea
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
             onClicked: {
                 if (modItem.controller && modItem.modelObject) {
                     currentModSelected = modItem.modelObject;
@@ -93,8 +94,34 @@ Item {
                     //     modDetailsText.text = modItem.modelObject.modDescription || "No description available";
                     // }
                 }
+
+                if (mouse.button === Qt.RightButton) {
+                    modContextMenu.popup()
+                }
             }
             hoverEnabled: true
+
+            Menu {
+                id: modContextMenu
+                MenuItem {
+                    text: "Edit"
+                    onTriggered: {
+                        console.log("Option 1 triggered for", modItem.modelObject.modTitle)
+                    }
+                }
+                MenuItem {
+                    text: "Disable"
+                    onTriggered: {
+                        console.log("Option 2 triggered for", modItem.modelObject.modTitle)
+                    }
+                }
+                MenuItem {
+                    text: "Delete"
+                    onTriggered: {
+                        console.log("Option 2 triggered for", modItem.modelObject.modTitle)
+                    }
+                }
+            }
         }
     }
 }
