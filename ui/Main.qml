@@ -115,6 +115,7 @@ ApplicationWindow {
         }
     }
 
+    // Maint content
     Pane {
         id: mainContent
         width: parent.width - navRail.width
@@ -192,61 +193,15 @@ ApplicationWindow {
 
             }
 
-            // action bar
             RowLayout {
-                id: actionBar
-                width: parent.width
-                height: parent.height
-                Material.background: "#f7fbf2"
-                anchors.top: launchArea.bottom
+                // mods list
+                Layout.topMargin: -4
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-
-                // action bar (add, remove, refresh, filter, search)
-                RowLayout {
-                    Layout.topMargin: 6
-                    Layout.preferredHeight: 30
-                    Layout.preferredWidth: 400
-                    // align top
-                    Layout.alignment: Qt.AlignTop
-
-                    ActionButton {
-                        icon: "qrc:/icons/add.svg"
-                        text: "Add"
-                        Layout.preferredHeight: 40
-                        onClicked: console.log("Add clicked")
-                    }
-
-                    ActionButton {
-                        icon: "qrc:/icons/delete.svg"
-                        text: "Remove"
-                        Layout.preferredHeight: 40
-                        onClicked: console.log("Remove clicked")
-                    }
-
-                    ActionButton {
-                        icon: "qrc:/icons/refresh.svg"
-                        text: "Refresh"
-                        Layout.preferredHeight: 40
-                        onClicked: console.log("Refresh clicked")
-                    }
-
-                    ComboBox {
-                        id: editableDropdown
-                        Layout.preferredHeight: 40
-                        Layout.preferredWidth: 100
-                        editable: true  // Allows typing new values
-
-                        model: ["Red", "Green", "Blue"]
-
-                        background: Rectangle {
-                            color: "#f7fbf2"
-                            radius: 0
-                        }
-
-                        onAccepted: {
-                            console.log("User entered:", editableDropdown.currentText)
-                        }
-                    }
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
 
                     SearchBar {
                         id: searchBar
@@ -266,20 +221,6 @@ ApplicationWindow {
                             modController.updateModList(searchBar.orderBy, searchBar.searchTerm)
                         }
                     }
-                }
-
-
-            }
-
-            RowLayout {
-                // mods list
-                Layout.topMargin: -4
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
 
                     Rectangle {
                         id: listHead
