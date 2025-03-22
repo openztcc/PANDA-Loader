@@ -195,7 +195,7 @@ ApplicationWindow {
 
             RowLayout {
                 // mods list
-                Layout.topMargin: -4
+                Layout.topMargin: 2
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
