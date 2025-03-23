@@ -8,13 +8,16 @@ Item {
     id: modItem
     property var controller: null
     property var modelObject: null
+    property bool isClicked: false
     anchors.fill: parent
     signal selectedMod(var mod)
 
     Pane {
         anchors.fill: parent
-        Material.background: modArea.containsPress ? Qt.lighter("#f7fbf2", 0.8) : 
-                             modArea.containsMouse ? Qt.darker("#f7fbf2", 0.01) : "#f7fbf2"
+        Material.background: modArea.containsPress ? Qt.darker("#f7fbf2", 1.2) :
+                            isClicked ? Qt.darker("#f7fbf2", 1.1) :
+                            modArea.containsMouse ? Qt.lighter("#f7fbf2", 1.05) : 
+                            "#f7fbf2"
         padding: 12
         anchors.bottomMargin: 1
         
@@ -98,6 +101,8 @@ Item {
                 if (mouse.button === Qt.RightButton) {
                     modContextMenu.popup()
                 }
+
+                isClicked = !isClicked
             }
             hoverEnabled: true
 
