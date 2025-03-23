@@ -18,57 +18,73 @@ Item {
                             isClicked ? Qt.darker("#f7fbf2", 1.1) :
                             modArea.containsMouse ? Qt.lighter("#f7fbf2", 1.05) : 
                             "#f7fbf2"
-        padding: 12
+        leftPadding: 10
+        rightPadding: 10
+        // topPadding: -5
         anchors.bottomMargin: 1
         
-        contentItem: RowLayout {
-            id: modMeta
-            spacing: 12
-            
-            Rectangle {
-                id: modImg
-                width: 44
-                height: 30
-                color: "#BCD0C3"
-            }
-            
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 3
-                // name of mod
-                Label {
-                    text: modItem.modelObject && modItem.modelObject.modTitle ? modItem.modelObject.modTitle : "No title"
-                    font.pixelSize: 12
-                    color: "#424940"
+        contentItem: Item { 
+            anchors.fill: parent
+            RowLayout {
+                id: modMeta
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+                    bottom: parent.bottom
+                    leftMargin: 10
+                    rightMargin: 20
                 }
-            }
-            
-            Item {
-                Layout.fillWidth: true
-            }
-            
-            // disable checkbox
-            CheckBox {
-                id: modCheck
-                z: 1
-                Layout.alignment: Qt.AlignRight
-                Layout.rightMargin: -3
-                Layout.preferredWidth: 20
-                checked: true
-                Material.accent: "#376a3e"
-                enabled: true
-                onCheckedChanged: {
-                    if (modItem.modelObject) {
-                        console.log("Checkbox changed:", modItem.modelObject.modTitle, checked)
+                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignVCenter
+                
+                // mod icon placeholder
+                Rectangle {
+                    id: modImg
+                    width: 44
+                    height: 30
+                    color: "#BCD0C3"
+                }
+                
+                // mod name and category label
+                RowLayout {
+                    Layout.fillWidth: true
+                    // name of mod
+                    Label {
+                        id: modName
+                        leftPadding: 10
+                        text: modItem.modelObject && modItem.modelObject.modTitle ? modItem.modelObject.modTitle : "No title"
+                        font.pixelSize: 12
+                        color: "#424940"
                     }
                 }
                 
-                // Prevent click propagation to parent MouseArea
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        modCheck.toggle()
-                        mouse.accepted = true
+                Item {
+                    Layout.fillWidth: true
+                }
+                
+                // disable checkbox
+                CheckBox {
+                    id: modCheck
+                    z: 1
+                    Layout.alignment: Qt.AlignRight
+                    Layout.preferredWidth: 20
+                    checked: true
+                    Material.accent: "#376a3e"
+                    enabled: true
+                    onCheckedChanged: {
+                        if (modItem.modelObject) {
+                            console.log("Checkbox changed:", modItem.modelObject.modTitle, checked)
+                        }
+                    }
+                    
+                    // Prevent click propagation to parent MouseArea
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            modCheck.toggle()
+                            mouse.accepted = true
+                        }
                     }
                 }
             }

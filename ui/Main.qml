@@ -265,7 +265,7 @@ ApplicationWindow {
                         delegate: Rectangle { // Mod list container
                             id: modPane
                             width: ListView.view.width
-                            height: 75
+                            height: 50
 
                             // bottom border
                             Rectangle {
