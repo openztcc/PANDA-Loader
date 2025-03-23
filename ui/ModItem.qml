@@ -35,21 +35,11 @@ Item {
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 3
-                // category
-                Label {
-                    text: modItem.modelObject && modItem.modelObject.modCategory ? modItem.modelObject.modCategory : "Uncategorized"
-                    font.pixelSize: 10
-                }
                 // name of mod
                 Label {
                     text: modItem.modelObject && modItem.modelObject.modTitle ? modItem.modelObject.modTitle : "No title"
                     font.pixelSize: 12
                     color: "#424940"
-                }
-                // author(s)
-                Label {
-                    text: "by " + (modItem.modelObject && modItem.modelObject.modAuthor ? modItem.modelObject.modAuthor : "Unknown")
-                    font.pixelSize: 10
                 }
             }
             
