@@ -92,6 +92,8 @@ QVariant PController::data(const QModelIndex &index, int role) const
                 return mod->modCategory();
             case ModTagsRole:
                 return mod->modTags();
+            case ModIdRole:
+                return mod->modId();
         }
     }
 
@@ -146,6 +148,7 @@ void PController::loadMods()
         mod->setmodEnabled(query.value("enabled").toBool());
         mod->setmodCategory(query.value("category").toString());
         mod->setmodTags(query.value("tags").toString());
+        mod->setmodId(query.value("mod_id").toString());
         addMod(mod);
     }
 

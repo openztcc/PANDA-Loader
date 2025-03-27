@@ -40,7 +40,8 @@ public:
         ModPathRole,
         ModEnabledRole,
         ModCategoryRole,
-        ModTagsRole
+        ModTagsRole,
+        ModIdRole
     };
 
     Q_INVOKABLE QSharedPointer<PModItem> currentlySelectedMod() const;
