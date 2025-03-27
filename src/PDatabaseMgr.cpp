@@ -419,10 +419,10 @@ QSqlQuery PDatabaseMgr::searchMods(const QString &propertyName, const QString &s
 }
 
 // Return mod by primary key
-PMod PDatabaseMgr::getModByPk(const QString &modId) {
+PDatabaseMgr::PMod PDatabaseMgr::getModByPk(const QString &modId) {
     QSqlQuery query(m_db);
-    query.prepare("SELECT * FROM mods WHERE mod_id = :mod_id");
-    query.bindValue(":mod_id", modId);
+    query.prepare("SELECT * FROM mods WHERE mod_id = :modId");
+    query.bindValue(":modId", modId);
 
     if (!query.exec()) {
         qDebug() << "Error running query: " << query.lastError();
@@ -446,7 +446,7 @@ PMod PDatabaseMgr::getModByPk(const QString &modId) {
 }
 
 // Static version of getModByPk
-PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &modId) {
+PDatabaseMgr::PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &modId) {
     QSqlQuery query(db);
     query.prepare("SELECT * FROM mods WHERE mod_id = :mod_id");
     query.bindValue(":mod_id", modId);

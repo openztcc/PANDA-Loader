@@ -14,8 +14,6 @@ ApplicationWindow {
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
 
-    property var selectedMod: null
-
     // Navigation Rail
     Drawer {
         width: 70
@@ -306,7 +304,7 @@ ApplicationWindow {
                 // mod details
                 InfoPane {
                     id: infoPane
-                    targetComponent: currentModSelected  
+                    targetComponent: modController.currentMod
                 }
 
             }

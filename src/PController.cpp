@@ -4,23 +4,25 @@ PController::PController(QObject *parent) : QAbstractListModel(parent), m_curren
 {
 }
 
-PModItem PController::currentlySelectedMod(QString modId) const
+QSharedPointer<PModItem> PController::currentlySelectedMod(QString modId) const
 {
     PDatabaseMgr db;
     db.openDatabase();
 
-    PMod mod = db.getModByPk(modId);
+    PDatabaseMgr::PMod mod = db.getModByPk(modId);
 
-    PModItem modItem;
-
-    modItem.setmodTitle(mod.title);
-    modItem.setmodAuthor(mod.authors.join(", "));
-    modItem.setmodDescription(mod.description);
-    modItem.setmodPath(QUrl::fromLocalFile(mod.path));
-    modItem.setmodEnabled(mod.enabled);
-    modItem.setmodCategory(mod.category);
-    modItem.setmodTags(mod.tags.join(", "));
-    modItem.setmodId(mod.mod_id);
+    QSharedPointer<PModItem> modItem;
+    modItem = QSharedPointer<PModItem>::create();
+    modItem->setmodTitle(mod.title);
+    modItem->setmodAuthor(mod.authors.join(", "));
+    modItem->setmodDescription(mod.description);
+    modItem->setmodPath(QUrl::fromLocalFile(mod.path));
+    modItem->setmodEnabled(mod.enabled);
+    modItem->setmodCategory(mod.category);
+    modItem->setmodTags(mod.tags.join(", "));
+    modItem->setmodId(mod.mod_id);
+    qDebug() << "Currently selected mod: " << modItem->modTitle();
+    qDebug() << "With ID: " << modItem->modId();
 
     db.closeDatabase();
 
@@ -131,6 +133,7 @@ QHash<int, QByteArray> PController::roleNames() const
     roles[ModEnabledRole] = "modEnabled";
     roles[ModCategoryRole] = "modCategory";
     roles[ModTagsRole] = "modTags";
+    roles[ModIdRole] = "modId";
 
     return roles;
 }
@@ -213,7 +216,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             mod.category = "Unknown";
             mod.tags = {"Unknown"};
             mod.version = "1.0.0";
-            mod.mod_id = QUuid::createUuid().toString();
+            mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
         }
         else {
 
@@ -223,7 +226,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             // Grab mod_id from config
             mod.mod_id = PConfigMgr::getKeyValue("mod_id", config);
             if (mod.mod_id.isEmpty()) {
-                mod.mod_id = QUuid::createUuid().toString();
+                mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
             }
 
             // Check if mod_id already exists in database
@@ -323,6 +326,7 @@ void PController::updateModList(QString orderBy, QString searchTerm)
         mod->setmodEnabled(query.value("enabled").toBool());
         mod->setmodCategory(query.value("category").toString());
         mod->setmodTags(query.value("tags").toString());
+        mod->setmodId(query.value("mod_id").toString());
         addMod(mod);
     }
     db.closeDatabase();

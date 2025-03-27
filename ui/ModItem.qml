@@ -95,15 +95,13 @@ Item {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
-            onClicked: {
+            onClicked: function(mouse) {
                 // left click to select mod
                 if (modItem.controller && modItem.modelObject) {
                     // grab the mod object
                     var controller = modItem.controller
-                    var modId = modItem.modelObject.modId
-
-                    selectedMod = modId // emit signal
-                    console.log("Mod clicked:", modItem.modelObject.modTitle)
+                    controller.setCurrentMod(modItem.modelObject)
+                    // console.log("Mod clicked:", currentMod.modTitle)
                     // if (modDetailsText) {
                     //     modDetailsText.text = modItem.modelObject.modDescription || "No description available";
                     // }

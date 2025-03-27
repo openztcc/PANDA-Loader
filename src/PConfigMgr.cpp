@@ -75,7 +75,7 @@ bool PConfigMgr::updateMetaConfig(const QString &ztdFilePath, const toml::table 
     }
 
     QString metaConfigPath = QDir::tempPath() + "/" + m_metaConfigName;
-    QString tempZtdPath = QDir::tempPath() + "/" + QUuid::createUuid().toString() + ".ztd";
+    QString tempZtdPath = QDir::tempPath() + "/" + QUuid::createUuid().toString(QUuid::WithoutBraces) + ".ztd";
 
     // Copy the original ztd to the temporary file
     if (!PZtdMgr::copyZtdFile(ztdFilePath, tempZtdPath)) {
