@@ -20,6 +20,8 @@ class PModItem : public QObject
     Q_PROPERTY(bool modEnabled READ modEnabled WRITE setmodEnabled NOTIFY modEnabledChanged)
     Q_PROPERTY(QString modCategory READ modCategory WRITE setmodCategory NOTIFY modCategoryChanged)
     Q_PROPERTY(QString modTags READ modTags WRITE setmodTags NOTIFY modTagsChanged)
+    Q_PROPERTY(QString modId READ modId WRITE setmodId NOTIFY modIdChanged)
+    
 public:
     explicit PModItem(QObject *parent = nullptr);
     PModItem(const QString &title, const QString &author, const QString &desc, 
@@ -49,6 +51,9 @@ public:
     QString modTags() const;
     void setmodTags(const QString &newModTags);
 
+    QString modId() const;
+    void setmodId(const QString &newModId);
+
 signals:
     void modIndexChanged();
     void modTitleChanged();
@@ -58,6 +63,7 @@ signals:
     void modEnabledChanged();
     void modCategoryChanged();
     void modTagsChanged();
+    void modIdChanged();
 
 private:
     int m_mod_index;
@@ -68,6 +74,7 @@ private:
     bool m_mod_enabled;
     QString m_mod_category;
     QString m_mod_tags;
+    QString m_mod_id;
 };
 
 #endif // PMODITEM_H

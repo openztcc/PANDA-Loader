@@ -137,3 +137,17 @@ void PModItem::setmodTags(const QString &newModTags)
     m_mod_tags = newModTags;
     emit modTagsChanged();
 }
+
+QString PModItem::modId() const
+{
+    return m_mod_id;
+}
+
+void PModItem::setmodId(const QString &newModId)
+{
+    if (m_mod_id == newModId)
+        return;
+
+    m_mod_id = newModId;
+    emit modIdChanged();
+}
