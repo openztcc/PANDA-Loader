@@ -102,7 +102,7 @@ Item {
                     var controller = modItem.controller
                     var modId = modItem.modelObject.modId
 
-                    selectedMod = modId
+                    selectedMod = modId // emit signal
                     console.log("Mod clicked:", modItem.modelObject.modTitle)
                     // if (modDetailsText) {
                     //     modDetailsText.text = modItem.modelObject.modDescription || "No description available";

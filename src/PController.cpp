@@ -4,9 +4,27 @@ PController::PController(QObject *parent) : QAbstractListModel(parent), m_curren
 {
 }
 
-QSharedPointer<PModItem> PController::currentlySelectedMod() const
+PModItem PController::currentlySelectedMod(QString modId) const
 {
-    return m_currentMod;
+    PDatabaseMgr db;
+    db.openDatabase();
+
+    PMod mod = db.getModByPk(modId);
+
+    PModItem modItem;
+
+    modItem.setmodTitle(mod.title);
+    modItem.setmodAuthor(mod.authors.join(", "));
+    modItem.setmodDescription(mod.description);
+    modItem.setmodPath(QUrl::fromLocalFile(mod.path));
+    modItem.setmodEnabled(mod.enabled);
+    modItem.setmodCategory(mod.category);
+    modItem.setmodTags(mod.tags.join(", "));
+    modItem.setmodId(mod.mod_id);
+
+    db.closeDatabase();
+
+    return modItem;
 }
 
 int PController::modCount() const
