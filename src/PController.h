@@ -44,7 +44,7 @@ public:
         ModIdRole
     };
 
-    Q_INVOKABLE QSharedPointer<PModItem> currentlySelectedMod() const;
+    Q_INVOKABLE QSharedPointer<PModItem> currentlySelectedMod(QString modId) const;
     int modCount() const;
     void addMod(QSharedPointer<PModItem>);
     void removeMod(QSharedPointer<PModItem>);

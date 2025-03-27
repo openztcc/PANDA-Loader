@@ -14,7 +14,7 @@ ApplicationWindow {
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
 
-    property var currentModSelected: null
+    property var selectedMod: null
 
     // Navigation Rail
     Drawer {

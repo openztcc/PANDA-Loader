@@ -96,18 +96,25 @@ Item {
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onClicked: {
+                // left click to select mod
                 if (modItem.controller && modItem.modelObject) {
-                    currentModSelected = modItem.modelObject;
-                    console.log("Mod clicked:", modItem.modelObject.modTitle);
+                    // grab the mod object
+                    var controller = modItem.controller
+                    var modId = modItem.modelObject.modId
+
+                    selectedMod = modId
+                    console.log("Mod clicked:", modItem.modelObject.modTitle)
                     // if (modDetailsText) {
                     //     modDetailsText.text = modItem.modelObject.modDescription || "No description available";
                     // }
                 }
 
+                // right click context menu
                 if (mouse.button === Qt.RightButton) {
                     modContextMenu.popup()
                 }
 
+                // toggle click state
                 isClicked = !isClicked
             }
             hoverEnabled: true
