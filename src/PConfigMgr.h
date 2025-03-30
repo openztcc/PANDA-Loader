@@ -12,10 +12,6 @@ public:
     PConfigMgr();
     ~PConfigMgr();
 
-    struct PSettings {
-        QString p_zoo_game_path;
-        QString p_iso_path;
-    };
     static toml::table getMetaConfig(const QString &ztdFilePath);
     static QString getKeyValue(const QString &key, const toml::table &config);
     static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
