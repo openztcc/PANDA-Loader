@@ -3,6 +3,10 @@
 
 #include <QObject>
 #include <QString>
+#include "toml.hpp"
+#include <QDir>
+#include <QDebug>
+#include "../src/PConfigMgr.h"
 
 class PSettings : public QObject
 {
@@ -14,13 +18,13 @@ class PSettings : public QObject
 public:
     explicit PSettings(QObject* parent = nullptr);
 
-    QString zooGamePath() const;
+    QString zooGamePath() const { return m_zooGamePath; }
     void setZooGamePath(const QString& path);
 
-    bool useIsoMounting() const;
+    bool useIsoMounting() const { return m_useIsoMounting; }
     void setUseIsoMounting(bool use);
 
-    QString isoPath() const;
+    QString isoPath() const { return m_isoPath; }
     void setIsoPath(const QString& path);
 
     bool loadFromToml(const QString& filePath);
@@ -34,6 +38,7 @@ private:
     QString m_zooGamePath;
     bool m_useIsoMounting = false;
     QString m_isoPath;
+    QString m_configPath = QDir::homePath() + "/config.toml";
 };
 
 #endif // PSETTINGS_H
