@@ -17,7 +17,7 @@ Item {
 
     MouseArea {
         id: backgroundMouseArea
-        anchors.fill: parent.parent
+        anchors.fill: searchBar
         propagateComposedEvents: true // Allow clicks to pass through when needed
         onClicked: {
             searchField.focus = false;

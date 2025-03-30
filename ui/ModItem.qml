@@ -8,20 +8,40 @@ Item {
     id: modItem
     property var controller: null
     property var modelObject: null
-    property bool isClicked: false
+    property var prevObject: null
+    property bool isSelected: false
     anchors.fill: parent
     signal selectedMod(var mod)
 
+    Component.onCompleted: {
+        if (modItem.modelObject) {
+            modItem.modelObject.qmlItem = modItem            
+        }
+    }
+
     Pane {
+        id: modPane
         anchors.fill: parent
         Material.background: modArea.containsPress ? Qt.darker("#f7fbf2", 1.2) :
-                            isClicked ? Qt.darker("#f7fbf2", 1.1) :
+                            isSelected ? Qt.darker("#f7fbf2", 1.1) :
                             modArea.containsMouse ? Qt.lighter("#f7fbf2", 1.05) : 
                             "#f7fbf2"
         leftPadding: 10
         rightPadding: 10
         // topPadding: -5
         anchors.bottomMargin: 1
+
+        function determineBackgroundColor() {
+            if (modArea.containsPress) {
+                return Qt.darker("#f7fbf2", 1.2)
+            } else if (isSelected) {
+                return Qt.darker("#f7fbf2", 1.1)
+            } else if (modArea.containsMouse) {
+                return Qt.lighter("#f7fbf2", 1.05)
+            } else {
+                return "#f7fbf2"
+            }
+        }
         
         contentItem: Item { 
             anchors.fill: parent
@@ -98,22 +118,21 @@ Item {
             onClicked: function(mouse) {
                 // left click to select mod
                 if (modItem.controller && modItem.modelObject) {
-                    // grab the mod object
-                    var controller = modItem.controller
-                    controller.setCurrentMod(modItem.modelObject)
-                    // console.log("Mod clicked:", currentMod.modTitle)
-                    // if (modDetailsText) {
-                    //     modDetailsText.text = modItem.modelObject.modDescription || "No description available";
-                    // }
+                    if (controller.previousMod && controller.previousMod.qmlItem) {
+                        controller.previousMod.qmlItem.isSelected = false
+                        controller.previousMod.qmlItem.modPane.Material.background = "#f7fbf2"
+
+                    }
+
+                    // set new current mod 
+                    controller.setCurrentMod(modItem.modelObject);
+                    modItem.isSelected = true
                 }
 
                 // right click context menu
                 if (mouse.button === Qt.RightButton) {
                     modContextMenu.popup()
                 }
-
-                // toggle click state
-                isClicked = !isClicked
             }
             hoverEnabled: true
 
@@ -139,5 +158,6 @@ Item {
                 }
             }
         }
+
     }
 }

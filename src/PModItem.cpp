@@ -151,3 +151,11 @@ void PModItem::setmodId(const QString &newModId)
     m_mod_id = newModId;
     emit modIdChanged();
 }
+
+void PModItem::setQmlItem(QObject* item)
+{
+    if (m_qmlItem != item) {
+        m_qmlItem = item;
+        emit qmlItemChanged();
+    }
+}

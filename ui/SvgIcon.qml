@@ -21,7 +21,7 @@ Item {
         width: imgRoot.iconWidth
         height: imgRoot.iconHeight
         fillMode: Image.PreserveAspectFit
-        anchors.verticalCenter: parent.horizontalCenter
+        anchors.verticalCenter: imgRoot.verticalCenter
 
         // color: root.fg ? root.fg : "#d4e8d1"
     }

@@ -4,7 +4,7 @@ PController::PController(QObject *parent) : QAbstractListModel(parent), m_curren
 {
 }
 
-QSharedPointer<PModItem> PController::currentlySelectedMod(QString modId) const
+QSharedPointer<PModItem> PController::getModAsObject(QString modId) const
 {
     PDatabaseMgr db;
     db.openDatabase();
@@ -72,7 +72,7 @@ void PController::selectMod(int index)
         return;
     }
     qDebug() << "Emitting modSelected signal: " << m_currentMod->modTitle();
-    emit modSelected(m_currentMod);
+    emit modSelected();
 }
 
 void PController::deselectMod()
@@ -83,6 +83,32 @@ void PController::deselectMod()
 void PController::clearSelection()
 {
     emit modDeselected();
+}
+
+void PController::setCurrentMod(QObject* mod)
+{ 
+    // Convert QObject to PModItem
+    PModItem* modItem = qobject_cast<PModItem*>(mod);
+    if (!modItem) {
+        qDebug() << "Invalid mod object passed to setCurrentMod";
+        return;
+    }
+
+    // Find the shared pointer in our list
+    for (const auto& sharedMod : m_mods_list) {
+        if (sharedMod.data() == modItem) {
+            if (m_currentMod != sharedMod) {
+                // Store previous mod before changing
+                m_previousMod = m_currentMod;
+                m_currentMod = sharedMod;
+                emit currentModChanged();
+                emit previousModChanged();
+            }
+            return;
+        }
+    }
+
+    qDebug() << "Mod not found in list: " << modItem->modTitle();
 }
 
 int PController::rowCount(const QModelIndex &parent) const
@@ -114,6 +140,8 @@ QVariant PController::data(const QModelIndex &index, int role) const
                 return mod->modTags();
             case ModIdRole:
                 return mod->modId();
+            case ModObjectRole:
+                return QVariant::fromValue(mod.data()); // return a whole mod object
         }
     }
 
@@ -134,6 +162,7 @@ QHash<int, QByteArray> PController::roleNames() const
     roles[ModCategoryRole] = "modCategory";
     roles[ModTagsRole] = "modTags";
     roles[ModIdRole] = "modId";
+    roles[ModObjectRole] = "modObject"; // return a whole mod object
 
     return roles;
 }

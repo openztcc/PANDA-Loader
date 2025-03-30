@@ -133,8 +133,8 @@ ApplicationWindow {
             Rectangle {
                 id: launchArea
                 Layout.fillWidth: true
-                height: 150
-                anchors.top: parent.top
+                Layout.preferredHeight: 150
+                Layout.alignment: Qt.AlignTop
 
                 Image {
                     id: bgImage
@@ -232,18 +232,18 @@ ApplicationWindow {
 
                             Text {
                                 text: "Mod Name"
-                                anchors.left: parent.left
+                                Layout.alignment: Qt.AlignLeft
                                 anchors.leftMargin: 10
                             }
 
                             Text {
                                 text: "Enabled"
-                                anchors.right: headCheck.left
+                                Layout.alignment: Qt.AlignRight
                             }
 
                             CheckBox {
                                 id: headCheck
-                                anchors.right: parent.right
+                                Layout.alignment: Qt.AlignRight
                                 anchors.rightMargin: 10
                                 Material.accent: "#376a3e"
                                 checked: true
@@ -283,8 +283,9 @@ ApplicationWindow {
                         }
 
                         ScrollBar.vertical: ScrollBar {
+                            id: vScroll
                             policy: ScrollBar.AsNeeded
-                            visible: flickableView.moving || flickableView.dragging
+                            visible: modsList.moving || modsList.dragging
                             width: 8
                             // background: Rectangle {
                             //     color: "#289662"
