@@ -53,6 +53,30 @@ toml::table PConfigMgr::getConfig(const QString &filePath)
     return config;
 }
 
+// Save the config to a toml file in filesystem
+bool PConfigMgr::saveConfig(const QString &filePath, const toml::table &config)
+{
+    // Create the directory if it does not exist
+    QDir dir(QFileInfo(filePath).absolutePath());
+    if (!dir.exists()) {
+        dir.mkpath(dir.absolutePath());
+    }
+
+    // Write the new configuration to the toml file
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return false; 
+    }
+
+    std::stringstream ss;
+    ss << config;
+    QString tomlStr = QString::fromStdString(ss.str());
+    file.write(tomlStr.toUtf8());
+    file.close();
+
+    return true;
+}
+
 // Get a key value from a toml table
 QString PConfigMgr::getKeyValue(const QString &key, const toml::table &config)
 {

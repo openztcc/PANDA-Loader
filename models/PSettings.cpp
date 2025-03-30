@@ -39,7 +39,10 @@ bool PSettings::loadFromToml(const QString& filePath) {
         defaultConfig["useIsoMounting"] = m_useIsoMounting;
         defaultConfig["isoPath"] = m_isoPath.toStdString();
         // Save the default config to the file
-        
+        if (!PConfigMgr::saveConfig(filePath, defaultConfig)) {
+            qDebug() << "Failed to save default settings to config.toml";
+            return false;
+        }
     }
 
     // Load settings from the TOML file
