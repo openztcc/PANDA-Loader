@@ -6,6 +6,7 @@ import QtQuick.Effects
 import PandaLdr 1.0
 
 ApplicationWindow {
+    id: root
     width: 800
     height: 675
     visible: true
@@ -278,7 +279,7 @@ ApplicationWindow {
                             ModItem {
                                 id: modItems
                                 controller: modController
-                                modelObject: model
+                                modelObject: modObject
                             }
                         }
 
@@ -305,7 +306,12 @@ ApplicationWindow {
                 // mod details
                 InfoPane {
                     id: infoPane
-                    targetComponent: modController.currentMod
+                    Connections {
+                        target: modController
+                        function onCurrentModChanged() {
+                            infoPane.targetComponent = modController.currentMod;
+                        }
+                    }
                 }
 
             }

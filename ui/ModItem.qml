@@ -22,10 +22,7 @@ Item {
     Pane {
         id: modPane
         anchors.fill: parent
-        Material.background: modArea.containsPress ? Qt.darker("#f7fbf2", 1.2) :
-                            isSelected ? Qt.darker("#f7fbf2", 1.1) :
-                            modArea.containsMouse ? Qt.lighter("#f7fbf2", 1.05) : 
-                            "#f7fbf2"
+        Material.background: determineBackgroundColor()
         leftPadding: 10
         rightPadding: 10
         // topPadding: -5
@@ -101,7 +98,7 @@ Item {
                     // Prevent click propagation to parent MouseArea
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: {
+                        onClicked: function(mouse) {
                             modCheck.toggle()
                             mouse.accepted = true
                         }
@@ -118,14 +115,9 @@ Item {
             onClicked: function(mouse) {
                 // left click to select mod
                 if (modItem.controller && modItem.modelObject) {
-                    if (controller.previousMod && controller.previousMod.qmlItem) {
-                        controller.previousMod.qmlItem.isSelected = false
-                        controller.previousMod.qmlItem.modPane.Material.background = "#f7fbf2"
-
-                    }
 
                     // set new current mod 
-                    controller.setCurrentMod(modItem.modelObject);
+                    modItem.controller.setCurrentMod(modItem.modelObject);
                     modItem.isSelected = true
                 }
 
@@ -158,6 +150,16 @@ Item {
                 }
             }
         }
+
+        // allows isSelected to be dynamic; true only if the modItem matches currentMod
+        // (makes select and deselect work)
+        Connections {
+            target: modItem.controller
+            function onCurrentModChanged() {
+                modItem.isSelected = (modItem.controller.currentMod === modItem.modelObject)
+            }
+        }
+
 
     }
 }

@@ -21,6 +21,7 @@ QSharedPointer<PModItem> PController::getModAsObject(QString modId) const
     modItem->setmodCategory(mod.category);
     modItem->setmodTags(mod.tags.join(", "));
     modItem->setmodId(mod.mod_id);
+
     qDebug() << "Currently selected mod: " << modItem->modTitle();
     qDebug() << "With ID: " << modItem->modId();
 
@@ -87,18 +88,18 @@ void PController::clearSelection()
 
 void PController::setCurrentMod(QObject* mod)
 { 
-    // Convert QObject to PModItem
+    // convert QObject to PModItem
     PModItem* modItem = qobject_cast<PModItem*>(mod);
     if (!modItem) {
         qDebug() << "Invalid mod object passed to setCurrentMod";
         return;
     }
 
-    // Find the shared pointer in our list
+    // find mod shared pointer in list
     for (const auto& sharedMod : m_mods_list) {
         if (sharedMod.data() == modItem) {
             if (m_currentMod != sharedMod) {
-                // Store previous mod before changing
+                // save the previous mod
                 m_previousMod = m_currentMod;
                 m_currentMod = sharedMod;
                 emit currentModChanged();
