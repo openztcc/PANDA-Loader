@@ -30,6 +30,29 @@ toml::table PConfigMgr::getMetaConfig(const QString &ztdFilePath)
     return config;
 }
 
+// Generic config parser for toml files in filesystem
+toml::table PConfigMgr::getConfig(const QString &filePath)
+{
+    // Check if the config file exists
+    if (!QFile::exists(filePath)) {
+        return toml::table(); // Return empty table if the config file does not exist
+    }
+
+    // Read config file
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return toml::table();
+    }
+
+    QByteArray fileData = file.readAll();
+    file.close();
+
+    // Parse the toml data
+    toml::table config = toml::parse(fileData.constData());
+
+    return config;
+}
+
 // Get a key value from a toml table
 QString PConfigMgr::getKeyValue(const QString &key, const toml::table &config)
 {

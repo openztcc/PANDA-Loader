@@ -27,10 +27,19 @@ PSettings::PSettings(QObject* parent) : QObject(parent) {
 }
 
 bool PSettings::loadFromToml(const QString& filePath) {
-    toml::table config = PConfigMgr::getMetaConfig(filePath);
+    toml::table config = PConfigMgr::getConfig(filePath);
     if (config.empty()) {
-        qDebug() << "Failed to load TOML file:" << filePath;
-        return false;
+        // generate default settings
+        m_zooGamePath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
+        m_useIsoMounting = false;
+        m_isoPath = "";
+        // Save default settings to the TOML file
+        toml::table defaultConfig;
+        defaultConfig["zooGamePath"] = m_zooGamePath.toStdString();
+        defaultConfig["useIsoMounting"] = m_useIsoMounting;
+        defaultConfig["isoPath"] = m_isoPath.toStdString();
+        // Save the default config to the file
+        
     }
 
     // Load settings from the TOML file
