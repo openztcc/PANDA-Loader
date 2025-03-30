@@ -8,9 +8,10 @@
 #include <QDebug>
 #include <QFile>
 #include <QQmlEngine>
-#include "PModItem.h"
+#include "../models/PModItem.h"
 #include <QDir>
 #include <QtQml/qqmlregistration.h>
+#include "../models/PSettings.h"
 
 // static functions
 
@@ -30,6 +31,7 @@ public:
 signals:
     void pathChanged();
 private:
+    PSettings *m_settings;
     QString m_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
     QString m_resource_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     QVector<PModItem> m_mods;

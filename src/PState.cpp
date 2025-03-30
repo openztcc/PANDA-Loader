@@ -5,6 +5,15 @@ PState::PState(QObject *parent) : QObject(parent) {
     m_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
     m_resource_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     m_mods = QVector<PModItem>();
+    m_settings = new PSettings(this);
+    // Load settings from the TOML file
+    if (!m_settings->loadFromToml()) {
+        qDebug() << "Failed to load settings from config.toml";
+    } else {
+        m_path = m_settings->zooGamePath() + "\\zoo.exe";
+        m_resource_path = m_settings->zooGamePath() + "\\dlupdate\\";
+        qDebug() << "Loaded settings from config.toml: " << m_path;
+    }
 }
 
 int PState::launchZT() {

@@ -26,10 +26,13 @@ qt_add_executable(appPandaLdr
     src/main.cpp
     src/PState.cpp src/PState.h
     src/PController.cpp src/PController.h
-    src/PModItem.cpp src/PModItem.h
     src/PZtdMgr.cpp src/PZtdMgr.h
     src/PConfigMgr.cpp src/PConfigMgr.h
     src/PDatabaseMgr.cpp src/PDatabaseMgr.h
+    src/PSystemMgr.h src/PSystemMgr.cpp
+    models/PModItem.cpp models/PModItem.h
+    models/PSettings.cpp models/PSettings.h
+
 )
 
 include_directories(
@@ -45,6 +48,7 @@ target_include_directories(
 
 target_include_directories(
     appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/src
+    appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/models
 )
 
 qt_policy(SET QTP0004 NEW)
@@ -65,10 +69,12 @@ qt_add_qml_module(appPandaLdr
     SOURCES
         src/PState.cpp src/PState.h
         src/PController.cpp src/PController.h
-        src/PModItem.cpp src/PModItem.h
         src/PZtdMgr.cpp src/PZtdMgr.h
         src/PConfigMgr.cpp src/PConfigMgr.h
         src/PDatabaseMgr.cpp src/PDatabaseMgr.h
+        src/PSystemMgr.h src/PSystemMgr.cpp
+        models/PModItem.cpp models/PModItem.h
+        models/PSettings.cpp models/PSettings.h
 )
 
 qt_add_resources(appPandaLdr "resources"

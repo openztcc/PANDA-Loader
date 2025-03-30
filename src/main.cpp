@@ -6,7 +6,7 @@
 #include "PController.h"
 #include <QQmlContext>
 #include <QQmlEngine>
-#include "PModItem.h"
+#include "../models/PModItem.h"
 #include "PController.h"
 
 int main(int argc, char *argv[])

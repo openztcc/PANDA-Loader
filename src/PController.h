@@ -13,7 +13,7 @@ concerns itself with the mods list and operations over other classes from the UI
 #include <QVector>
 
 // Project includes
-#include "PModItem.h"
+#include "../models/PModItem.h"
 #include "PState.h"
 #include "PZtdMgr.h"
 #include "PDatabaseMgr.h"
@@ -77,6 +77,7 @@ signals:
 
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;
+    QList<QObject*> m_selected_mods;
     QSharedPointer<PModItem> m_currentMod;
     QSharedPointer<PModItem> m_previousMod;
     PState *m_state;
