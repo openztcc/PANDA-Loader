@@ -27,7 +27,7 @@ public:
     QString isoPath() const { return m_isoPath; }
     void setIsoPath(const QString& path);
 
-    bool loadFromToml(const QString& filePath);
+    bool loadFromToml();
 
 signals:
     void zooGamePathChanged();
@@ -38,7 +38,7 @@ private:
     QString m_zooGamePath;
     bool m_useIsoMounting = false;
     QString m_isoPath;
-    QString m_configPath = QDir::homePath() + "/config.toml";
+    QString m_configPath = QDir::homePath() + "/.panda/config.toml";
 };
 
 #endif // PSETTINGS_H
