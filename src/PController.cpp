@@ -4,9 +4,30 @@ PController::PController(QObject *parent) : QAbstractListModel(parent), m_curren
 {
 }
 
-QSharedPointer<PModItem> PController::currentlySelectedMod() const
+QSharedPointer<PModItem> PController::getModAsObject(QString modId) const
 {
-    return m_currentMod;
+    PDatabaseMgr db;
+    db.openDatabase();
+
+    PDatabaseMgr::PMod mod = db.getModByPk(modId);
+
+    QSharedPointer<PModItem> modItem;
+    modItem = QSharedPointer<PModItem>::create();
+    modItem->setmodTitle(mod.title);
+    modItem->setmodAuthor(mod.authors.join(", "));
+    modItem->setmodDescription(mod.description);
+    modItem->setmodPath(QUrl::fromLocalFile(mod.path));
+    modItem->setmodEnabled(mod.enabled);
+    modItem->setmodCategory(mod.category);
+    modItem->setmodTags(mod.tags.join(", "));
+    modItem->setmodId(mod.mod_id);
+
+    qDebug() << "Currently selected mod: " << modItem->modTitle();
+    qDebug() << "With ID: " << modItem->modId();
+
+    db.closeDatabase();
+
+    return modItem;
 }
 
 int PController::modCount() const
@@ -52,7 +73,7 @@ void PController::selectMod(int index)
         return;
     }
     qDebug() << "Emitting modSelected signal: " << m_currentMod->modTitle();
-    emit modSelected(m_currentMod);
+    emit modSelected();
 }
 
 void PController::deselectMod()
@@ -63,6 +84,32 @@ void PController::deselectMod()
 void PController::clearSelection()
 {
     emit modDeselected();
+}
+
+void PController::setCurrentMod(QObject* mod)
+{ 
+    // convert QObject to PModItem
+    PModItem* modItem = qobject_cast<PModItem*>(mod);
+    if (!modItem) {
+        qDebug() << "Invalid mod object passed to setCurrentMod";
+        return;
+    }
+
+    // find mod shared pointer in list
+    for (const auto& sharedMod : m_mods_list) {
+        if (sharedMod.data() == modItem) {
+            if (m_currentMod != sharedMod) {
+                // save the previous mod
+                m_previousMod = m_currentMod;
+                m_currentMod = sharedMod;
+                emit currentModChanged();
+                emit previousModChanged();
+            }
+            return;
+        }
+    }
+
+    qDebug() << "Mod not found in list: " << modItem->modTitle();
 }
 
 int PController::rowCount(const QModelIndex &parent) const
@@ -92,6 +139,10 @@ QVariant PController::data(const QModelIndex &index, int role) const
                 return mod->modCategory();
             case ModTagsRole:
                 return mod->modTags();
+            case ModIdRole:
+                return mod->modId();
+            case ModObjectRole:
+                return QVariant::fromValue(mod.data()); // return a whole mod object
         }
     }
 
@@ -111,6 +162,8 @@ QHash<int, QByteArray> PController::roleNames() const
     roles[ModEnabledRole] = "modEnabled";
     roles[ModCategoryRole] = "modCategory";
     roles[ModTagsRole] = "modTags";
+    roles[ModIdRole] = "modId";
+    roles[ModObjectRole] = "modObject"; // return a whole mod object
 
     return roles;
 }
@@ -146,6 +199,7 @@ void PController::loadMods()
         mod->setmodEnabled(query.value("enabled").toBool());
         mod->setmodCategory(query.value("category").toString());
         mod->setmodTags(query.value("tags").toString());
+        mod->setmodId(query.value("mod_id").toString());
         addMod(mod);
     }
 
@@ -192,7 +246,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             mod.category = "Unknown";
             mod.tags = {"Unknown"};
             mod.version = "1.0.0";
-            mod.mod_id = QUuid::createUuid().toString();
+            mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
         }
         else {
 
@@ -202,7 +256,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             // Grab mod_id from config
             mod.mod_id = PConfigMgr::getKeyValue("mod_id", config);
             if (mod.mod_id.isEmpty()) {
-                mod.mod_id = QUuid::createUuid().toString();
+                mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
             }
 
             // Check if mod_id already exists in database
@@ -283,6 +337,9 @@ void PController::updateModList(QString orderBy, QString searchTerm)
     if (orderBy.isEmpty() && searchTerm.isEmpty()) {
         query = db.getAllMods();
     }
+    else if (orderBy.isEmpty() && !searchTerm.isEmpty()) {
+        query = db.searchMods("title", searchTerm);
+    }
     else {
         query = db.searchMods(orderBy, searchTerm);
     }
@@ -299,6 +356,7 @@ void PController::updateModList(QString orderBy, QString searchTerm)
         mod->setmodEnabled(query.value("enabled").toBool());
         mod->setmodCategory(query.value("category").toString());
         mod->setmodTags(query.value("tags").toString());
+        mod->setmodId(query.value("mod_id").toString());
         addMod(mod);
     }
     db.closeDatabase();

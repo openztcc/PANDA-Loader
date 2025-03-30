@@ -6,6 +6,7 @@ import QtQuick.Effects
 import PandaLdr 1.0
 
 ApplicationWindow {
+    id: root
     width: 800
     height: 675
     visible: true
@@ -13,8 +14,6 @@ ApplicationWindow {
 
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
-
-    property var currentModSelected: null
 
     // Navigation Rail
     Drawer {
@@ -115,6 +114,7 @@ ApplicationWindow {
         }
     }
 
+    // Maint content
     Pane {
         id: mainContent
         width: parent.width - navRail.width
@@ -134,8 +134,8 @@ ApplicationWindow {
             Rectangle {
                 id: launchArea
                 Layout.fillWidth: true
-                height: 150
-                anchors.top: parent.top
+                Layout.preferredHeight: 150
+                Layout.alignment: Qt.AlignTop
 
                 Image {
                     id: bgImage
@@ -192,61 +192,15 @@ ApplicationWindow {
 
             }
 
-            // action bar
             RowLayout {
-                id: actionBar
-                width: parent.width
-                height: parent.height
-                Material.background: "#f7fbf2"
-                anchors.top: launchArea.bottom
+                // mods list
+                Layout.topMargin: 2
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-
-                // action bar (add, remove, refresh, filter, search)
-                RowLayout {
-                    Layout.topMargin: 6
-                    Layout.preferredHeight: 30
-                    Layout.preferredWidth: 400
-                    // align top
-                    Layout.alignment: Qt.AlignTop
-
-                    ActionButton {
-                        icon: "qrc:/icons/add.svg"
-                        text: "Add"
-                        Layout.preferredHeight: 40
-                        onClicked: console.log("Add clicked")
-                    }
-
-                    ActionButton {
-                        icon: "qrc:/icons/delete.svg"
-                        text: "Remove"
-                        Layout.preferredHeight: 40
-                        onClicked: console.log("Remove clicked")
-                    }
-
-                    ActionButton {
-                        icon: "qrc:/icons/refresh.svg"
-                        text: "Refresh"
-                        Layout.preferredHeight: 40
-                        onClicked: console.log("Refresh clicked")
-                    }
-
-                    ComboBox {
-                        id: editableDropdown
-                        Layout.preferredHeight: 40
-                        Layout.preferredWidth: 100
-                        editable: true  // Allows typing new values
-
-                        model: ["Red", "Green", "Blue"]
-
-                        background: Rectangle {
-                            color: "#f7fbf2"
-                            radius: 0
-                        }
-
-                        onAccepted: {
-                            console.log("User entered:", editableDropdown.currentText)
-                        }
-                    }
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
 
                     SearchBar {
                         id: searchBar
@@ -266,20 +220,6 @@ ApplicationWindow {
                             modController.updateModList(searchBar.orderBy, searchBar.searchTerm)
                         }
                     }
-                }
-
-
-            }
-
-            RowLayout {
-                // mods list
-                Layout.topMargin: -4
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
 
                     Rectangle {
                         id: listHead
@@ -293,18 +233,18 @@ ApplicationWindow {
 
                             Text {
                                 text: "Mod Name"
-                                anchors.left: parent.left
+                                Layout.alignment: Qt.AlignLeft
                                 anchors.leftMargin: 10
                             }
 
                             Text {
                                 text: "Enabled"
-                                anchors.right: headCheck.left
+                                Layout.alignment: Qt.AlignRight
                             }
 
                             CheckBox {
                                 id: headCheck
-                                anchors.right: parent.right
+                                Layout.alignment: Qt.AlignRight
                                 anchors.rightMargin: 10
                                 Material.accent: "#376a3e"
                                 checked: true
@@ -324,7 +264,7 @@ ApplicationWindow {
                         delegate: Rectangle { // Mod list container
                             id: modPane
                             width: ListView.view.width
-                            height: 75
+                            height: 50
 
                             // bottom border
                             Rectangle {
@@ -339,13 +279,14 @@ ApplicationWindow {
                             ModItem {
                                 id: modItems
                                 controller: modController
-                                modelObject: model
+                                modelObject: modObject
                             }
                         }
 
                         ScrollBar.vertical: ScrollBar {
+                            id: vScroll
                             policy: ScrollBar.AsNeeded
-                            visible: flickableView.moving || flickableView.dragging
+                            visible: modsList.moving || modsList.dragging
                             width: 8
                             // background: Rectangle {
                             //     color: "#289662"
@@ -365,7 +306,12 @@ ApplicationWindow {
                 // mod details
                 InfoPane {
                     id: infoPane
-                    targetComponent: currentModSelected  
+                    Connections {
+                        target: modController
+                        function onCurrentModChanged() {
+                            infoPane.targetComponent = modController.currentMod;
+                        }
+                    }
                 }
 
             }

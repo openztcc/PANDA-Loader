@@ -14,7 +14,3 @@ PANDA = Project and Animal Loader.
 
 - Zoo Tycoon 1 or Zoo Tycoon 2
 - Windows 10 or greater
-
-## License
-
-PANDA Loader is released under [GNU General Public License v3.0](LICENSE.md).

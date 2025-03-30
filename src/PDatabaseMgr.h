@@ -57,7 +57,8 @@ public:
 
     QSqlQuery getAllMods();
     QSqlQuery searchMods(const QString &propertyName, const QString &searchTerm);
-    QSqlQuery getModByPk(const QString &modId);
+    Q_INVOKABLE PDatabaseMgr::PMod getModByPk(const QString &modId);
+    PDatabaseMgr::PMod getModByPk(QSqlDatabase &db, const QString &modId);
 
     bool doesModExist(const QString &modId);
     bool doesDependencyExist(const QString &dependencyId);

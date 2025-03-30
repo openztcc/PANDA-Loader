@@ -3,7 +3,7 @@ import QtQuick.Effects
 
 
 Item {
-    id: root
+    id: actionButton
     property string color: "#e5e9e1"
     property string fg: "#3a4b3a"
     property string icon: "No icon"
@@ -17,11 +17,11 @@ Item {
         height: parent.height
         radius: 0
         color: if (hoverArea.containsPress) {
-            return Qt.lighter(root.color, 0.8)
+            return Qt.lighter(actionButton.color, 0.8)
         } else if (hoverArea.containsMouse) {
-            return Qt.darker(root.color, 0.01)
+            return Qt.darker(actionButton.color, 0.01)
         } else {
-            return root.color
+            return actionButton.color
         }
         Behavior on color { ColorAnimation { duration: 70 } }
 
@@ -30,7 +30,7 @@ Item {
             width: 20
             height: 20
             id: iconImage
-            source: root.icon
+            source: actionButton.icon
             anchors.centerIn: parent
         }
 
@@ -45,7 +45,7 @@ Item {
     MouseArea {
         id: hoverArea
         anchors.fill: parent
-        onClicked: root.clicked()
+        onClicked: actionButton.clicked()
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
     }

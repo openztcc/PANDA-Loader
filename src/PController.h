@@ -27,7 +27,8 @@ class PModItem;
 class PController : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(QSharedPointer<PModItem> currentMod READ currentlySelectedMod NOTIFY modSelected)
+    Q_PROPERTY(QObject* currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
+    Q_PROPERTY(QObject* previousMod READ previousMod NOTIFY previousModChanged)
     Q_PROPERTY(int modCount READ modCount NOTIFY modAdded)
 
 public:
@@ -40,10 +41,12 @@ public:
         ModPathRole,
         ModEnabledRole,
         ModCategoryRole,
-        ModTagsRole
+        ModTagsRole,
+        ModIdRole,
+        ModObjectRole
     };
 
-    Q_INVOKABLE QSharedPointer<PModItem> currentlySelectedMod() const;
+    QSharedPointer<PModItem> getModAsObject(QString modId) const;
     int modCount() const;
     void addMod(QSharedPointer<PModItem>);
     void removeMod(QSharedPointer<PModItem>);
@@ -55,6 +58,11 @@ public:
     void addState(PState *state);
     Q_INVOKABLE void updateModList(QString orderBy, QString searchTerm);
 
+    QObject* currentMod() const { return m_currentMod.data(); }
+    Q_INVOKABLE void setCurrentMod(QObject* mod);
+
+    QObject* previousMod() const { return m_previousMod.data(); }
+
     virtual int rowCount(const QModelIndex &parent) const override;
     virtual QVariant data(const QModelIndex &index, int role) const override;
     virtual QHash<int, QByteArray> roleNames() const override;
@@ -62,12 +70,15 @@ public:
 signals:
     void modAdded(QSharedPointer<PModItem>);
     void modRemoved(QSharedPointer<PModItem>);
-    void modSelected(QSharedPointer<PModItem>);
+    void modSelected();
     void modDeselected();
+    void previousModChanged();
+    void currentModChanged();
 
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;
     QSharedPointer<PModItem> m_currentMod;
+    QSharedPointer<PModItem> m_previousMod;
     PState *m_state;
 };
 

@@ -20,6 +20,11 @@ class PModItem : public QObject
     Q_PROPERTY(bool modEnabled READ modEnabled WRITE setmodEnabled NOTIFY modEnabledChanged)
     Q_PROPERTY(QString modCategory READ modCategory WRITE setmodCategory NOTIFY modCategoryChanged)
     Q_PROPERTY(QString modTags READ modTags WRITE setmodTags NOTIFY modTagsChanged)
+    Q_PROPERTY(QString modId READ modId WRITE setmodId NOTIFY modIdChanged)
+
+    Q_PROPERTY(QObject* qmlItem READ qmlItem WRITE setQmlItem NOTIFY qmlItemChanged)
+    Q_PROPERTY(bool isSelected READ isSelected WRITE setIsSelected NOTIFY isSelectedChanged)
+
 public:
     explicit PModItem(QObject *parent = nullptr);
     PModItem(const QString &title, const QString &author, const QString &desc, 
@@ -49,6 +54,20 @@ public:
     QString modTags() const;
     void setmodTags(const QString &newModTags);
 
+    QString modId() const;
+    void setmodId(const QString &newModId);
+
+    QObject* qmlItem() const { return m_qmlItem; }
+    void setQmlItem(QObject* item);
+
+    bool isSelected() const { return m_isSelected; }
+    void setIsSelected(bool selected) { 
+        if (m_isSelected != selected) {
+            m_isSelected = selected;
+            emit isSelectedChanged();
+        }
+    }
+
 signals:
     void modIndexChanged();
     void modTitleChanged();
@@ -58,6 +77,9 @@ signals:
     void modEnabledChanged();
     void modCategoryChanged();
     void modTagsChanged();
+    void modIdChanged();
+    void qmlItemChanged();
+    void isSelectedChanged();
 
 private:
     int m_mod_index;
@@ -68,6 +90,10 @@ private:
     bool m_mod_enabled;
     QString m_mod_category;
     QString m_mod_tags;
+    QString m_mod_id;
+    QObject* m_qmlItem = nullptr;
+    bool m_isSelected = false;
 };
 
 #endif // PMODITEM_H
+

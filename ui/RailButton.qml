@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 
 Item {
-    id: root
+    id: railButton
     width: parent ? parent.width : 80
     height: 40
 
@@ -27,11 +27,11 @@ Item {
             height: 30
             radius: 16
             color: if (hoverArea.containsPress) {
-                return Qt.lighter(root.color, 1.2)
+                return Qt.lighter(railButton.color, 1.2)
             } else if (hoverArea.containsMouse) {
-                return Qt.darker(root.color, 1.1)
+                return Qt.darker(railButton.color, 1.1)
             } else {
-                return root.bg
+                return railButton.bg
             }
             // animate
             Behavior on color { ColorAnimation { duration: 70 } }
@@ -40,15 +40,15 @@ Item {
             SvgIcon {
                 bgWidth: parent.width
                 bgHeight: parent.height
-                icon: root.icon
+                icon: railButton.icon
             }
         }
 
         // Label below the icon
         Label {
-            text: root.text
+            text: railButton.text
             font.pixelSize: 10
-            color: root.fg
+            color: railButton.fg
             horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -59,7 +59,7 @@ Item {
         id: hoverArea
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: root.clicked()
+        onClicked: railButton.clicked()
         cursorShape: Qt.PointingHandCursor
 
     }
