@@ -30,6 +30,7 @@ qt_add_executable(appPandaLdr
     src/PZtdMgr.cpp src/PZtdMgr.h
     src/PConfigMgr.cpp src/PConfigMgr.h
     src/PDatabaseMgr.cpp src/PDatabaseMgr.h
+    src/PSystemMgr.h src/PSystemMgr.cpp
 )
 
 include_directories(
@@ -69,6 +70,7 @@ qt_add_qml_module(appPandaLdr
         src/PZtdMgr.cpp src/PZtdMgr.h
         src/PConfigMgr.cpp src/PConfigMgr.h
         src/PDatabaseMgr.cpp src/PDatabaseMgr.h
+        src/PSystemMgr.h src/PSystemMgr.cpp
 )
 
 qt_add_resources(appPandaLdr "resources"

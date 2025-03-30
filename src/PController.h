@@ -77,6 +77,7 @@ signals:
 
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;
+    QList<QObject*> m_selected_mods;
     QSharedPointer<PModItem> m_currentMod;
     QSharedPointer<PModItem> m_previousMod;
     PState *m_state;
