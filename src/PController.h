@@ -13,7 +13,7 @@ concerns itself with the mods list and operations over other classes from the UI
 #include <QVector>
 
 // Project includes
-#include "PModItem.h"
+#include "../models/PModItem.h"
 #include "PState.h"
 #include "PZtdMgr.h"
 #include "PDatabaseMgr.h"

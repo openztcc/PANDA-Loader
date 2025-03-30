@@ -11,6 +11,11 @@ class PConfigMgr
 public:
     PConfigMgr();
     ~PConfigMgr();
+
+    struct PSettings {
+        QString p_zoo_game_path;
+        QString p_iso_path;
+    };
     static toml::table getMetaConfig(const QString &ztdFilePath);
     static QString getKeyValue(const QString &key, const toml::table &config);
     static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
@@ -19,5 +24,8 @@ public:
     toml::table getZooIniConfig(const QString &iniPath);
     bool updateZooIniConfig(const QString &iniPath, const toml::table &config);
     bool removeZooIniConfig(const QString &iniPath);
+    bool readPandaConfig(const QString &filePath, toml::table &config);
+private:
+    QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
 };
 #endif // PCONFIGMGR_H

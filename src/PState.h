@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QQmlEngine>
-#include "PModItem.h"
+#include "../models/PModItem.h"
 #include <QDir>
 #include <QtQml/qqmlregistration.h>
 

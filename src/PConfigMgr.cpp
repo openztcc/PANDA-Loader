@@ -224,3 +224,25 @@ bool PConfigMgr::removeZooIniConfig(const QString &iniPath)
     return QFile::remove(iniPath);
 }
 
+// Reads a Panda config file and returns a toml table
+bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
+{
+    // Check if config file exists
+    if (!QFile::exists(filePath)) {
+        return false;
+    }
+
+    // Read config file
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return false;
+    }
+
+    QByteArray fileData = file.readAll();
+    file.close();
+
+    // Parse the toml data
+    config = toml::parse(fileData.constData());
+
+    return true;
+}

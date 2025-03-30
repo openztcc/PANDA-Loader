@@ -4,14 +4,16 @@
 #include <QObject>
 #include <QProcess>
 #include <QString>
+#include <QDebug>
 
-class PSystemMgr
+class PSystemMgr : public QObject
 {
     Q_OBJECT
 public:
     PSystemMgr();
-    static bool isIsoMounted(const QString &isoPath) const;
-    static bool mountIso(const QString &isoPath) const;
+    static bool isIsoMounted(const QString &isoPath);
+    static bool mountIso(const QString& isoPath, QString& mountPoint);
+    static bool mountIsoIfNeeded(const QString &isoPath);
 };
 
 #endif // PSYSTEMMGR_H
