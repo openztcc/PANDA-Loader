@@ -53,7 +53,7 @@ bool PSettings::loadFromToml() {
 
     // Load settings from the TOML file
     m_zooGamePath = PConfigMgr::getKeyValue("zooGamePath", config);
-    m_useIsoMounting = PConfigMgr::getKeyValue("useIsoMounting", config) == "true";
+    m_useIsoMounting = PConfigMgr::getBoolValue("useIsoMounting", config);
     m_isoPath = PConfigMgr::getKeyValue("isoPath", config);
 
     return true;

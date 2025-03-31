@@ -12,7 +12,7 @@ PState::PState(QObject *parent) : QObject(parent) {
     } else {
         m_path = m_settings->zooGamePath() + "\\zoo.exe";
         m_resource_path = m_settings->zooGamePath() + "\\dlupdate\\";
-        qDebug() << "Loaded settings from config.toml: " << m_path;
+        qDebug() << "Loaded settings from config.toml.";
     }
 }
 
@@ -20,15 +20,37 @@ int PState::launchZT() {
     // QMutexLocker locker(&mutex);
     QString _path = this->m_path;
 
+    qDebug() << "Launching Zoo Tycoon 1 from path: " << _path;
+
     // has proc started
     QProcess proc;
     if (!QFile::exists(_path)) {
         qWarning() << "Zoo Tycoon 1 binary not found: " << _path;
         return 0;
     }
+    
+    // if iso mounting enabled, mount the iso first
+    if (m_settings->useIsoMounting()) {
+        QString isoPath = m_settings->isoPath();
+        if (!QFile::exists(isoPath)) {
+            qWarning() << "ISO file not found: " << isoPath;
+            return 0;
+        }
+        // mount the iso
+        if (!PSystemMgr::mountIsoIfNeeded(isoPath)) {
+            qWarning() << "Failed to mount ISO file: " << isoPath;
+            return 0;
+        }
+
+        qDebug() << "ISO mounted successfully: " << isoPath;
+    }
+    else {
+        qDebug() << "ISO mounting is disabled, skipping mount operation";
+    }
 
     // start proc
     if (proc.startDetached(_path)) {
+        qDebug() << "Zoo Tycoon 1 binary started successfully: " << _path;
         return 1;
     } else {
         qWarning() << "Failed to start Zoo Tycoon 1 binary: " << _path;
