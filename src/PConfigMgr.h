@@ -5,6 +5,8 @@
 #include "PZtdMgr.h"
 #include <QSettings>
 #include <QDir>
+#include <QBuffer>
+#include <QIODevice>
 
 class PConfigMgr
 {
@@ -24,6 +26,11 @@ public:
     bool updateZooIniConfig(const QString &iniPath, const toml::table &config);
     bool removeZooIniConfig(const QString &iniPath);
     bool readPandaConfig(const QString &filePath, toml::table &config);
+
+    // misc config
+    static QList<std::unique_ptr<QSettings>> getConfigInZtd(const QString &ztdFilePath, const QString &ext = "", const QString &entityType = "");
+    static QStringList getMenuIconPaths(const QString &ztdFilePath);
+    static QStringList getCodenamesInZtd(const QString &ztdFilePath);
 private:
     QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
 };

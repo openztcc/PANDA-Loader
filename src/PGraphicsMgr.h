@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "ApeCore.h"
+#include "PConfigMgr.h"
 
 class PGraphicsMgr : public QObject
 {

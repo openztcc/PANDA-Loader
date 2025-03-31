@@ -16,14 +16,12 @@ toml::table PConfigMgr::getMetaConfig(const QString &ztdFilePath)
     toml::table config;
     QByteArray fileData;
 
-    // Check if the ztd file exists and parse
+    // does file exist
     if (PZtdMgr::openFileInZtd(ztdFilePath, m_metaConfigName, fileData)) {
-        // Parse the toml data
         config = toml::parse(fileData.constData());
     }
 
     if (config.empty()) {
-        // If the config is empty, return an empty toml table
         return toml::table();
     }
 
@@ -35,7 +33,7 @@ toml::table PConfigMgr::getConfig(const QString &filePath)
 {
     // Check if the config file exists
     if (!QFile::exists(filePath)) {
-        return toml::table(); // Return empty table if the config file does not exist
+        return toml::table();
     }
 
     // Read config file
@@ -305,4 +303,132 @@ bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
     config = toml::parse(fileData.constData());
 
     return true;
+}
+
+// Get config from ztd file
+QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
+{
+    QStringList validFolders = { "scenery", "animals" };
+    QStringList validExtensions = { ".uca", ".ucb", ".ucs", ".ai", ".scn", ".cfg" };
+    QList<std::unique_ptr<QSettings>> configFilesFound;
+
+    QStringList folderFilter = entityType.isEmpty() ? validFolders : QStringList{ entityType };
+    QStringList extensionFilter = ext.isEmpty() ? validExtensions : QStringList{ ext };
+
+    // Validate input
+    if (!ext.isEmpty() && !validExtensions.contains(ext, Qt::CaseInsensitive)) {
+        qDebug() << "Invalid file extension:" << ext;
+        return configFilesFound;
+    }
+    if (!entityType.isEmpty() && !validFolders.contains(entityType, Qt::CaseInsensitive)) {
+        qDebug() << "Invalid folder name:" << entityType;
+        return configFilesFound;
+    }
+
+    QuaZip zip(ztdFilePath);
+    if (!zip.open(QuaZip::mdUnzip)) {
+        qDebug() << "Failed to open ZTD file:" << zip.getZipError();
+        return configFilesFound;
+    }
+
+    QStringList fileList = zip.getFileNameList();
+    QuaZipFile zipFile(&zip);
+
+    for (const QString &fileName : fileList) {
+        // Filter by folder
+        bool folderMatch = false;
+        for (const QString &folder : folderFilter) {
+            if (fileName.startsWith(folder + "/", Qt::CaseInsensitive)) {
+                folderMatch = true;
+                break;
+            }
+        }
+        if (!folderMatch) continue;
+
+        // Filter by extension
+        bool extensionMatch = false;
+        for (const QString &fileExt : extensionFilter) {
+            if (fileName.endsWith(fileExt, Qt::CaseInsensitive)) {
+                extensionMatch = true;
+                break;
+            }
+        }
+        if (!extensionMatch) continue;
+
+        // Open the file inside the zip
+        if (!zip.setCurrentFile(fileName)) {
+            qDebug() << "Failed to select file in ZTD:" << fileName;
+            continue;
+        }
+        if (!zipFile.open(QIODevice::ReadOnly)) {
+            qDebug() << "Failed to open file in ZTD:" << fileName;
+            continue;
+        }
+
+        QByteArray fileData = zipFile.readAll();
+        zipFile.close();
+
+        // in memory buffer for QSettings
+        auto buffer = std::make_unique<QBuffer>();
+        buffer->setData(fileData);
+        buffer->open(QIODevice::ReadOnly);
+
+        auto settings = std::make_unique<QSettings>(buffer.get(), QSettings::IniFormat);
+        // transf ownership to QSettings
+        buffer.release(); 
+
+        configFilesFound.append(std::move(settings));
+    }
+
+    zip.close();
+    return configFilesFound;
+}
+
+// Get menu icon paths from ztd file
+QStringList PConfigMgr::getMenuIconPaths(const QString &ztdFilePath)
+{
+    QStringList iconPaths;
+
+    auto configList = PConfigMgr::getConfigInZtd(ztdFilePath);
+
+    for (const auto &config : configList)
+    {
+        // scan the config for icon paths
+        QStringList iconGroups = { "Icon", "m/Icon" };
+
+        for (const QString &groupName : iconGroups)
+        {
+            config->beginGroup(groupName);
+            QStringList keys = config->allKeys();
+
+            for (const QString &key : keys)
+            {
+                if (key.compare("Icon", Qt::CaseInsensitive) == 0)
+                {
+                    QVariant val = config->value(key);
+                    if (val.isValid())
+                    {
+                        // BF INI files can sometimes have duplicate keys
+                        // here we try to split the values by comma and add them to the list
+                        QStringList splitIcons = val.toStringList();
+                        for (const QString &icon : splitIcons)
+                        {
+                            if (!icon.isEmpty())
+                                iconPaths.append(icon);
+                        }
+                    }
+                }
+            }
+
+            config->endGroup();
+        }
+    }
+
+    // print icon paths for debugging
+    for (const QString &iconPath : iconPaths)
+    {
+        qDebug() << "Icon path:" << iconPath;
+    }
+
+    return iconPaths;
 }

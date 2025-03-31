@@ -33,6 +33,8 @@ qt_add_executable(appPandaLdr
     src/PGraphicsMgr.h src/PGraphicsMgr.cpp
     models/PModItem.cpp models/PModItem.h
     models/PSettings.cpp models/PSettings.h
+    models/PEntityType.cpp models/PEntityType.h
+    models/PIconData.h
 )
 
 add_subdirectory(libs/apecore)
@@ -68,6 +70,7 @@ qt_add_qml_module(appPandaLdr
         ui/FilterTag.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
+        # sources
         src/PState.cpp src/PState.h
         src/PController.cpp src/PController.h
         src/PZtdMgr.cpp src/PZtdMgr.h
@@ -75,8 +78,11 @@ qt_add_qml_module(appPandaLdr
         src/PDatabaseMgr.cpp src/PDatabaseMgr.h
         src/PSystemMgr.h src/PSystemMgr.cpp
         src/PGraphicsMgr.h src/PGraphicsMgr.cpp
+        # models
         models/PModItem.cpp models/PModItem.h
         models/PSettings.cpp models/PSettings.h
+        models/PEntityType.cpp models/PEntityType.h
+        models/PIconData.h
 )
 
 qt_add_resources(appPandaLdr "resources"
