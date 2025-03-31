@@ -30,10 +30,12 @@ qt_add_executable(appPandaLdr
     src/PConfigMgr.cpp src/PConfigMgr.h
     src/PDatabaseMgr.cpp src/PDatabaseMgr.h
     src/PSystemMgr.h src/PSystemMgr.cpp
+    src/PGraphicsMgr.h src/PGraphicsMgr.cpp
     models/PModItem.cpp models/PModItem.h
     models/PSettings.cpp models/PSettings.h
-
 )
+
+add_subdirectory(libs/apecore)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/include
@@ -42,9 +44,8 @@ link_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib
 )
 add_library(tomlplusplus INTERFACE)
-target_include_directories(
-    tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include
-)
+
+target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
 
 target_include_directories(
     appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/src
@@ -73,6 +74,7 @@ qt_add_qml_module(appPandaLdr
         src/PConfigMgr.cpp src/PConfigMgr.h
         src/PDatabaseMgr.cpp src/PDatabaseMgr.h
         src/PSystemMgr.h src/PSystemMgr.cpp
+        src/PGraphicsMgr.h src/PGraphicsMgr.cpp
         models/PModItem.cpp models/PModItem.h
         models/PSettings.cpp models/PSettings.h
 )
@@ -115,6 +117,7 @@ target_link_libraries(appPandaLdr
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a 
     Qt6::Sql 
     tomlplusplus
+    ApeCore
 )
 
 include(GNUInstallDirs)
