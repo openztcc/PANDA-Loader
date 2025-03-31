@@ -2,6 +2,7 @@
 #define PGRAPHICSMGR_H
 
 #include <QObject>
+#include "ApeCore.h"
 
 class PGraphicsMgr : public QObject
 {
