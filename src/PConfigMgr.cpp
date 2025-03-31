@@ -90,6 +90,19 @@ QString PConfigMgr::getKeyValue(const QString &key, const toml::table &config)
     return QString("");
 }
 
+// Get a key value from a toml table as a boolean
+bool PConfigMgr::getBoolValue(const QString &key, const toml::table &config)
+{
+    // Find value in table
+    if (auto it = config.find(key.toStdString()); it != config.end()) {
+        if (auto boolVal = it->second.as_boolean()) {
+            return boolVal->get();
+        }
+    }
+
+    return false;
+}
+
 // Get a key value from a toml table as a list (ie tags and authors)
 QVector<QString> PConfigMgr::getKeyValueAsList(const QString &key, const toml::table &config)
 {

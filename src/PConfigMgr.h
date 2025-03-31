@@ -16,6 +16,7 @@ public:
     static toml::table getConfig(const QString &filePath);
     static bool saveConfig(const QString &filePath, const toml::table &config);
     static QString getKeyValue(const QString &key, const toml::table &config);
+    static bool getBoolValue(const QString &key, const toml::table &config);
     static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);

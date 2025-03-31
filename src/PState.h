@@ -12,6 +12,7 @@
 #include <QDir>
 #include <QtQml/qqmlregistration.h>
 #include "../models/PSettings.h"
+#include "../src/PSystemMgr.h"
 
 // static functions
 
