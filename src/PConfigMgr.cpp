@@ -310,7 +310,7 @@ QList<std::unique_ptr<PEntityType>> PConfigMgr::getConfigInZtd(const QString &zt
 {
     QStringList validFolders = { "scenery", "animals" };
     QStringList validExtensions = { ".uca", ".ucb", ".ucs", ".ai", ".scn", ".cfg", ".ani" };
-    QList<std::unique_ptr<QSettings>> configFilesFound;
+    QList<std::unique_ptr<PEntityType>> configFilesFound;
 
     QStringList folderFilter = entityType.isEmpty() ? validFolders : QStringList{ entityType };
     QStringList extensionFilter = ext.isEmpty() ? validExtensions : QStringList{ ext };
@@ -349,7 +349,8 @@ QList<std::unique_ptr<PEntityType>> PConfigMgr::getConfigInZtd(const QString &zt
                 // Scan these files for valid extensions. There should only be one.
                 for (const QString &projectFile : projectFiles) {
                     // Check if the file has a valid extension
-                    if (extensionFilter.contains(QFileInfo(projectFile).suffix(), Qt::CaseInsensitive)) {
+                    auto hasValidExtension = validExtensions.contains(QFileInfo(projectFile).suffix(), Qt::CaseInsensitive);
+                    if (hasValidExtension) {
                         // Open the file and read it into a QSettings object
                         if (!zip.setCurrentFile(projectFile)) {
                             qDebug() << "Failed to select file in ZTD:" << projectFile;
@@ -363,9 +364,19 @@ QList<std::unique_ptr<PEntityType>> PConfigMgr::getConfigInZtd(const QString &zt
                         QByteArray fileData = zipFile.readAll();
                         zipFile.close();
 
-                        // Create a QSettings object from the file data
-                        auto settings = std::make_unique<QSettings>(QBuffer::fromData(fileData), QSettings::IniFormat);
-                        configFilesFound.append(std::move(settings));
+                        // load ini file into QSettings
+                        auto buffer = std::make_unique<QBuffer>();
+                        buffer->setData(fileData);
+                        buffer->open(QIODevice::ReadOnly);
+                        auto settings = std::make_unique<QSettings>(buffer.get(), QSettings::IniFormat);
+                        buffer.release(); // transfer ownership to QSettings
+
+                        PEntityType entity;
+                        entity.load(*settings, projectFile);
+
+                        // create pointer to entity type and add to list
+                        auto entityTypePtr = std::make_unique<PEntityType>(entity);
+                        configFilesFound.append(std::move(entityTypePtr));
                     }
                 }
             }
