@@ -1,7 +1,7 @@
 #include <QString>
 
 struct PIconData {
-    QString entityId;
+    QString id;
     QString aniPath;
     QString graphicPath;
     bool finalPaths;

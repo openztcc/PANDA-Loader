@@ -74,11 +74,14 @@ public:
     QString id;
     QLIst<PIconData> icons;
     QMap<QString, QString> characteristics;
-    QMap<QString, QString> animPaths;
+    QMap<QString, QString> iconAniPaths;
 
-    static std::unique_ptr<PEntityType> load(const QSettings& settings);
+    static std::unique_ptr<PEntityType> load(const QSettings& settings, const QString& path);
     static Type getType(const QString& path);
     PEntityType();
+
+    // helper functions
+    static QString determineViewFromPath(const QString& aniPath);
 }
 
 #endif // PENTITYTYPE_H
