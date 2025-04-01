@@ -3,6 +3,6 @@
 struct PIconData {
     QString id;
     QString aniPath;
-    QString graphicPath;
-    bool finalPaths;
+    QString resolvedPath;
+    bool isResolved;
 }

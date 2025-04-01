@@ -3,6 +3,15 @@
 // Loads the entity type from the entity config
 // TODO: eventually expand to load all config properties depending on the type
 std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const QString& path) {
+    // check if the path is empty
+    if (path.isEmpty()) {
+        qDebug() << "Path is empty for entity type:" << path;
+        return nullptr;
+    }
+
+    // set path 
+    ztdpath = path;
+
     auto entityType = std::make_unique<PEntityType>();
 
     // for now, only care about the id and aniPath
@@ -41,6 +50,15 @@ std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const 
         settings.endGroup();
         
     } else if (PEntityType::getType(path) == Type::Scenery) {
+        // assign the id from Global
+        settings.beginGroup("Global");
+        entityType->id = settings.value("Type").toString();
+        settings.endGroup();
+
+        if (entityType->id.isEmpty()) {
+            qDebug() << "Entity type id is empty for path:" << path;
+        }
+
         // For any scenery type, we need to find the [Icon] section
         // these have four identical keys named Icon so can't parse 
         settings.beginGroup("Icon");
@@ -140,5 +158,19 @@ QString PEntityType::determineViewFromPath(const QString& aniPath) {
         return "SW";
     } else {
         return "NA";
+    }
+}
+
+// Finalize the icon paths using the .ani paths
+void PEntityType::loadIcons(){
+    // open the relative ani path inside the ztd file
+    QList<std::unique_ptr<QSettings>> configFiles = PConfigMgr::getConfigInZtd(ztdpath, ".ani");
+
+    for (const auto& config : configFiles) {
+        config.get()->beginGroup("animation");
+        // check if id is set
+        if (this->id.isEmpty() || this->id == "") {
+            this->id = config.get()->value("dir1").toString();
+        }
     }
 }

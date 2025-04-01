@@ -29,6 +29,7 @@ public:
 
     // misc config
     static QList<std::unique_ptr<QSettings>> getConfigInZtd(const QString &ztdFilePath, const QString &ext = "", const QString &entityType = "");
+    static std::unique_ptr<QSettings> getKnownConfigInZtd(const QString &ztdFilePath, const QString &path);
     static QStringList getMenuIconPaths(const QString &ztdFilePath);
     static QStringList getCodenamesInZtd(const QString &ztdFilePath);
 private:

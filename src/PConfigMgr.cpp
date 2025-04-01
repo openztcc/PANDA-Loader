@@ -309,7 +309,7 @@ bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
 QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
 {
     QStringList validFolders = { "scenery", "animals" };
-    QStringList validExtensions = { ".uca", ".ucb", ".ucs", ".ai", ".scn", ".cfg" };
+    QStringList validExtensions = { ".uca", ".ucb", ".ucs", ".ai", ".scn", ".cfg", ".ani" };
     QList<std::unique_ptr<QSettings>> configFilesFound;
 
     QStringList folderFilter = entityType.isEmpty() ? validFolders : QStringList{ entityType };

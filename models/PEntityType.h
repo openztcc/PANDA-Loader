@@ -6,6 +6,8 @@
 #include <QMap>
 #include <memory>
 #include "../models/PIconData.h"
+#include <QSettings>
+#include "../src/PConfigMgr.h"
 
 class PEntityType {
 public:
@@ -73,11 +75,14 @@ public:
 
     QString id;
     QLIst<PIconData> icons;
+    QList ztdPath;
     QMap<QString, QString> characteristics;
     QMap<QString, QString> iconAniPaths;
 
-    static std::unique_ptr<PEntityType> load(const QSettings& settings, const QString& path);
+    std::unique_ptr<PEntityType> load(const QSettings& settings, const QString& path);
     static Type getType(const QString& path);
+
+    void loadIcons(QMap<QString, QString>& iconAniPaths);
     PEntityType();
 
     // helper functions
