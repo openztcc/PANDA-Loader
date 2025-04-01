@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QBuffer>
 #include <QIODevice>
+#include "../models/PEntityType.h"
 
 class PConfigMgr
 {

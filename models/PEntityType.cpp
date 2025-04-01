@@ -9,8 +9,8 @@ std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const 
         return nullptr;
     }
 
-    // set path 
-    ztdpath = path;
+    // set path
+    this->ztdPath = path;
 
     auto entityType = std::make_unique<PEntityType>();
 
@@ -67,8 +67,7 @@ std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const 
 
         // load the ani paths
         PEntityType::loadAniPaths(iconPaths);
-
-
+        settings.endGroup();
     }
 
     // null initialization for other fields

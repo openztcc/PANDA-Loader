@@ -5,4 +5,4 @@ struct PIconData {
     QString aniPath;
     QString resolvedPath;
     bool isResolved;
-}
+};

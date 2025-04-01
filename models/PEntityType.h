@@ -7,7 +7,6 @@
 #include <memory>
 #include "../models/PIconData.h"
 #include <QSettings>
-#include "../src/PConfigMgr.h"
 
 class PEntityType {
 public:
@@ -19,7 +18,7 @@ public:
         AnimalFood,
         TankFilter,
         Fence,
-        TankWall
+        TankWall,
         Path,
         Rubble,
         Unit,
@@ -35,16 +34,16 @@ public:
 
     enum MemberTypes {
         Entity,
-        Unit,
+        UnitMember,
         ZTUnit,
         Animals,
-        Scenery,
-        Building,
-        Staff,
-        Ambient,
+        SceneryMember,
+        BuildingMember,
+        StaffMember,
+        AmbientMember,
         ZooFences,
         LowFence,
-        Fence,
+        FenceMember,
         HabitatFences,
         HighFence,
         Developer,
@@ -65,17 +64,17 @@ public:
     };
 
     enum ClassType {
-        Keeper,
+        KeeperClass,
         Maint,
         Tour,
-        Helicopter,
+        HelicopterClass,
         Scient,
         Trainer
-    }
+    };
 
     QString id;
-    QLIst<PIconData> icons;
-    QList ztdPath;
+    QList<PIconData> icons;
+    QStringList ztdPath;
     QMap<QString, QString> characteristics;
     QMap<QString, QString> iconAniPaths;
 
@@ -88,6 +87,6 @@ public:
 
     // helper functions
     static QString determineViewFromPath(const QString& aniPath);
-}
+};
 
 #endif // PENTITYTYPE_H

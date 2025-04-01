@@ -306,7 +306,7 @@ bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
 }
 
 // Get config from ztd file
-QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
+QList<std::unique_ptr<PEntityType>> PConfigMgr::getConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
 {
     QStringList validFolders = { "scenery", "animals" };
     QStringList validExtensions = { ".uca", ".ucb", ".ucs", ".ai", ".scn", ".cfg", ".ani" };
@@ -334,50 +334,42 @@ QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdF
     QStringList fileList = zip.getFileNameList();
     QuaZipFile zipFile(&zip);
 
+    // Root level folders: animals, scenery, objects, freeform, etc.
     for (const QString &fileName : fileList) {
-        // Filter by folder
-        bool folderMatch = false;
-        for (const QString &folder : folderFilter) {
-            if (fileName.startsWith(folder + "/", Qt::CaseInsensitive)) {
-                folderMatch = true;
-                break;
+        // Only look at valid folders
+        auto validFolder = folderFilter.contains(QFileInfo(fileName).dir().dirName(), Qt::CaseInsensitive);
+        if (!fileName.endsWith("/") && validFolder) {
+            // First level folders are named after the project IDs
+            // Get list of fildes inside this folder
+            QStringList projectFolders = zip.getFileNameList(fileName);
+            for (const QString &projectFolder : projectFolders) {
+                // Second level folders contain ucb, ai, uca, ucs files
+                QStringList projectFiles = zip.getFileNameList(projectFolder);
+
+                // Scan these files for valid extensions. There should only be one.
+                for (const QString &projectFile : projectFiles) {
+                    // Check if the file has a valid extension
+                    if (extensionFilter.contains(QFileInfo(projectFile).suffix(), Qt::CaseInsensitive)) {
+                        // Open the file and read it into a QSettings object
+                        if (!zip.setCurrentFile(projectFile)) {
+                            qDebug() << "Failed to select file in ZTD:" << projectFile;
+                            continue;
+                        }
+                        if (!zipFile.open(QIODevice::ReadOnly)) {
+                            qDebug() << "Failed to open file in ZTD:" << projectFile;
+                            continue;
+                        }
+
+                        QByteArray fileData = zipFile.readAll();
+                        zipFile.close();
+
+                        // Create a QSettings object from the file data
+                        auto settings = std::make_unique<QSettings>(QBuffer::fromData(fileData), QSettings::IniFormat);
+                        configFilesFound.append(std::move(settings));
+                    }
+                }
             }
         }
-        if (!folderMatch) continue;
-
-        // Filter by extension
-        bool extensionMatch = false;
-        for (const QString &fileExt : extensionFilter) {
-            if (fileName.endsWith(fileExt, Qt::CaseInsensitive)) {
-                extensionMatch = true;
-                break;
-            }
-        }
-        if (!extensionMatch) continue;
-
-        // Open the file inside the zip
-        if (!zip.setCurrentFile(fileName)) {
-            qDebug() << "Failed to select file in ZTD:" << fileName;
-            continue;
-        }
-        if (!zipFile.open(QIODevice::ReadOnly)) {
-            qDebug() << "Failed to open file in ZTD:" << fileName;
-            continue;
-        }
-
-        QByteArray fileData = zipFile.readAll();
-        zipFile.close();
-
-        // in memory buffer for QSettings
-        auto buffer = std::make_unique<QBuffer>();
-        buffer->setData(fileData);
-        buffer->open(QIODevice::ReadOnly);
-
-        // auto settings = std::make_unique<QSettings>(buffer.get(), QSettings::IniFormat);
-        // transf ownership to QSettings
-        buffer.release(); 
-
-        // configFilesFound.append(std::move(settings));
     }
 
     zip.close();
