@@ -384,51 +384,36 @@ QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdF
     return configFilesFound;
 }
 
-// Get menu icon paths from ztd file
-QStringList PConfigMgr::getMenuIconPaths(const QString &ztdFilePath)
+// Get known config in ztd file with a specific path
+std::unique_ptr<QSettings> PConfigMgr::getKnownConfigInZtd(const QString &ztdFilePath, const QString &path)
 {
-    // QStringList iconPaths;
+    QuaZip zip(ztdFilePath);
+    if (!zip.open(QuaZip::mdUnzip)) {
+        qDebug() << "Failed to open ZTD file:" << zip.getZipError();
+        return nullptr;
+    }
 
-    // auto configList = PConfigMgr::getConfigInZtd(ztdFilePath);
+    QuaZipFile zipFile(&zip);
+    if (!zip.setCurrentFile(path)) {
+        qDebug() << "Failed to select file in ZTD:" << path;
+        return nullptr;
+    }
+    if (!zipFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "Failed to open file in ZTD:" << path;
+        return nullptr;
+    }
 
-    // for (const auto &config : configList)
-    // {
-    //     // scan the config for icon paths
-    //     QStringList iconGroups = { "Icon", "m/Icon" };
+    QByteArray fileData = zipFile.readAll();
+    zipFile.close();
 
-    //     for (const QString &groupName : iconGroups)
-    //     {
-    //         config->beginGroup(groupName);
-    //         QStringList keys = config->allKeys();
+    // in memory buffer for QSettings
+    auto buffer = std::make_unique<QBuffer>();
+    buffer->setData(fileData);
+    buffer->open(QIODevice::ReadOnly);
 
-    //         for (const QString &key : keys)
-    //         {
-    //             if (key.compare("Icon", Qt::CaseInsensitive) == 0)
-    //             {
-    //                 QVariant val = config->value(key);
-    //                 if (val.isValid())
-    //                 {
-    //                     // BF INI files can sometimes have duplicate keys
-    //                     // here we try to split the values by comma and add them to the list
-    //                     QStringList splitIcons = val.toStringList();
-    //                     for (const QString &icon : splitIcons)
-    //                     {
-    //                         if (!icon.isEmpty())
-    //                             iconPaths.append(icon);
-    //                     }
-    //                 }
-    //             }
-    //         }
+    // auto settings = std::make_unique<QSettings>(buffer.get(), QSettings::IniFormat);
+    // transf ownership to QSettings
+    buffer.release(); 
 
-    //         config->endGroup();
-    //     }
-    // }
-
-    // // print icon paths for debugging
-    // for (const QString &iconPath : iconPaths)
-    // {
-    //     qDebug() << "Icon path:" << iconPath;
-    // }
-
-    // return iconPaths;
+    return nullptr; // TODO: Return the settings object
 }
