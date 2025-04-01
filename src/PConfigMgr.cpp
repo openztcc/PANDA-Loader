@@ -373,11 +373,11 @@ QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdF
         buffer->setData(fileData);
         buffer->open(QIODevice::ReadOnly);
 
-        auto settings = std::make_unique<QSettings>(buffer.get(), QSettings::IniFormat);
+        // auto settings = std::make_unique<QSettings>(buffer.get(), QSettings::IniFormat);
         // transf ownership to QSettings
         buffer.release(); 
 
-        configFilesFound.append(std::move(settings));
+        // configFilesFound.append(std::move(settings));
     }
 
     zip.close();
@@ -387,48 +387,48 @@ QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdF
 // Get menu icon paths from ztd file
 QStringList PConfigMgr::getMenuIconPaths(const QString &ztdFilePath)
 {
-    QStringList iconPaths;
+    // QStringList iconPaths;
 
-    auto configList = PConfigMgr::getConfigInZtd(ztdFilePath);
+    // auto configList = PConfigMgr::getConfigInZtd(ztdFilePath);
 
-    for (const auto &config : configList)
-    {
-        // scan the config for icon paths
-        QStringList iconGroups = { "Icon", "m/Icon" };
+    // for (const auto &config : configList)
+    // {
+    //     // scan the config for icon paths
+    //     QStringList iconGroups = { "Icon", "m/Icon" };
 
-        for (const QString &groupName : iconGroups)
-        {
-            config->beginGroup(groupName);
-            QStringList keys = config->allKeys();
+    //     for (const QString &groupName : iconGroups)
+    //     {
+    //         config->beginGroup(groupName);
+    //         QStringList keys = config->allKeys();
 
-            for (const QString &key : keys)
-            {
-                if (key.compare("Icon", Qt::CaseInsensitive) == 0)
-                {
-                    QVariant val = config->value(key);
-                    if (val.isValid())
-                    {
-                        // BF INI files can sometimes have duplicate keys
-                        // here we try to split the values by comma and add them to the list
-                        QStringList splitIcons = val.toStringList();
-                        for (const QString &icon : splitIcons)
-                        {
-                            if (!icon.isEmpty())
-                                iconPaths.append(icon);
-                        }
-                    }
-                }
-            }
+    //         for (const QString &key : keys)
+    //         {
+    //             if (key.compare("Icon", Qt::CaseInsensitive) == 0)
+    //             {
+    //                 QVariant val = config->value(key);
+    //                 if (val.isValid())
+    //                 {
+    //                     // BF INI files can sometimes have duplicate keys
+    //                     // here we try to split the values by comma and add them to the list
+    //                     QStringList splitIcons = val.toStringList();
+    //                     for (const QString &icon : splitIcons)
+    //                     {
+    //                         if (!icon.isEmpty())
+    //                             iconPaths.append(icon);
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-            config->endGroup();
-        }
-    }
+    //         config->endGroup();
+    //     }
+    // }
 
-    // print icon paths for debugging
-    for (const QString &iconPath : iconPaths)
-    {
-        qDebug() << "Icon path:" << iconPath;
-    }
+    // // print icon paths for debugging
+    // for (const QString &iconPath : iconPaths)
+    // {
+    //     qDebug() << "Icon path:" << iconPath;
+    // }
 
-    return iconPaths;
+    // return iconPaths;
 }

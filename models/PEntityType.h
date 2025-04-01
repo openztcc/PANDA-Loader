@@ -7,7 +7,7 @@
 #include <memory>
 #include "../models/PIconData.h"
 
-class EntityType {
+class PEntityType {
 public:
     // Supported types
     enum Type {
@@ -31,29 +31,54 @@ public:
         Unknown
     };
 
+    enum MemberTypes {
+        Entity,
+        Unit,
+        ZTUnit,
+        Animals,
+        Scenery,
+        Building,
+        Staff,
+        Ambient,
+        ZooFences,
+        LowFence,
+        Fence,
+        HabitatFences,
+        HighFence,
+        Developer,
+        ZooGate,
+        Foliage,
+        Shelters,
+        Rocks,
+        Trash,
+        Poo,
+        Structures,
+        Toys,
+        HabitatFoliage,
+        ZooFoliage,
+        Dinosaur,
+        All,
+        Aqua,
+        ShowToys,
+    };
+
+    enum ClassType {
+        Keeper,
+        Maint,
+        Tour,
+        Helicopter,
+        Scient,
+        Trainer
+    }
+
     QString id;
-    bool color;
-    bool ncolors;
-    bool cIconZoom;
-    bool cExpansionID;
-    bool cMoveable;
-    bool cUseNumbersInName;
-    bool cUsesRealShadows;
-    bool cHasShadowImages;
-    bool cForceShadowBlack;
-    bool cDrawsLate;
-    int cHeight;
-    int cDepth;
-    bool cHasUnderwaterSection;
-    bool cIsTransparent;
-    bool cUsesPlacementCube;
-    bool cShow;
-    bool cHitThreshold;
-    bool fullpal
+    QLIst<PIconData> icons;
+    QMap<QString, QString> characteristics;
+    QMap<QString, QString> animPaths;
 
-    EntityType();
-    
-
+    static std::unique_ptr<PEntityType> load(const QSettings& settings);
+    static Type getType(const QString& path);
+    PEntityType();
 }
 
 #endif // PENTITYTYPE_H
