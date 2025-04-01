@@ -82,7 +82,8 @@ public:
     std::unique_ptr<PEntityType> load(const QSettings& settings, const QString& path);
     static Type getType(const QString& path);
 
-    void loadIcons(QMap<QString, QString>& iconAniPaths);
+    void loadAniPaths(QStringList& iconPaths);
+    void loadIconPath(QString& iconPath);
     PEntityType();
 
     // helper functions
