@@ -390,12 +390,11 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
     QStringList iconAniPaths;
 
     for (auto& file : configFiles) {
-        auto settings = file->settings.get();
-        if (!settings) continue;
+        if (!file->settings) continue;
 
         if (file->filename.endsWith(".uca")) {
-            QStringList mIcon = PConfigMgr::extractDuplicateKeys(settings->allKeys(), "m/Icon", "Icon");
-            QStringList fIcon = PConfigMgr::extractDuplicateKeys(settings->allKeys(), "f/Icon", "Icon");
+            QStringList mIcon = PConfigMgr::extractDuplicateKeys(std::move(file->settings), "m/Icon", "Icon");
+            QStringList fIcon = PConfigMgr::extractDuplicateKeys(std::move(file->settings), "f/Icon", "Icon");
 
             if (!mIcon.isEmpty()) {
                 iconAniPaths.append(mIcon);
@@ -406,7 +405,7 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
             }
 
         } else if (file->filename.endsWith(".ucb") || file->filename.endsWith(".ucs")) {
-            QStringList icons = PConfigMgr::extractDuplicateKeys(settings->allKeys(), "Icon", "Icon");
+            QStringList icons = PConfigMgr::extractDuplicateKeys(std::move(file->settings), "Icon", "Icon");
             if (!icons.isEmpty()) {
                 iconAniPaths.append(icons);
             }
@@ -424,7 +423,7 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
 // @group: the group to search for duplicate keys
 // @key: the key to search for duplicate values
 // @return: a QStringList of duplicate values
-QStringList PConfigMgr::extractDuplicateKeys(const QByteArray& iniData, const QString& group, const QString& key)
+QStringList PConfigMgr::extractDuplicateKeys(std::unique_ptr<QSettings> iniData, const QString& group, const QString& key)
 {
     QStringList matches;
     QTextStream stream(iniData);

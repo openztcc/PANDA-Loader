@@ -60,5 +60,6 @@ private:
 
     // helper functions
     static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);
+    static QStringList extractDuplicateKeys(std::unique_ptr<QSettings> iniData, const QString& group, const QString& key);
 };
 #endif // PCONFIGMGR_H
