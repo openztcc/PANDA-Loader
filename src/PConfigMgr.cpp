@@ -442,16 +442,20 @@ QStringList PConfigMgr::extractDuplicateKeys(const QByteArray& rawData, const QS
         QString line = stream.readLine().trimmed();
 
         if (line.startsWith("[") && line.endsWith("]")) {
-            inGroup = (line.mid(1, line.length() - 2).trimmed() == group);
+            QString currentGroup = line.mid(1, line.length() - 2).trimmed();
+            inGroup = (currentGroup.compare(group, Qt::CaseInsensitive) == 0);
             continue;
         }
 
-        if (inGroup && line.startsWith(key + "=", Qt::CaseInsensitive)) {
+        if (inGroup && line.startsWith(key, Qt::CaseInsensitive)) {
             QString value = line.section('=', 1).trimmed();
-            matches << value;
+            if (!value.isEmpty()) {
+                matches << value;
+            }
         }
     }
 
     return matches;
 }
+
 
