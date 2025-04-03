@@ -318,7 +318,7 @@ std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getAllConfigInZtd(
 
         // store files in a list
         for (const auto& file : files) {
-            auto iniData = byteArrayToIniData(file.data);
+            auto iniData = byteArrayToIniData(file);
             configFilesFound.push_back(std::make_unique<PConfigMgr::IniData>(std::move(iniData)));
         }
     }
@@ -328,7 +328,7 @@ std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getAllConfigInZtd(
 
 
 // Convert byte array to QSettings object
-PConfigMgr::IniData PConfigMgr::byteArrayToIniData(const QByteArray& data)
+PConfigMgr::IniData PConfigMgr::byteArrayToIniData(const PZtdMgr::FileData& data)
 {
     // write data to temp file
     QTemporaryFile tempFile;
@@ -336,7 +336,7 @@ PConfigMgr::IniData PConfigMgr::byteArrayToIniData(const QByteArray& data)
         qWarning() << "Failed to open temporary file for INI data.";
         return {};
     }
-    tempFile.write(data);
+    tempFile.write(data.data);
     tempFile.flush();
 
     // make qsettings from the temp file
@@ -344,9 +344,14 @@ PConfigMgr::IniData PConfigMgr::byteArrayToIniData(const QByteArray& data)
 
     PConfigMgr::IniData iniData;
     iniData.settings = std::move(settings);
-    iniData.filename = QFileInfo(tempFile.fileName()).fileName();
-    iniData.path = tempFile.fileName();
+    iniData.filename = data.filename;
+    iniData.path = data.path;
 
+    // close the temp file
+    tempFile.close();
+
+    // remove the temp file
+    QFile::remove(tempFile.fileName());
     return iniData;
 }
 

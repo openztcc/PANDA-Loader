@@ -54,6 +54,6 @@ private:
     QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
 
     // helper functions
-    static PConfigMgr::IniData byteArrayToIniData(const QByteArray &data);
+    static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);
 };
 #endif // PCONFIGMGR_H
