@@ -306,11 +306,42 @@ bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
 }
 
 // Get config from ztd file
-QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
+// TODO: add validation for config files
+QList<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getAllConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
 {
     QStringList validExtensions = { ".uca", ".ucb", ".ucs", ".ai", ".scn", ".cfg", ".ani" };
     QList<std::unique_ptr<QSettings>> configFilesFound;
 
-    // zip.close();
+    for (const QString ext : validExtensions) {
+        // Get all config files in ztd
+        QList<PZtdMgr::FileData> files = PZtdMgr::getFilesInZtd(ztdFilePath, ext);
+        for (const auto &file : files) {
+            // convert byte array to QSettings object
+            QByteArray fileData = file.data;
+            PConfigMgr::IniData iniData = byteArrayToIniData(fileData);
+            configFilesFound.append(std::make_unique<PConfigMgr::IniData>(iniData));
+        }
+    }
+
     return configFilesFound;
+}
+
+// Convert byte array to QSettings object
+QConfigMgr::IniData PConfigMgr::byteArrayToIniData(const QByteArray &data)
+{
+    // Create a QBuffer to read the byte array
+    QBuffer buffer;
+    buffer.setData(data);
+    buffer.open(QIODevice::ReadOnly);
+
+    // Create a QSettings object from the buffer
+    QSettings settings(&buffer, QSettings::IniFormat);
+
+    // Create IniData object and set the settings
+    IniData iniData;
+    iniData.settings = new QSettings(settings);
+    iniData.filename = settings.fileName();
+    iniData.path = settings.filePath();
+
+    return iniData;
 }

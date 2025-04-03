@@ -165,29 +165,29 @@ add_custom_command(TARGET testZtdMgr POST_BUILD
     ${CMAKE_BINARY_DIR}/test_data
 )
 
-# # ------------- PTestConfigMgr -------------
-# qt_add_executable(testConfigMgr
-#     tests/PTestConfigMgr.cpp
-#     PConfigMgr.h PConfigMgr.cpp
-#     PZtdMgr.h PZtdMgr.cpp
-# )
+# ------------- PTestConfigMgr -------------
+qt_add_executable(testConfigMgr
+    tests/PTestConfigMgr.cpp
+    src/PConfigMgr.h src/PConfigMgr.cpp
+    src/PZtdMgr.h src/PZtdMgr.cpp
+)
 
-# # link the required libraries
-# target_link_libraries(testConfigMgr
-#     PRIVATE
-#         Qt6::Test
-#         Qt6::Core
-#         Qt6::Sql
-#         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
-#         tomlplusplus
-# )
+# link the required libraries
+target_link_libraries(testConfigMgr
+    PRIVATE
+        Qt6::Test
+        Qt6::Core
+        Qt6::Sql
+        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+        tomlplusplus
+)
 
-# # add test data as resource
-# add_custom_command(TARGET testConfigMgr POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy_directory
-#     ${CMAKE_SOURCE_DIR}/tests/test_data
-#     ${CMAKE_BINARY_DIR}/test_data
-# )
+# add test data as resource
+add_custom_command(TARGET testConfigMgr POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/test_data
+    ${CMAKE_BINARY_DIR}/test_data
+)
 
 # # ------------- PTestDatabaseMgr -------------
 # qt_add_executable(testDatabaseMgr

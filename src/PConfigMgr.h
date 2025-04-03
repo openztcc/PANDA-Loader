@@ -43,7 +43,7 @@ private:
     QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
 
     // helper functions
-    static QList<PZtdMgr::FileData> getAllConfigInZtd(const QString &ztdFilePath, const QString &ext = "", const QString &entityType = "");
+    static QList<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath, const QString &ext = "", const QString &entityType = "");
     static PConfigMgr::IniData byteArrayToIniData(const QByteArray &data);
 };
 #endif // PCONFIGMGR_H
