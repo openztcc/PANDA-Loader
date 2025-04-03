@@ -10,7 +10,7 @@ std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const 
     }
 
     // set path
-    this->ztdPath = path;
+    ztdPath.append(path);
 
     auto entityType = std::make_unique<PEntityType>();
 
@@ -198,3 +198,4 @@ void PEntityType::loadIconPath(QString& iconPath) {
         this->icons.push_back(icon);
     }
 }
+

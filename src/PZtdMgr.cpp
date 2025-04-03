@@ -422,3 +422,75 @@ bool PZtdMgr::removeFileFromDir(const QString &file)
     // Remove the file
     return QFile::remove(file);
 }
+
+// Gets a list of files in a ztd file with a specific extension and level
+QList<QByteArray> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, const QString &ext, int maxLevel, const QStringList &folderList, QuaZip *zip)
+{
+    QList<QByteArray> filesFound;
+    bool createdZip = false;
+
+    if (!zip) {
+        zip = new QuaZip(ztdFilePath);
+        createdZip = true;
+
+        if (!zip->open(QuaZip::mdUnzip)) {
+            qDebug() << "Failed to open ZTD file for extraction: " << zip->getZipError();
+            delete zip;
+            return filesFound;
+        }
+
+        // get filenames
+        QStringList rootEntries;
+        QuaZipFileInfo info;
+        QuaZipFile file(zip);
+        for (bool more = zip->goToFirstFile(); more; more = zip->goToNextFile()) {
+            zip->getCurrentFileInfo(&info);
+            rootEntries << info.name;
+        }
+
+        filesFound.append(getFilesInZtd(ztdFilePath, ext, maxLevel, rootEntries, zip));
+
+        if (createdZip) {
+            zip->close();
+            delete zip;
+        }
+        return filesFound;
+    }
+
+    if (maxLevel > 0) {
+        QStringList subFolders;
+
+        for (const QString &entry : folderList) {
+            if (!entry.endsWith("/")) {
+                // found file, check if it matches the extension
+                if (entry.endsWith(ext)) {
+                    QuaZipFile zipFile(zip);
+                    if (!zip->setCurrentFile(entry)) continue;
+
+                    if (!zipFile.open(QIODevice::ReadOnly)) continue;
+
+                    QByteArray fileData = zipFile.readAll();
+                    filesFound.append(fileData);
+                    zipFile.close();
+                }
+            } else {
+                // if folder, get all files in the folder
+                for (bool more = zip->goToFirstFile(); more; more = zip->goToNextFile()) {
+                    QuaZipFileInfo info;
+                    zip->getCurrentFileInfo(&info);
+
+                    if (info.name.startsWith(entry) && info.name != entry) {
+                        subFolders << info.name;
+                    }
+                }
+            }
+        }
+
+        if (!subFolders.isEmpty()) {
+            filesFound.append(getFilesInZtd(ztdFilePath, ext, maxLevel - 1, subFolders, zip));
+        }
+    }
+
+    return filesFound;
+}
+
