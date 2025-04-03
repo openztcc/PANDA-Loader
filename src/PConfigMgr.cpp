@@ -360,11 +360,16 @@ PConfigMgr::IniData PConfigMgr::byteArrayToIniData(const PZtdMgr::FileData& data
 // TODO: add extension validation (only ucb, uca, ucs, ai)
 std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getCoreConfigInZtd(const QString &ztdFilePath)
 {
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> configFiles = getAllConfigInZtd(ztdFilePath);
+    return getCoreConfigInZtd(configFiles);
+}
+
+// Get the core config files from a ztd file
+std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getCoreConfigInZtd(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles)
+{
     std::vector<std::unique_ptr<PConfigMgr::IniData>> coreConfigFiles;
     QStringList validRootFolders = { "animals", "scenery" };
     QStringList validSceneryFolders = { "buildings", "food", "other" };
-    // Get the core config files from the ztd file
-    std::vector<std::unique_ptr<PConfigMgr::IniData>> configFiles = getAllConfigInZtd(ztdFilePath);
 
     // Filter the config files to only include core configs
     for (auto& file : configFiles) {
@@ -384,6 +389,7 @@ std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getCoreConfigInZtd
 
     return coreConfigFiles;
 }
+
 
 // Get the icon animation paths from a ztd file
 QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles)

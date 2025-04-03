@@ -53,6 +53,9 @@ public:
     // asset configuration operations
     static std::vector<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath);
     static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(const QString &ztdFilePath);
+    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
+    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getIconAniConfigInZtd(const QString &ztdFilePath);
+    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getIconAniConfigInZtd(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
     static QStringList getIconAniPaths(const QString &ztdFilePath);
     static QStringList getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
     static QStringList getCodenamesInZtd(const QString &ztdFilePath);
