@@ -493,3 +493,32 @@ std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getIconAniConfigIn
     return iconAniConfigFiles;
 }
 
+// Get the paths to the icons from the icon animation config files
+QStringList PConfigMgr::getIconPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &aniFiles)
+{
+    QStringList iconPaths;
+
+    for (auto& file : aniFiles) {
+        if (!file->settings) continue;
+
+        settings.beginGroup("animation");
+        QStringList dirs;
+        QStringList keys = settings.childKeys();
+        for (const QString& key : keys) {
+            if (key.startsWith("dir") || key == "animation") {
+                dirs.append(settings.value(key).toString());
+            }
+        }
+        settings.endGroup();
+    }
+
+    return iconPaths;
+}
+
+// Overloaded function to get icon paths from a ztd file
+QStringList PConfigMgr::getIconPaths(const QString &ztdFilePath)
+{
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> aniFiles = getIconAniConfigInZtd(ztdFilePath);
+    return getIconPaths(aniFiles);
+}
+

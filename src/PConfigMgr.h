@@ -58,7 +58,8 @@ public:
     static std::vector<std::unique_ptr<PConfigMgr::IniData>> getIconAniConfigInZtd(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
     static QStringList getIconAniPaths(const QString &ztdFilePath);
     static QStringList getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
-    static QStringList getCodenamesInZtd(const QString &ztdFilePath);
+    static QStringList getIconPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &aniFiles);
+    static QStringList getIconPaths(const QString &ztdFilePath);
 private:
     QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
 
