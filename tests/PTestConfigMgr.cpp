@@ -274,7 +274,7 @@ void PTestConfigMgr::testGetIconAniPaths_data()
     QTest::addColumn<bool>("expected");
 
     QTest::newRow("ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
-    QTest::newRow("uca ztd") << testDataDir + "getfile_valid_uca" << true;
+    QTest::newRow("uca ztd") << testDataDir + "getfile_valid_uca.ztd" << true;
     QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
 }
 
