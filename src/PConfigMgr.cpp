@@ -346,6 +346,7 @@ PConfigMgr::IniData PConfigMgr::byteArrayToIniData(const PZtdMgr::FileData& data
     iniData.settings = std::move(settings);
     iniData.filename = data.filename;
     iniData.path = data.path;
+    iniData.rawData = data.data;
 
     // close the temp file
     tempFile.close();
@@ -393,8 +394,8 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
         if (!file->settings) continue;
 
         if (file->filename.endsWith(".uca")) {
-            QStringList mIcon = PConfigMgr::extractDuplicateKeys(std::move(file->settings), "m/Icon", "Icon");
-            QStringList fIcon = PConfigMgr::extractDuplicateKeys(std::move(file->settings), "f/Icon", "Icon");
+            QStringList mIcon = PConfigMgr::extractDuplicateKeys(file->rawData, "m/Icon", "Icon");
+            QStringList fIcon = PConfigMgr::extractDuplicateKeys(file->rawData, "f/Icon", "Icon");
 
             if (!mIcon.isEmpty()) {
                 iconAniPaths.append(mIcon);
@@ -405,7 +406,7 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
             }
 
         } else if (file->filename.endsWith(".ucb") || file->filename.endsWith(".ucs")) {
-            QStringList icons = PConfigMgr::extractDuplicateKeys(std::move(file->settings), "Icon", "Icon");
+            QStringList icons = PConfigMgr::extractDuplicateKeys(file->rawData, "Icon", "Icon");
             if (!icons.isEmpty()) {
                 iconAniPaths.append(icons);
             }
@@ -431,23 +432,17 @@ QStringList PConfigMgr::getIconAniPaths(const QString &ztdFilePath)
 // @group: the group to search for duplicate keys
 // @key: the key to search for duplicate values
 // @return: a QStringList of duplicate values
-QStringList PConfigMgr::extractDuplicateKeys(std::unique_ptr<QSettings> iniData, const QString& group, const QString& key)
+QStringList PConfigMgr::extractDuplicateKeys(const QByteArray& rawData, const QString& group, const QString& key)
 {
     QStringList matches;
-    if (!iniData) {
-        return matches; // Return empty list if iniData is null
-    }
-    QBuffer buffer;
-    buffer.setData(iniData->fileName().toUtf8());
-    buffer.open(QIODevice::ReadOnly);
-    QTextStream stream(&buffer);
+    QTextStream stream(rawData);
     bool inGroup = false;
 
     while (!stream.atEnd()) {
         QString line = stream.readLine().trimmed();
 
         if (line.startsWith("[") && line.endsWith("]")) {
-            inGroup = (line.mid(1, line.length() - 2) == group);
+            inGroup = (line.mid(1, line.length() - 2).trimmed() == group);
             continue;
         }
 
@@ -459,3 +454,4 @@ QStringList PConfigMgr::extractDuplicateKeys(std::unique_ptr<QSettings> iniData,
 
     return matches;
 }
+
