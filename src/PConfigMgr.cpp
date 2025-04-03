@@ -450,3 +450,33 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
 
     return iconAniPaths;
 }
+
+// INI files by default are not allowed to have duplicate keys; blue fang
+// config files tend to have duplicate keys in the same group
+// This function extracts the duplicate keys from the INI data
+// @iniData: the INI data as a QByteArray
+// @group: the group to search for duplicate keys
+// @key: the key to search for duplicate values
+// @return: a QStringList of duplicate values
+QStringList PConfigMgr::extractDuplicateKeys(const QByteArray& iniData, const QString& group, const QString& key)
+{
+    QStringList matches;
+    QTextStream stream(iniData);
+    bool inGroup = false;
+
+    while (!stream.atEnd()) {
+        QString line = stream.readLine().trimmed();
+
+        if (line.startsWith("[") && line.endsWith("]")) {
+            inGroup = (line.mid(1, line.length() - 2) == group);
+            continue;
+        }
+
+        if (inGroup && line.startsWith(key + "=", Qt::CaseInsensitive)) {
+            QString value = line.section('=', 1).trimmed();
+            matches << value;
+        }
+    }
+
+    return matches;
+}
