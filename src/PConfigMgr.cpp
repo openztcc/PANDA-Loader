@@ -307,41 +307,46 @@ bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
 
 // Get config from ztd file
 // TODO: add validation for config files
-QList<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getAllConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
+std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getAllConfigInZtd(const QString &ztdFilePath)
 {
     QStringList validExtensions = { ".uca", ".ucb", ".ucs", ".ai", ".scn", ".cfg", ".ani" };
-    QList<std::unique_ptr<QSettings>> configFilesFound;
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> configFilesFound;
 
-    for (const QString ext : validExtensions) {
-        // Get all config files in ztd
+    // grab files for every valid extension
+    for (const QString& ext : validExtensions) {
         QList<PZtdMgr::FileData> files = PZtdMgr::getFilesInZtd(ztdFilePath, ext);
-        for (const auto &file : files) {
-            // convert byte array to QSettings object
-            QByteArray fileData = file.data;
-            PConfigMgr::IniData iniData = byteArrayToIniData(fileData);
-            configFilesFound.append(std::make_unique<PConfigMgr::IniData>(iniData));
+
+        // store files in a list
+        for (const auto& file : files) {
+            auto iniData = byteArrayToIniData(file.data);
+            configFilesFound.push_back(std::make_unique<PConfigMgr::IniData>(std::move(iniData)));
         }
     }
 
     return configFilesFound;
 }
 
+
 // Convert byte array to QSettings object
-QConfigMgr::IniData PConfigMgr::byteArrayToIniData(const QByteArray &data)
+PConfigMgr::IniData PConfigMgr::byteArrayToIniData(const QByteArray& data)
 {
-    // Create a QBuffer to read the byte array
-    QBuffer buffer;
-    buffer.setData(data);
-    buffer.open(QIODevice::ReadOnly);
+    // write data to temp file
+    QTemporaryFile tempFile;
+    if (!tempFile.open()) {
+        qWarning() << "Failed to open temporary file for INI data.";
+        return {};
+    }
+    tempFile.write(data);
+    tempFile.flush();
 
-    // Create a QSettings object from the buffer
-    QSettings settings(&buffer, QSettings::IniFormat);
+    // make qsettings from the temp file
+    auto settings = std::make_unique<QSettings>(tempFile.fileName(), QSettings::IniFormat);
 
-    // Create IniData object and set the settings
-    IniData iniData;
-    iniData.settings = new QSettings(settings);
-    iniData.filename = settings.fileName();
-    iniData.path = settings.filePath();
+    PConfigMgr::IniData iniData;
+    iniData.settings = std::move(settings);
+    iniData.filename = QFileInfo(tempFile.fileName()).fileName();
+    iniData.path = tempFile.fileName();
 
     return iniData;
 }
+

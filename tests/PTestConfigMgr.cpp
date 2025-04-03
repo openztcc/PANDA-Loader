@@ -1,5 +1,5 @@
 #include <QtTest/QtTest>
-#include "../PConfigMgr.h"
+#include "../src/PConfigMgr.h"
 
 class PTestConfigMgr : public QObject
 {
@@ -19,6 +19,8 @@ private slots:
     // void testUpdateZooIniConfig();
     // void testRemoveZooIniConfig_data();
     // void testRemoveZooIniConfig();
+    void testGetAllConfigInZtd_data();
+    void testGetAllConfigInZtd();
 };
 
 // Statics
@@ -185,6 +187,43 @@ void PTestConfigMgr::testRemoveMetaConfig()
     if (expected) {
         toml::table config = PConfigMgr::getMetaConfig(ztdFilePath);
         QVERIFY(config.empty());
+    }
+}
+
+void PTestConfigMgr::testGetAllConfigInZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("valid ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetAllConfigInZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get all config files in ztd
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> configFiles = PConfigMgr::getAllConfigInZtd(ztdFilePath);
+
+    qDebug() << "Config files found:" << configFiles.size();
+    for (const auto &file : configFiles) {
+        qDebug() << "File:" << file->filename << file->path;
+        if (file->settings) {
+            qDebug() << "Settings:" << file->settings->fileName();
+        } else {
+            qDebug() << "Settings: nullptr";
+        }
+    }
+
+    if (expected) {
+        QVERIFY(!configFiles.empty());
+        for (const auto &file : configFiles) {
+            QVERIFY(file->settings != nullptr);
+        }
+    } else {
+        QVERIFY(configFiles.empty());
     }
 }
 

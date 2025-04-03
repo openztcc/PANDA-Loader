@@ -8,6 +8,7 @@
 #include <QBuffer>
 #include <QIODevice>
 #include "../models/PEntityType.h"
+#include <QtCore>
 
 class PConfigMgr
 {
@@ -17,7 +18,16 @@ public:
     struct IniData {
         QString filename;
         QString path;
-        QSettings *settings = nullptr;
+        std::unique_ptr<QSettings> settings;
+
+        IniData() = default;
+
+        // operator overloads
+        IniData(const IniData&) = delete;
+        IniData& operator=(const IniData&) = delete;
+
+        IniData(IniData&&) = default;
+        IniData& operator=(IniData&&) = default;
     };
 
     PConfigMgr();
@@ -37,13 +47,13 @@ public:
     bool readPandaConfig(const QString &filePath, toml::table &config);
 
     // misc config
+    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath);
     static QStringList getMenuIconPaths(const QString &ztdFilePath);
     static QStringList getCodenamesInZtd(const QString &ztdFilePath);
 private:
     QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
 
     // helper functions
-    static QList<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath, const QString &ext = "", const QString &entityType = "");
     static PConfigMgr::IniData byteArrayToIniData(const QByteArray &data);
 };
 #endif // PCONFIGMGR_H

@@ -215,5 +215,5 @@ add_custom_command(TARGET testConfigMgr POST_BUILD
 # )
 
 add_test(NAME testZtdMgr COMMAND testZtdMgr)
-# add_test(NAME testConfigMgr COMMAND testConfigMgr)
+add_test(NAME testConfigMgr COMMAND testConfigMgr)
 # add_test(NAME testDatabaseMgr COMMAND testDatabaseMgr)
