@@ -79,7 +79,7 @@ public:
     QMap<QString, QString> iconAniPaths;
 
     void load(QSettings& settings, const QString& path);
-    static Type getType(const QString& path);
+    static PEntityType::Type getType(const QString& path);
 
     void loadAniPaths(QStringList& iconPaths);
     void loadIconPath(QString& iconPath);

@@ -87,7 +87,7 @@ void PEntityType::load(QSettings& settings, const QString& path) {
 // ZTUnits don't have a member type but have [Global] section with Class = Type
 // - Class = staff - Keeper, Maint, Tour, Helicopter, Scientist
 // - Class = animals - For animals, Type usually is the entity id as well
-Type PEntityType::getType (const QString& path) {
+PEntityType::Type PEntityType::getType (const QString& path) {
     if (path.contains("animal")) {
         return Type::Animal;
     } else if (path.contains("scenery")) {
@@ -117,82 +117,41 @@ QString PEntityType::determineViewFromPath(const QString& aniPath) {
 
 // Finalize the icon paths using the .ani paths
 void PEntityType::loadAniPaths(QStringList& iconPaths) {
-    // get all "Icon" keys
-    for (const QString& iconPath : iconPaths) {
-        if (iconPath.compare("Icon", Qt::CaseInsensitive) == 0) {
-            // get the ani path
-            QString aniPath = settings.value(iconPath).toString();
-            QVariant value = settings.value(iconPath);
-            
-            if (value.type() == QVariant::StringList) {
-                QStringList aniPaths = value.toStringList();
-                for (const QString& aniPath : aniPaths) {
-                    if (!aniPath.isEmpty()) {
-                        bool pathsFinalized = false;
-
-                        if (aniPath.contains(".tga")) {
-                            pathsFinalized = true;
-                        }
-
-                        // populate icon struct
-                        PEntityType::loadIconPath(aniPath);
-
-                    } else {
-                        qDebug() << "Icon .ani path is empty for:" << path;
-                    }
-                }
-            } else {
-                // if it's not a list, just add the single icon
-                if (!aniPath.isEmpty()) {
-                    bool pathsFinalized = false;
-
-                    if (aniPath.contains(".tga")) {
-                        pathsFinalized = true;
-                    }
-
-                    // populate icon struct
-                    PEntityType::loadIconPath(aniPath);
-                } else {
-                    qDebug() << "Icon .ani path is empty for:" << path;
-                }
-            }
-        } 
-    }
-    
+//
 }
 
 // Load the icon paths from the ani paths
 void PEntityType::loadIconPath(QString& iconPath) {
-    // get view i.e NE, NW, SE, SW
-    QString view = PEntityType::determineViewFromPath(iconPath);
+    // // get view i.e NE, NW, SE, SW
+    // QString view = PEntityType::determineViewFromPath(iconPath);
 
-    // get the config from path
-    std::unique_ptr<QSettings> config = PConfigMgr::getKnownConfigInZtd(ztdpath, iconPath + ".ani");
+    // // get the config from path
+    // std::unique_ptr<QSettings> config = PConfigMgr::getKnownConfigInZtd(ztdpath, iconPath + ".ani");
 
-    config.get()->beginGroup("animation");
-    // check if id is set
-    if (this->id.isEmpty() || this->id == "") {
-        this->id = config.get()->value("dir1").toString();
-    }
+    // config.get()->beginGroup("animation");
+    // // check if id is set
+    // if (this->id.isEmpty() || this->id == "") {
+    //     this->id = config.get()->value("dir1").toString();
+    // }
 
-    // get finalized graphics paths
-    QString dir0 = config.get()->value("dir0").toString();
-    QString dir1 = config.get()->value("dir1").toString();
-    QString dir2 = config.get()->value("dir2").toString();
-    QString animation = config.get()->value("animation").toString();
-    QString aniPath = dir0 + "/" + dir1 + "/" + dir2 + "/" + animation;
+    // // get finalized graphics paths
+    // QString dir0 = config.get()->value("dir0").toString();
+    // QString dir1 = config.get()->value("dir1").toString();
+    // QString dir2 = config.get()->value("dir2").toString();
+    // QString animation = config.get()->value("animation").toString();
+    // QString aniPath = dir0 + "/" + dir1 + "/" + dir2 + "/" + animation;
 
-    // check if ani path is empty
-    if (aniPath.isEmpty()) {
-        qDebug() << "Ani path is empty for:" << iconPath;
-    } else {
-        // add the ani path to the list of icon ani paths
-        PIconData icon;
-        icon.id = this->id;
-        icon.resolvedPath = aniPath;
-        icon.aniPath = aniPath;
-        icon.isResolved = true;
-        this->icons.push_back(icon);
-    }
+    // // check if ani path is empty
+    // if (aniPath.isEmpty()) {
+    //     qDebug() << "Ani path is empty for:" << iconPath;
+    // } else {
+    //     // add the ani path to the list of icon ani paths
+    //     PIconData icon;
+    //     icon.id = this->id;
+    //     icon.resolvedPath = aniPath;
+    //     icon.aniPath = aniPath;
+    //     icon.isResolved = true;
+    //     this->icons.push_back(icon);
+    // }
 }
 

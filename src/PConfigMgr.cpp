@@ -306,84 +306,84 @@ bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
 }
 
 // Get config from ztd file
-QList<std::unique_ptr<PEntityType>> PConfigMgr::getConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
+QList<std::unique_ptr<QSettings>> PConfigMgr::getConfigInZtd(const QString &ztdFilePath, const QString &ext, const QString &entityType)
 {
     QStringList validFolders = { "scenery", "animals" };
     QStringList validExtensions = { ".uca", ".ucb", ".ucs", ".ai", ".scn", ".cfg", ".ani" };
-    QList<std::unique_ptr<PEntityType>> configFilesFound;
+    QList<std::unique_ptr<QSettings>> configFilesFound;
 
     QStringList folderFilter = entityType.isEmpty() ? validFolders : QStringList{ entityType };
     QStringList extensionFilter = ext.isEmpty() ? validExtensions : QStringList{ ext };
 
-    // Validate input
-    if (!ext.isEmpty() && !validExtensions.contains(ext, Qt::CaseInsensitive)) {
-        qDebug() << "Invalid file extension:" << ext;
-        return configFilesFound;
-    }
-    if (!entityType.isEmpty() && !validFolders.contains(entityType, Qt::CaseInsensitive)) {
-        qDebug() << "Invalid folder name:" << entityType;
-        return configFilesFound;
-    }
+    // // Validate input
+    // if (!ext.isEmpty() && !validExtensions.contains(ext, Qt::CaseInsensitive)) {
+    //     qDebug() << "Invalid file extension:" << ext;
+    //     return configFilesFound;
+    // }
+    // if (!entityType.isEmpty() && !validFolders.contains(entityType, Qt::CaseInsensitive)) {
+    //     qDebug() << "Invalid folder name:" << entityType;
+    //     return configFilesFound;
+    // }
 
-    QuaZip zip(ztdFilePath);
-    if (!zip.open(QuaZip::mdUnzip)) {
-        qDebug() << "Failed to open ZTD file:" << zip.getZipError();
-        return configFilesFound;
-    }
+    // QuaZip zip(ztdFilePath);
+    // if (!zip.open(QuaZip::mdUnzip)) {
+    //     qDebug() << "Failed to open ZTD file:" << zip.getZipError();
+    //     return configFilesFound;
+    // }
 
-    QStringList fileList = zip.getFileNameList();
-    QuaZipFile zipFile(&zip);
+    // QStringList fileList = zip.getFileNameList();
+    // QuaZipFile zipFile(&zip);
 
-    // Root level folders: animals, scenery, objects, freeform, etc.
-    for (const QString &fileName : fileList) {
-        // Only look at valid folders
-        auto validFolder = folderFilter.contains(QFileInfo(fileName).dir().dirName(), Qt::CaseInsensitive);
-        if (!fileName.endsWith("/") && validFolder) {
-            // First level folders are named after the project IDs
-            // Get list of fildes inside this folder
-            QStringList projectFolders = zip.getFileNameList(fileName);
-            for (const QString &projectFolder : projectFolders) {
-                // Second level folders contain ucb, ai, uca, ucs files
-                QStringList projectFiles = zip.getFileNameList(projectFolder);
+    // // Root level folders: animals, scenery, objects, freeform, etc.
+    // for (const QString &fileName : fileList) {
+    //     // Only look at valid folders
+    //     auto validFolder = folderFilter.contains(QFileInfo(fileName).dir().dirName(), Qt::CaseInsensitive);
+    //     if (!fileName.endsWith("/") && validFolder) {
+    //         // First level folders are named after the project IDs
+    //         // Get list of fildes inside this folder
+    //         QStringList projectFolders = zip.getFileNameList();
+    //         for (const QString &projectFolder : projectFolders) {
+    //             // Second level folders contain ucb, ai, uca, ucs files
+    //             QStringList projectFiles = zip.getFileNameList();
 
-                // Scan these files for valid extensions. There should only be one.
-                for (const QString &projectFile : projectFiles) {
-                    // Check if the file has a valid extension
-                    auto hasValidExtension = validExtensions.contains(QFileInfo(projectFile).suffix(), Qt::CaseInsensitive);
-                    if (hasValidExtension) {
-                        // Open the file and read it into a QSettings object
-                        if (!zip.setCurrentFile(projectFile)) {
-                            qDebug() << "Failed to select file in ZTD:" << projectFile;
-                            continue;
-                        }
-                        if (!zipFile.open(QIODevice::ReadOnly)) {
-                            qDebug() << "Failed to open file in ZTD:" << projectFile;
-                            continue;
-                        }
+    //             // Scan these files for valid extensions. There should only be one.
+    //             for (const QString &projectFile : projectFiles) {
+    //                 // Check if the file has a valid extension
+    //                 auto hasValidExtension = validExtensions.contains(QFileInfo(projectFile).suffix(), Qt::CaseInsensitive);
+    //                 if (hasValidExtension) {
+    //                     // Open the file and read it into a QSettings object
+    //                     if (!zip.setCurrentFile(projectFile)) {
+    //                         qDebug() << "Failed to select file in ZTD:" << projectFile;
+    //                         continue;
+    //                     }
+    //                     if (!zipFile.open(QIODevice::ReadOnly)) {
+    //                         qDebug() << "Failed to open file in ZTD:" << projectFile;
+    //                         continue;
+    //                     }
 
-                        QByteArray fileData = zipFile.readAll();
-                        zipFile.close();
+    //                     QByteArray fileData = zipFile.readAll();
+    //                     zipFile.close();
 
-                        // load ini file into QSettings
-                        auto buffer = std::make_unique<QBuffer>();
-                        buffer->setData(fileData);
-                        buffer->open(QIODevice::ReadOnly);
-                        auto settings = std::make_unique<QSettings>(buffer.get(), QSettings::IniFormat);
-                        buffer.release(); // transfer ownership to QSettings
+    //                     // load ini file into QSettings
+    //                     auto buffer = std::make_unique<QBuffer>();
+    //                     buffer->setData(fileData);
+    //                     buffer->open(QIODevice::ReadOnly);
+    //                     auto settings = std::make_unique<QSettings>();
+    //                     buffer.release(); // transfer ownership to QSettings
 
-                        PEntityType entity;
-                        entity.load(*settings, projectFile);
+    //                     // QSettings entity;
+    //                     // entity.load(*settings, projectFile);
 
-                        // create pointer to entity type and add to list
-                        auto entityTypePtr = std::make_unique<PEntityType>(entity);
-                        configFilesFound.append(std::move(entityTypePtr));
-                    }
-                }
-            }
-        }
-    }
+    //                     // // create pointer to entity type and add to list
+    //                     // auto entityTypePtr = std::make_unique<QSettings>(entity);
+    //                     // configFilesFound.append(std::move(entityTypePtr));
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-    zip.close();
+    // zip.close();
     return configFilesFound;
 }
 

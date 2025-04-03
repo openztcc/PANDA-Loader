@@ -1,5 +1,5 @@
 #include <QtTest/QtTest>
-#include "../PZtdMgr.h"
+#include "../src/PZtdMgr.h"
 
 class PTestZtdMgr : public QObject
 {
@@ -17,6 +17,9 @@ private slots:
     void testCopyZtdFile();
     void testOpenFileInZtd_data();
     void testOpenFileInZtd();
+    // abstracts
+    void testGetFilesInZtd_data();
+    void testGetFilesInZtd();
 };
 
 // Statics
@@ -293,6 +296,46 @@ void PTestZtdMgr::testOpenFileInZtd()
     if (expectedResult) {
         QVERIFY(!fileData.isEmpty());
     }
+}
+
+void PTestZtdMgr::testGetFilesInZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<QString>("ext");
+    QTest::addColumn<int>("maxLevel");
+    QTest::addColumn<QStringList>("folderList");
+    QTest::addColumn<bool>("expectedResult");
+
+    // Test case 1: Valid ztd file and valid extension
+    QTest::newRow("valid ztd and ext") << testDataDir + "getfile_valid.ztd" << ".ucs" << 3 << QStringList() << true;
+
+    // Test case 2: Valid ztd file and invalid extension
+    QTest::newRow("valid ztd and invalid ext") << testDataDir + "getfile_valid.ztd" << ".ucb" << 3 << QStringList() << false;
+
+    // Test case 3: Non-existent ztd file
+    QTest::newRow("non-existent ztd file") << testDataDir + "getfile_valid.ztd" << ".ani" << 3 << QStringList() << false;
+}
+
+void PTestZtdMgr::testGetFilesInZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(QString, ext);
+    QFETCH(int, maxLevel);
+    QFETCH(QStringList, folderList);
+    QFETCH(bool, expectedResult);
+
+    // Run the function
+    QList<PZtdMgr::FileData> files = PZtdMgr::getFilesInZtd(ztdFilePath, ext, maxLevel, folderList);
+
+    qDebug() << "Files found:" << files.size();
+    for (const auto& file : files) {
+        qDebug() << "File:" << file.filename << file.ext;
+        qDebug() << "Path:" << file.path;
+        qDebug() << "Data:" << file.data.size() << "bytes";
+    }
+
+    // Check expected result
+    QCOMPARE(!files.isEmpty(), expectedResult);
 }
 
 

@@ -36,7 +36,7 @@ public:
     static bool openFileInZtd(const QString &ztdFilePath, const QString &fileNameToOpen, QByteArray &fileData);
     static bool isZtdFile(const QString &filePath);
     static bool fileExistsInZtd(const QString &ztdFilePath, const QString &fileNameToCheck);
-    static QList<FileData> getFilesInZtd(
+    static QList<PZtdMgr::FileData> getFilesInZtd(
         const QString &ztdFilePath,
         const QString &ext,
         int maxLevel = 3,

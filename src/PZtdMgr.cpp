@@ -424,9 +424,9 @@ bool PZtdMgr::removeFileFromDir(const QString &file)
 }
 
 // Gets a list of files in a ztd file with a specific extension and level
-QList<FileData> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, const QString &ext, int maxLevel, const QStringList &folderList, QuaZip *zip)
+QList<PZtdMgr::FileData> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, const QString &ext, int maxLevel, const QStringList &folderList, QuaZip *zip)
 {
-    QList<FileData> filesFound;
+    QList<PZtdMgr::FileData> filesFound;
     bool createdZip = false;
 
     if (!zip) {
@@ -461,7 +461,21 @@ QList<FileData> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, const QString
         QStringList subFolders;
 
         for (const QString &entry : folderList) {
-            if (!entry.endsWith("/")) {
+            zip->setCurrentFile(entry);
+            QuaZipFileInfo info;
+            zip->getCurrentFileInfo(&info);
+
+            if (info.name.endsWith('/') && QFileInfo(info.name).isDir()) {
+                // if folder, get all files in the folder
+                for (bool more = zip->goToFirstFile(); more; more = zip->goToNextFile()) {
+                    QuaZipFileInfo info;
+                    zip->getCurrentFileInfo(&info);
+
+                    if (info.name.startsWith(entry) && info.name != entry) {
+                        subFolders << info.name;
+                    }
+                }
+            } else {
                 // found file, check if it matches the extension
                 if (entry.endsWith(ext)) {
                     QuaZipFile zipFile(zip);
@@ -475,18 +489,8 @@ QList<FileData> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, const QString
                     file.filename = QFileInfo(entry).fileName();
                     file.ext = QFileInfo(entry).suffix();
                     file.path = entry;
-                    filesFound.append(fileData);
+                    filesFound.append(file);
                     zipFile.close();
-                }
-            } else {
-                // if folder, get all files in the folder
-                for (bool more = zip->goToFirstFile(); more; more = zip->goToNextFile()) {
-                    QuaZipFileInfo info;
-                    zip->getCurrentFileInfo(&info);
-
-                    if (info.name.startsWith(entry) && info.name != entry) {
-                        subFolders << info.name;
-                    }
                 }
             }
         }
