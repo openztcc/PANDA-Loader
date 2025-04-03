@@ -140,30 +140,30 @@ install(TARGETS appPandaLdr
 # # add the main project modules
 # # creates the test exe
 
-# # ------------- PTestZtdMgr -------------
-# qt_add_executable(testZtdMgr
-#     tests/PTestZtdMgr.cpp
-#     PZtdMgr.h PZtdMgr.cpp
-#     PConfigMgr.h PConfigMgr.cpp
-#     PDatabaseMgr.h PDatabaseMgr.cpp
-# )
+# ------------- PTestZtdMgr -------------
+qt_add_executable(testZtdMgr
+    tests/PTestZtdMgr.cpp
+    src/PZtdMgr.h src/PZtdMgr.cpp
+    src/PConfigMgr.h src/PConfigMgr.cpp
+    src/PDatabaseMgr.h src/PDatabaseMgr.cpp
+)
 
-# # link the required libraries
-# target_link_libraries(testZtdMgr
-#     PRIVATE
-#         Qt6::Test
-#         Qt6::Core
-#         Qt6::Sql
-#         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
-#         tomlplusplus
-# )
+# link the required libraries
+target_link_libraries(testZtdMgr
+    PRIVATE
+        Qt6::Test
+        Qt6::Core
+        Qt6::Sql
+        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+        tomlplusplus
+)
 
-# # add test data as resource
-# add_custom_command(TARGET testZtdMgr POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy_directory
-#     ${CMAKE_SOURCE_DIR}/tests/test_data
-#     ${CMAKE_BINARY_DIR}/test_data
-# )
+# add test data as resource
+add_custom_command(TARGET testZtdMgr POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/test_data
+    ${CMAKE_BINARY_DIR}/test_data
+)
 
 # # ------------- PTestConfigMgr -------------
 # qt_add_executable(testConfigMgr
@@ -214,6 +214,6 @@ install(TARGETS appPandaLdr
 #     ${CMAKE_BINARY_DIR}/test_data
 # )
 
-# add_test(NAME testZtdMgr COMMAND testZtdMgr)
+add_test(NAME testZtdMgr COMMAND testZtdMgr)
 # add_test(NAME testConfigMgr COMMAND testConfigMgr)
 # add_test(NAME testDatabaseMgr COMMAND testDatabaseMgr)

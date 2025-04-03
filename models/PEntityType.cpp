@@ -2,26 +2,25 @@
 
 // Loads the entity type from the entity config
 // TODO: eventually expand to load all config properties depending on the type
-std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const QString& path) {
+void PEntityType::load(QSettings& settings, const QString& path) {
     // check if the path is empty
     if (path.isEmpty()) {
         qDebug() << "Path is empty for entity type:" << path;
-        return nullptr;
     }
 
     // set path
-    ztdPath.append(path);
+    ztdPath = path;
 
-    auto entityType = std::make_unique<PEntityType>();
+    auto type = PEntityType::getType(path);
 
     // for now, only care about the id and aniPath
-    if (PEntityType::getType(path) == Type::Animal) {
+    if (type == Type::Animal) {
         settings.beginGroup("Global");
-        entityType->id = settings.value("Type").toString();
+        id = settings.value("Type").toString();
         settings.endGroup();
 
         // debugging
-        if (entityType->id.isEmpty()) {
+        if (id.isEmpty()) {
             qDebug() << "Entity type id is empty for path:" << path;
         }
 
@@ -31,7 +30,7 @@ std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const 
         if (settings.contains("Type")) {
             QString aniPath = settings.value("Type").toString();
             if (!aniPath.isEmpty()) {
-                entityType->iconAniPaths.push_back({entityType->id, aniPath, "", false});
+                iconAniPaths.insert(id, aniPath);
             } else {
                 qDebug() << "m/Icon .ani path is empty for:" << path;
             }
@@ -42,20 +41,20 @@ std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const 
         if (settings.contains("Type")) {
             QString aniPath = settings.value("Type").toString();
             if (!aniPath.isEmpty()) {
-                entityType->iconAniPaths.push_back({entityType->id, aniPath, "", false});
+                iconAniPaths.insert(id, aniPath);
             } else {
                 qDebug() << "f/Icon .ani path is empty for:" << path;
             }
         }
         settings.endGroup();
         
-    } else if (PEntityType::getType(path) == Type::Scenery) {
+    } else if (type == Type::Scenery) {
         // assign the id from Global
         settings.beginGroup("Global");
-        entityType->id = settings.value("Type").toString();
+        id = settings.value("Type").toString();
         settings.endGroup();
 
-        if (entityType->id.isEmpty()) {
+        if (id.isEmpty()) {
             qDebug() << "Entity type id is empty for path:" << path;
         }
 
@@ -71,9 +70,7 @@ std::unique_ptr<PEntityType> PEntityType::load(const QSettings& settings, const 
     }
 
     // null initialization for other fields
-    entityType->characteristics.clear();
-
-    return entityType;
+    characteristics.clear();
 }
 
 // Gets the type of the entity based on the path

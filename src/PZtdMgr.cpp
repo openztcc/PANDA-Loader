@@ -424,9 +424,9 @@ bool PZtdMgr::removeFileFromDir(const QString &file)
 }
 
 // Gets a list of files in a ztd file with a specific extension and level
-QList<QByteArray> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, const QString &ext, int maxLevel, const QStringList &folderList, QuaZip *zip)
+QList<FileData> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, const QString &ext, int maxLevel, const QStringList &folderList, QuaZip *zip)
 {
-    QList<QByteArray> filesFound;
+    QList<FileData> filesFound;
     bool createdZip = false;
 
     if (!zip) {
@@ -470,6 +470,11 @@ QList<QByteArray> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, const QStri
                     if (!zipFile.open(QIODevice::ReadOnly)) continue;
 
                     QByteArray fileData = zipFile.readAll();
+                    FileData file;
+                    file.data = fileData;
+                    file.filename = QFileInfo(entry).fileName();
+                    file.ext = QFileInfo(entry).suffix();
+                    file.path = entry;
                     filesFound.append(fileData);
                     zipFile.close();
                 }

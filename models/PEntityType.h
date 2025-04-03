@@ -74,11 +74,11 @@ public:
 
     QString id;
     QList<PIconData> icons;
-    QStringList ztdPath;
+    QString ztdPath;
     QMap<QString, QString> characteristics;
     QMap<QString, QString> iconAniPaths;
 
-    std::unique_ptr<PEntityType> load(const QSettings& settings, const QString& path);
+    void load(QSettings& settings, const QString& path);
     static Type getType(const QString& path);
 
     void loadAniPaths(QStringList& iconPaths);

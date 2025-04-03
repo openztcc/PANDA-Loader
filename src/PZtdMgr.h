@@ -36,7 +36,13 @@ public:
     static bool openFileInZtd(const QString &ztdFilePath, const QString &fileNameToOpen, QByteArray &fileData);
     static bool isZtdFile(const QString &filePath);
     static bool fileExistsInZtd(const QString &ztdFilePath, const QString &fileNameToCheck);
-    static QList<QBuffer> getFilesInZtd(const QString &ztdFilePath, const QString ext, int maxLevel = 3, QStringList *folderList = nullptr, QuaZip *zip = nullptr);
+    static QList<FileData> getFilesInZtd(
+        const QString &ztdFilePath,
+        const QString &ext,
+        int maxLevel = 3,
+        const QStringList &folderList = QStringList(),
+        QuaZip *zip = nullptr
+    );
 private:
     static bool extractFilesFromZtd(const QString &ztdFilePath, const QString &tempDir);
     static bool replaceFileInDir(const QString &tempDirPath, const QString &filePathToAdd);
