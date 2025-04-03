@@ -23,6 +23,8 @@ private slots:
     void testGetAllConfigInZtd();
     void testGetCoreConfigInZtd_data();
     void testGetCoreConfigInZtd();
+    void testGetIconAniPaths_data();
+    void testGetIconAniPaths();
 };
 
 // Statics
@@ -263,6 +265,35 @@ void PTestConfigMgr::testGetCoreConfigInZtd()
         }
     } else {
         QVERIFY(coreConfigFiles.empty());
+    }
+}
+
+void PTestConfigMgr::testGetIconAniPaths_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetIconAniPaths()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get icon animation paths
+    QStringList iconAniPaths = PConfigMgr::getIconAniPaths(ztdFilePath);
+
+    qDebug() << "Icon animation paths found:" << iconAniPaths.size();
+    for (const auto &path : iconAniPaths) {
+        qDebug() << "Path:" << path;
+    }
+
+    if (expected) {
+        QVERIFY(!iconAniPaths.empty());
+    } else {
+        QVERIFY(iconAniPaths.empty());
     }
 }
 
