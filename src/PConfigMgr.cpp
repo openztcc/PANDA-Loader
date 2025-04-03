@@ -415,6 +415,14 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
     return iconAniPaths;
 }
 
+// Overloaded function to get icon animation paths from a ztd file
+QStringList PConfigMgr::getIconAniPaths(const QString &ztdFilePath)
+{
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> configFiles = getAllConfigInZtd(ztdFilePath);
+
+    return PConfigMgr::getIconAniPaths(configFiles);
+}
+
 
 // INI files by default are not allowed to have duplicate keys; blue fang
 // config files tend to have duplicate keys in the same group
@@ -426,7 +434,13 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
 QStringList PConfigMgr::extractDuplicateKeys(std::unique_ptr<QSettings> iniData, const QString& group, const QString& key)
 {
     QStringList matches;
-    QTextStream stream(iniData);
+    if (!iniData) {
+        return matches; // Return empty list if iniData is null
+    }
+    QBuffer buffer;
+    buffer.setData(iniData->fileName().toUtf8());
+    buffer.open(QIODevice::ReadOnly);
+    QTextStream stream(&buffer);
     bool inGroup = false;
 
     while (!stream.atEnd()) {
