@@ -356,25 +356,26 @@ PConfigMgr::IniData PConfigMgr::byteArrayToIniData(const PZtdMgr::FileData& data
 }
 
 // Validates and returns the core config files in a ztd file
-std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getCoreConfigInZtd(const PConfigMgr::IniData &iniData)
+// TODO: add extension validation (only ucb, uca, ucs, ai)
+std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getCoreConfigInZtd(const QString &ztdFilePath)
 {
     std::vector<std::unique_ptr<PConfigMgr::IniData>> coreConfigFiles;
     QStringList validRootFolders = { "animals", "scenery" };
     QStringList validSceneryFolders = { "buildings", "food", "other" };
     // Get the core config files from the ztd file
-    auto configFiles = getAllConfigInZtd(iniData.path);
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> configFiles = getAllConfigInZtd(ztdFilePath);
 
     // Filter the config files to only include core configs
-    for (const auto& file : configFiles) {
+    for (auto& file : configFiles) {
         QStringList path = file->path.split("/");
         // check if the first folder is a valid root folder
         if (validRootFolders.contains(path[0])) {
             // check if the second folder is a valid scenery folder
-            if (path.size() > == 3 && path[0] == "animals") {
-                coreConfigFiles.push_back(std::make_unique<PConfigMgr::IniData>(*file));
-            } else if (path.size() > 4 && path[0] == "scenery") {
+            if (path.size() == 2 && path[0] == "animals") {
+                coreConfigFiles.push_back(std::move(file));
+            } else if (path.size() == 3 && path[0] == "scenery") {
                 if (validSceneryFolders.contains(path[1])) {
-                    coreConfigFiles.push_back(std::make_unique<PConfigMgr::IniData>(*file));
+                    coreConfigFiles.push_back(std::move(file));
                 }
             }
         }

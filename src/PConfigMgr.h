@@ -48,7 +48,7 @@ public:
 
     // misc config
     static std::vector<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(const PConfigMgr::IniData &iniData);
+    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(const QString &ztdFilePath);
     static QStringList getMenuIconPaths(const QString &ztdFilePath);
     static QStringList getCodenamesInZtd(const QString &ztdFilePath);
 private:

@@ -21,6 +21,8 @@ private slots:
     // void testRemoveZooIniConfig();
     void testGetAllConfigInZtd_data();
     void testGetAllConfigInZtd();
+    void testGetCoreConfigInZtd_data();
+    void testGetCoreConfigInZtd();
 };
 
 // Statics
@@ -224,6 +226,43 @@ void PTestConfigMgr::testGetAllConfigInZtd()
         }
     } else {
         QVERIFY(configFiles.empty());
+    }
+}
+
+void PTestConfigMgr::testGetCoreConfigInZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("valid ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetCoreConfigInZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get core config files in ztd
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> coreConfigFiles = PConfigMgr::getCoreConfigInZtd(ztdFilePath);
+
+    qDebug() << "Core config files found:" << coreConfigFiles.size();
+    for (const auto &file : coreConfigFiles) {
+        qDebug() << "File:" << file->filename << file->path;
+        if (file->settings) {
+            qDebug() << "Settings:" << file->settings->fileName();
+        } else {
+            qDebug() << "Settings: nullptr";
+        }
+    }
+
+    if (expected) {
+        QVERIFY(!coreConfigFiles.empty());
+        for (const auto &file : coreConfigFiles) {
+            QVERIFY(file->settings != nullptr);
+        }
+    } else {
+        QVERIFY(coreConfigFiles.empty());
     }
 }
 
