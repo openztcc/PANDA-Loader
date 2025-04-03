@@ -12,6 +12,14 @@
 class PConfigMgr
 {
 public:
+    // ----------- Local Models ------------------
+    // ini config data
+    struct IniData {
+        QString filename;
+        QString path;
+        QSettings *settings = nullptr;
+    };
+
     PConfigMgr();
     ~PConfigMgr();
 
@@ -29,11 +37,13 @@ public:
     bool readPandaConfig(const QString &filePath, toml::table &config);
 
     // misc config
-    static QList<std::unique_ptr<QSettings>> getConfigInZtd(const QString &ztdFilePath, const QString &ext = "", const QString &entityType = "");
-    static std::unique_ptr<QSettings> getKnownConfigInZtd(const QString &ztdFilePath, const QString &path);
     static QStringList getMenuIconPaths(const QString &ztdFilePath);
     static QStringList getCodenamesInZtd(const QString &ztdFilePath);
 private:
     QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
+
+    // helper functions
+    static QList<PZtdMgr::FileData> getAllConfigInZtd(const QString &ztdFilePath, const QString &ext = "", const QString &entityType = "");
+    static PConfigMgr::IniData byteArrayToIniData(const QByteArray &data);
 };
 #endif // PCONFIGMGR_H
