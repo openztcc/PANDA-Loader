@@ -33,6 +33,7 @@ public:
     PConfigMgr();
     ~PConfigMgr();
 
+    // meta configuration operations
     static toml::table getMetaConfig(const QString &ztdFilePath);
     static toml::table getConfig(const QString &filePath);
     static bool saveConfig(const QString &filePath, const toml::table &config);
@@ -42,14 +43,17 @@ public:
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);
     toml::table getZooIniConfig(const QString &iniPath);
+
+    // zoo.ini configuration operations
     bool updateZooIniConfig(const QString &iniPath, const toml::table &config);
     bool removeZooIniConfig(const QString &iniPath);
     bool readPandaConfig(const QString &filePath, toml::table &config);
 
-    // misc config
+    // asset configuration operations
     static std::vector<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath);
     static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(const QString &ztdFilePath);
-    static QStringList getMenuIconPaths(const QString &ztdFilePath);
+    static QStringList getIconAniPaths(const QString &ztdFilePath);
+    static QStringList getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
     static QStringList getCodenamesInZtd(const QString &ztdFilePath);
 private:
     QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
