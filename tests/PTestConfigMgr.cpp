@@ -199,7 +199,7 @@ void PTestConfigMgr::testGetAllConfigInZtd_data()
     QTest::addColumn<QString>("ztdFilePath");
     QTest::addColumn<bool>("expected");
 
-    QTest::newRow("valid ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("valid ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
     QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
 }
 
@@ -236,7 +236,8 @@ void PTestConfigMgr::testGetCoreConfigInZtd_data()
     QTest::addColumn<QString>("ztdFilePath");
     QTest::addColumn<bool>("expected");
 
-    QTest::newRow("valid ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("valid ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("valid uca ztd") << testDataDir + "getfile_valid_uca.ztd" << true;
     QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
 }
 
