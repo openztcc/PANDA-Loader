@@ -389,67 +389,33 @@ QStringList PConfigMgr::getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::
 {
     QStringList iconAniPaths;
 
-    // Filter the config files to only include icon ani files
     for (auto& file : configFiles) {
-        // find out what kind of file it is
-        if (file->filename.endsWith(".ucb") || file->filename.endsWith(".ucs")) {
-            // we are using a building or scenery config file which contain
-            // ani paths under [Icon] and four "Icon" keys
+        auto settings = file->settings.get();
+        if (!settings) continue;
 
-            // get the settings
-            auto settings = file->settings.get();
-            // check if the settings contain the "Icon" group
-            if (settings->childGroups().contains("Icon")) {
-                // get the icon paths
-                settings->beginGroup("Icon");
-                QStringList keys = settings->childKeys();
-                for (const auto& key : keys) {
-                    if (key.startsWith("Icon")) {
-                        QString aniPath = settings->value(key).toString();
-                        iconAniPaths.append(aniPath);
-                    }
-                }
-                settings->endGroup();
-            }
-        } else if (file->filename.endsWith(".uca")) {
-            // we are using an animal config file which contain
-            // ani paths under [m/Icon] and/or [f/Icon]
+        if (file->filename.endsWith(".uca")) {
+            QStringList mIcon = PConfigMgr::extractDuplicateKeys(settings->allKeys(), "m/Icon", "Icon");
+            QStringList fIcon = PConfigMgr::extractDuplicateKeys(settings->allKeys(), "f/Icon", "Icon");
 
-            // get the settings
-            auto settings = file->settings.get();
-
-            // check if the settings contain the "m/Icon" group
-            if (settings->childGroups().contains("m/Icon")) {
-                // get the icon paths
-                settings->beginGroup("m/Icon");
-                QStringList keys = settings->childKeys();
-                for (const auto& key : keys) {
-                    if (key.startsWith("Icon")) {
-                        QString aniPath = settings->value(key).toString();
-                        iconAniPaths.append(aniPath);
-                    }
-                }
-                settings->endGroup();
+            if (!mIcon.isEmpty()) {
+                iconAniPaths.append(mIcon);
             }
 
-            // check if the settings contain the "f/Icon" group
-            if (settings->childGroups().contains("f/Icon")) {
-                // get the icon paths
-                settings->beginGroup("f/Icon");
-                QStringList keys = settings->childKeys();
-                for (const auto& key : keys) {
-                    if (key.startsWith("Icon")) {
-                        QString aniPath = settings->value(key).toString();
-                        iconAniPaths.append(aniPath);
-                    }
-                }
-                settings->endGroup();
+            if (!fIcon.isEmpty()) {
+                iconAniPaths.append(fIcon);
+            }
+
+        } else if (file->filename.endsWith(".ucb") || file->filename.endsWith(".ucs")) {
+            QStringList icons = PConfigMgr::extractDuplicateKeys(settings->allKeys(), "Icon", "Icon");
+            if (!icons.isEmpty()) {
+                iconAniPaths.append(icons);
             }
         }
     }
 
     return iconAniPaths;
 }
+
 
 // INI files by default are not allowed to have duplicate keys; blue fang
 // config files tend to have duplicate keys in the same group
