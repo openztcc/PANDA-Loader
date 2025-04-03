@@ -503,3 +503,31 @@ QList<PZtdMgr::FileData> PZtdMgr::getFilesInZtd(const QString &ztdFilePath, cons
     return filesFound;
 }
 
+// Gets a file from a relative path in a ztd file
+QByteArray PZtdMgr::getFileFromRelPath(const QString &ztdFilePath, const QString &relPath) 
+{
+    QuaZip zip(ztdFilePath);
+    if (!zip.open(QuaZip::mdUnzip)) {
+        qWarning() << "Failed to open ZTD file:" << ztdFilePath;
+        return {};
+    }
+
+    if (!zip.setCurrentFile(relPath)) {
+        qWarning() << "File not found in ZTD:" << relPath;
+        zip.close();
+        return {};
+    }
+
+    QuaZipFile file(&zip);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Failed to open file in ZTD:" << relPath;
+        zip.close();
+        return {};
+    }
+
+    QByteArray data = file.readAll();
+    file.close();
+    zip.close();
+
+    return data;
+}

@@ -43,6 +43,7 @@ public:
         const QStringList &folderList = QStringList(),
         QuaZip *zip = nullptr
     );
+    static QByteArray getFileFromRelPath(const QString &ztdFilePath, const QString &relPath);
 private:
     static bool extractFilesFromZtd(const QString &ztdFilePath, const QString &tempDir);
     static bool replaceFileInDir(const QString &tempDirPath, const QString &filePathToAdd);
