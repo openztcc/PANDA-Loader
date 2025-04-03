@@ -25,6 +25,8 @@ private slots:
     void testGetCoreConfigInZtd();
     void testGetIconAniPaths_data();
     void testGetIconAniPaths();
+    void testGetIconAniConfigInZtd_data();
+    void testGetIconAniConfigInZtd();
 };
 
 // Statics
@@ -296,6 +298,44 @@ void PTestConfigMgr::testGetIconAniPaths()
         QVERIFY(!iconAniPaths.empty());
     } else {
         QVERIFY(iconAniPaths.empty());
+    }
+}
+
+void PTestConfigMgr::testGetIconAniConfigInZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("valid ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("valid uca ztd") << testDataDir + "getfile_valid_uca.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetIconAniConfigInZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get icon animation config files in ztd
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> iconAniConfigFiles = PConfigMgr::getIconAniConfigInZtd(ztdFilePath);
+
+    qDebug() << "Icon animation config files found:" << iconAniConfigFiles.size();
+    for (const auto &file : iconAniConfigFiles) {
+        qDebug() << "File:" << file->filename << file->path;
+        if (file->settings) {
+            qDebug() << "Settings:" << file->settings->fileName();
+        } else {
+            qDebug() << "Settings: nullptr";
+        }
+    }
+
+    if (expected) {
+        QVERIFY(!iconAniConfigFiles.empty());
+        for (const auto &file : iconAniConfigFiles) {
+            QVERIFY(file->settings != nullptr);
+        }
+    } else {
+        QVERIFY(iconAniConfigFiles.empty());
     }
 }
 

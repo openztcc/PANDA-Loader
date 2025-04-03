@@ -476,24 +476,14 @@ std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getIconAniConfigIn
     std::vector<std::unique_ptr<PConfigMgr::IniData>> iconAniConfigFiles;
 
     for (auto it = configFiles.begin(); it != configFiles.end(); ) {
-        const QStringList foundPath = (*it)->path.split("/");
+        QString foundPath = (*it)->path.toLower();
+
         for (const QString& aniPath : extractedAniPaths) {
-            QStringList extractedPath = aniPath.split("/");
-            qDebug() << "Found path: " << foundPath;
-            qDebug() << "Extracted path: " << extractedPath;
-            if (foundPath.size() == extractedPath.size()) {
-                // Check if the paths match
-                for (int i = 0; i < foundPath.size(); ++i) {
-                    if (foundPath[i] != extractedPath[i]) {
-                        break;
-                    }
-                }
-            }
-            // If the paths match, add the file to the list
+            QString extractedPath = (aniPath + ".ani").toLower();
+            qDebug() << "Comparing " << foundPath << " with " << extractedPath;
             if (foundPath == extractedPath) {
                 iconAniConfigFiles.push_back(std::move(*it));
-                it = configFiles.erase(it); // Remove the file from the original list
-                break;
+                break; // break out of the inner loop
             }
         }
 
