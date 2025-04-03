@@ -480,7 +480,6 @@ std::vector<std::unique_ptr<PConfigMgr::IniData>> PConfigMgr::getIconAniConfigIn
 
         for (const QString& aniPath : extractedAniPaths) {
             QString extractedPath = (aniPath + ".ani").toLower();
-            qDebug() << "Comparing " << foundPath << " with " << extractedPath;
             if (foundPath == extractedPath) {
                 iconAniConfigFiles.push_back(std::move(*it));
                 break; // break out of the inner loop
@@ -501,19 +500,31 @@ QStringList PConfigMgr::getIconPaths(std::vector<std::unique_ptr<PConfigMgr::Ini
     for (auto& file : aniFiles) {
         if (!file->settings) continue;
 
-        settings.beginGroup("animation");
+        file->settings->beginGroup("animation");
+
         QStringList dirs;
-        QStringList keys = settings.childKeys();
+        QString animation;
+
+        QStringList keys = file->settings->childKeys();
         for (const QString& key : keys) {
-            if (key.startsWith("dir") || key == "animation") {
-                dirs.append(settings.value(key).toString());
+            if (key.startsWith("dir")) {
+                dirs.append(file->settings->value(key).toString().trimmed());
+            } else if (key == "animation") {
+                animation = file->settings->value(key).toString().trimmed();
             }
         }
-        settings.endGroup();
+
+        file->settings->endGroup();
+
+        if (!dirs.isEmpty() && !animation.isEmpty()) {
+            QString fullPath = dirs.join("/") + "/" + animation;
+            iconPaths.append(fullPath);
+        }
     }
 
     return iconPaths;
 }
+
 
 // Overloaded function to get icon paths from a ztd file
 QStringList PConfigMgr::getIconPaths(const QString &ztdFilePath)

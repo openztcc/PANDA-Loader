@@ -27,6 +27,8 @@ private slots:
     void testGetIconAniPaths();
     void testGetIconAniConfigInZtd_data();
     void testGetIconAniConfigInZtd();
+    void testGetIconPaths_data();
+    void testGetIconPaths();
 };
 
 // Statics
@@ -336,6 +338,36 @@ void PTestConfigMgr::testGetIconAniConfigInZtd()
         }
     } else {
         QVERIFY(iconAniConfigFiles.empty());
+    }
+}
+
+void PTestConfigMgr::testGetIconPaths_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("uca ztd") << testDataDir + "getfile_valid_uca.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetIconPaths()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get icon paths
+    QStringList iconPaths = PConfigMgr::getIconPaths(ztdFilePath);
+
+    qDebug() << "Icon paths found:" << iconPaths.size();
+    for (const auto &path : iconPaths) {
+        qDebug() << "Path:" << path;
+    }
+
+    if (expected) {
+        QVERIFY(!iconPaths.empty());
+    } else {
+        QVERIFY(iconPaths.empty());
     }
 }
 
