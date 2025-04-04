@@ -3,14 +3,17 @@
 
 #include <QObject>
 #include "ApeCore.h"
-#include "../models/PEntityType.h"
+#include "PConfigMgr.h"
+#include "PZtdMgr.h"
 
 class PGraphicsMgr : public QObject
 {
     Q_OBJECT
 public:
     PGraphicsMgr();
-    static QStringList extractIcons(const QString &ztdFilePath);
+    static std::vector<OutputBuffer> getGraphicBuffers(const QString &ztdFilePath);
+    static QString getPalettePath(const QString &ztdFilePath);
+    static bool processIcons(const QString &ztdFilePath);
     static bool convertGraphics(QStringList &iconPaths);
 };
 
