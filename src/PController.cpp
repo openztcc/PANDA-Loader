@@ -233,10 +233,13 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
     {
         PDatabaseMgr::PMod mod;
 
+        QMap<QString, OutputBuffer> buffers = PGraphicsMgr::getGraphicBuffers(ztd);
+        PGraphicsMgr::processIcons(buffers);
+
         // Check if config exists
         if (!PZtdMgr::fileExistsInZtd(ztd, "meta.toml")) {
             qDebug() << "No meta config found in ztd: " << ztd;
-            
+
             // Insert mod with blank values
             mod.title = "Unknown";
             mod.authors = {"Unknown"};
