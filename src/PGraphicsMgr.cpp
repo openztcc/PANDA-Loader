@@ -2,6 +2,22 @@
 
 PGraphicsMgr::PGraphicsMgr() {}
 
+OutputBuffer outputBufferCopy(const OutputBuffer& src) {
+    OutputBuffer copy;
+    copy.width = src.width;
+    copy.height = src.height;
+    copy.channels = src.channels;
+    copy.offsetX = src.offsetX;
+    copy.offsetY = src.offsetY;
+
+    size_t bufferSize = static_cast<size_t>(src.width) * src.height * src.channels;
+    copy.pixels = new uint8_t[bufferSize];
+    std::memcpy(copy.pixels, src.pixels, bufferSize);
+
+    return copy;
+}
+
+
 // Get the graphic buffers from a ztd file
 QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFilePath) {
     QMap<QString, OutputBuffer> graphicBuffers;
@@ -75,7 +91,7 @@ QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFi
         QString graphicName = path.section('/', -2, -2);
         OutputBuffer* out = *buffer;
         if (out) {
-            graphicBuffers.insert(graphicName + '_' + projectName, *out);
+            graphicBuffers.insert(graphicName + '_' + projectName, outputBufferCopy(*out));
         } else {
             qDebug() << "No buffers allocated.";
         }

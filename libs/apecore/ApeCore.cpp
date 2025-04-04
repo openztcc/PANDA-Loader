@@ -587,7 +587,8 @@ int ApeCore::exportToPNG(std::string fileName, OutputBuffer output)
         return -1;
     }
 
-    if (!stbi_write_png(fileName.c_str(), output.width, output.height, output.channels, output.pixels, 0)) {
+    int stride = output.width * output.channels;
+    if (!stbi_write_png(fileName.c_str(), output.width, output.height, output.channels, output.pixels, stride)) {
         std::cerr << "Failed to write image" << std::endl;
         return -2;
     } else {
