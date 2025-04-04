@@ -5,8 +5,8 @@ PGraphicsMgr::PGraphicsMgr() {}
 PGraphicsMgr::~PGraphicsMgr() {}
 
 // Get the graphic buffers from a ztd file
-std::vector<OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFilePath) {
-    std::vector<OutputBuffer> buffers;
+QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFilePath) {
+    QMap<QString, OutputBuffer> graphicBuffers;
     QStringList graphicPaths = PConfigMgr::getIconPaths(ztdFilePath);
     for (const QString &path : graphicPaths) {
         // make temp file for the graphic
@@ -50,10 +50,10 @@ std::vector<OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFile
             continue;
         }
 
-        for (int i = 0; i < graphic.getFrameCount(); ++i) {
-            OutputBuffer output = buffer[i];
-            buffers.push_back(output);
-        }
+        // add the graphic buffer to the map
+        QString graphicName = path.section("/", -1, -1).toUpper();
+        graphicBuffers.insert(graphicName, *buffer);
+        
         graphicFile.close();
         paletteFile.close();
 
@@ -62,4 +62,19 @@ std::vector<OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFile
         QFile::remove(paletteFile.fileName());
 
     }
+}
+
+// Process graphic buffers into cached PNG files
+// returns paths to the generated PNG files
+QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffers) {
+    QStringList pngPaths;
+    for (auto it = graphicBuffers.begin(); it != graphicBuffers.end(); ++it) {
+        QString pngPath = it.key() + ".png";
+        if (ApeCore::exportToPNG(pngPath, it.value()) == 0) {
+            pngPaths.append(pngPath);
+        } else {
+            qDebug() << "Failed to export PNG: " << pngPath;
+        }
+    }
+    return pngPaths;
 }

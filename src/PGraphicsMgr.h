@@ -11,10 +11,8 @@ class PGraphicsMgr : public QObject
     Q_OBJECT
 public:
     PGraphicsMgr();
-    static std::vector<OutputBuffer> getGraphicBuffers(const QString &ztdFilePath);
-    static QString getPalettePath(const QString &ztdFilePath);
-    static bool processIcons(const QString &ztdFilePath);
-    static bool convertGraphics(QStringList &iconPaths);
+    static QMap<QString, OutputBuffer> getGraphicBuffers(const QString &ztdFilePath);
+    static QStringList graphicBuffers processIcons(QMap<QString, OutputBuffer> &graphicBuffers);
 };
 
 #endif // PGRAPHICSMGR_H
