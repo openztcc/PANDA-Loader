@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include "ApeCore.h"
+#include <QDir>
+#include <QTemporaryFile>
 #include "PConfigMgr.h"
-#include "PZtdMgr.h"
 
 class PGraphicsMgr : public QObject
 {
@@ -12,9 +13,9 @@ class PGraphicsMgr : public QObject
 public:
     PGraphicsMgr();
     static QMap<QString, OutputBuffer> getGraphicBuffers(const QString &ztdFilePath);
-    static QStringList graphicBuffers processIcons(QMap<QString, OutputBuffer> &graphicBuffers);
+    static QStringList processIcons(QMap<QString, OutputBuffer> &graphicBuffers);
 private:
-    static QString m_outputiconsPath = QDir::homePath() + "/.panda/modicons/";
+    QString m_outputiconsPath = QDir::homePath() + "/.panda/modicons/";
 };
 
 #endif // PGRAPHICSMGR_H

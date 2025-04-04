@@ -95,7 +95,7 @@ class ApeCore
 
         int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
         int save(std::string fileName);
-        int exportToPNG(std::string fileName, OutputBuffer output);
+        static int exportToPNG(std::string fileName, OutputBuffer output);
         int getFrameCount();
         OutputBuffer** apeBuffer();
         std::string getPalLocation();

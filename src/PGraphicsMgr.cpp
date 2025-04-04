@@ -2,71 +2,74 @@
 
 PGraphicsMgr::PGraphicsMgr() {}
 
-PGraphicsMgr::~PGraphicsMgr() {}
-
 // Get the graphic buffers from a ztd file
 QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFilePath) {
     QMap<QString, OutputBuffer> graphicBuffers;
     QStringList graphicPaths = PConfigMgr::getIconPaths(ztdFilePath);
+
+    // local function to create temp files
+    auto createTempFile = [](const QByteArray &fileData, const QString &filePath) {
+        QTemporaryFile tempFile;
+        tempFile.setAutoRemove(true);
+        if (!tempFile.open()) {
+            qDebug() << "Failed to create temp file: " << filePath;
+            return QString();
+        }
+
+        tempFile.write(fileData);
+        tempFile.flush();
+
+        return tempFile.fileName();
+    };
+    
     for (const QString &path : graphicPaths) {
         // make temp file for the graphic
         QByteArray graphicData = PZtdMgr::getFileFromRelPath(ztdFilePath, path);
-        QTemporaryFile graphicFile;
-        graphicFile.setAutoRemove(true);
-        if (!graphicFile.open()) continue;
-        graphicFile.write(graphicData);
-        graphicFile.flush();
-
-        if (!graphicFile.open()) {
-            qDebug() << "Failed to open temp file for graphic: " << path;
+        QString graphicFile = createTempFile(graphicData, path);
+        if (graphicFile.isEmpty()) {
+            qDebug() << "Failed to write graphic data to temp file:" << path;
             continue;
         }
+        QString projectName = path.section("/", 0, -2).toUpper();
 
         // read the graphic header
-        QByteArray header = ApeCore::getFileHeader(graphicFile.fileName());
-        if (header.isEmpty()) {
-            qDebug() << "Failed to get file header for graphic: " << path;
+        Header header = ApeCore::getHeader(graphicFile.toStdString());
+        if (header.palName.empty()){
+            qDebug() << "Failed to get palette path from header for:" << path;
             continue;
         }
 
         // get palette file
-        QString palettePath = header->palName;
+        QString palettePath = QString::fromUtf8(header.palName.data(), static_cast<int>(header.palName.size())); // converts to QString from char vector
         if (palettePath.isEmpty()) {
             qDebug() << "Failed to get palette path for graphic: " << path;
             continue;
         }
 
+        // grab palette file from ztd
+        QByteArray paletteData = PZtdMgr::getFileFromRelPath(ztdFilePath, palettePath);
         // create temp file for the palette
-        QTempFile paletteFile(palettePath);
-        if (!paletteFile.open()) {
-            qDebug() << "Failed to open temp file for palette: " << palettePath;
-            continue;
-        }
+        QString paletteFile = createTempFile(paletteData, palettePath);
 
         // read the graphic data
         ApeCore graphic;
-        if (graphic.load(graphicFile.fileName(), 0, paletteFile.fileName()) != 0) {
+        if (graphic.load(graphicFile.toStdString(), 0, paletteFile.toStdString()) != 0) {
             qDebug() << "Failed to load graphic: " << path;
             continue;
         }
 
-        OutputBuffer** buffer = graphic.getOutputBuffer();
-        if (buffer == nullptr) {
-            qDebug() << "Failed to get output buffer for graphic: " << path;
+        OutputBuffer** buffer = graphic.apeBuffer();
+        if (!buffer || !*buffer) {
+            qDebug() << "Invalid output buffer for:" << path;
             continue;
         }
 
         // add the graphic buffer to the map
         QString graphicName = path.section("/", -1, -1).toUpper();
-        graphicBuffers.insert(graphicName, *buffer);
-        
-        graphicFile.close();
-        paletteFile.close();
-
-        // cleanup temp files
-        QFile::remove(paletteFile.fileName());
-
+        graphicBuffers.insert(graphicName + '_' + projectName, *buffer[0]);
     }
+
+    return graphicBuffers;
 }
 
 // Process graphic buffers into cached PNG files
@@ -75,8 +78,10 @@ QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffe
     QStringList pngPaths;
     for (auto it = graphicBuffers.begin(); it != graphicBuffers.end(); ++it) {
         QString graphicName = it.key();
-        QString pngPath = m_outputiconsPath + graphicName + ".png";
-        if (it.value().exportToPNG(pngPath, it.value()) == 0) {
+        QString homePath = QDir::homePath() + "/.panda/modicons/";
+        QString pngPath = homePath + graphicName + ".png";
+
+        if (ApeCore::exportToPNG(pngPath.toStdString(), it.value()) == 0) {
             pngPaths.append(pngPath);
         } else {
             qDebug() << "Failed to export PNG: " << pngPath;
