@@ -155,12 +155,12 @@ int ApeCore::readPal(std::string fileName)
         colors.push_back(color);
 
         // Debug output
-        std::cout << "\tColor " << i << ": R=" << static_cast<int>(color.r) 
-                  << " G=" << static_cast<int>(color.g) 
-                  << " B=" << static_cast<int>(color.b) 
-                  << " A=" << static_cast<int>(color.a) 
-                //   << " (Raw ARGB: " << std::hex << color.a << color.r << color.g << color.b << std::dec << ")"
-                  << std::endl;
+        // std::cout << "\tColor " << i << ": R=" << static_cast<int>(color.r) 
+        //           << " G=" << static_cast<int>(color.g) 
+        //           << " B=" << static_cast<int>(color.b) 
+        //           << " A=" << static_cast<int>(color.a) 
+        //         //   << " (Raw ARGB: " << std::hex << color.a << color.r << color.g << color.b << std::dec << ")"
+        //           << std::endl;
     }
 
     pal.close();
@@ -291,7 +291,7 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
 
     // ------------------------------- read header
     // Note: if bg frame exists, not counted in frameCount
-    std::cout << "Header" << std::endl;
+    // std::cout << "Header" << std::endl;
 
     // check if fatz
     if (hasMagic(input)) {
@@ -299,10 +299,10 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
         input.seekg(8, std::ios::cur);
         // read 9th byte
         input.read((char*)&hasBackground, 1);
-        std::cout << "\tType: is fatz" << std::endl;
-        std::cout << "\thasBackground: " << hasBackground << std::endl;
+        // std::cout << "\tType: is fatz" << std::endl;
+        // std::cout << "\thasBackground: " << hasBackground << std::endl;
     } else {
-        std::cout << "\tType: not fatz" << std::endl;
+        // std::cout << "\tType: not fatz" << std::endl;
     }
 
     input.read((char*)&header.speed, 4); // animation speed in ms
@@ -369,29 +369,29 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
         frames[i] = frame;
 
         // print frame
-        std::cout << "Frame " << i << std::endl;
-        std::cout << "\tframeSize: " << frame.frameSize << " bytes" << std::endl;
-        std::cout << "\theight: " << (int)frame.height << " px" << std::endl;
-        std::cout << "\twidth: " << (int)frame.width << " px" << std::endl;
-        std::cout << "\ty: " << (int)frame.y << std::endl;
-        std::cout << "\tx: " << (int)frame.x << std::endl;
-        std::cout << "\tunk1: " << (int)frame.unk1 << std::endl;
-        std::cout << "\tunk2: " << (int)frame.unk2 << std::endl;
-        std::cout << "\tpixelSets: " << frame.pixelSets.size() << std::endl;
-        for (int j = 0; j < frame.pixelSets.size(); j++) {
-            std::cout << "\t\tpixelSet " << j << std::endl;
-            std::cout << "\t\t\tblockCount: " << (int)frame.pixelSets[j].blockCount << std::endl;
-            for (int k = 0; k < frame.pixelSets[j].blocks.size(); k++) {
-                std::cout << "\t\t\tblock " << k << std::endl;
-                std::cout << "\t\t\t\toffset: " << (int)frame.pixelSets[j].blocks[k].offset << std::endl;
-                std::cout << "\t\t\t\tcolorCount: " << (int)frame.pixelSets[j].blocks[k].colorCount << std::endl;
-                std::cout << "\t\t\t\tcolors: ";
-                for (int l = 0; l < frame.pixelSets[j].blocks[k].colorCount; l++) {
-                    std::cout << (int)frame.pixelSets[j].blocks[k].colors[l] << " ";
-                }
-                std::cout << std::endl;
-            }
-        }
+        // std::cout << "Frame " << i << std::endl;
+        // std::cout << "\tframeSize: " << frame.frameSize << " bytes" << std::endl;
+        // std::cout << "\theight: " << (int)frame.height << " px" << std::endl;
+        // std::cout << "\twidth: " << (int)frame.width << " px" << std::endl;
+        // std::cout << "\ty: " << (int)frame.y << std::endl;
+        // std::cout << "\tx: " << (int)frame.x << std::endl;
+        // std::cout << "\tunk1: " << (int)frame.unk1 << std::endl;
+        // std::cout << "\tunk2: " << (int)frame.unk2 << std::endl;
+        // std::cout << "\tpixelSets: " << frame.pixelSets.size() << std::endl;
+        // for (int j = 0; j < frame.pixelSets.size(); j++) {
+        //     std::cout << "\t\tpixelSet " << j << std::endl;
+        //     std::cout << "\t\t\tblockCount: " << (int)frame.pixelSets[j].blockCount << std::endl;
+        //     for (int k = 0; k < frame.pixelSets[j].blocks.size(); k++) {
+        //         std::cout << "\t\t\tblock " << k << std::endl;
+        //         std::cout << "\t\t\t\toffset: " << (int)frame.pixelSets[j].blocks[k].offset << std::endl;
+        //         std::cout << "\t\t\t\tcolorCount: " << (int)frame.pixelSets[j].blocks[k].colorCount << std::endl;
+        //         std::cout << "\t\t\t\tcolors: ";
+        //         for (int l = 0; l < frame.pixelSets[j].blocks[k].colorCount; l++) {
+        //             std::cout << (int)frame.pixelSets[j].blocks[k].colors[l] << " ";
+        //         }
+        //         std::cout << std::endl;
+        //     }
+        // }
     }
 
     input.close();
