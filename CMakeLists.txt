@@ -219,6 +219,7 @@ qt_add_executable(testGraphicsMgr
     tests/PTestGraphicsMgr.cpp
     src/PConfigMgr.h src/PConfigMgr.cpp
     src/PGraphicsMgr.h src/PGraphicsMgr.cpp
+    src/PZtdMgr.h src/PZtdMgr.cpp
 )
 
 # link the required libraries

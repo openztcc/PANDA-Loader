@@ -42,6 +42,36 @@ void PTestGraphicsMgr::testGetGraphicBuffers()
     }
 }
 
+void PTestGraphicsMgr::testProcessIcons_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("has valid ucb") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("has valid uca") << testDataDir + "getfile_valid_uca.ztd" << true;
+}
+
+void PTestGraphicsMgr::testProcessIcons()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get graphic buffers
+    QMap<QString, OutputBuffer> graphicBuffers = PGraphicsMgr::getGraphicBuffers(ztdFilePath);
+
+    // Process icons
+    QStringList processedIcons = PGraphicsMgr::processIcons(graphicBuffers);
+
+    if (expected) {
+        QVERIFY(!processedIcons.isEmpty());
+        for (const auto &icon : processedIcons) {
+            qDebug() << "Processed icon:" << icon;
+        }
+    } else {
+        QVERIFY(processedIcons.isEmpty());
+    }
+}
+
 
 QTEST_MAIN(PTestGraphicsMgr)
 #include "PTestGraphicsMgr.moc"
