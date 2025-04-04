@@ -10,7 +10,13 @@ QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFi
     QStringList graphicPaths = PConfigMgr::getIconPaths(ztdFilePath);
     for (const QString &path : graphicPaths) {
         // make temp file for the graphic
-        QTempFile graphicFile(path);
+        QByteArray graphicData = PZtdMgr::getFileFromRelPath(ztdFilePath, path);
+        QTemporaryFile graphicFile;
+        graphicFile.setAutoRemove(true);
+        if (!graphicFile.open()) continue;
+        graphicFile.write(graphicData);
+        graphicFile.flush();
+
         if (!graphicFile.open()) {
             qDebug() << "Failed to open temp file for graphic: " << path;
             continue;
@@ -58,7 +64,6 @@ QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFi
         paletteFile.close();
 
         // cleanup temp files
-        QFile::remove(graphicFile.fileName());
         QFile::remove(paletteFile.fileName());
 
     }
@@ -69,8 +74,9 @@ QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFi
 QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffers) {
     QStringList pngPaths;
     for (auto it = graphicBuffers.begin(); it != graphicBuffers.end(); ++it) {
-        QString pngPath = it.key() + ".png";
-        if (ApeCore::exportToPNG(pngPath, it.value()) == 0) {
+        QString graphicName = it.key();
+        QString pngPath = m_outputiconsPath + graphicName + ".png";
+        if (it.value().exportToPNG(pngPath, it.value()) == 0) {
             pngPaths.append(pngPath);
         } else {
             qDebug() << "Failed to export PNG: " << pngPath;

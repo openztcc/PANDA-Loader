@@ -13,6 +13,8 @@ public:
     PGraphicsMgr();
     static QMap<QString, OutputBuffer> getGraphicBuffers(const QString &ztdFilePath);
     static QStringList graphicBuffers processIcons(QMap<QString, OutputBuffer> &graphicBuffers);
+private:
+    static QString m_outputiconsPath = QDir::homePath() + "/.panda/modicons/";
 };
 
 #endif // PGRAPHICSMGR_H
