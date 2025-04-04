@@ -214,6 +214,32 @@ add_custom_command(TARGET testConfigMgr POST_BUILD
 #     ${CMAKE_BINARY_DIR}/test_data
 # )
 
+# -------------- PTestGraphicsMgr --------------
+qt_add_executable(testGraphicsMgr
+    tests/PTestGraphicsMgr.cpp
+    src/PConfigMgr.h src/PConfigMgr.cpp
+    src/PGraphicsMgr.h src/PGraphicsMgr.cpp
+)
+
+# link the required libraries
+target_link_libraries(testGraphicsMgr
+    PRIVATE
+        Qt6::Test
+        Qt6::Core
+        Qt6::Sql
+        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+        ApeCore
+        tomlplusplus
+)
+
+# add test data as resource
+add_custom_command(TARGET testGraphicsMgr POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/test_data
+    ${CMAKE_BINARY_DIR}/test_data
+)
+
 add_test(NAME testZtdMgr COMMAND testZtdMgr)
 add_test(NAME testConfigMgr COMMAND testConfigMgr)
 # add_test(NAME testDatabaseMgr COMMAND testDatabaseMgr)
+add_test(NAME testGraphicsMgr COMMAND testGraphicsMgr)
