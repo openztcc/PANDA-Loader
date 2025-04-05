@@ -69,7 +69,7 @@ bool PDatabaseMgr::createTables() {
 bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
                              const QString &version, bool enabled, const QVector<QString> &tags,
                              const QString category, const QString &modId, const QVector<PDependency> &dependencies,
-                             const QString &filename, const QString &location)
+                             const QString &filename, const QString &location, const QStringList &iconpaths)
                              {
     QSqlQuery query(m_db);
 
@@ -79,8 +79,8 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         return false;
     }
 
-    query.prepare("INSERT INTO mods (title, author, description, enabled, tags, category, version, mod_id, filename, location) "
-                  "VALUES (:title, :author, :description, :enabled, :tags, :category, :version, :mod_id, :filename, :location)");
+    query.prepare("INSERT INTO mods (title, author, description, enabled, tags, category, version, mod_id, filename, location, iconpaths) "
+                  "VALUES (:title, :author, :description, :enabled, :tags, :category, :version, :mod_id, :filename, :location, :iconpaths) ");
     
     // Bind required values
     query.bindValue(":title", name);
@@ -159,6 +159,13 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         query.bindValue(":filename", "");
     }
 
+    if (!iconpaths.isEmpty()) {
+        query.bindValue(":iconpaths", iconpaths.join(", "));
+    } 
+    else {
+        query.bindValue(":iconpaths", "");
+    }
+
 
     return true;
 }
@@ -166,7 +173,7 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
 // TODO: Fix tags so they insert as a list
 bool PDatabaseMgr::insertMod(const PMod &mod) {
     return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies,
-        mod.filename, mod.location);
+        mod.filename, mod.location, mod.iconpaths);
 }
 
 bool PDatabaseMgr::deleteMod(const QString &modId) {
