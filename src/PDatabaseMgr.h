@@ -33,13 +33,15 @@ public:
         QString title;
         QVector<QString> authors;
         QString description;
-        QString path;
         bool enabled;
         QString category;
         QVector<QString> tags;
         QString version;
         QString mod_id;
         QVector<PDependency> dependencies;
+        QString location;
+        QString filename;
+        QStringList iconpaths;
     };
 
     bool openDatabase();
@@ -81,7 +83,11 @@ private:
         "category TEXT, "
         "tags TEXT, "
         "version TEXT NOT NULL, "
-        "mod_id TEXT NOT NULL UNIQUE"
+        "mod_id TEXT NOT NULL UNIQUE, "
+        "iconpaths TEXT, "
+        "filename TEXT, "
+        "location TEXT, "
+        "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
         ");";
 
     const QString m_createDependenciesTableQuery =

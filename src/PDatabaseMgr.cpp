@@ -418,6 +418,18 @@ QSqlQuery PDatabaseMgr::searchMods(const QString &propertyName, const QString &s
     return query;
 }
 
+// Get search results as a list of strings
+QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString &searchTerm) {
+    QSqlQuery query = searchMods(propertyName, searchTerm);
+    QStringList results;
+
+    while (query.next()) {
+        results.append(query.value("title").toString());
+    }
+
+    return results;
+}
+
 // Return mod by primary key
 PDatabaseMgr::PMod PDatabaseMgr::getModByPk(const QString &modId) {
     QSqlQuery query(m_db);
