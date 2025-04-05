@@ -48,8 +48,9 @@ public:
     void closeDatabase();
     bool createTables();
     bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
-                   const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
-                     const QString category, const QString &modId, const QVector<PDependency> &dependencies);
+                   const QString &version, bool enabled, const QVector<QString> &tags,
+                   const QString category, const QString &modId, const QVector<PDependency> &dependencies = {},
+                   const QString &path = "", const QString &filename = "", const QString &location = "");
     bool insertMod(const PMod &mod);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);

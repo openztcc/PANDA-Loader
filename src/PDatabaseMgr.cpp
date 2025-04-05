@@ -67,8 +67,9 @@ bool PDatabaseMgr::createTables() {
 }
 
 bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
-                             const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
-                             const QString category, const QString &modId, const QVector<PDependency> &dependencies) 
+                             const QString &version, bool enabled, const QVector<QString> &tags,
+                             const QString category, const QString &modId, const QVector<PDependency> &dependencies,
+                             const QString &filename, const QString &location)
                              {
     QSqlQuery query(m_db);
 
@@ -78,8 +79,8 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         return false;
     }
 
-    query.prepare("INSERT INTO mods (title, author, description, path, enabled, tags, category, version, mod_id) "
-                  "VALUES (:title, :author, :description, :path, :enabled, :tags, :category, :version, :mod_id)");
+    query.prepare("INSERT INTO mods (title, author, description, enabled, tags, category, version, mod_id, filename, location) "
+                  "VALUES (:title, :author, :description, :enabled, :tags, :category, :version, :mod_id, :filename, :location)");
     
     // Bind required values
     query.bindValue(":title", name);
@@ -101,14 +102,6 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
     }
     else {
         query.bindValue(":description", "");
-    }
-
-    // add path to path field
-    if (!path.isEmpty()) {
-        query.bindValue(":path", path);
-    }
-    else {
-        query.bindValue(":path", "");
     }
 
     // add enabled to enabled field
@@ -153,12 +146,28 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         // 
     }
 
+    // Insert mod location and filename
+    if (!location.isEmpty()) {
+        query.bindValue(":location", location);
+    } 
+    else {
+        query.bindValue(":location", "");
+    }
+    if (!filename.isEmpty()) {
+        query.bindValue(":filename", filename);
+    } 
+    else {
+        query.bindValue(":filename", "");
+    }
+
+
     return true;
 }
 
 // TODO: Fix tags so they insert as a list
 bool PDatabaseMgr::insertMod(const PMod &mod) {
-    return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.path, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies);
+    return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies,
+        mod.location, mod.filename, mod.location);
 }
 
 bool PDatabaseMgr::deleteMod(const QString &modId) {
