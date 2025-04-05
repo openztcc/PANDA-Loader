@@ -58,7 +58,7 @@ public:
     void setmodId(const QString &newModId);
 
     QUrl modLocation() const;
-    void setmodLocation;
+    void setmodLocation(const QUrl &newModLocation);
 
     QString modFilename() const;
     void setmodFilename(const QString &newModFilename);
