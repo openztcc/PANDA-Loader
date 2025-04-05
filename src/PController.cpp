@@ -233,8 +233,19 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
     {
         PDatabaseMgr::PMod mod;
 
-        QMap<QString, OutputBuffer> buffers = PGraphicsMgr::getGraphicBuffers(ztd);
-        PGraphicsMgr::processIcons(buffers);
+        // QMap<QString, OutputBuffer> buffers = PGraphicsMgr::getGraphicBuffers(ztd);
+        // if (buffers.isEmpty()) {
+        //     // qDebug() << "No buffers to process for ztd: " << ztd;
+        //     continue; 
+        // } else {
+        //     PGraphicsMgr::processIcons(buffers);
+        // }
+
+        // Check if ztd already exists in database
+        if (db.doesZtdExist(ztd)) {
+            qDebug() << "ZTD already exists in database: " << ztd;
+            continue; // Skip this ztd
+        }
 
         // Check if config exists
         if (!PZtdMgr::fileExistsInZtd(ztd, "meta.toml")) {
@@ -244,7 +255,8 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             mod.title = "Unknown";
             mod.authors = {"Unknown"};
             mod.description = "No description found";
-            mod.path = ztd;
+            mod.location = ztd.split("/").removeLast().join("/");
+            mod.filename = ztd.split("/").last();
             mod.enabled = true;
             mod.category = "Unknown";
             mod.tags = {"Unknown"};

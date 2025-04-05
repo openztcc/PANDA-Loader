@@ -44,6 +44,15 @@ QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFi
 
     
     for (const QString &path : graphicPaths) {
+        // check if files already exist 
+        QString projectName = path.split('/')[1];
+        QString graphicName = path.section('/', -2, -2);
+        QString homePath = QDir::homePath() + "/.panda/modicons/";
+        QString fullPath = homePath + graphicName + '_' + projectName + ".png";
+        if (QFile::exists(fullPath)) {
+            // qDebug() << "Graphic already exists:" << fullPath;
+            break;
+        }
         // make temp file for the graphic
         QByteArray graphicData = PZtdMgr::getFileFromRelPath(ztdFilePath, path);
         if (graphicData.isEmpty()) {
@@ -59,7 +68,6 @@ QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFi
             qDebug() << "Temp file was not created:" << graphicFile;
             continue;
         }
-        QString projectName = path.split('/')[1];
 
         Header header = ApeCore::getHeader(graphicFile.toStdString());
         if (header.palName.data() == nullptr){
@@ -88,7 +96,6 @@ QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFi
         }
 
         // add the graphic buffer to the map
-        QString graphicName = path.section('/', -2, -2);
         OutputBuffer* out = *buffer;
         if (out) {
             graphicBuffers.insert(graphicName + '_' + projectName, outputBufferCopy(*out));
@@ -109,6 +116,20 @@ QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffe
         QString graphicName = it.key();
         QString homePath = QDir::homePath() + "/.panda/modicons/";
         QString pngPath = homePath + graphicName + ".png";
+
+        // check if file already exists
+        if (QFile::exists(pngPath)) {
+            qDebug() << "PNG file already exists:" << pngPath;
+            continue;
+        }
+        // create the directory if it doesn't exist
+        QDir dir(homePath);
+        if (!dir.exists()) {
+            if (!dir.mkpath(homePath)) {
+                qDebug() << "Failed to create directory:" << homePath;
+                continue;
+            }
+        }
 
         if (ApeCore::exportToPNG(pngPath.toStdString(), it.value()) == 1) {
             pngPaths.append(pngPath);
