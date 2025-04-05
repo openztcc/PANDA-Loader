@@ -232,19 +232,22 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
     for (const QString &ztd : ztdList)
     {
         PDatabaseMgr::PMod mod;
+        QString filename = ztd.split("/").last();
+        QString location = ztd.split("/").removeLast().join("/");
 
-        // QMap<QString, OutputBuffer> buffers = PGraphicsMgr::getGraphicBuffers(ztd);
-        // if (buffers.isEmpty()) {
-        //     // qDebug() << "No buffers to process for ztd: " << ztd;
-        //     continue; 
-        // } else {
-        //     PGraphicsMgr::processIcons(buffers);
-        // }
 
         // Check if ztd already exists in database
-        if (db.doesZtdExist(ztd)) {
-            qDebug() << "ZTD already exists in database: " << ztd;
-            continue; // Skip this ztd
+        if (db.searchMods("filename", filename).size() > 0) {
+            qDebug() << "ZTD already exists in database: " << filename;
+            continue;
+        } else { // process icons if do not exist
+            QMap<QString, OutputBuffer> buffers = PGraphicsMgr::getGraphicBuffers(ztd);
+            if (buffers.isEmpty()) {
+                qDebug() << "No buffers to process for ztd: " << ztd;
+                continue;
+            } else {
+                PGraphicsMgr::processIcons(buffers);
+            }
         }
 
         // Check if config exists
@@ -255,8 +258,8 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             mod.title = "Unknown";
             mod.authors = {"Unknown"};
             mod.description = "No description found";
-            mod.location = ztd.split("/").removeLast().join("/");
-            mod.filename = ztd.split("/").last();
+            mod.location = location;
+            mod.filename = filename;
             mod.enabled = true;
             mod.category = "Unknown";
             mod.tags = {"Unknown"};
@@ -322,7 +325,8 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
                 mod.version = "1.0.0";
             }
 
-
+            mod.filename = filename;
+            mod.location = location;
         }
 
         db.insertMod(mod);
