@@ -58,7 +58,7 @@ public:
     QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();
-    QSqlQuery searchMods(const QString &propertyName, const QString &searchTerm);
+    QSqlQuery queryMods(const QString &propertyName, const QString &searchTerm);
     QStringList searchMods(const QString &propertyName, const QString &searchTerm);
     Q_INVOKABLE PDatabaseMgr::PMod getModByPk(const QString &modId);
     PDatabaseMgr::PMod getModByPk(QSqlDatabase &db, const QString &modId);

@@ -144,12 +144,12 @@ QVariant PController::data(const QModelIndex &index, int role) const
                 return mod->modId();
             case ModFilenameRole:
                 return mod->modFilename();
-            case ModIconPathsRole:
-                return mod->modIconPaths();
             case ModDependencyIdRole:
                 return mod->dependencyId();
             case ModLocationRole:
                 return mod->modLocation();
+            case ModIconPathsRole:
+                return mod->modIconPaths();
             case ModObjectRole:
                 return QVariant::fromValue(mod.data()); // return a whole mod object
         }
@@ -172,7 +172,6 @@ QHash<int, QByteArray> PController::roleNames() const
     roles[ModTagsRole] = "modTags";
     roles[ModIdRole] = "modId";
     roles[ModFilenameRole] = "modFilename";
-    roles[ModIconPathsRole] = "modIconPaths";
     roles[ModDependencyIdRole] = "modDependencyId";
     roles[ModLocationRole] = "modLocation";
     roles[ModObjectRole] = "modObject"; // return a whole mod object
@@ -207,7 +206,6 @@ void PController::loadMods()
         mod->setmodTitle(query.value("title").toString());
         mod->setmodAuthor(query.value("author").toString());
         mod->setmodDescription(query.value("description").toString());
-        mod->setmodPath(QUrl::fromLocalFile(query.value("path").toString()));
         mod->setmodEnabled(query.value("enabled").toBool());
         mod->setmodCategory(query.value("category").toString());
         mod->setmodTags(query.value("tags").toString());
@@ -318,7 +316,6 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
                 mod.description = "No description found";
             }
 
-            mod.path = ztd;
             mod.enabled = true;
 
             mod.tags = PConfigMgr::getKeyValueAsList("tags", config);
@@ -375,10 +372,10 @@ void PController::updateModList(QString orderBy, QString searchTerm)
         query = db.getAllMods();
     }
     else if (orderBy.isEmpty() && !searchTerm.isEmpty()) {
-        query = db.searchMods("title", searchTerm);
+        query = db.queryMods("title", searchTerm);
     }
     else {
-        query = db.searchMods(orderBy, searchTerm);
+        query = db.queryMods(orderBy, searchTerm);
     }
 
     // Iterate through the results and create PModItem objects

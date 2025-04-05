@@ -39,12 +39,15 @@ public:
         ModTitleRole = Qt::UserRole + 1,
         ModAuthorRole,
         ModDescriptionRole,
-        ModPathRole,
         ModEnabledRole,
         ModCategoryRole,
         ModTagsRole,
         ModIdRole,
-        ModObjectRole
+        ModObjectRole,
+        ModFilenameRole,
+        ModIconPathsRole,
+        ModDependencyIdRole,
+        ModLocationRole
     };
 
     QSharedPointer<PModItem> getModAsObject(QString modId) const;
