@@ -82,20 +82,6 @@ void PModItem::setmodDescription(const QString &newModDescription)
     emit modDescriptionChanged();
 }
 
-QUrl PModItem::modPath() const
-{
-    return m_mod_path;
-}
-
-void PModItem::setmodPath(const QUrl &newModPath)
-{
-    if (m_mod_path == newModPath)
-        return;
-
-    m_mod_path = newModPath;
-    emit modPathChanged();
-}
-
 bool PModItem::modEnabled() const
 {
     return m_mod_enabled;
@@ -150,6 +136,62 @@ void PModItem::setmodId(const QString &newModId)
 
     m_mod_id = newModId;
     emit modIdChanged();
+}
+
+QUrl PModItem::modLocation() const
+{
+    return m_mod_path;
+}
+
+void PModItem::setmodLocation(const QUrl &newModLocation)
+{
+    if (m_mod_path == newModLocation)
+        return;
+
+    m_mod_path = newModLocation;
+    emit modLocationChanged();
+}
+
+QString PModItem::modFilename() const
+{
+    return m_mod_filename;
+}
+
+void PModItem::setmodFilename(const QString &newModFilename)
+{
+    if (m_mod_filename == newModFilename)
+        return;
+
+    m_mod_filename = newModFilename;
+    emit modFilenameChanged();
+}
+
+QStringList PModItem::modIconPaths() const
+{
+    return m_mod_iconpaths;
+}
+
+void PModItem::setmodIconPaths(const QStringList &newModIconPaths)
+{
+    if (m_mod_iconpaths == newModIconPaths)
+        return;
+
+    m_mod_iconpaths = newModIconPaths;
+    emit modIconPathsChanged();
+}
+
+QString PModItem::dependencyId() const
+{
+    return m_dependency_id;
+}
+
+void PModItem::setDependencyId(const QString &newDependencyId)
+{
+    if (m_dependency_id == newDependencyId)
+        return;
+
+    m_dependency_id = newDependencyId;
+    emit dependencyIdChanged();
 }
 
 void PModItem::setQmlItem(QObject* item)

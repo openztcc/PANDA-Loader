@@ -57,17 +57,17 @@ public:
     QString modId() const;
     void setmodId(const QString &newModId);
 
-    QUrl modLocation() const { return m_mod_location; }
-    void setmodLocation(const QUrl &newModLocation) { m_mod_location = newModLocation; }
+    QUrl modLocation() const;
+    void setmodLocation;
 
-    QString modFilename() const { return m_mod_filename; }
-    void setmodFilename(const QString &newModFilename) { m_mod_filename = newModFilename; }
+    QString modFilename() const;
+    void setmodFilename(const QString &newModFilename);
 
-    QStringList modIconPaths() const { return m_mod_iconpaths; }
-    void setmodIconPaths(const QStringList &newModIconPaths) { m_mod_iconpaths = newModIconPaths; }
+    QStringList modIconPaths() const;
+    void setmodIconPaths(const QStringList &newModIconPaths);
 
-    QString dependencyId() const { return m_dependency_id; }
-    void setDependencyId(const QString &newDependencyId) { m_dependency_id = newDependencyId; }
+    QString dependencyId() const;
+    void setDependencyId(const QString &newDependencyId);
 
     QObject* qmlItem() const { return m_qmlItem; }
     void setQmlItem(QObject* item);
