@@ -50,7 +50,7 @@ public:
     bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
                    const QString &version, bool enabled, const QVector<QString> &tags,
                    const QString category, const QString &modId, const QVector<PDependency> &dependencies = {},
-                   const QString &path = "", const QString &filename = "", const QString &location = "");
+                   const QString &filename = "", const QString &location = "");
     bool insertMod(const PMod &mod);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);

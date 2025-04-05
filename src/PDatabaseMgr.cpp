@@ -74,7 +74,7 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
     QSqlQuery query(m_db);
 
     // Check for missing required fields
-    if (name.isEmpty() || version.isEmpty() || path.isEmpty() || modId.isEmpty()) {
+    if (name.isEmpty() || version.isEmpty() || modId.isEmpty()) {
         qDebug() << "Missing required fields for mod insert";
         return false;
     }
@@ -86,7 +86,6 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
     query.bindValue(":title", name);
     query.bindValue(":version", version);
     query.bindValue(":mod_id", modId);
-    query.bindValue(":path", path);
     
     // add authors to author field
     if (!authors.isEmpty()) {
@@ -167,7 +166,7 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
 // TODO: Fix tags so they insert as a list
 bool PDatabaseMgr::insertMod(const PMod &mod) {
     return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies,
-        mod.location, mod.filename, mod.location);
+        mod.filename, mod.location);
 }
 
 bool PDatabaseMgr::deleteMod(const QString &modId) {
@@ -404,7 +403,7 @@ QSqlQuery PDatabaseMgr::getAllMods() {
 // Return results within orderBy filter and searchTerm
 // TODO: Handle case where searchTerm is empty or just spaces, should return all mods
 // in this filter
-QSqlQuery PDatabaseMgr::searchMods(const QString &propertyName, const QString &searchTerm) {
+QSqlQuery PDatabaseMgr::queryMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query(m_db);
 
     QString property = propertyName;
@@ -429,7 +428,7 @@ QSqlQuery PDatabaseMgr::searchMods(const QString &propertyName, const QString &s
 
 // Get search results as a list of strings
 QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString &searchTerm) {
-    QSqlQuery query = searchMods(propertyName, searchTerm);
+    QSqlQuery query = queryMods(propertyName, searchTerm);
     QStringList results;
 
     while (query.next()) {
@@ -455,12 +454,14 @@ PDatabaseMgr::PMod PDatabaseMgr::getModByPk(const QString &modId) {
         mod.title = query.value("title").toString();
         mod.authors = query.value("author").toString().split(", ");
         mod.description = query.value("description").toString();
-        mod.path = query.value("path").toString();
         mod.enabled = query.value("enabled").toBool();
         mod.tags = query.value("tags").toString().split(", ");
         mod.category = query.value("category").toString();
         mod.version = query.value("version").toString();
         mod.mod_id = query.value("mod_id").toString();
+        mod.iconpaths = query.value("iconpaths").toStringList();
+        mod.filename = query.value("filename").toString();
+        mod.location = query.value("location").toString();
     }
 
     return mod;
@@ -482,12 +483,14 @@ PDatabaseMgr::PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &mod
         mod.title = query.value("title").toString();
         mod.authors = query.value("author").toString().split(", ");
         mod.description = query.value("description").toString();
-        mod.path = query.value("path").toString();
         mod.enabled = query.value("enabled").toBool();
         mod.tags = query.value("tags").toString().split(", ");
         mod.category = query.value("category").toString();
         mod.version = query.value("version").toString();
         mod.mod_id = query.value("mod_id").toString();
+        mod.iconpaths = query.value("iconpaths").toStringList();
+        mod.filename = query.value("filename").toString();
+        mod.location = query.value("location").toString();
     }
 
     return mod;
