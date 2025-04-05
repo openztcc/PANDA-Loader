@@ -61,6 +61,23 @@ Item {
                     width: 44
                     height: 30
                     color: "#BCD0C3"
+
+                    Image {
+                        id: modIcon
+                        anchors.fill: parent
+                        source: getIcon()
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        visible: modItem.modelObject && modItem.modelObject.modIcon ? true : false
+                    }
+
+                    function getIcon() {
+                        if (modItem.modelObject && modItem.modelObject.modIcon) {
+                            return modItem.modelObject.modIconPaths[0]
+                        } else {
+                            return "qrc:/images/placeholder.png"
+                        }
+                    }
                 }
                 
                 // mod name and category label

@@ -249,7 +249,9 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
     {
         PDatabaseMgr::PMod mod;
         QString filename = ztd.split("/").last();
-        QString location = ztd.split("/").removeLast().join("/");
+        QStringList locationPath = ztd.split("/");
+        locationPath.removeLast();
+        QString location = locationPath.join("/");
 
 
         // Check if ztd already exists in database
