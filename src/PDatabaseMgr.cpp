@@ -447,30 +447,8 @@ QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString 
 // Return mod by primary key
 PDatabaseMgr::PMod PDatabaseMgr::getModByPk(const QString &modId) {
     QSqlQuery query(m_db);
-    query.prepare("SELECT * FROM mods WHERE mod_id = :modId");
-    query.bindValue(":modId", modId);
 
-    if (!query.exec()) {
-        qDebug() << "Error running query: " << query.lastError();
-    }
-
-    PMod mod;
-
-    if (query.next()) {
-        mod.title = query.value("title").toString();
-        mod.authors = query.value("author").toString().split(", ");
-        mod.description = query.value("description").toString();
-        mod.enabled = query.value("enabled").toBool();
-        mod.tags = query.value("tags").toString().split(", ");
-        mod.category = query.value("category").toString();
-        mod.version = query.value("version").toString();
-        mod.mod_id = query.value("mod_id").toString();
-        mod.iconpaths = query.value("iconpaths").toStringList();
-        mod.filename = query.value("filename").toString();
-        mod.location = query.value("location").toString();
-    }
-
-    return mod;
+    return getModByPk(m_db, modId);
 }
 
 // Static version of getModByPk
@@ -494,7 +472,7 @@ PDatabaseMgr::PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &mod
         mod.category = query.value("category").toString();
         mod.version = query.value("version").toString();
         mod.mod_id = query.value("mod_id").toString();
-        mod.iconpaths = query.value("iconpaths").toStringList();
+        mod.iconpaths = query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts);
         mod.filename = query.value("filename").toString();
         mod.location = query.value("location").toString();
     }

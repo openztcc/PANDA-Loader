@@ -392,7 +392,7 @@ void PController::updateModList(QString orderBy, QString searchTerm)
         mod->setmodCategory(query.value("category").toString());
         mod->setmodTags(query.value("tags").toString());
         mod->setmodId(query.value("mod_id").toString());
-        mod->setmodIconPaths(PConfigMgr::getIconPaths(query.value("iconpaths").toString()));
+        mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
         mod->setmodFilename(query.value("filename").toString());
         mod->setmodLocation(QUrl::fromLocalFile(query.value("location").toString()));
         mod->setDependencyId(query.value("dependency_id").toString());
