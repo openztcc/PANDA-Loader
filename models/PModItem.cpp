@@ -9,22 +9,30 @@ PModItem::PModItem(QObject *parent)
     m_mod_title = "";
     m_mod_author = "";
     m_mod_description = "";
-    m_mod_path = QUrl();
     m_mod_enabled = false;
     m_mod_category = "";
     m_mod_tags = "";
-
-    
+    m_mod_iconpaths = QStringList();
+    m_mod_location = QUrl();
+    m_mod_filename = "";
+    m_dependency_id = "";
 }
 
-PModItem::PModItem(const QString &title, const QString &author, const QString &desc, 
-    const QUrl &path, bool enabled, const QString &category, const QString &tags, QObject *parent) 
+PModItem::PModItem(const QString &title, const QString &author, const QString &desc,
+                   const QUrl &path, bool enabled, const QString &category, const QString &tags,
+                   const QStringList &iconpaths, const QString &location, const QString &filename,
+                   const QString &depId, QObject *parent)
+
 : QObject(parent), 
 m_mod_title(title), m_mod_author(author), m_mod_description(desc),
-m_mod_path(path), m_mod_enabled(enabled), m_mod_category(category), m_mod_tags(tags)
+m_mod_enabled(enabled), m_mod_category(category), m_mod_tags(tags),
+m_mod_location(location), m_mod_filename(filename),
+m_mod_iconpaths(iconpaths), m_dependency_id(depId)
 {
+    m_mod_index = 0;
+    m_qmlItem = nullptr;
+    m_isSelected = false;
 }
-
 
 int PModItem::modIndex() const
 {
@@ -140,15 +148,15 @@ void PModItem::setmodId(const QString &newModId)
 
 QUrl PModItem::modLocation() const
 {
-    return m_mod_path;
+    return m_mod_location;
 }
 
 void PModItem::setmodLocation(const QUrl &newModLocation)
 {
-    if (m_mod_path == newModLocation)
+    if (m_mod_location == newModLocation)
         return;
 
-    m_mod_path = newModLocation;
+    m_mod_location = newModLocation;
     emit modLocationChanged();
 }
 

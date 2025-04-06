@@ -31,7 +31,9 @@ class PModItem : public QObject
 public:
     explicit PModItem(QObject *parent = nullptr);
     PModItem(const QString &title, const QString &author, const QString &desc, 
-        const QUrl &path, bool enabled, const QString &category, const QString &tags, QObject *parent = nullptr);
+        const QUrl &path, bool enabled, const QString &category, const QString &tags, 
+        const QStringList &iconpaths, const QString &location, const QString &filename,
+        const QString &depId, QObject *parent = nullptr);
         
     int modIndex() const;
     void setmodIndex(int newModIndex);
@@ -105,7 +107,7 @@ private:
     QString m_mod_category;
     QString m_mod_tags;
     QString m_mod_id;
-    QString m_mod_location;
+    QUrl m_mod_location;
     QString m_mod_filename;
     QStringList m_mod_iconpaths;
     QString m_dependency_id;
