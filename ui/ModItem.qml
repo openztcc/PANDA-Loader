@@ -20,6 +20,16 @@ Item {
         if (modItem.modelObject) {
             modItem.modelObject.qmlItem = modItem            
         }
+        modItem.forceActiveFocus()
+    }
+
+    Keys.onPressed: (event) => {
+        // Escape key to deselect mod
+        if (event.key === Qt.Key_Escape) {
+            modItem.controller.setCurrentMod(null)
+            modItem.isSelected = false
+            console.log("Tried to deselect mod")
+        }
     }
 
     Pane {
@@ -151,6 +161,7 @@ Item {
                     modContextMenu.popup()
                 }
             }
+
             hoverEnabled: true
 
             Menu {

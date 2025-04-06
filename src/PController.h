@@ -55,7 +55,7 @@ public:
     void addMod(QSharedPointer<PModItem>);
     void removeMod(QSharedPointer<PModItem>);
     Q_INVOKABLE void selectMod(int index);
-    void deselectMod();
+    Q_INVOKABLE void deselectMod(int index);
     void clearSelection();
     void loadMods();
     void loadModsFromZTDs(const QStringList &ztdList);
@@ -81,7 +81,7 @@ signals:
 
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;
-    QList<QObject*> m_selected_mods;
+    QList<QSharedPointer<PModItem>> m_selected_mods;
     QSharedPointer<PModItem> m_currentMod;
     QSharedPointer<PModItem> m_previousMod;
     PState *m_state;

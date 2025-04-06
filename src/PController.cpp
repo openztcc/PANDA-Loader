@@ -79,9 +79,30 @@ void PController::selectMod(int index)
     emit modSelected();
 }
 
-void PController::deselectMod()
+void PController::deselectMod(int index)
 {
+    if (index < 0 || index >= m_mods_list.size())
+    {
+        return;
+    }
 
+    // Check if the mod at the given index is the current mod
+    if (m_mods_list[index] != m_currentMod)
+    {
+        qDebug() << "Selected mod is not the current mod, cannot deselect";
+        return;
+    }
+
+    if (m_currentMod)
+    {
+        m_currentMod = nullptr;
+        qDebug() << "Emitting modDeselected signal: " << m_currentMod->modTitle();
+        emit modDeselected();
+    }
+    else
+    {
+        qDebug() << "Current mod is null, cannot deselect";
+    }
 }
 
 void PController::clearSelection()
@@ -95,6 +116,12 @@ void PController::setCurrentMod(QObject* mod)
     PModItem* modItem = qobject_cast<PModItem*>(mod);
     if (!modItem) {
         qDebug() << "Invalid mod object passed to setCurrentMod";
+
+        // Deselect current mod if invalid
+        m_previousMod = m_currentMod;
+        m_currentMod = nullptr;
+        emit currentModChanged();
+
         return;
     }
 
