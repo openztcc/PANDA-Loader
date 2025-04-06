@@ -56,7 +56,6 @@ public:
     void removeMod(QSharedPointer<PModItem>);
     Q_INVOKABLE void selectMod(int index);
     Q_INVOKABLE void deselectMod(int index);
-    void clearSelection();
     void loadMods();
     void loadModsFromZTDs(const QStringList &ztdList);
     void addState(PState *state);
@@ -64,7 +63,7 @@ public:
 
     QObject* currentMod() const { return m_currentMod.data(); }
     Q_INVOKABLE void setCurrentMod(QObject* mod);
-
+    Q_INVOKABLE void clearSelection();
     QObject* previousMod() const { return m_previousMod.data(); }
 
     virtual int rowCount(const QModelIndex &parent) const override;

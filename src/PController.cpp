@@ -107,6 +107,10 @@ void PController::deselectMod(int index)
 
 void PController::clearSelection()
 {
+    // Clear the current mod and emit the deselected signal
+    m_previousMod = m_currentMod;
+    m_currentMod = nullptr;
+    emit currentModChanged();
     emit modDeselected();
 }
 
@@ -116,13 +120,14 @@ void PController::setCurrentMod(QObject* mod)
     PModItem* modItem = qobject_cast<PModItem*>(mod);
     if (!modItem) {
         qDebug() << "Invalid mod object passed to setCurrentMod";
+        return;
+    }
 
-        // Deselect current mod if invalid
+    // handle passed in  item if nullptr
+    if (modItem == nullptr) {
         m_previousMod = m_currentMod;
         m_currentMod = nullptr;
         emit currentModChanged();
-
-        return;
     }
 
     // find mod shared pointer in list

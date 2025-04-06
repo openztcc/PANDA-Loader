@@ -26,9 +26,10 @@ Item {
     Keys.onPressed: (event) => {
         // Escape key to deselect mod
         if (event.key === Qt.Key_Escape) {
-            modItem.controller.setCurrentMod(null)
+            var modTitle = modItem.modelObject.modTitle
             modItem.isSelected = false
-            console.log("Tried to deselect mod")
+            modItem.controller.clearSelection()
+            console.log("Deselected mod:", modTitle)
         }
     }
 
