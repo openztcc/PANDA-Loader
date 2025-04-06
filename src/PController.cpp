@@ -16,11 +16,14 @@ QSharedPointer<PModItem> PController::getModAsObject(QString modId) const
     modItem->setmodTitle(mod.title);
     modItem->setmodAuthor(mod.authors.join(", "));
     modItem->setmodDescription(mod.description);
-    modItem->setmodPath(QUrl::fromLocalFile(mod.path));
     modItem->setmodEnabled(mod.enabled);
     modItem->setmodCategory(mod.category);
     modItem->setmodTags(mod.tags.join(", "));
     modItem->setmodId(mod.mod_id);
+    modItem->setmodLocation(QUrl::fromLocalFile(mod.location));
+    modItem->setmodFilename(mod.filename);
+    modItem->setmodIconPaths(mod.iconpaths);
+    modItem->setDependencyId(mod.dependencies[0].dependencyId);
 
     qDebug() << "Currently selected mod: " << modItem->modTitle();
     qDebug() << "With ID: " << modItem->modId();
@@ -131,8 +134,6 @@ QVariant PController::data(const QModelIndex &index, int role) const
                 return mod->modAuthor();
             case ModDescriptionRole:
                 return mod->modDescription();
-            case ModPathRole:
-                return mod->modPath();
             case ModEnabledRole:
                 return mod->modEnabled();
             case ModCategoryRole:
@@ -141,6 +142,14 @@ QVariant PController::data(const QModelIndex &index, int role) const
                 return mod->modTags();
             case ModIdRole:
                 return mod->modId();
+            case ModFilenameRole:
+                return mod->modFilename();
+            case ModDependencyIdRole:
+                return mod->dependencyId();
+            case ModLocationRole:
+                return mod->modLocation();
+            case ModIconPathsRole:
+                return mod->modIconPaths();
             case ModObjectRole:
                 return QVariant::fromValue(mod.data()); // return a whole mod object
         }
@@ -158,11 +167,13 @@ QHash<int, QByteArray> PController::roleNames() const
     roles[ModTitleRole] = "modTitle";
     roles[ModAuthorRole] = "modAuthor";
     roles[ModDescriptionRole] = "modDescription";
-    roles[ModPathRole] = "modPath";
     roles[ModEnabledRole] = "modEnabled";
     roles[ModCategoryRole] = "modCategory";
     roles[ModTagsRole] = "modTags";
     roles[ModIdRole] = "modId";
+    roles[ModFilenameRole] = "modFilename";
+    roles[ModDependencyIdRole] = "modDependencyId";
+    roles[ModLocationRole] = "modLocation";
     roles[ModObjectRole] = "modObject"; // return a whole mod object
 
     return roles;
@@ -195,11 +206,14 @@ void PController::loadMods()
         mod->setmodTitle(query.value("title").toString());
         mod->setmodAuthor(query.value("author").toString());
         mod->setmodDescription(query.value("description").toString());
-        mod->setmodPath(QUrl::fromLocalFile(query.value("path").toString()));
         mod->setmodEnabled(query.value("enabled").toBool());
         mod->setmodCategory(query.value("category").toString());
         mod->setmodTags(query.value("tags").toString());
         mod->setmodId(query.value("mod_id").toString());
+        mod->setmodFilename(query.value("filename").toString());
+        mod->setmodIconPaths(query.value("iconpaths").toStringList());
+        mod->setDependencyId(query.value("dependency_id").toString());
+        mod->setmodLocation(QUrl::fromLocalFile(query.value("location").toString()));
         addMod(mod);
     }
 
@@ -232,21 +246,42 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
     for (const QString &ztd : ztdList)
     {
         PDatabaseMgr::PMod mod;
+        QString filename = ztd.split("/").last();
+        QStringList locationPath = ztd.split("/");
+        locationPath.removeLast();
+        QString location = locationPath.join("/");
+        QStringList iconPaths;
+
+
+        // Check if ztd already exists in database
+        if (db.searchMods("filename", filename).size() > 0) {
+            qDebug() << "ZTD already exists in database: " << filename;
+            continue;
+        } else { // process icons if do not exist
+            QMap<QString, OutputBuffer> buffers = PGraphicsMgr::getGraphicBuffers(ztd);
+            if (buffers.isEmpty()) {
+                qDebug() << "No buffers to process for ztd: " << ztd;
+            } else {
+                iconPaths = PGraphicsMgr::processIcons(buffers);
+            }
+        }
 
         // Check if config exists
         if (!PZtdMgr::fileExistsInZtd(ztd, "meta.toml")) {
             qDebug() << "No meta config found in ztd: " << ztd;
-            
+
             // Insert mod with blank values
             mod.title = "Unknown";
             mod.authors = {"Unknown"};
             mod.description = "No description found";
-            mod.path = ztd;
+            mod.location = location;
+            mod.filename = filename;
             mod.enabled = true;
             mod.category = "Unknown";
             mod.tags = {"Unknown"};
             mod.version = "1.0.0";
             mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+            mod.iconpaths = iconPaths;
         }
         else {
 
@@ -282,7 +317,6 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
                 mod.description = "No description found";
             }
 
-            mod.path = ztd;
             mod.enabled = true;
 
             mod.tags = PConfigMgr::getKeyValueAsList("tags", config);
@@ -307,7 +341,9 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
                 mod.version = "1.0.0";
             }
 
-
+            mod.filename = filename;
+            mod.location = location;
+            mod.iconpaths = iconPaths;
         }
 
         db.insertMod(mod);
@@ -338,10 +374,10 @@ void PController::updateModList(QString orderBy, QString searchTerm)
         query = db.getAllMods();
     }
     else if (orderBy.isEmpty() && !searchTerm.isEmpty()) {
-        query = db.searchMods("title", searchTerm);
+        query = db.queryMods("title", searchTerm);
     }
     else {
-        query = db.searchMods(orderBy, searchTerm);
+        query = db.queryMods(orderBy, searchTerm);
     }
 
     // Iterate through the results and create PModItem objects
@@ -352,11 +388,14 @@ void PController::updateModList(QString orderBy, QString searchTerm)
         mod->setmodTitle(query.value("title").toString());
         mod->setmodAuthor(query.value("author").toString());
         mod->setmodDescription(query.value("description").toString());
-        mod->setmodPath(QUrl::fromLocalFile(query.value("path").toString()));
         mod->setmodEnabled(query.value("enabled").toBool());
         mod->setmodCategory(query.value("category").toString());
         mod->setmodTags(query.value("tags").toString());
         mod->setmodId(query.value("mod_id").toString());
+        mod->setmodIconPaths(PConfigMgr::getIconPaths(query.value("iconpaths").toString()));
+        mod->setmodFilename(query.value("filename").toString());
+        mod->setmodLocation(QUrl::fromLocalFile(query.value("location").toString()));
+        mod->setDependencyId(query.value("dependency_id").toString());
         addMod(mod);
     }
     db.closeDatabase();

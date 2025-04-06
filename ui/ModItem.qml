@@ -39,7 +39,7 @@ Item {
                 return "#f7fbf2"
             }
         }
-        
+
         contentItem: Item { 
             anchors.fill: parent
             RowLayout {
@@ -61,6 +61,17 @@ Item {
                     width: 44
                     height: 30
                     color: "#BCD0C3"
+
+                    Image {
+                        id: modIcon
+                        anchors.fill: parent
+                        source: (modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
+                                             ? modItem.modelObject.modIconPaths[0]
+                                             : "")
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        visible: modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
+                    }
                 }
                 
                 // mod name and category label

@@ -18,6 +18,7 @@ concerns itself with the mods list and operations over other classes from the UI
 #include "PZtdMgr.h"
 #include "PDatabaseMgr.h"
 #include "PConfigMgr.h"
+#include "PGraphicsMgr.h"
 
 // Third-party includes
 #include "toml.hpp"
@@ -38,12 +39,15 @@ public:
         ModTitleRole = Qt::UserRole + 1,
         ModAuthorRole,
         ModDescriptionRole,
-        ModPathRole,
         ModEnabledRole,
         ModCategoryRole,
         ModTagsRole,
         ModIdRole,
-        ModObjectRole
+        ModObjectRole,
+        ModFilenameRole,
+        ModIconPathsRole,
+        ModDependencyIdRole,
+        ModLocationRole
     };
 
     QSharedPointer<PModItem> getModAsObject(QString modId) const;

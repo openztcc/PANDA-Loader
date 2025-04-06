@@ -1,5 +1,5 @@
 #include <QtTest/QtTest>
-#include "../PConfigMgr.h"
+#include "../src/PConfigMgr.h"
 
 class PTestConfigMgr : public QObject
 {
@@ -19,6 +19,16 @@ private slots:
     // void testUpdateZooIniConfig();
     // void testRemoveZooIniConfig_data();
     // void testRemoveZooIniConfig();
+    void testGetAllConfigInZtd_data();
+    void testGetAllConfigInZtd();
+    void testGetCoreConfigInZtd_data();
+    void testGetCoreConfigInZtd();
+    void testGetIconAniPaths_data();
+    void testGetIconAniPaths();
+    void testGetIconAniConfigInZtd_data();
+    void testGetIconAniConfigInZtd();
+    void testGetIconPaths_data();
+    void testGetIconPaths();
 };
 
 // Statics
@@ -185,6 +195,179 @@ void PTestConfigMgr::testRemoveMetaConfig()
     if (expected) {
         toml::table config = PConfigMgr::getMetaConfig(ztdFilePath);
         QVERIFY(config.empty());
+    }
+}
+
+void PTestConfigMgr::testGetAllConfigInZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("valid ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetAllConfigInZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get all config files in ztd
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> configFiles = PConfigMgr::getAllConfigInZtd(ztdFilePath);
+
+    qDebug() << "Config files found:" << configFiles.size();
+    for (const auto &file : configFiles) {
+        qDebug() << "File:" << file->filename << file->path;
+        if (file->settings) {
+            qDebug() << "Settings:" << file->settings->fileName();
+        } else {
+            qDebug() << "Settings: nullptr";
+        }
+    }
+
+    if (expected) {
+        QVERIFY(!configFiles.empty());
+        for (const auto &file : configFiles) {
+            QVERIFY(file->settings != nullptr);
+        }
+    } else {
+        QVERIFY(configFiles.empty());
+    }
+}
+
+void PTestConfigMgr::testGetCoreConfigInZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("valid ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("valid uca ztd") << testDataDir + "getfile_valid_uca.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetCoreConfigInZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get core config files in ztd
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> coreConfigFiles = PConfigMgr::getCoreConfigInZtd(ztdFilePath);
+
+    qDebug() << "Core config files found:" << coreConfigFiles.size();
+    for (const auto &file : coreConfigFiles) {
+        qDebug() << "File:" << file->filename << file->path;
+        if (file->settings) {
+            qDebug() << "Settings:" << file->settings->fileName();
+        } else {
+            qDebug() << "Settings: nullptr";
+        }
+    }
+
+    if (expected) {
+        QVERIFY(!coreConfigFiles.empty());
+        for (const auto &file : coreConfigFiles) {
+            QVERIFY(file->settings != nullptr);
+        }
+    } else {
+        QVERIFY(coreConfigFiles.empty());
+    }
+}
+
+void PTestConfigMgr::testGetIconAniPaths_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("uca ztd") << testDataDir + "getfile_valid_uca.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetIconAniPaths()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get icon animation paths
+    QStringList iconAniPaths = PConfigMgr::getIconAniPaths(ztdFilePath);
+
+    qDebug() << "Icon animation paths found:" << iconAniPaths.size();
+    for (const auto &path : iconAniPaths) {
+        qDebug() << "Path:" << path;
+    }
+
+    if (expected) {
+        QVERIFY(!iconAniPaths.empty());
+    } else {
+        QVERIFY(iconAniPaths.empty());
+    }
+}
+
+void PTestConfigMgr::testGetIconAniConfigInZtd_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("valid ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("valid uca ztd") << testDataDir + "getfile_valid_uca.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetIconAniConfigInZtd()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get icon animation config files in ztd
+    std::vector<std::unique_ptr<PConfigMgr::IniData>> iconAniConfigFiles = PConfigMgr::getIconAniConfigInZtd(ztdFilePath);
+
+    qDebug() << "Icon animation config files found:" << iconAniConfigFiles.size();
+    for (const auto &file : iconAniConfigFiles) {
+        qDebug() << "File:" << file->filename << file->path;
+        if (file->settings) {
+            qDebug() << "Settings:" << file->settings->fileName();
+        } else {
+            qDebug() << "Settings: nullptr";
+        }
+    }
+
+    if (expected) {
+        QVERIFY(!iconAniConfigFiles.empty());
+        for (const auto &file : iconAniConfigFiles) {
+            QVERIFY(file->settings != nullptr);
+        }
+    } else {
+        QVERIFY(iconAniConfigFiles.empty());
+    }
+}
+
+void PTestConfigMgr::testGetIconPaths_data()
+{
+    QTest::addColumn<QString>("ztdFilePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("ucb ztd") << testDataDir + "getfile_valid.ztd" << true;
+    QTest::newRow("uca ztd") << testDataDir + "getfile_valid_uca.ztd" << true;
+    QTest::newRow("invalid ztd") << testDataDir + "config_invalid.ztd" << false;
+}
+
+void PTestConfigMgr::testGetIconPaths()
+{
+    QFETCH(QString, ztdFilePath);
+    QFETCH(bool, expected);
+
+    // Get icon paths
+    QStringList iconPaths = PConfigMgr::getIconPaths(ztdFilePath);
+
+    qDebug() << "Icon paths found:" << iconPaths.size();
+    for (const auto &path : iconPaths) {
+        qDebug() << "Path:" << path;
+    }
+
+    if (expected) {
+        QVERIFY(!iconPaths.empty());
+    } else {
+        QVERIFY(iconPaths.empty());
     }
 }
 

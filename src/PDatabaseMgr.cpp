@@ -67,25 +67,25 @@ bool PDatabaseMgr::createTables() {
 }
 
 bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
-                             const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
-                             const QString category, const QString &modId, const QVector<PDependency> &dependencies) 
+                             const QString &version, bool enabled, const QVector<QString> &tags,
+                             const QString category, const QString &modId, const QVector<PDependency> &dependencies,
+                             const QString &filename, const QString &location, const QStringList &iconpaths)
                              {
     QSqlQuery query(m_db);
 
     // Check for missing required fields
-    if (name.isEmpty() || version.isEmpty() || path.isEmpty() || modId.isEmpty()) {
+    if (name.isEmpty() || version.isEmpty() || modId.isEmpty()) {
         qDebug() << "Missing required fields for mod insert";
         return false;
     }
 
-    query.prepare("INSERT INTO mods (title, author, description, path, enabled, tags, category, version, mod_id) "
-                  "VALUES (:title, :author, :description, :path, :enabled, :tags, :category, :version, :mod_id)");
+    query.prepare("INSERT INTO mods (title, author, description, enabled, tags, category, version, mod_id, filename, location, iconpaths) "
+                  "VALUES (:title, :author, :description, :enabled, :tags, :category, :version, :mod_id, :filename, :location, :iconpaths) ");
     
     // Bind required values
     query.bindValue(":title", name);
     query.bindValue(":version", version);
     query.bindValue(":mod_id", modId);
-    query.bindValue(":path", path);
     
     // add authors to author field
     if (!authors.isEmpty()) {
@@ -101,14 +101,6 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
     }
     else {
         query.bindValue(":description", "");
-    }
-
-    // add path to path field
-    if (!path.isEmpty()) {
-        query.bindValue(":path", path);
-    }
-    else {
-        query.bindValue(":path", "");
     }
 
     // add enabled to enabled field
@@ -135,12 +127,6 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         query.bindValue(":category", "Uncategorized");
     }
 
-    // Execute the query
-    if (!query.exec()) {
-        qDebug() << "Failed to insert mod: " << query.lastError();
-        return false;
-    }
-
     // Insert dependencies
     if (!dependencies.isEmpty()) {
         for (const PDependency &dependency : dependencies) {
@@ -153,12 +139,40 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         // 
     }
 
+    // Insert mod location and filename
+    if (!location.isEmpty()) {
+        query.bindValue(":location", location);
+    } 
+    else {
+        query.bindValue(":location", "");
+    }
+    if (!filename.isEmpty()) {
+        query.bindValue(":filename", filename);
+    } 
+    else {
+        query.bindValue(":filename", "");
+    }
+
+    if (!iconpaths.isEmpty()) {
+        query.bindValue(":iconpaths", iconpaths.join(", "));
+    } 
+    else {
+        query.bindValue(":iconpaths", "");
+    }
+
+    // Execute the query
+    if (!query.exec()) {
+        qDebug() << "Failed to insert mod: " << query.lastError();
+        return false;
+    }
+
     return true;
 }
 
 // TODO: Fix tags so they insert as a list
 bool PDatabaseMgr::insertMod(const PMod &mod) {
-    return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.path, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies);
+    return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies,
+        mod.filename, mod.location, mod.iconpaths);
 }
 
 bool PDatabaseMgr::deleteMod(const QString &modId) {
@@ -395,7 +409,7 @@ QSqlQuery PDatabaseMgr::getAllMods() {
 // Return results within orderBy filter and searchTerm
 // TODO: Handle case where searchTerm is empty or just spaces, should return all mods
 // in this filter
-QSqlQuery PDatabaseMgr::searchMods(const QString &propertyName, const QString &searchTerm) {
+QSqlQuery PDatabaseMgr::queryMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query(m_db);
 
     QString property = propertyName;
@@ -418,6 +432,18 @@ QSqlQuery PDatabaseMgr::searchMods(const QString &propertyName, const QString &s
     return query;
 }
 
+// Get search results as a list of strings
+QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString &searchTerm) {
+    QSqlQuery query = queryMods(propertyName, searchTerm);
+    QStringList results;
+
+    while (query.next()) {
+        results.append(query.value("title").toString());
+    }
+
+    return results;
+}
+
 // Return mod by primary key
 PDatabaseMgr::PMod PDatabaseMgr::getModByPk(const QString &modId) {
     QSqlQuery query(m_db);
@@ -434,12 +460,14 @@ PDatabaseMgr::PMod PDatabaseMgr::getModByPk(const QString &modId) {
         mod.title = query.value("title").toString();
         mod.authors = query.value("author").toString().split(", ");
         mod.description = query.value("description").toString();
-        mod.path = query.value("path").toString();
         mod.enabled = query.value("enabled").toBool();
         mod.tags = query.value("tags").toString().split(", ");
         mod.category = query.value("category").toString();
         mod.version = query.value("version").toString();
         mod.mod_id = query.value("mod_id").toString();
+        mod.iconpaths = query.value("iconpaths").toStringList();
+        mod.filename = query.value("filename").toString();
+        mod.location = query.value("location").toString();
     }
 
     return mod;
@@ -461,12 +489,14 @@ PDatabaseMgr::PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &mod
         mod.title = query.value("title").toString();
         mod.authors = query.value("author").toString().split(", ");
         mod.description = query.value("description").toString();
-        mod.path = query.value("path").toString();
         mod.enabled = query.value("enabled").toBool();
         mod.tags = query.value("tags").toString().split(", ");
         mod.category = query.value("category").toString();
         mod.version = query.value("version").toString();
         mod.mod_id = query.value("mod_id").toString();
+        mod.iconpaths = query.value("iconpaths").toStringList();
+        mod.filename = query.value("filename").toString();
+        mod.location = query.value("location").toString();
     }
 
     return mod;

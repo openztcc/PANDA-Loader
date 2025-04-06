@@ -6,10 +6,22 @@
 #include "quazipnewinfo.h"
 #include <QDir>
 #include <QUuid>
+#include <QBuffer>
 
 class PZtdMgr
 {
 public:
+
+    // ----------- Local Models ------------------
+    // FileData
+    struct FileData {
+        QByteArray data;
+        QString filename;
+        QString ext;
+        QString path;
+    };
+
+
     PZtdMgr();
     ~PZtdMgr();
     static bool hasZtdFiles(const QString &zipFilePath);
@@ -24,6 +36,14 @@ public:
     static bool openFileInZtd(const QString &ztdFilePath, const QString &fileNameToOpen, QByteArray &fileData);
     static bool isZtdFile(const QString &filePath);
     static bool fileExistsInZtd(const QString &ztdFilePath, const QString &fileNameToCheck);
+    static QList<PZtdMgr::FileData> getFilesInZtd(
+        const QString &ztdFilePath,
+        const QString &ext,
+        int maxLevel = 3,
+        const QStringList &folderList = QStringList(),
+        QuaZip *zip = nullptr
+    );
+    static QByteArray getFileFromRelPath(const QString &ztdFilePath, const QString &relPath);
 private:
     static bool extractFilesFromZtd(const QString &ztdFilePath, const QString &tempDir);
     static bool replaceFileInDir(const QString &tempDirPath, const QString &filePathToAdd);

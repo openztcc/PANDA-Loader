@@ -33,21 +33,24 @@ public:
         QString title;
         QVector<QString> authors;
         QString description;
-        QString path;
         bool enabled;
         QString category;
         QVector<QString> tags;
         QString version;
         QString mod_id;
         QVector<PDependency> dependencies;
+        QString location;
+        QString filename;
+        QStringList iconpaths;
     };
 
     bool openDatabase();
     void closeDatabase();
     bool createTables();
     bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
-                   const QString &version, const QString &path, bool enabled, const QVector<QString> &tags,
-                     const QString category, const QString &modId, const QVector<PDependency> &dependencies);
+                   const QString &version, bool enabled, const QVector<QString> &tags,
+                   const QString category, const QString &modId, const QVector<PDependency> &dependencies = {},
+                   const QString &filename = "", const QString &location = "", const QStringList &iconpaths = {});
     bool insertMod(const PMod &mod);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);
@@ -56,7 +59,8 @@ public:
     QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();
-    QSqlQuery searchMods(const QString &propertyName, const QString &searchTerm);
+    QSqlQuery queryMods(const QString &propertyName, const QString &searchTerm);
+    QStringList searchMods(const QString &propertyName, const QString &searchTerm);
     Q_INVOKABLE PDatabaseMgr::PMod getModByPk(const QString &modId);
     PDatabaseMgr::PMod getModByPk(QSqlDatabase &db, const QString &modId);
 
@@ -75,12 +79,15 @@ private:
         "title TEXT NOT NULL, "
         "author TEXT NOT NULL, "
         "description TEXT, "
-        "path TEXT NOT NULL, "
         "enabled INTEGER NOT NULL, "
         "category TEXT, "
         "tags TEXT, "
         "version TEXT NOT NULL, "
-        "mod_id TEXT NOT NULL UNIQUE"
+        "mod_id TEXT NOT NULL UNIQUE, "
+        "iconpaths TEXT, "
+        "filename TEXT, "
+        "location TEXT, "
+        "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
         ");";
 
     const QString m_createDependenciesTableQuery =
