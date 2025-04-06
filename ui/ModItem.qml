@@ -61,6 +61,7 @@ Item {
                     width: 44
                     height: 30
                     color: "#BCD0C3"
+                    clip: true
 
                     Image {
                         id: modIcon
@@ -71,7 +72,10 @@ Item {
                         fillMode: Image.PreserveAspectFit
                         smooth: true
                         visible: modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
+                        cache: false
+                        asynchronous: true
                     }
+
                 }
                 
                 // mod name and category label
@@ -124,11 +128,17 @@ Item {
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onClicked: function(mouse) {
+                console.log(modItem.modelObject.modIconPaths[0])
                 // left click to select mod
                 if (modItem.controller && modItem.modelObject) {
 
                     // set new current mod 
                     modItem.controller.setCurrentMod(modItem.modelObject);
+                    modItem.isSelected = true
+                }
+
+                // if ctrl + left click, toggle selection
+                if (mouse.button === Qt.LeftButton && mouse.modifiers === Qt.ControlModifier) {
                     modItem.isSelected = true
                 }
 

@@ -6,12 +6,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS 
     Quick 
-    Test 
+    Test
     Sql
     QuickControls2
     QuickLayouts
     Svg
-    Xml 
     Core
     Gui
 )
@@ -118,7 +117,6 @@ target_link_libraries(appPandaLdr
     Qt6::QuickControls2
     Qt6::QuickLayouts
     Qt6::Svg
-    Qt6::Xml
     Qt6::Gui
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a 
     Qt6::Sql 
