@@ -211,7 +211,7 @@ void PController::loadMods()
         mod->setmodTags(query.value("tags").toString());
         mod->setmodId(query.value("mod_id").toString());
         mod->setmodFilename(query.value("filename").toString());
-        mod->setmodIconPaths(query.value("iconpaths").toStringList());
+        mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
         mod->setDependencyId(query.value("dependency_id").toString());
         mod->setmodLocation(QUrl::fromLocalFile(query.value("location").toString()));
         addMod(mod);
