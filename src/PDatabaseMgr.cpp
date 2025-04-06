@@ -127,12 +127,6 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         query.bindValue(":category", "Uncategorized");
     }
 
-    // Execute the query
-    if (!query.exec()) {
-        qDebug() << "Failed to insert mod: " << query.lastError();
-        return false;
-    }
-
     // Insert dependencies
     if (!dependencies.isEmpty()) {
         for (const PDependency &dependency : dependencies) {
@@ -166,6 +160,11 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         query.bindValue(":iconpaths", "");
     }
 
+    // Execute the query
+    if (!query.exec()) {
+        qDebug() << "Failed to insert mod: " << query.lastError();
+        return false;
+    }
 
     return true;
 }

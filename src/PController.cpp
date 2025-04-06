@@ -260,7 +260,6 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             QMap<QString, OutputBuffer> buffers = PGraphicsMgr::getGraphicBuffers(ztd);
             if (buffers.isEmpty()) {
                 qDebug() << "No buffers to process for ztd: " << ztd;
-                continue;
             } else {
                 PGraphicsMgr::processIcons(buffers);
             }

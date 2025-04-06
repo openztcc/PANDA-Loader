@@ -79,7 +79,6 @@ private:
         "title TEXT NOT NULL, "
         "author TEXT NOT NULL, "
         "description TEXT, "
-        "path TEXT NOT NULL, "
         "enabled INTEGER NOT NULL, "
         "category TEXT, "
         "tags TEXT, "
