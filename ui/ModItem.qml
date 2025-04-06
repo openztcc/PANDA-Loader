@@ -39,7 +39,7 @@ Item {
                 return "#f7fbf2"
             }
         }
-        
+
         contentItem: Item { 
             anchors.fill: parent
             RowLayout {
@@ -65,18 +65,12 @@ Item {
                     Image {
                         id: modIcon
                         anchors.fill: parent
-                        source: getIcon()
+                        source: (modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
+                                             ? modItem.modelObject.modIconPaths[0]
+                                             : "")
                         fillMode: Image.PreserveAspectFit
                         smooth: true
-                        visible: modItem.modelObject && modItem.modelObject.modIcon ? true : false
-                    }
-
-                    function getIcon() {
-                        if (modItem.modelObject && modItem.modelObject.modIcon) {
-                            return modItem.modelObject.modIconPaths[0]
-                        } else {
-                            return "qrc:/images/placeholder.png"
-                        }
+                        visible: modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
                     }
                 }
                 

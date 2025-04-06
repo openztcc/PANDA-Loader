@@ -116,6 +116,7 @@ QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffe
         QString graphicName = it.key();
         QString homePath = QDir::homePath() + "/.panda/modicons/";
         QString pngPath = homePath + graphicName + ".png";
+        QString fileUrl = QUrl::fromLocalFile(pngPath).toString();
 
         // check if file already exists
         if (QFile::exists(pngPath)) {
@@ -132,9 +133,9 @@ QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffe
         }
 
         if (ApeCore::exportToPNG(pngPath.toStdString(), it.value()) == 1) {
-            pngPaths.append(pngPath);
+            pngPaths.append(fileUrl);
         } else {
-            qDebug() << "Failed to export PNG: " << pngPath;
+            qDebug() << "Failed to export PNG: " << graphicName;
         }
     }
     return pngPaths;

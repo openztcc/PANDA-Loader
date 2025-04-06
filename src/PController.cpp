@@ -250,6 +250,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
         QStringList locationPath = ztd.split("/");
         locationPath.removeLast();
         QString location = locationPath.join("/");
+        QStringList iconPaths;
 
 
         // Check if ztd already exists in database
@@ -261,7 +262,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             if (buffers.isEmpty()) {
                 qDebug() << "No buffers to process for ztd: " << ztd;
             } else {
-                PGraphicsMgr::processIcons(buffers);
+                iconPaths = PGraphicsMgr::processIcons(buffers);
             }
         }
 
@@ -280,6 +281,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
             mod.tags = {"Unknown"};
             mod.version = "1.0.0";
             mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+            mod.iconpaths = iconPaths;
         }
         else {
 
@@ -341,6 +343,7 @@ void PController::loadModsFromZTDs(const QStringList &ztdList)
 
             mod.filename = filename;
             mod.location = location;
+            mod.iconpaths = iconPaths;
         }
 
         db.insertMod(mod);
