@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
+import QtGraphicalEffects
 import PandaLdr 1.0
 
 Item {
@@ -58,14 +59,15 @@ Item {
                 // mod icon placeholder
                 Rectangle {
                     id: modImg
-                    width: 44
-                    height: 30
+                    Layout.preferredWidth: 44
+                    Layout.preferredHeight: 30
                     color: "#BCD0C3"
                     clip: true
+                    radius: 5
 
                     Image {
                         id: modIcon
-                        anchors.fill: parent
+                        anchors.centerIn: parent
                         source: (modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
                                              ? modItem.modelObject.modIconPaths[0]
                                              : "")
@@ -73,7 +75,18 @@ Item {
                         smooth: true
                         visible: modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
                         cache: false
-                        asynchronous: true
+                        asynchronous: false
+                        property bool rounded: true
+                        property bool adapt: true
+
+                        layer.enabled: rounded
+                        layer.effect: OpacityMask {
+                            maskSource: Item {
+
+                            }
+                        }
+
+
                     }
 
                 }
