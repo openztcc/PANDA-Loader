@@ -123,13 +123,6 @@ void PController::setCurrentMod(QObject* mod)
         return;
     }
 
-    // handle passed in  item if nullptr
-    if (modItem == nullptr) {
-        m_previousMod = m_currentMod;
-        m_currentMod = nullptr;
-        emit currentModChanged();
-    }
-
     // find mod shared pointer in list
     for (const auto& sharedMod : m_mods_list) {
         if (sharedMod.data() == modItem) {
@@ -137,6 +130,11 @@ void PController::setCurrentMod(QObject* mod)
                 // save the previous mod
                 m_previousMod = m_currentMod;
                 m_currentMod = sharedMod;
+
+                // clear selected mods list and add current mod to it
+                m_selected_mods.clear();
+                m_selected_mods.append(m_currentMod);
+
                 emit currentModChanged();
                 emit previousModChanged();
             }
