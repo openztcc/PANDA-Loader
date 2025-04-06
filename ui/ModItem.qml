@@ -1,9 +1,11 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick 2.15
+import QtQuick.Controls 6.5
 import QtQuick.Layouts
 import QtQuick.Controls.Material
-import QtGraphicalEffects
+import Qt5Compat.GraphicalEffects
 import PandaLdr 1.0
+
+pragma ComponentBehavior: Bound
 
 Item {
     id: modItem
@@ -55,40 +57,29 @@ Item {
                 }
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignVCenter
-                
-                // mod icon placeholder
-                Rectangle {
-                    id: modImg
+
+                Image {
+                    id: modIcon
+
+                    property int radius: 5
+
                     Layout.preferredWidth: 44
-                    Layout.preferredHeight: 30
-                    color: "#BCD0C3"
-                    clip: true
-                    radius: 5
+                    Layout.preferredHeight: 31
 
-                    Image {
-                        id: modIcon
-                        anchors.centerIn: parent
-                        source: (modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
-                                             ? modItem.modelObject.modIconPaths[0]
-                                             : "")
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        visible: modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
-                        cache: false
-                        asynchronous: false
-                        property bool rounded: true
-                        property bool adapt: true
-
-                        layer.enabled: rounded
-                        layer.effect: OpacityMask {
-                            maskSource: Item {
-
-                            }
+                    source: (modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
+                             ? modItem.modelObject.modIconPaths[0]
+                             : "")
+                    fillMode: Image.PreserveAspectCrop
+                    layer.enabled: true
+                    layer.effect: OpacityMask {
+                        id: iconMask
+                        maskSource: Rectangle {
+                            id: rectMask
+                            width: modIcon.width
+                            height: modIcon.height
+                            radius: modIcon.radius
                         }
-
-
                     }
-
                 }
                 
                 // mod name and category label
