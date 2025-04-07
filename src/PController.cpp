@@ -145,6 +145,15 @@ void PController::setCurrentMod(QObject* mod)
     qDebug() << "Mod not found in list: " << modItem->modTitle();
 }
 
+QList<QObject*> PController::selectedMods() const
+{
+    QList<QObject*> selectedModsList;
+    for (const auto& mod : m_selected_mods) {
+        selectedModsList.append(mod.data());
+    }
+    return selectedModsList;
+}
+
 void PController::addModToSelection(QObject* mod)
 {
     // convert QObject to PModItem

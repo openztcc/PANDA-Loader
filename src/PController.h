@@ -29,7 +29,7 @@ class PController : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QObject* currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
-    Q_PROPERTY(QSharedPointer<QObject*> selectedMods READ selectedmods WRITE addToSelectedMods NOTIFY selectedModsListUpdated)
+    Q_PROPERTY(QList<QObject*> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
     Q_PROPERTY(QObject* previousMod READ previousMod NOTIFY previousModChanged)
     Q_PROPERTY(int modCount READ modCount NOTIFY modAdded)
 
@@ -66,6 +66,7 @@ public:
     Q_INVOKABLE void setCurrentMod(QObject* mod);
     Q_INVOKABLE void clearSelection();
     Q_INVOKABLE void addModToSelection(QObject* mod);
+    Q_INVOKABLE QList<QObject*> selectedMods() const;
     Q_INVOKABLE void removeFromSelectedMods(QObject* mod);
     QObject* previousMod() const { return m_previousMod.data(); }
 
