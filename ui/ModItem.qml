@@ -157,6 +157,8 @@ Item {
                 }
                 // left click to select mod
                 else if (modItem.controller && modItem.modelObject) {
+                    // clear selection
+                    modItem.controller.clearSelection()
 
                     // set new current mod 
                     modItem.controller.setCurrentMod(modItem.modelObject);
@@ -203,6 +205,11 @@ Item {
             function onCurrentModChanged() {
                 modItem.isSelected = (modItem.controller.currentMod === modItem.modelObject)
             }
+
+            function onSelectedModsListUpdated() {
+                modItem.isSelected = modItem.controller.selectedMods.includes(modItem.modelObject);
+            }
+
         }
 
 
