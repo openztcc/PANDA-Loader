@@ -184,7 +184,8 @@ Item {
                     }
                 }
                 MenuItem {
-                    text: "Disable"
+                    property var selection: modItem.controller.selectedMods
+                    text: selection.length > 0 ? "Disable (" + selection.length + ") mods" : "Disable mod"
                     onTriggered: {
                         console.log("Option 2 triggered for", modItem.modelObject.modTitle)
                     }
