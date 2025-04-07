@@ -156,7 +156,7 @@ Item {
                     modItem.isSelected = true
                 }
                 // left click to select mod
-                else if (modItem.controller && modItem.modelObject) {
+                else if ((modItem.controller && modItem.modelObject) && mouse.button === Qt.LeftButton) {
                     // clear selection
                     modItem.controller.clearSelection()
 
