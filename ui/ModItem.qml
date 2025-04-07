@@ -144,18 +144,26 @@ Item {
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onClicked: function(mouse) {
                 console.log(modItem.modelObject.modIconPaths[0])
+                console.log("Clicked. Button:", mouse.button, "Modifiers:", mouse.modifiers)
+                // if ctrl + left click, toggle selection
+                if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
+                    console.log("Ctrl + Left Click")
+                    modItem.controller.addModToSelection(modItem.modelObject)
+                    console.log("Selected mods after toggle:")
+                    for (var i = 0; i < modItem.controller.selectedMods.length; i++) {
+                        console.log("", modItem.controller.selectedMods[i].modTitle)
+                    }
+                    modItem.isSelected = true
+                }
                 // left click to select mod
-                if (modItem.controller && modItem.modelObject) {
+                else if (modItem.controller && modItem.modelObject) {
 
                     // set new current mod 
                     modItem.controller.setCurrentMod(modItem.modelObject);
                     modItem.isSelected = true
                 }
 
-                // if ctrl + left click, toggle selection
-                if (mouse.button === Qt.LeftButton && mouse.modifiers === Qt.ControlModifier) {
-                    modItem.isSelected = true
-                }
+
 
                 // right click context menu
                 if (mouse.button === Qt.RightButton) {
