@@ -145,6 +145,29 @@ void PController::setCurrentMod(QObject* mod)
     qDebug() << "Mod not found in list: " << modItem->modTitle();
 }
 
+void PController::addModToSelection(QObject* mod)
+{
+    // convert QObject to PModItem
+    PModItem* modItem = qobject_cast<PModItem*>(mod);
+    if (!modItem) {
+        qDebug() << "Invalid mod object passed to addModToSelection";
+        return;
+    }
+
+    // find mod shared pointer in list
+    for (const auto& sharedMod : m_mods_list) {
+        if (sharedMod.data() == modItem) {
+            if (!m_selected_mods.contains(sharedMod)) {
+                m_selected_mods.append(sharedMod);
+                emit selectedModsListUpdated(m_selected_mods);
+            }
+            return;
+        }
+    }
+
+    qDebug() << "Mod not found in list: " << modItem->modTitle();
+}
+
 int PController::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);

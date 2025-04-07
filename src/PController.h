@@ -65,7 +65,7 @@ public:
     QObject* currentMod() const { return m_currentMod.data(); }
     Q_INVOKABLE void setCurrentMod(QObject* mod);
     Q_INVOKABLE void clearSelection();
-    Q_INVOKABLE void addToSelectedMods(QObject* mod);
+    Q_INVOKABLE void addModToSelection(QObject* mod);
     Q_INVOKABLE void removeFromSelectedMods(QObject* mod);
     QObject* previousMod() const { return m_previousMod.data(); }
 
