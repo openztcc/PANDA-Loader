@@ -176,22 +176,31 @@ Item {
             hoverEnabled: true
 
             Menu {
+                property var selection: modItem.controller.selectedMods
                 id: modContextMenu
                 MenuItem {
+                    id: modEdit
                     text: "Edit"
                     onTriggered: {
                         console.log("Option 1 triggered for", modItem.modelObject.modTitle)
+                        // if more than 1 mod selected, disable option
+                        if (modContextMenu.selection.length > 1) {
+                            modEdit.enabled = false
+                        } else {
+                            modEdit.enabled = true
+                        }
                     }
                 }
                 MenuItem {
                     property var selection: modItem.controller.selectedMods
-                    text: selection.length > 0 ? "Disable (" + selection.length + ") mods" : "Disable mod"
+                    text: modContextMenu.selection.length > 1 ? "Disable (" + modContextMenu.selection.length + ") mods" : "Disable mod"
                     onTriggered: {
                         console.log("Option 2 triggered for", modItem.modelObject.modTitle)
                     }
                 }
                 MenuItem {
-                    text: "Delete"
+                    
+                    text: modContextMenu.selection.length > 1 ? "Delete (" + modContextMenu.selection.length + ") mods" : "Delete mod"
                     onTriggered: {
                         console.log("Option 2 triggered for", modItem.modelObject.modTitle)
                     }
