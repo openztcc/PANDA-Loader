@@ -67,6 +67,7 @@ qt_add_qml_module(appPandaLdr
         ui/InfoPaneItem.qml
         ui/SearchBar.qml
         ui/FilterTag.qml
+        ui/SimpleModal.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         # sources

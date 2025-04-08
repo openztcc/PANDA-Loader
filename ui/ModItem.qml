@@ -13,6 +13,7 @@ Item {
     property var modelObject: null
     property var prevObject: null
     property bool isSelected: false
+    property var confirmationDialog
     anchors.fill: parent
     signal selectedMod(var mod)
 
@@ -225,6 +226,7 @@ Item {
                         }
                         confirmationDialog.title = "Delete " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
                         confirmMsg.text = "Are you sure you want to delete " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
+                        confirmationDialog.centerTo = modItem.parent
                         confirmationDialog.open()
                     }
                 }

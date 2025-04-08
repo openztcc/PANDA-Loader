@@ -15,6 +15,11 @@ ApplicationWindow {
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
 
+    // Declare modals
+    SimpleModal {
+        id: confirmDialog
+    }
+
     // Navigation Rail
     Drawer {
         width: 70
@@ -269,23 +274,27 @@ ApplicationWindow {
                         Keys.onPressed: (event) => {
                             // Escape key to deselect mod
                             if (event.key === Qt.Key_Escape) {
-                                var modTitle = modItem.modelObject.modTitle
-                                modItem.isSelected = false
-                                modItem.controller.clearSelection()
-                                console.log("Deselected mod:", modTitle)
+                                var selectedMods = modController.selectedMods
+
+                                for (var i = 0; i < selectedMods.length; i++) {
+                                    selectedMods[i].isSelected = false
+                                }
+                                modController.clearSelection()
+                                console.log("Deselected mods")
                             }
 
                             // Del key to delete mod
                             else if (event.key === Qt.Key_Delete) {
-                                var selectedCount = modItem.controller.selectedMods.length
+                                var selectedCount = modController.selectedMods.length
                                 // Ask for confirmation before deleting
-                                confirmationDialog.action = function() {
-                                    modItem.controller.deleteSelected()
-                                    confirmationDialog.close()
+                                confirmDialog.action = function() {
+                                    modController.controller.deleteSelected()
+                                    confirmDialog.close()
                                 }
-                                confirmationDialog.title = "Delete " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
-                                confirmMsg.text = "Are you sure you want to delete " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
-                                confirmationDialog.open()
+                                confirmDialog.title = "Delete " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
+                                confirmDialog.message = "Are you sure you want to delete " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
+                                confirmDialog.centerTo = modsList.modPane
+                                confirmDialog.open()
                             }
                         }
 
@@ -309,6 +318,7 @@ ApplicationWindow {
                                 id: modItems
                                 controller: modController
                                 modelObject: modObject
+                                confirmationDialog: root.confirmDialog
                             }
                         }
 

@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Effects
+import QtQuick.Controls
 
 
 Item {
@@ -7,14 +7,15 @@ Item {
     property var action
     property alias title: confirmationDialog.title
     property alias message: confirmMsg.text
+    property alias centerTo: simpleModal.parent
 
     Dialog {
         id: confirmationDialog
         title: ""
         modal: true
         standardButtons: Dialog.Yes | Dialog.No
-        x: (parent.width - width) / 2
-        y: (parent.height - height) / 2
+        x: (simpleModal.centerTo.width - width) / 2
+        y: (simpleModal.centerTo.height - height) / 2
         contentItem: Column {
             spacing: 10
             Label {
@@ -24,8 +25,8 @@ Item {
             }
         }
         onAccepted: {
-            if (action) {
-                action()
+            if (simpleModal.action) {
+                simpleModal.action()
             } else {
                 console.log("No action defined")
             }
