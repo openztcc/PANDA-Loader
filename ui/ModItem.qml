@@ -33,6 +33,31 @@ Item {
         }
     }
 
+    Dialog {
+        property var action
+        id: confirmationDialog
+        title: ""
+        modal: true
+        standardButtons: Dialog.Yes | Dialog.No
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        contentItem: Column {
+            spacing: 10
+            Label {
+                id: confirmMsg
+                text: "Placeholder text"
+                wrapMode: Text.Wrap
+            }
+        }
+        onAccepted: {
+            action()
+        }
+        onRejected: {
+            console.log(confirmationDialog.title + " cancelled")
+        }
+    }
+
+
     Pane {
         id: modPane
         anchors.fill: parent
@@ -196,28 +221,6 @@ Item {
                     for (let i = 0; i < modItem.controller.selectedMods.length; i++) {
                         console.log(modItem.controller.selectedMods[i].modTitle)
                     }
-                }
-            }
-
-            Dialog {
-                property var action
-                id: confirmationDialog
-                title: ""
-                modal: true
-                standardButtons: Dialog.Yes | Dialog.No
-                contentItem: Column {
-                    spacing: 10
-                    Label {
-                        id: confirmMsg
-                        text: "Placeholder text"
-                        wrapMode: Text.Wrap
-                    }
-                }
-                onAccepted: {
-                    action()
-                }
-                onRejected: {
-                    console.log(confirmationDialog.title + " cancelled")
                 }
             }
 
