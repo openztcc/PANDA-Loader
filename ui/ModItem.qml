@@ -187,6 +187,8 @@ Item {
                         modItem.isSelected = true
                     }
 
+                    // set the selection so that the context menu gets updated array
+                    modContextMenu.selection = modItem.controller.selectedMods
                     modContextMenu.popup()
 
                     // print selected mods
