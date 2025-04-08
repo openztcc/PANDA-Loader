@@ -143,35 +143,60 @@ Item {
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onClicked: function(mouse) {
-                console.log(modItem.modelObject.modIconPaths[0])
                 console.log("Clicked. Button:", mouse.button, "Modifiers:", mouse.modifiers)
-                // if ctrl + left click, toggle selection
+
+                // Ctrl + left click adds to selection
                 if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
-                    console.log("Ctrl + Left Click")
                     modItem.controller.addModToSelection(modItem.modelObject)
-                    console.log("Selected mods after toggle:")
-                    for (var i = 0; i < modItem.controller.selectedMods.length; i++) {
-                        console.log("", modItem.controller.selectedMods[i].modTitle)
+                    modItem.isSelected = true
+
+                    // print selected mods
+                    console.log("Selected mods:")
+                    for (let i = 0; i < modItem.controller.selectedMods.length; i++) {
+                        console.log(modItem.controller.selectedMods[i].modTitle)
                     }
-                    modItem.isSelected = true
                 }
-                // left click to select mod
-                else if ((modItem.controller && modItem.modelObject) && mouse.button === Qt.LeftButton) {
-                    // clear selection
+
+                // Left click selects single mod
+                else if (mouse.button === Qt.LeftButton) {
                     modItem.controller.clearSelection()
-
-                    // set new current mod 
-                    modItem.controller.setCurrentMod(modItem.modelObject);
+                    modItem.controller.setCurrentMod(modItem.modelObject)
                     modItem.isSelected = true
+
+                    // print selected mods
+                    console.log("Selected mods:")
+                    for (let i = 0; i < modItem.controller.selectedMods.length; i++) {
+                        console.log(modItem.controller.selectedMods[i].modTitle)
+                    }
                 }
 
+                // Right click only clears selection if the clicked mod isn't already selected
+                else if (mouse.button === Qt.RightButton) {
+                    const selected = modItem.controller.selectedMods
+                    let alreadySelected = false
+                    for (let i = 0; i < selected.length; i++) {
+                        if (selected[i] === modItem.modelObject) {
+                            alreadySelected = true
+                            break
+                        }
+                    }
 
+                    if (!alreadySelected) {
+                        modItem.controller.clearSelection()
+                        modItem.controller.setCurrentMod(modItem.modelObject)
+                        modItem.isSelected = true
+                    }
 
-                // right click context menu
-                if (mouse.button === Qt.RightButton) {
                     modContextMenu.popup()
+
+                    // print selected mods
+                    console.log("Selected mods:")
+                    for (let i = 0; i < modItem.controller.selectedMods.length; i++) {
+                        console.log(modItem.controller.selectedMods[i].modTitle)
+                    }
                 }
             }
+
 
             hoverEnabled: true
 
