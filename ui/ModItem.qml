@@ -20,7 +20,7 @@ Item {
         if (modItem.modelObject) {
             modItem.modelObject.qmlItem = modItem            
         }
-        modItem.forceActiveFocus()
+        // modItem.forceActiveFocus()
     }
 
     Keys.onPressed: (event) => {
