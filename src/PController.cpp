@@ -65,7 +65,12 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
     QString location = mod->modLocation().toLocalFile();
     QString filename = mod->modFilename();
     QString ztdFilePath = location + "/" + filename;
-    
+    if (PZtdMgr::deleteFile(ztdFilePath)) {
+        qDebug() << "Deleted ztd file: " << ztdFilePath;
+    } else {
+        qDebug() << "Failed to delete ztd file: " << ztdFilePath;
+    }
+
     // remove mod from list
     beginRemoveRows(QModelIndex(), index, index);
     m_mods_list.removeAt(index);
