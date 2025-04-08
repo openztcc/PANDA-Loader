@@ -260,6 +260,35 @@ ApplicationWindow {
                         boundsBehavior: Flickable.StopAtBounds
                         model: modController
                         clip: true
+                        focus: true
+
+                        Component.onCompleted: {
+                            modsList.forceActiveFocus(Qt.MouseFocusReason)
+                        }
+
+                        Keys.onPressed: (event) => {
+                            // Escape key to deselect mod
+                            if (event.key === Qt.Key_Escape) {
+                                var modTitle = modItem.modelObject.modTitle
+                                modItem.isSelected = false
+                                modItem.controller.clearSelection()
+                                console.log("Deselected mod:", modTitle)
+                            }
+
+                            // Del key to delete mod
+                            else if (event.key === Qt.Key_Delete) {
+                                var selectedCount = modItem.controller.selectedMods.length
+                                // Ask for confirmation before deleting
+                                confirmationDialog.action = function() {
+                                    modItem.controller.deleteSelected()
+                                    confirmationDialog.close()
+                                }
+                                confirmationDialog.title = "Delete " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
+                                confirmMsg.text = "Are you sure you want to delete " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
+                                confirmationDialog.open()
+                            }
+                        }
+
 
                         delegate: Rectangle { // Mod list container
                             id: modPane

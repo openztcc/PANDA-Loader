@@ -23,41 +23,6 @@ Item {
         // modItem.forceActiveFocus()
     }
 
-    Keys.onPressed: (event) => {
-        // Escape key to deselect mod
-        if (event.key === Qt.Key_Escape) {
-            var modTitle = modItem.modelObject.modTitle
-            modItem.isSelected = false
-            modItem.controller.clearSelection()
-            console.log("Deselected mod:", modTitle)
-        }
-    }
-
-    Dialog {
-        property var action
-        id: confirmationDialog
-        title: ""
-        modal: true
-        standardButtons: Dialog.Yes | Dialog.No
-        x: (parent.width - width) / 2
-        y: (parent.height - height) / 2
-        contentItem: Column {
-            spacing: 10
-            Label {
-                id: confirmMsg
-                text: "Placeholder text"
-                wrapMode: Text.Wrap
-            }
-        }
-        onAccepted: {
-            action()
-        }
-        onRejected: {
-            console.log(confirmationDialog.title + " cancelled")
-        }
-    }
-
-
     Pane {
         id: modPane
         anchors.fill: parent
