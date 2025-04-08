@@ -55,9 +55,22 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
         return;
     }
 
+    // delete mod from database
+    PDatabaseMgr db;
+    db.openDatabase();
+    db.deleteMod(mod->modId());
+    db.closeDatabase();
+
+    // delete mod from filesystem
+    QString location = mod->modLocation().toLocalFile();
+    QString filename = mod->modFilename();
+    QString ztdFilePath = location + "/" + filename;
+    
+    // remove mod from list
     beginRemoveRows(QModelIndex(), index, index);
     m_mods_list.removeAt(index);
     endRemoveRows();
+
 
     emit modRemoved(mod);
 }

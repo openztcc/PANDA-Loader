@@ -219,7 +219,6 @@ Item {
                     }
                 }
                 MenuItem {
-                    property var selection: modItem.controller.selectedMods
                     text: modContextMenu.selection.length > 1 ? "Disable (" + modContextMenu.selection.length + ") mods" : "Disable mod"
                     onTriggered: {
                         console.log("Option 2 triggered for", modItem.modelObject.modTitle)

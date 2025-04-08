@@ -531,3 +531,12 @@ QByteArray PZtdMgr::getFileFromRelPath(const QString &ztdFilePath, const QString
 
     return data;
 }
+
+// Delete a file from the filesystem
+bool PZtdMgr::deleteFile(const QString &filePath) 
+{
+    if (QFile::exists(filePath)) {
+        return QFile::remove(filePath);
+    }
+    return false;
+}
