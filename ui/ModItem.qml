@@ -229,6 +229,7 @@ Item {
                     text: modContextMenu.selection.length > 1 ? "Delete (" + modContextMenu.selection.length + ") mods" : "Delete mod"
                     onTriggered: {
                         console.log("Option 2 triggered for", modItem.modelObject.modTitle)
+                        
                     }
                 }
             }

@@ -80,6 +80,16 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
     emit modRemoved(mod);
 }
 
+// Deletes selected mods from the database and filesystem
+void PController::deleteSelected()
+{
+    for (const auto& mod : m_selected_mods) {
+        removeMod(mod);
+    }
+    m_selected_mods.clear();
+    emit selectedModsListUpdated(m_selected_mods);
+}
+
 void PController::selectMod(int index)
 {
     if (index < 0 || index >= m_mods_list.size())

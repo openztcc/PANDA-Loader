@@ -54,7 +54,8 @@ public:
     QSharedPointer<PModItem> getModAsObject(QString modId) const;
     int modCount() const;
     void addMod(QSharedPointer<PModItem>);
-    void removeMod(QSharedPointer<PModItem>);
+    Q_INVOKABLE void removeMod(QSharedPointer<PModItem>);
+    Q_INVOKABLE void deleteSelected();
     Q_INVOKABLE void selectMod(int index);
     Q_INVOKABLE void deselectMod(int index);
     void loadMods();
