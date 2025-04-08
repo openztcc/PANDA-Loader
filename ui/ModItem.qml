@@ -199,6 +199,27 @@ Item {
                 }
             }
 
+            Dialog {
+                property var action
+                id: confirmationDialog
+                title: ""
+                modal: true
+                standardButtons: Dialog.Yes | Dialog.No
+                contentItem: Column {
+                    spacing: 10
+                    Label {
+                        id: confirmMsg
+                        text: "Placeholder text"
+                        wrapMode: Text.Wrap
+                    }
+                }
+                onAccepted: {
+                    action()
+                }
+                onRejected: {
+                    console.log(confirmationDialog.title + " cancelled")
+                }
+            }
 
             hoverEnabled: true
 
@@ -225,11 +246,18 @@ Item {
                     }
                 }
                 MenuItem {
-                    
                     text: modContextMenu.selection.length > 1 ? "Delete (" + modContextMenu.selection.length + ") mods" : "Delete mod"
                     onTriggered: {
                         console.log("Option 2 triggered for", modItem.modelObject.modTitle)
-                        
+                        var selectedCount = modContextMenu.selection.length
+                        // Ask for confirmation before deleting
+                        confirmationDialog.action = function() {
+                            modItem.controller.deleteSelected()
+                            confirmationDialog.close()
+                        }
+                        confirmationDialog.title = "Delete " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
+                        confirmMsg.text = "Are you sure you want to delete " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
+                        confirmationDialog.open()
                     }
                 }
             }
