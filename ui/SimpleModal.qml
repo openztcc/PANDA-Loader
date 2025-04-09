@@ -1,6 +1,5 @@
-import QtQuick
-import QtQuick.Controls
-
+import QtQuick 2.15
+import QtQuick.Controls 6.5
 
 Item {
     id: simpleModal
@@ -11,6 +10,7 @@ Item {
 
     Dialog {
         id: confirmationDialog
+
         title: ""
         modal: true
         standardButtons: Dialog.Yes | Dialog.No

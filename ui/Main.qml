@@ -5,6 +5,8 @@ import QtQuick.Controls.Material
 import QtQuick.Effects
 import PandaLdr 1.0
 
+pragma ComponentBehavior: Bound
+
 ApplicationWindow {
     id: root
     width: 800
@@ -256,19 +258,23 @@ ApplicationWindow {
                             }
                         }
                     }
-
                     // mod list view
                     ListView {                        
                         id: modsList
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         boundsBehavior: Flickable.StopAtBounds
-                        model: modController
+                        model: modModel
                         clip: true
                         focus: true
 
                         Component.onCompleted: {
                             modsList.forceActiveFocus(Qt.MouseFocusReason)
+                            console.log("ListView model:", modsList.model)
+                            console.log("Model type:", typeof modsList.model)
+                            console.log("Model row count:", modsList.model ? modsList.model.rowCount() : "N/A")
+                            console.log("Context property modModel:", modModel)
+                            console.log("Context property modController:", modController)
                         }
 
                         Keys.onPressed: (event) => {
@@ -304,6 +310,18 @@ ApplicationWindow {
                             width: ListView.view.width
                             height: 50
 
+                            required property int index
+                            required property var model
+                            required property string modTitle
+                            required property var modObject
+
+                            Component.onCompleted: {
+                                console.log("Delegate created for item at index:", modPane.index)
+                                console.log("modTitle:", modPane.modTitle)
+                                console.log("modObject:", modPane.modObject)
+                                console.log("Available roles:", Object.keys(modPane.model).join(", "))
+                            }
+
                             // bottom border
                             Rectangle {
                                 anchors.left: parent.left
@@ -316,9 +334,9 @@ ApplicationWindow {
                             // mod list item
                             ModItem {
                                 id: modItems
-                                controller: modController
-                                modelObject: modObject
-                                confirmationDialog: root.confirmDialog
+                                modTitle: modPane.modTitle
+                                modelObject: modPane.modObject
+                                cDialog: confirmDialog
                             }
                         }
 

@@ -9,6 +9,8 @@
 #include <QStringList>
 #include <QDir>
 #include <QCoreApplication>
+#include "PGraphicsMgr.h"
+#include "PZtdMgr.h"
 
 class PDatabaseMgr : public QObject
 {
@@ -63,6 +65,8 @@ public:
     QStringList searchMods(const QString &propertyName, const QString &searchTerm);
     Q_INVOKABLE PDatabaseMgr::PMod getModByPk(const QString &modId);
     PDatabaseMgr::PMod getModByPk(QSqlDatabase &db, const QString &modId);
+
+    void loadModsFromZTDs(const QStringList &ztdList);
 
     bool doesModExist(const QString &modId);
     bool doesDependencyExist(const QString &dependencyId);

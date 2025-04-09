@@ -6,7 +6,6 @@ concerns itself with the mods list and operations over other classes from the UI
 
 // Qt includes
 #include <QObject>
-#include <QAbstractListModel>
 #include <QList>
 #include <QSharedPointer>
 #include <QStringList>
@@ -18,38 +17,26 @@ concerns itself with the mods list and operations over other classes from the UI
 #include "PZtdMgr.h"
 #include "PDatabaseMgr.h"
 #include "PConfigMgr.h"
-#include "PGraphicsMgr.h"
+#include "../models/PModModel.h"
 
 // Third-party includes
 #include "toml.hpp"
 
 class PModItem;
 
-class PController : public QAbstractListModel
+class PController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QObject* currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
     Q_PROPERTY(QList<QObject*> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
     Q_PROPERTY(QObject* previousMod READ previousMod NOTIFY previousModChanged)
     Q_PROPERTY(int modCount READ modCount NOTIFY modAdded)
+    Q_PROPERTY(QAbstractListModel* model READ model CONSTANT)
 
 public:
-    explicit PController(QObject *parent = nullptr);
+    explicit PController(QObject *parent = nullptr, PState *state = nullptr);
 
-    enum Role {
-        ModTitleRole = Qt::UserRole + 1,
-        ModAuthorRole,
-        ModDescriptionRole,
-        ModEnabledRole,
-        ModCategoryRole,
-        ModTagsRole,
-        ModIdRole,
-        ModObjectRole,
-        ModFilenameRole,
-        ModIconPathsRole,
-        ModDependencyIdRole,
-        ModLocationRole
-    };
+    PModModel* model() const { return m_model; }
 
     QSharedPointer<PModItem> getModAsObject(QString modId) const;
     int modCount() const;
@@ -58,10 +45,6 @@ public:
     Q_INVOKABLE void deleteSelected();
     Q_INVOKABLE void selectMod(int index);
     Q_INVOKABLE void deselectMod(int index);
-    void loadMods();
-    void loadModsFromZTDs(const QStringList &ztdList);
-    void addState(PState *state);
-    Q_INVOKABLE void updateModList(QString orderBy, QString searchTerm);
 
     QObject* currentMod() const { return m_currentMod.data(); }
     Q_INVOKABLE void setCurrentMod(QObject* mod);
@@ -70,10 +53,6 @@ public:
     Q_INVOKABLE QList<QObject*> selectedMods() const;
     // Q_INVOKABLE void removeFromSelectedMods(QObject* mod);
     QObject* previousMod() const { return m_previousMod.data(); }
-
-    virtual int rowCount(const QModelIndex &parent) const override;
-    virtual QVariant data(const QModelIndex &index, int role) const override;
-    virtual QHash<int, QByteArray> roleNames() const override;
 
 signals:
     void modAdded(QSharedPointer<PModItem>);
@@ -85,11 +64,11 @@ signals:
     void selectedModsListUpdated(QList<QSharedPointer<PModItem>> mods);
 
 private:
-    QList<QSharedPointer<PModItem>> m_mods_list;
     QList<QSharedPointer<PModItem>> m_selected_mods;
     QSharedPointer<PModItem> m_currentMod;
     QSharedPointer<PModItem> m_previousMod;
     PState *m_state;
+    PModModel *m_model;
 };
 
 #endif // PCONTROLLER_H
