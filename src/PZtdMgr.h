@@ -30,8 +30,7 @@ public:
     static bool removeFileFromZtd(const QString &ztdFilePath, const QString &fileNameToRemove);
     // bool listFilesInZtd(const QString &ztdFilePath, QStringList &fileList);
     // bool createZtd(const QString &ztdFilePath, const QStringList &filesToAdd);
-    static bool moveZtdFile(const QString &ztdFilePath, const QString &newLocation);
-    static bool renameZtdFile(const QString &oldFilePath, const QString &newFileName);
+    static bool moveFile(const QString &filePath, const QString &newLocation);
     static bool copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCopyPath);
     static bool openFileInZtd(const QString &ztdFilePath, const QString &fileNameToOpen, QByteArray &fileData);
     static bool isZtdFile(const QString &filePath);

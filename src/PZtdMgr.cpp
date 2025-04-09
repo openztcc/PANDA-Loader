@@ -313,31 +313,15 @@ bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileN
 }
 
 // Moves a ztd file from one location on disk to another
-bool PZtdMgr::moveZtdFile(const QString &ztdFilePath, const QString &newLocation) 
+bool PZtdMgr::moveFile(const QString &filePath, const QString &newLocation) 
 {
     // Check if the ztd file exists
-    if (!QFile::exists(ztdFilePath)) {
+    if (!QFile::exists(filePath)) {
         return false; // Ztd file does not exist
     }
 
     // Move the ztd file to the new location
-    return QFile::rename(ztdFilePath, newLocation);
-}
-
-// Renames a ztd file
-bool PZtdMgr::renameZtdFile(const QString &oldFilePath, const QString &newFileName) 
-{
-    // Check if the ztd file exists
-    if (!QFile::exists(oldFilePath)) {
-        return false; // Ztd file does not exist
-    }
-
-    // Get the directory of the old file
-    QString dirPath = QFileInfo(oldFilePath).absolutePath();
-    QString newFilePath = dirPath + "/" + newFileName;
-
-    // Rename the ztd file
-    return QFile::rename(oldFilePath, newFilePath);
+    return QFile::rename(filePath, newLocation);
 }
 
 bool PZtdMgr::copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCopyPath) 
