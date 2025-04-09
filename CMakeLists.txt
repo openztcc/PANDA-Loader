@@ -22,6 +22,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/libs/quazip/cmake")
 find_package(QuaZip REQUIRED)
 
 qt_add_executable(appPandaLdr
+    ${SRC_RC}
     src/main.cpp
     src/PState.cpp src/PState.h
     src/PController.cpp src/PController.h
@@ -134,6 +135,7 @@ install(TARGETS appPandaLdr
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
 
 # Set up unit tests
 

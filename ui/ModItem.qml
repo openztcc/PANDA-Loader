@@ -128,6 +128,9 @@ Item {
                     onCheckedChanged: {
                         if (modItem.modelObject) {
                             console.log("Checkbox changed:", modItem.modTitle, checked)
+                            if (!checked) {
+                                modController.disableMod(modItem.modelObject)
+                            }
                         }
                     }
                     
@@ -240,6 +243,23 @@ Item {
                     text: modContextMenu.selection.length > 1 ? "Disable (" + modContextMenu.selection.length + ") mods" : "Disable mod"
                     onTriggered: {
                         console.log("Option 2 triggered for", modItem.modTitle)
+                        var selectedCount = modContextMenu.selection.length
+                        // Ask for confirmation before disabling
+                        modItem.cDialog.action = function() {
+                            console.log("Disabling mods")
+                            modController.disableSelected()
+                            console.log("Disabled mods")
+                            // change opacity for disabled mods
+                            console.log("Changing opacity for disabled mods")
+                            for (let i = 0; i < modController.selectedMods.length; i++) {
+                                modItem.opacity = 0.5
+                            }
+                            modItem.cDialog.close()
+                        }
+                        modItem.cDialog.title = "Disable " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
+                        modItem.cDialog.message = "Are you sure you want to disable " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
+                        modItem.cDialog.centerTo = modItem.centerTo
+                        modItem.cDialog.open()
                     }
                 }
                 MenuItem {

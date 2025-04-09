@@ -42,13 +42,16 @@ public:
     int modCount() const;
     void addMod(QSharedPointer<PModItem>);
     Q_INVOKABLE void removeMod(QSharedPointer<PModItem>);
-    Q_INVOKABLE void disableMod(QSharedPointer<PModItem>, QObject* qmlItem = nullptr);
-    Q_INVOKABLE void enableMod(QSharedPointer<PModItem>);
+    Q_INVOKABLE void disableMod(QSharedPointer<PModItem>);
+    // Q_INVOKABLE void enableMod(QSharedPointer<PModItem>);
     Q_INVOKABLE void disableSelected();
-    Q_INVOKABLE void enableSelected();
+    // Q_INVOKABLE void enableSelected();
     Q_INVOKABLE void deleteSelected();
     Q_INVOKABLE void selectMod(int index);
     Q_INVOKABLE void deselectMod(int index);
+
+    // effect controls
+    Q_INVOKABLE void changeOpacity(QObject* qmlItem, float opacity);
 
     QObject* currentMod() const { return m_currentMod.data(); }
     Q_INVOKABLE void setCurrentMod(QObject* mod);

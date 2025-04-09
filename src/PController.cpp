@@ -3,6 +3,7 @@
 PController::PController(QObject *parent, PState *state)
 {
     m_model = new PModModel(this);
+    m_state = state;
     m_model->addState(state);
     m_model->loadMods();
 }
@@ -86,23 +87,43 @@ void PController::deleteSelected()
     emit selectedModsListUpdated(m_selected_mods);
 }
 
-void PController::disableMod(QSharedPointer<PModItem> mod, QObject* qmlItem)
+void PController::disableMod(QSharedPointer<PModItem> mod)
 {
-    QString disabledDir = m_state->getGamePath().toLocalFile() + "/dlupdate/.disabledmods/";
-    QString filename = mod->modFilename();
+    QString basePath;
+    QString disabledDir;
+    QString filename;
 
-    if (!QDir(disabledDir).exists()) {
-        QDir().mkdir(disabledDir);
+    qDebug() << "Disabling mod: " << mod->modTitle();
+    if (!m_state) {
+        qCritical() << "PState is null, cannot disable mod";
+        return;
+    } else {
+        basePath = QDir::cleanPath(m_state->getGamePath());
+        disabledDir = QDir::cleanPath(basePath + "/dlupdate/.disabledmods/") + "/";
+        filename = mod->modFilename();
     }
 
-    QString ztdFilePath = mod->modLocation().toLocalFile() + "/" + filename;
-    QString newZtdFilePath = disabledDir + filename;
-
-    if (qmlItem) {
-        qmlItem->setProperty("opacity", 0.3);
-        qDebug() << "Set opacity to 0.3 for" << mod->modTitle();
+    qDebug() << "Checking if disabled mods folder exists: " << disabledDir;
+    if (!QDir(disabledDir).exists()) {
+        QDir().mkdir(disabledDir);
     } else {
-        qDebug() << "QML item is null";
+        qDebug() << "Disabled mods folder already exists: " << disabledDir;
+    }
+    qDebug() << "Moving ztd file to disabled mods folder: " << disabledDir;
+
+    QString ztdFilePath = QDir::cleanPath(mod->modLocation().toLocalFile() + "/" + filename);
+    QString newZtdFilePath = QDir::cleanPath(disabledDir + filename);
+
+    qDebug() << "ZTD file path: " << ztdFilePath;
+    if (!QFile::exists(ztdFilePath)) {
+        qCritical() << "ZTD file path does not exist:" << ztdFilePath;
+        return;
+    }    
+
+    if (PZtdMgr::moveFile(ztdFilePath, newZtdFilePath)) {
+        qDebug() << "Moved ztd file to disabled mods folder: " << newZtdFilePath;
+    } else {
+        qDebug() << "Failed to move ztd file: " << ztdFilePath;
     }
 }
 
@@ -110,6 +131,16 @@ void PController::disableSelected()
 {
     for (const auto& mod : m_selected_mods) {
         disableMod(mod);
+    }
+}
+
+void PController::changeOpacity(QObject* qmlItem, float opacity)
+{
+    if (qmlItem) {
+        qmlItem->setProperty("opacity", opacity);
+        qDebug() << "Set opacity for qml item.";
+    } else {
+        qDebug() << "QML item is null";
     }
 }
 

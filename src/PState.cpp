@@ -10,7 +10,7 @@ PState::PState(QObject *parent) : QObject(parent) {
     if (!m_settings->loadFromToml()) {
         qDebug() << "Failed to load settings from config.toml";
     } else {
-        m_path = m_settings->zooGamePath() + "\\zoo.exe";
+        m_path = m_settings->zooGamePath();
         m_resource_path = m_settings->zooGamePath() + "\\dlupdate\\";
         qDebug() << "Loaded settings from config.toml.";
     }
@@ -18,7 +18,7 @@ PState::PState(QObject *parent) : QObject(parent) {
 
 int PState::launchZT() {
     // QMutexLocker locker(&mutex);
-    QString _path = this->m_path + "zoo.exe";
+    QString _path = this->m_path + "\\zoo.exe";
 
     qDebug() << "Launching Zoo Tycoon 1 from path: " << _path;
 
