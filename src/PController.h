@@ -42,7 +42,7 @@ public:
     int modCount() const;
     void addMod(QSharedPointer<PModItem>);
     Q_INVOKABLE void removeMod(QSharedPointer<PModItem>);
-    Q_INVOKABLE void disableMod(QSharedPointer<PModItem>);
+    Q_INVOKABLE void disableMod(QSharedPointer<PModItem>, QObject* qmlItem = nullptr);
     Q_INVOKABLE void enableMod(QSharedPointer<PModItem>);
     Q_INVOKABLE void disableSelected();
     Q_INVOKABLE void enableSelected();

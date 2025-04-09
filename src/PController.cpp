@@ -86,6 +86,27 @@ void PController::deleteSelected()
     emit selectedModsListUpdated(m_selected_mods);
 }
 
+void PController::disableMod(QSharedPointer<PModItem> mod, QObject* qmlItem)
+{
+    QString disabledDir = m_state->getGamePath().toLocalFile() + "/dlupdate/.disabledmods/";
+    QString filename = mod->modFilename();
+
+    if (!QDir(disabledDir).exists()) {
+        QDir().mkdir(disabledDir);
+    }
+
+    QString ztdFilePath = mod->modLocation().toLocalFile() + "/" + filename;
+    QString newZtdFilePath = disabledDir + filename;
+
+    if (qmlItem) {
+        qmlItem->setProperty("opacity", 0.3);
+        qDebug() << "Set opacity to 0.3 for" << mod->modTitle();
+    } else {
+        qDebug() << "QML item is null";
+    }
+}
+
+
 void PController::selectMod(int index)
 {
     if (index < 0 || index >= m_model->modsList().size())

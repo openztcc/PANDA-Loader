@@ -2,7 +2,7 @@
 #include <qdir.h>
 
 PState::PState(QObject *parent) : QObject(parent) {
-    m_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
+    m_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\";
     m_resource_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     m_mods = QVector<PModItem>();
     m_settings = new PSettings(this);
@@ -18,7 +18,7 @@ PState::PState(QObject *parent) : QObject(parent) {
 
 int PState::launchZT() {
     // QMutexLocker locker(&mutex);
-    QString _path = this->m_path;
+    QString _path = this->m_path + "zoo.exe";
 
     qDebug() << "Launching Zoo Tycoon 1 from path: " << _path;
 
