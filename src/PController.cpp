@@ -106,6 +106,12 @@ void PController::disableMod(QSharedPointer<PModItem> mod, QObject* qmlItem)
     }
 }
 
+void PController::disableSelected()
+{
+    for (const auto& mod : m_selected_mods) {
+        disableMod(mod);
+    }
+}
 
 void PController::selectMod(int index)
 {
