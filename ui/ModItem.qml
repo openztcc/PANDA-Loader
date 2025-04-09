@@ -16,6 +16,7 @@ Item {
     property var prevObject: null
     property bool isSelected: false
     property var cDialog: null
+    property var centerTo: null
     anchors.fill: parent
     signal selectedMod(var mod)
 
@@ -68,6 +69,14 @@ Item {
 
                 Image {
                     id: modIcon
+
+                    Component.onCompleted: {
+                        if (modItem.modelObject) {
+                            console.log("Checking icon for modItem:" + modItem.modelObject.modTitle + " - " + modItem.modelObject.modIconPaths.length + " icons" + " - " + modItem.modelObject.modIconPaths[0])
+                        } else {
+                            console.log("MODEL OBJECT IS NULL")
+                        }
+                    }
 
                     property int radius: 5
 
@@ -245,7 +254,7 @@ Item {
                         }
                         modItem.cDialog.title = "Delete " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
                         modItem.cDialog.message = "Are you sure you want to delete " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
-                        modItem.cDialog.centerTo = modItem.parent
+                        modItem.cDialog.centerTo = modItem.centerTo
                         modItem.cDialog.open()
                     }
                 }

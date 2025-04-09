@@ -337,6 +337,7 @@ ApplicationWindow {
                                 modTitle: modPane.modTitle
                                 modelObject: modPane.modObject
                                 cDialog: confirmDialog
+                                centerTo: mainContent
                             }
                         }
 
