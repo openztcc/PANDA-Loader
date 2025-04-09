@@ -37,6 +37,7 @@ public:
     static bool fileExistsInZtd(const QString &ztdFilePath, const QString &fileNameToCheck);
     static bool deleteFile(const QString &filePath);
     static bool renameFile(const QString &filePath, const QString &newFileName);
+    static bool makeDir(const QString &dirPath);
     static QList<PZtdMgr::FileData> getFilesInZtd(
         const QString &ztdFilePath,
         const QString &ext,

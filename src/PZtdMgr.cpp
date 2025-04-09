@@ -535,3 +535,13 @@ bool PZtdMgr::renameFile(const QString &filePath, const QString &newFileName)
     }
     return false;
 }
+
+// Create a directory on the filesystem
+bool PZtdMgr::makeDir(const QString &dirPath) 
+{
+    QDir dir(dirPath);
+    if (!dir.exists()) {
+        return dir.mkpath(dirPath);
+    }
+    return false;
+}
