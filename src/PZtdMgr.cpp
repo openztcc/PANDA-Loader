@@ -540,3 +540,14 @@ bool PZtdMgr::deleteFile(const QString &filePath)
     }
     return false;
 }
+
+// Rename a file on the filesystem
+bool PZtdMgr::renameFile(const QString &filePath, const QString &newFileName) 
+{
+    if (QFile::exists(filePath)) {
+        QString dirPath = QFileInfo(filePath).absolutePath();
+        QString newFilePath = dirPath + "/" + newFileName;
+        return QFile::rename(filePath, newFilePath);
+    }
+    return false;
+}
