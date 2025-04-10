@@ -30,7 +30,8 @@ public:
         ModDependencyIdRole,
         ModLocationRole,
         ModOgLocationRole,
-        ModSelectedRole
+        ModSelectedRole,
+        ModVersionRole
     };
 
     explicit PModModel(QObject *parent = nullptr);

@@ -312,13 +312,13 @@ ApplicationWindow {
 
                             required property int index
                             required property var model
-                            required property string modTitle
-                            required property var modObject
+                            required property string title
+                            required property var instance
 
                             Component.onCompleted: {
                                 console.log("Delegate created for item at index:", modPane.index)
-                                console.log("modTitle:", modPane.modTitle)
-                                console.log("modObject:", modPane.modObject)
+                                console.log("title:", modPane.title)
+                                console.log("instance:", modPane.instance)
                                 console.log("Available roles:", Object.keys(modPane.model).join(", "))
                             }
 
@@ -334,8 +334,8 @@ ApplicationWindow {
                             // mod list item
                             ModItem {
                                 id: modItems
-                                modTitle: modPane.modTitle
-                                modelObject: modPane.modObject
+                                title: modPane.title
+                                instance: modPane.instance
                                 cDialog: confirmDialog
                                 centerTo: mainContent
                             }

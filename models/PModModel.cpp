@@ -17,37 +17,39 @@ QVariant PModModel::data(const QModelIndex &index, int role) const
     if (index.isValid() && index.row() >= 0 && index.row() < m_mods_list.length())
     {
         QSharedPointer<PModItem> mod = m_mods_list[index.row()];
-        qDebug() << "Fetching data for mod: " << mod->modTitle();
+        qDebug() << "Fetching data for mod: " << mod->title();
         switch ((Role) role)
         {
             case ModTitleRole:
-                return mod->modTitle();
+                return mod->title();
             case ModAuthorRole:
-                return mod->modAuthor();
+                return mod->authors();
             case ModDescriptionRole:
-                return mod->modDescription();
+                return mod->description();
             case ModEnabledRole:
-                return mod->modEnabled();
+                return mod->enabled();
             case ModCategoryRole:
-                return mod->modCategory();
+                return mod->category();
             case ModTagsRole:
-                return mod->modTags();
+                return mod->tags();
             case ModIdRole:
-                return mod->modId();
+                return mod->id();
             case ModFilenameRole:
-                return mod->modFilename();
+                return mod->filename();
             case ModDependencyIdRole:
                 return mod->dependencyId();
             case ModLocationRole:
-                return mod->modLocation();
+                return mod->location();
             case ModIconPathsRole:
-                return mod->modIconPaths();
+                return mod->iconpaths();
             case ModOgLocationRole:
                 return mod->oglocation();
             case ModSelectedRole:
-                return mod->isSelected();
+                return mod->selected();
+            case ModVersionRole:
+                return mod->version();
             case ModObjectRole:
-                qDebug() << "Returning mod object: " << mod->modTitle();
+                qDebug() << "Returning mod object: " << mod->title();
                 return QVariant::fromValue(mod.data()); // return a whole mod object
         }
     }
@@ -63,20 +65,21 @@ QHash<int, QByteArray> PModModel::roleNames() const
     qDebug() << "PModModel::roleNames() called";
     QHash<int, QByteArray> roles;
 
-    roles[ModTitleRole] = "modTitle";
-    roles[ModAuthorRole] = "modAuthor";
-    roles[ModDescriptionRole] = "modDescription";
-    roles[ModEnabledRole] = "modEnabled";
-    roles[ModCategoryRole] = "modCategory";
-    roles[ModTagsRole] = "modTags";
-    roles[ModIdRole] = "modId";
-    roles[ModFilenameRole] = "modFilename";
-    roles[ModDependencyIdRole] = "modDependencyId";
-    roles[ModLocationRole] = "modLocation";
-    roles[ModObjectRole] = "modObject"; // return a whole mod object
-    roles[ModIconPathsRole] = "modIconPaths";
-    roles[ModOgLocationRole] = "modOgLocation";
-    roles[ModSelectedRole] = "modSelected";
+    roles[ModTitleRole] = "title";
+    roles[ModAuthorRole] = "authors";
+    roles[ModDescriptionRole] = "description";
+    roles[ModEnabledRole] = "enabled";
+    roles[ModCategoryRole] = "category";
+    roles[ModTagsRole] = "tags";
+    roles[ModIdRole] = "id";
+    roles[ModFilenameRole] = "filename";
+    roles[ModDependencyIdRole] = "depId";
+    roles[ModLocationRole] = "location";
+    roles[ModObjectRole] = "instance"; // return a whole mod object
+    roles[ModIconPathsRole] = "iconpaths";
+    roles[ModOgLocationRole] = "oglocation";
+    roles[ModSelectedRole] = "selected";
+    roles[ModVersionRole] = "version";
 
     return roles;
 }
@@ -106,8 +109,7 @@ void PModModel::loadMods()
     while (query.next())
     {
         qDebug() << "Loading mod from database: " << query.value("title").toString();
-        PModItem modItem = db.populateModItem(query);
-        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(modItem);
+        QSharedPointer<PModItem> mod = db.populateModItem(query);
         addMod(mod);
     }
 
@@ -122,12 +124,11 @@ void PModModel::reloadMod(int index)
     beginResetModel();
     if (index >= 0 && index < m_mods_list.size())
     {
-        // QSharedPointer<PModItem> mod = m_mods_list[index];
         // qDebug() << "Reloading mod: " << mod->modTitle();
         PDatabaseMgr db;
         db.openDatabase();
-        PModItem modItem = db.populateModItem(query);
-        QSharedPointer<PModItem> newMod = QSharedPointer<PModItem>::create(modItem);
+        QString id = m_mods_list[index]->id();
+        QSharedPointer<PModItem> newMod = db.getModByPk(id);
         // Update the mod in the list
         m_mods_list[index] = std::move(newMod);
         db.closeDatabase();
@@ -142,11 +143,11 @@ void PModModel::reloadMod(QSharedPointer<PModItem> mod)
     int index = m_mods_list.indexOf(mod);
     if (index == -1)
     {
-        qDebug() << "Mod not found in list: " << mod->modTitle();
+        qDebug() << "Mod not found in list: " << mod->title();
         return;
     }
     // Reload mod from database
-    qDebug() << "Reloading mod: " << mod->modTitle();
+    qDebug() << "Reloading mod: " << mod->title();
     reloadMod(index);
 }
 
@@ -179,8 +180,7 @@ void PModModel::updateModList(QString property, QString value)
     while (query.next())
     {
         qDebug() << "Loading mod from database: " << query.value("title").toString();
-        PModItem modItem = db.populateModItem(query);
-        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(modItem);
+        QSharedPointer<PModItem> mod = db.populateModItem(query);
         addMod(mod);
     }
     db.closeDatabase();
@@ -201,7 +201,7 @@ void PModModel::removeMod(int index)
 void PModModel::addMod(QSharedPointer<PModItem> mod)
 {
     beginInsertRows(QModelIndex(), m_mods_list.size(), m_mods_list.size());
-    qDebug() << "Adding mod to list: " << mod->modTitle();
+    qDebug() << "Adding mod to list: " << mod->title();
     m_mods_list.append(mod);
     endInsertRows();
     qDebug() << "New mod count: " << m_mods_list.size();

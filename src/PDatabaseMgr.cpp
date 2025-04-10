@@ -68,41 +68,39 @@ bool PDatabaseMgr::createTables() {
     return true;
 }
 
-bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
-                             const QString &version, bool enabled, const QVector<QString> &tags,
-                             const QString category, const QString &modId, const QVector<PDependency> &dependencies,
-                             const QString &filename, const QString &location, const QStringList &iconpaths,
-                             const QString &oglocation, bool isSelected)
+bool PDatabaseMgr::insertMod(const QString &title, const QString &description, const QStringList &authors, 
+    const QString &version, bool enabled, const QStringList &tags, const QString &category, 
+    const QString &id, const QString &depId, const QString &filename,
+    const QString &location, const QStringList &iconpaths, const QString &oglocation,
+    bool selected, QObject *parent)
                              {
     QSqlQuery query(m_db);
 
     // Check for missing required fields
-    if (name.isEmpty() || version.isEmpty() || modId.isEmpty()) {
+    if (title.isEmpty() || version.isEmpty() || id.isEmpty()) {
         qDebug() << "Missing required fields for mod insert";
         return false;
     }
 
-    query.prepare("INSERT INTO mods (title, author, description, enabled, tags, category, version, mod_id, filename, location, iconpaths,
-                    oglocation, isSelected) "
-                  "VALUES (:title, :author, :description, :enabled, :tags, :category, :version, :mod_id, :filename, :location, :iconpaths,
-                    :oglocation, :isSelected)");
+    query.prepare("INSERT INTO mods (title, authors, description, enabled, category, tags, version, mod_id, dep_id, filename, location, iconpaths, oglocation, is_selected) "
+                  "VALUES (:title, :authors, :description, :enabled, :category, :tags, :version, :mod_id, :dep_id, :filename, :location, :iconpaths, :oglocation, :is_selected)");
     
     // Bind required values
-    query.bindValue(":title", name);
+    query.bindValue(":title", title);
     query.bindValue(":version", version);
-    query.bindValue(":mod_id", modId);
+    query.bindValue(":mod_id", id);
     
     // add authors to author field
     if (!authors.isEmpty()) {
-        query.bindValue(":author", authors.join(", "));
+        query.bindValue(":authors", authors.join(", "));
     }
     else {
-        query.bindValue(":author", "");
+        query.bindValue(":authors", "");
     }
 
     // add description to description field
-    if (!desc.isEmpty()) {
-        query.bindValue(":description", desc);
+    if (!description.isEmpty()) {
+        query.bindValue(":description", description);
     }
     else {
         query.bindValue(":description", "");
@@ -132,16 +130,12 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         query.bindValue(":category", "Uncategorized");
     }
 
-    // Insert dependencies
-    if (!dependencies.isEmpty()) {
-        for (const PDependency &dependency : dependencies) {
-            if (!addDependency(modId, dependency)) {
-                return false;
-            }
-        }
-    }
+    // Insert dep id
+    if (!depId.isEmpty()) {
+        query.bindValue(":dep_id", depId);
+    } 
     else {
-        // 
+        query.bindValue(":dep_id", "");
     }
 
     // Insert mod location and filename
@@ -172,11 +166,11 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         query.bindValue(":oglocation", "");
     }
 
-    if (isSelected) {
-        query.bindValue(":isSelected", 1);
+    if (selected) {
+        query.bindValue(":is_selected", 1);
     } 
     else {
-        query.bindValue(":isSelected", 0);
+        query.bindValue(":is_selected", 0);
     }
 
     // Execute the query
@@ -189,9 +183,9 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
 }
 
 // TODO: Fix tags so they insert as a list
-bool PDatabaseMgr::insertMod(const PMod &mod) {
-    return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies,
-        mod.filename, mod.location, mod.iconpaths, mod.oglocation, mod.isSelected);
+bool PDatabaseMgr::insertMod(const PModItem &mod) {
+    return insertMod(mod.title(), mod.description(), {mod.authors()}, mod.version(), mod.enabled(), mod.tags(), mod.category(), mod.id(), mod.dependencyId(),
+        mod.filename(), mod.location(), mod.iconpaths(), mod.oglocation(), mod.selected());
 }
 
 bool PDatabaseMgr::deleteMod(const QString &modId) {
@@ -464,8 +458,8 @@ QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString 
 }
 
 // Static version of getModByPk
-PModItem PDatabaseMgr::getModByPk(const QString &modId) {
-    return queryAsObject("mod_id", modId);
+QSharedPointer<PModItem> PDatabaseMgr::getModByPk(const QString &modId) {
+    return queryToModItem("mod_id", modId);
 }
 
 // Grabs mods from ZTDs and stores them in database
@@ -486,7 +480,7 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
     // Insert mods into database
     for (const QString &ztd : ztdList)
     {
-        PDatabaseMgr::PMod mod;
+        PModItem mod;
         QString filename = ztd.split("/").last();
         QStringList locationPath = ztd.split("/");
         locationPath.removeLast();
@@ -512,19 +506,19 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
             qDebug() << "No meta config found in ztd: " << ztd;
 
             // Insert mod with blank values
-            mod.title = "Unknown";
-            mod.authors = {"Unknown"};
-            mod.description = "No description found";
-            mod.location = location;
-            mod.filename = filename;
-            mod.enabled = true;
-            mod.category = "Unknown";
-            mod.tags = {"Unknown"};
-            mod.version = "1.0.0";
-            mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
-            mod.iconpaths = iconPaths;
-            mod.oglocation = ztd;
-            mod.isSelected = false;
+            mod.setTitle("Unknown");
+            mod.setAuthors({"Unknown"});
+            mod.setDescription("No description found");
+            mod.setLocation(location);
+            mod.setFilename(filename);
+            mod.setEnabled(true);
+            mod.setCategory("Unknown");
+            mod.setTags({"Unknown"});
+            mod.setVersion("1.0.0");
+            mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
+            mod.setIconPaths(iconPaths);
+            mod.setOGLocation(ztd);
+            mod.setSelected(false);
         }
         else {
 
@@ -532,63 +526,61 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
             toml::table config = PConfigMgr::getMetaConfig(ztd);
 
             // Grab mod_id from config
-            mod.mod_id = PConfigMgr::getKeyValue("mod_id", config);
-            if (mod.mod_id.isEmpty()) {
-                mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+            mod.setId(PConfigMgr::getKeyValue("mod_id", config));
+            if (mod.id().isEmpty()) {
+                mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
             }
 
             // Check if mod_id already exists in database
             // TODO: Let user decide if it's a duplicate or not
-            if (doesModExist(mod.mod_id)) {
-                qDebug() << "Mod already exists in database: " << mod.mod_id;
+            if (doesModExist(mod.id())) {
+                qDebug() << "Mod already exists in database: " << mod.id();
                 continue; // Skip this mod
             }
 
             // Get other values from config
-            mod.title = PConfigMgr::getKeyValue("name", config);
-            if (mod.title.isEmpty()) {
-                mod.title = "Unknown";
+            mod.setTitle(PConfigMgr::getKeyValue("name", config));
+            if (mod.title().isEmpty()) {
+                mod.setTitle("Unknown");
             }
 
-            mod.authors = PConfigMgr::getKeyValueAsList("authors", config);
-            if (mod.authors.isEmpty()) {
-                mod.authors = {"Unknown"};
+            mod.setAuthors(PConfigMgr::getKeyValueAsList("authors", config));
+            if (mod.authors().isEmpty()) {
+                mod.setAuthors({"Unknown"});
             }
 
-            mod.description = PConfigMgr::getKeyValue("description", config);
-            if (mod.description.isEmpty()) {
-                mod.description = "No description found";
+            mod.setDescription(PConfigMgr::getKeyValue("description", config));
+            if (mod.description().isEmpty()) {
+                mod.setDescription("No description found");
             }
 
-            mod.enabled = true;
+            mod.setEnabled(true);
 
-            mod.tags = PConfigMgr::getKeyValueAsList("tags", config);
+            mod.setTags(PConfigMgr::getKeyValueAsList("tags", config));
             // remove "All" from tags if it exists
-            mod.tags.removeAll("All");
-            if (mod.tags.isEmpty()) {
-                mod.tags = {"Unknown"};
+            QStringList tags = mod.tags();
+            tags.removeAll("All");
+            mod.setTags(tags);
+            if (mod.tags().isEmpty()) {
+                mod.setTags({"Unknown"});
             }
 
-            mod.category = mod.tags[0];
-            qDebug() << "Added category: " << mod.category << " to mod " << mod.title;
-            if (mod.category.isEmpty()) {
-                mod.category = "Unknown";
+            mod.setCategory(mod.tags()[0]);
+            qDebug() << "Added category: " << mod.category() << " to mod " << mod.title();
+            if (mod.category().isEmpty()) {
+                mod.setCategory("Unknown");
             }
 
-            if (mod.category.isEmpty()) {
-                mod.category = "Unknown";
+            mod.setVersion(PConfigMgr::getKeyValue("version", config));
+            if (mod.version().isEmpty()) {
+                mod.setVersion("1.0.0");
             }
 
-            mod.version = PConfigMgr::getKeyValue("version", config);
-            if (mod.version.isEmpty()) {
-                mod.version = "1.0.0";
-            }
-
-            mod.filename = filename;
-            mod.location = location;
-            mod.iconpaths = iconPaths;
-            mod.oglocation = ztd;
-            mod.isSelected = false;
+            mod.setFilename(filename);
+            mod.setLocation(location);
+            mod.setIconPaths(iconPaths);
+            mod.setOGLocation(ztd);
+            mod.setSelected(false);
         }
 
         insertMod(mod);
@@ -601,29 +593,45 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
 }
 
 // Populate mod item from query result
-PModItem PDatabaseMgr::populateModItem(QSqlQuery query) {
-    PModItem modItem;
+QSharedPointer<PModItem> PDatabaseMgr::populateModItem(QSqlQuery &query) {
+    QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
-    modItem.setmodTitle(query.value("title").toString());
-    modItem.setmodAuthor(query.value("author").toString());
-    modItem.setmodDescription(query.value("description").toString());
-    modItem.setmodEnabled(query.value("enabled").toBool());
-    modItem.setmodCategory(query.value("category").toString());
-    modItem.setmodTags(query.value("tags").toString());
-    modItem.setmodId(query.value("mod_id").toString());
-    modItem.setmodFilename(query.value("filename").toString());
-    modItem.setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
-    modItem.setDependencyId(query.value("dependency_id").toString());
-    modItem.setmodLocation(query.value("location").toString());
-    modItem.setmodOglocation(query.value("oglocation").toString());
-    modItem.setIsSelected(query.value("isSelected").toBool());
+    qDebug() << "Populating mod item from query result";
+    modItem->setTitle(query.value("title").toString());
+    qDebug() << "Mod title: " << modItem->title();
+    modItem->setAuthors(query.value("authors").toStringList());
+    qDebug() << "Mod authors: " << modItem->authors();
+    modItem->setDescription(query.value("description").toString());
+    qDebug() << "Mod description: " << modItem->description();
+    modItem->setEnabled(query.value("enabled").toBool());
+    qDebug() << "Mod enabled: " << modItem->enabled();
+    modItem->setCategory(query.value("category").toString());
+    qDebug() << "Mod category: " << modItem->category();
+    modItem->setTags(query.value("tags").toStringList());
+    qDebug() << "Mod tags: " << modItem->tags();
+    modItem->setId(query.value("mod_id").toString());
+    qDebug() << "Mod ID: " << modItem->id();
+    modItem->setFilename(query.value("filename").toString());
+    qDebug() << "Mod filename: " << modItem->filename();
+    modItem->setIconPaths(query.value("iconpaths").toStringList());
+    qDebug() << "Mod icon paths: " << modItem->iconpaths();
+    modItem->setDependencyId(query.value("dep_id").toString());
+    qDebug() << "Mod dependency ID: " << modItem->dependencyId();
+    modItem->setLocation(query.value("location").toString());
+    qDebug() << "Mod location: " << modItem->location();
+    modItem->setOGLocation(query.value("oglocation").toString());
+    qDebug() << "Mod original location: " << modItem->oglocation();
+    modItem->setSelected(query.value("is_selected").toBool());
+    qDebug() << "Mod selected: " << modItem->selected();
+    modItem->setVersion(query.value("version").toString());
+    qDebug() << "Mod version: " << modItem->version();
 
     return modItem;
 }
 
 // Get the first result as a PModItem object
-PModItem PDatabaseMgr::queryToModItem(QSqlQuery query) {
-    PModItem modItem;
+QSharedPointer<PModItem> PDatabaseMgr::queryToModItem(QSqlQuery &query) {
+    QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
     if (!query.exec()) {
         qDebug() << "Error running query:" << query.lastError();
@@ -641,7 +649,7 @@ PModItem PDatabaseMgr::queryToModItem(QSqlQuery query) {
 }
 
 // Get a query result as a PModItem object
-PModItem PDatabaseMgr::queryToModItem(QString property, QString value) {
+QSharedPointer<PModItem> PDatabaseMgr::queryToModItem(QString property, QString value) {
     QSqlQuery query(m_db);
     query.prepare("SELECT * FROM mods WHERE " + property + " = :value");
     query.bindValue(":value", value);
@@ -650,12 +658,12 @@ PModItem PDatabaseMgr::queryToModItem(QString property, QString value) {
 }
 
 // Get a query result as a list of PModItem objects
-QVector<PModItem> PDatabaseMgr::queryToModItems(QString property, QString value) {
+QVector<QSharedPointer<PModItem>> PDatabaseMgr::queryToModItems(QString property, QString value) {
     QSqlQuery query = queryMods(property, value);
-    QVector<PModItem> modItems;
+    QVector<QSharedPointer<PModItem>> modItems;
 
     while (query.next()) {
-        PModItem modItem;
+        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
         modItem = populateModItem(query);
         modItems.append(modItem);
     }

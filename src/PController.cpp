@@ -8,29 +8,15 @@ PController::PController(QObject *parent, PState *state)
     m_model->loadMods();
 }
 
-QSharedPointer<PModItem> PController::getModAsObject(QString modId) const
+QSharedPointer<PModItem> PController::getModAsObject(QString id) const
 {
     PDatabaseMgr db;
     db.openDatabase();
 
-    PDatabaseMgr::PMod mod = db.getModByPk(modId);
+    QSharedPointer<PModItem> modItem = db.getModByPk(id);
 
-    QSharedPointer<PModItem> modItem;
-    modItem = QSharedPointer<PModItem>::create();
-    modItem->setmodTitle(mod.title);
-    modItem->setmodAuthor(mod.authors.join(", "));
-    modItem->setmodDescription(mod.description);
-    modItem->setmodEnabled(mod.enabled);
-    modItem->setmodCategory(mod.category);
-    modItem->setmodTags(mod.tags.join(", "));
-    modItem->setmodId(mod.mod_id);
-    modItem->setmodLocation(QUrl::fromLocalFile(mod.location));
-    modItem->setmodFilename(mod.filename);
-    modItem->setmodIconPaths(mod.iconpaths);
-    modItem->setDependencyId(mod.dependencies[0].dependencyId);
-
-    qDebug() << "Currently selected mod: " << modItem->modTitle();
-    qDebug() << "With ID: " << modItem->modId();
+    qDebug() << "Currently selected mod: " << modItem->title();
+    qDebug() << "With ID: " << modItem->id();
 
     db.closeDatabase();
 
@@ -57,21 +43,21 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
     }
 
     // delete icons associated with mod
-    if (PGraphicsMgr::deleteIcons(mod->modId())) {
-        qDebug() << "Deleted icons for mod: " << mod->modId();
+    if (PGraphicsMgr::deleteIcons(mod->id())) {
+        qDebug() << "Deleted icons for mod: " << mod->id();
     } else {
-        qDebug() << "Failed to delete icons for mod: " << mod->modId(); 
+        qDebug() << "Failed to delete icons for mod: " << mod->id();
     }
 
     // delete mod from database
     PDatabaseMgr db;
     db.openDatabase();
-    db.deleteMod(mod->modId());
+    db.deleteMod(mod->id());
     db.closeDatabase();
 
     // delete mod from filesystem
-    QString location = mod->modLocation().toLocalFile();
-    QString filename = mod->modFilename();
+    QString location = mod->location();
+    QString filename = mod->filename();
     QString ztdFilePath = location + "/" + filename;
     if (PZtdMgr::deleteFile(ztdFilePath)) {
         qDebug() << "Deleted ztd file: " << ztdFilePath;
@@ -106,13 +92,13 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     QString disabledDir;
 
     // Calculate correct paths
-    qDebug() << "Disabling mod: " << mod->modTitle();
+    qDebug() << "Disabling mod: " << mod->title();
     if (!m_state) {
         qCritical() << "PState is null, cannot disable mod";
         return;
     } else {
         fileBasePath = QDir::cleanPath(m_state->getGamePath());
-        filename = mod->modFilename();
+        filename = mod->filename();
         // needs trailing slash because the cleanpath removes it
         disabledDir = QDir::cleanPath(pandaHomePath + "/resources/mods/.disabled") + "/";
     }
@@ -127,7 +113,7 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     qDebug() << "Moving ztd file to disabled mods folder: " << disabledDir;
 
     // Determine final locations for file
-    QString ztdFilePath = QDir::cleanPath(mod->modLocation().toLocalFile() + "/" + filename);
+    QString ztdFilePath = QDir::cleanPath(mod->location() + "/" + filename);
     QString newZtdFilePath = QDir::cleanPath(disabledDir + filename);
 
     // Final sanity checks
@@ -148,15 +134,15 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     // Update the mod in the database
     PDatabaseMgr db;
     db.openDatabase();
-    db.updateMod(mod->modId(), "location", disabledDir);
-    db.updateMod(mod->modId(), "enabled", "0");
+    db.updateMod(mod->id(), "location", disabledDir);
+    db.updateMod(mod->id(), "enabled", "0");
     db.closeDatabase();
 
     // qml stuff
-    if (QObject* component = mod->qmlItem()) {
+    if (QObject* component = mod->uiComponent()) {
         component->setProperty("opacity", 0.5);
     }
-    mod->setmodEnabled(false);
+    mod->setEnabled(false);
 
     // Reload the mod
     reloadMod(mod);
@@ -198,7 +184,7 @@ void PController::selectMod(int index)
         qDebug() << "Current mod is null";
         return;
     }
-    qDebug() << "Emitting modSelected signal: " << m_currentMod->modTitle();
+    qDebug() << "Emitting modSelected signal: " << m_currentMod->title();
     emit modSelected();
 }
 
@@ -219,7 +205,7 @@ void PController::deselectMod(int index)
     if (m_currentMod)
     {
         m_currentMod = nullptr;
-        qDebug() << "Emitting modDeselected signal: " << m_currentMod->modTitle();
+        qDebug() << "Emitting modDeselected signal: " << m_currentMod->title();
         emit modDeselected();
     }
     else
@@ -265,7 +251,7 @@ void PController::setCurrentMod(QObject* mod)
         }
     }
 
-    qDebug() << "Mod not found in list: " << modItem->modTitle();
+    qDebug() << "Mod not found in list: " << modItem->title();
 }
 
 QList<QObject*> PController::selectedMods() const
@@ -297,7 +283,7 @@ void PController::addModToSelection(QObject* mod)
         }
     }
 
-    qDebug() << "Mod not found in list: " << modItem->modTitle();
+    qDebug() << "Mod not found in list: " << modItem->title();
 }
 
 void PController::updateModList(QString orderBy, QString searchTerm)

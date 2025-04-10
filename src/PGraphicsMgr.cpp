@@ -154,7 +154,7 @@ bool PGraphicsMgr::deleteIcons(const QString &modId) {
     // Get the icon paths from database
     PDatabaseMgr db;
     db.openDatabase();
-    QStringList iconPaths = db.getModByPk(modId).iconpaths;
+    QStringList iconPaths = db.getModByPk(modId)->iconpaths();
     db.closeDatabase();
 
     if (iconPaths.isEmpty()) {

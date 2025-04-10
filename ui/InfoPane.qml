@@ -27,7 +27,7 @@ Item {
             // mod title
             Text {
                 id: modDetailsText
-                text: infoPane.targetComponent ? infoPane.targetComponent.modTitle : "No mod selected"
+                text: infoPane.targetComponent ? infoPane.targetComponent.title : "No mod selected"
                 color: "#424940"
                 font.pixelSize: 16
                 font.bold: true
@@ -41,7 +41,7 @@ Item {
             // description
             Text {
                 id: modDetailsDesc
-                text: infoPane.targetComponent ? infoPane.targetComponent.modDescription : "No description"
+                text: infoPane.targetComponent ? infoPane.targetComponent.description : "No description"
                 color: "#424940"
                 font.pixelSize: 12
                 wrapMode: Text.WordWrap
@@ -55,7 +55,7 @@ Item {
             // authors
             InfoPaneItem {
                 fieldName: "Authors"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modAuthor : "No authors"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.authors : "No authors"
                 iconImg: "qrc:/icons/author.svg"
                 Layout.fillWidth: true
             }
@@ -63,7 +63,7 @@ Item {
             // mod path
             InfoPaneItem {
                 fieldName: "Path"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modLocation : "No path"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.location : "No path"
                 iconImg: "qrc:/icons/path.svg"
                 Layout.fillWidth: true
             }
@@ -71,7 +71,7 @@ Item {
             // File Name
             InfoPaneItem {
                 fieldName: "File Name"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modFilename : "No file name"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.filename : "No file name"
                 iconImg: "qrc:/icons/path.svg"
                 Layout.fillWidth: true
             }
@@ -79,7 +79,7 @@ Item {
             // mod ID
             InfoPaneItem {
                 fieldName: "Mod ID"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modId : "No ID"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.id : "No ID"
                 iconImg: "qrc:/icons/path.svg"
                 Layout.fillWidth: true
             }
@@ -87,7 +87,7 @@ Item {
             // enabled
             InfoPaneItem {
                 fieldName: "Status"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modEnabled ? "Enabled" : "Disabled" : "No status"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.enabled ? "Enabled" : "Disabled" : "No status"
                 iconImg: "qrc:/icons/path.svg"
                 Layout.fillWidth: true
             }
