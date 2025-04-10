@@ -63,8 +63,16 @@ Item {
             // mod path
             InfoPaneItem {
                 fieldName: "Path"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modPath : "No path"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modLocation : "No path"
                 iconImg: "qrc:/icons/path.svg"
+                Layout.fillWidth: true
+            }
+
+            // mod ID
+            InfoPaneItem {
+                fieldName: "Mod ID"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modId : "No ID"
+                iconImg: "qrc:/icons/id.svg"
                 Layout.fillWidth: true
             }
 
