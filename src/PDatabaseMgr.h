@@ -48,8 +48,10 @@ public:
     QSqlQuery queryMods(const QString &propertyName, const QString &searchTerm);
     QStringList searchMods(const QString &propertyName, const QString &searchTerm);
     Q_INVOKABLE PModItem getModByPk(const QString &modId);
-    PModItem queryToObject(QString property, QString value);
-    QVector<PModItem> queryToObjects(QString property, QString value);
+    PModItem populateModItem(QSqlQuery query);
+    PModItem queryToModItem(QSqlQuery query);
+    PModItem queryToModItem(QString property, QString value);
+    QVector<PModItem> queryToModItems(QString property, QString value);
 
     void loadModsFromZTDs(const QStringList &ztdList);
 

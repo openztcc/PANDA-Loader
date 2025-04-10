@@ -600,12 +600,29 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
     qDebug() << "Loaded mods from ZTDs";
 }
 
-// Get a query result as a PModItem object
-PModItem PDatabaseMgr::queryToObject(QString property, QString value) {
-    QSqlQuery query(m_db);
-    query.prepare("SELECT * FROM mods WHERE " + property + " = :value");
-    query.bindValue(":value", value);
+// Populate mod item from query result
+PModItem PDatabaseMgr::populateModItem(QSqlQuery query) {
+    PModItem modItem;
 
+    modItem.setmodTitle(query.value("title").toString());
+    modItem.setmodAuthor(query.value("author").toString());
+    modItem.setmodDescription(query.value("description").toString());
+    modItem.setmodEnabled(query.value("enabled").toBool());
+    modItem.setmodCategory(query.value("category").toString());
+    modItem.setmodTags(query.value("tags").toString());
+    modItem.setmodId(query.value("mod_id").toString());
+    modItem.setmodFilename(query.value("filename").toString());
+    modItem.setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
+    modItem.setDependencyId(query.value("dependency_id").toString());
+    modItem.setmodLocation(query.value("location").toString());
+    modItem.setmodOglocation(query.value("oglocation").toString());
+    modItem.setmodIsSelected(query.value("isSelected").toBool());
+
+    return modItem;
+}
+
+// Get the first result as a PModItem object
+PModItem PDatabaseMgr::queryToModItem(QSqlQuery query) {
     PModItem modItem;
 
     if (!query.exec()) {
@@ -626,15 +643,24 @@ PModItem PDatabaseMgr::queryToObject(QString property, QString value) {
         modItem.setDependencyId(query.value("dependency_id").toString());
         modItem.setmodLocation(query.value("location").toString());
     } else {
-        qDebug() << "Mod not found with ID:" << value;
+        qDebug() << "Mod not found with ID:" << query.lastError();
         return modItem;
     }
 
     return modItem;
 }
 
+// Get a query result as a PModItem object
+PModItem PDatabaseMgr::queryToModItem(QString property, QString value) {
+    QSqlQuery query(m_db);
+    query.prepare("SELECT * FROM mods WHERE " + property + " = :value");
+    query.bindValue(":value", value);
+
+    return queryToModItem(query);
+}
+
 // Get a query result as a list of PModItem objects
-QVector<PModItem> PDatabaseMgr::queryToObjects(QString property, QString value) {
+QVector<PModItem> PDatabaseMgr::queryToModItems(QString property, QString value) {
     QSqlQuery query = queryMods(property, value);
     QVector<PModItem> modItems;
 
