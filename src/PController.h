@@ -62,6 +62,7 @@ public:
     Q_INVOKABLE QList<QObject*> selectedMods() const;
     // Q_INVOKABLE void removeFromSelectedMods(QObject* mod);
     QObject* previousMod() const { return m_previousMod.data(); }
+    void reloadMod(QSharedPointer<PModItem> mod);
 
 signals:
     void modAdded(QSharedPointer<PModItem>);

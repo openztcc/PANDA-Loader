@@ -119,6 +119,57 @@ void PModModel::loadMods()
     endResetModel();
 }
 
+void PModModel::reloadMod(int index)
+{
+    // Reload mod from database
+    beginResetModel();
+    if (index >= 0 && index < m_mods_list.size())
+    {
+        QSharedPointer<PModItem> mod = m_mods_list[index];
+        qDebug() << "Reloading mod: " << mod->modTitle();
+        PDatabaseMgr db;
+        db.openDatabase();
+        QSqlQuery query = db.getAllMods();
+        while (query.next())
+        {
+            if (query.value("mod_id").toString() == mod->modId())
+            {
+                qDebug() << "Loading mod from database: " << query.value("title").toString();
+                mod->setmodTitle(query.value("title").toString());
+                mod->setmodAuthor(query.value("author").toString());
+                mod->setmodDescription(query.value("description").toString());
+                mod->setmodEnabled(query.value("enabled").toBool());
+                mod->setmodCategory(query.value("category").toString());
+                mod->setmodTags(query.value("tags").toString());
+                mod->setmodId(query.value("mod_id").toString());
+                mod->setmodFilename(query.value("filename").toString());
+                mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
+                mod->setDependencyId(query.value("dependency_id").toString());
+                mod->setmodLocation(QUrl::fromLocalFile(query.value("location").toString()));
+            }
+        }
+        db.closeDatabase();
+    }
+    endResetModel();
+}
+
+// Reload mod from database
+void PModModel::reloadMod(QSharedPointer<PModItem> mod)
+{
+    // Get index from mod list
+    int index = m_mods_list.indexOf(mod);
+    if (index == -1)
+    {
+        qDebug() << "Mod not found in list: " << mod->modTitle();
+        return;
+    }
+    // Reload mod from database
+    beginResetModel();
+    qDebug() << "Reloading mod: " << mod->modTitle();
+    reloadMod(index);
+    endResetModel();
+}
+
 // Updates the mod list based on the order and search term for filtering and live search
 void PModModel::updateModList(QString orderBy, QString searchTerm) 
 {

@@ -68,11 +68,19 @@ Item {
                 Layout.fillWidth: true
             }
 
+            // File Name
+            InfoPaneItem {
+                fieldName: "File Name"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modFilename : "No file name"
+                iconImg: "qrc:/icons/path.svg"
+                Layout.fillWidth: true
+            }
+
             // mod ID
             InfoPaneItem {
                 fieldName: "Mod ID"
                 innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modId : "No ID"
-                iconImg: "qrc:/icons/id.svg"
+                iconImg: "qrc:/icons/path.svg"
                 Layout.fillWidth: true
             }
 

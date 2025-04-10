@@ -140,6 +140,15 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     db.openDatabase();
     db.updateMod(mod->modId(), "location", disabledDir);
     db.closeDatabase();
+
+    // Reload the mod
+    reloadMod(mod);
+
+}
+
+void PController::reloadMod(QSharedPointer<PModItem> mod)
+{
+    m_model->reloadMod(mod);
 }
 
 void PController::disableSelected()
