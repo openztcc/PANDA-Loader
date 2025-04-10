@@ -28,6 +28,7 @@ public:
     QString getGamePath();
     void setGamePath(QString);
     QStringList getZtdList();
+    PSettings* settings() const { return m_settings; }
 
 signals:
     void pathChanged();

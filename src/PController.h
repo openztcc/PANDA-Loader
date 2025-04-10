@@ -12,12 +12,14 @@ concerns itself with the mods list and operations over other classes from the UI
 #include <QVector>
 
 // Project includes
-#include "../models/PModItem.h"
 #include "PState.h"
 #include "PZtdMgr.h"
 #include "PDatabaseMgr.h"
 #include "PConfigMgr.h"
+
+// Models
 #include "../models/PModModel.h"
+#include "../models/PModItem.h"
 
 // Third-party includes
 #include "toml.hpp"
