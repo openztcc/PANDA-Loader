@@ -164,10 +164,8 @@ void PModModel::reloadMod(QSharedPointer<PModItem> mod)
         return;
     }
     // Reload mod from database
-    beginResetModel();
     qDebug() << "Reloading mod: " << mod->modTitle();
     reloadMod(index);
-    endResetModel();
 }
 
 // Updates the mod list based on the order and search term for filtering and live search
