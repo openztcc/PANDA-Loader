@@ -89,20 +89,26 @@ void PController::deleteSelected()
 
 void PController::disableMod(QSharedPointer<PModItem> mod)
 {
-    QString basePath;
-    QString disabledDir;
+    // File location variables
+    QString fileBasePath;
     QString filename;
 
+    // Get the game path from the state
+    QString pandaHomePath = QDir::cleanPath(m_state->settings()->pandaHomePath());
+    QString disabledDir;
+
+    // Calculate correct paths
     qDebug() << "Disabling mod: " << mod->modTitle();
     if (!m_state) {
         qCritical() << "PState is null, cannot disable mod";
         return;
     } else {
-        basePath = QDir::cleanPath(m_state->getGamePath());
-        disabledDir = QDir::cleanPath(basePath + "/dlupdate/.disabledmods/") + "/";
+        fileBasePath = QDir::cleanPath(m_state->getGamePath());
         filename = mod->modFilename();
+        disabledDir = QDir::cleanPath(pandaHomePath + "/resources/mods/.disabled/");
     }
 
+    // Sanity checks
     qDebug() << "Checking if disabled mods folder exists: " << disabledDir;
     if (!QDir(disabledDir).exists()) {
         QDir().mkdir(disabledDir);
@@ -111,20 +117,29 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     }
     qDebug() << "Moving ztd file to disabled mods folder: " << disabledDir;
 
+    // Determine final locations for file
     QString ztdFilePath = QDir::cleanPath(mod->modLocation().toLocalFile() + "/" + filename);
     QString newZtdFilePath = QDir::cleanPath(disabledDir + filename);
 
+    // Final sanity checks
     qDebug() << "ZTD file path: " << ztdFilePath;
     if (!QFile::exists(ztdFilePath)) {
         qCritical() << "ZTD file path does not exist:" << ztdFilePath;
         return;
     }    
 
+    // Move file to disabled mods folder
     if (PZtdMgr::moveFile(ztdFilePath, newZtdFilePath)) {
         qDebug() << "Moved ztd file to disabled mods folder: " << newZtdFilePath;
     } else {
         qDebug() << "Failed to move ztd file: " << ztdFilePath;
     }
+
+    // Update the mod in the database
+    PDatabaseMgr db;
+    db.openDatabase();
+    db.updateMod(mod->modId(), "location", disabledDir);
+    db.closeDatabase();
 }
 
 void PController::disableSelected()
