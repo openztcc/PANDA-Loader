@@ -71,7 +71,8 @@ bool PDatabaseMgr::createTables() {
 bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
                              const QString &version, bool enabled, const QVector<QString> &tags,
                              const QString category, const QString &modId, const QVector<PDependency> &dependencies,
-                             const QString &filename, const QString &location, const QStringList &iconpaths)
+                             const QString &filename, const QString &location, const QStringList &iconpaths,
+                             const QString &oglocation, bool isSelected)
                              {
     QSqlQuery query(m_db);
 
@@ -81,8 +82,10 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         return false;
     }
 
-    query.prepare("INSERT INTO mods (title, author, description, enabled, tags, category, version, mod_id, filename, location, iconpaths) "
-                  "VALUES (:title, :author, :description, :enabled, :tags, :category, :version, :mod_id, :filename, :location, :iconpaths) ");
+    query.prepare("INSERT INTO mods (title, author, description, enabled, tags, category, version, mod_id, filename, location, iconpaths,
+                    oglocation, isSelected) "
+                  "VALUES (:title, :author, :description, :enabled, :tags, :category, :version, :mod_id, :filename, :location, :iconpaths,
+                    :oglocation, :isSelected)");
     
     // Bind required values
     query.bindValue(":title", name);
@@ -162,6 +165,20 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
         query.bindValue(":iconpaths", "");
     }
 
+    if (!oglocation.isEmpty()) {
+        query.bindValue(":oglocation", oglocation);
+    } 
+    else {
+        query.bindValue(":oglocation", "");
+    }
+
+    if (isSelected) {
+        query.bindValue(":isSelected", 1);
+    } 
+    else {
+        query.bindValue(":isSelected", 0);
+    }
+
     // Execute the query
     if (!query.exec()) {
         qDebug() << "Failed to insert mod: " << query.lastError();
@@ -174,7 +191,7 @@ bool PDatabaseMgr::insertMod(const QString &name, const QString &desc, const QVe
 // TODO: Fix tags so they insert as a list
 bool PDatabaseMgr::insertMod(const PMod &mod) {
     return insertMod(mod.title, mod.description, {mod.authors}, mod.version, mod.enabled, mod.tags, mod.category, mod.mod_id, mod.dependencies,
-        mod.filename, mod.location, mod.iconpaths);
+        mod.filename, mod.location, mod.iconpaths, mod.oglocation, mod.isSelected);
 }
 
 bool PDatabaseMgr::deleteMod(const QString &modId) {
@@ -476,6 +493,8 @@ PDatabaseMgr::PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &mod
         mod.iconpaths = query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts);
         mod.filename = query.value("filename").toString();
         mod.location = query.value("location").toString();
+        mod.oglocation = query.value("oglocation").toString();
+        mod.isSelected = query.value("isSelected").toBool();
     } else {
         qDebug() << "Mod not found with ID:" << modId;
         return mod;
@@ -539,6 +558,8 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
             mod.version = "1.0.0";
             mod.mod_id = QUuid::createUuid().toString(QUuid::WithoutBraces);
             mod.iconpaths = iconPaths;
+            mod.oglocation = ztd;
+            mod.isSelected = false;
         }
         else {
 
@@ -601,6 +622,8 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
             mod.filename = filename;
             mod.location = location;
             mod.iconpaths = iconPaths;
+            mod.oglocation = ztd;
+            mod.isSelected = false;
         }
 
         insertMod(mod);

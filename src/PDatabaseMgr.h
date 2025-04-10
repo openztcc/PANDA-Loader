@@ -44,6 +44,8 @@ public:
         QString location;
         QString filename;
         QStringList iconpaths;
+        bool isSelected = false;
+        QString oglocation;
     };
 
     bool openDatabase();
@@ -52,7 +54,8 @@ public:
     bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
                    const QString &version, bool enabled, const QVector<QString> &tags,
                    const QString category, const QString &modId, const QVector<PDependency> &dependencies = {},
-                   const QString &filename = "", const QString &location = "", const QStringList &iconpaths = {});
+                   const QString &filename = "", const QString &location = "", const QStringList &iconpaths = {},
+                   const QString &oglocation = "", bool isSelected = false);
     bool insertMod(const PMod &mod);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);
@@ -91,6 +94,8 @@ private:
         "iconpaths TEXT, "
         "filename TEXT, "
         "location TEXT, "
+        "oglocation TEXT, "
+        "is_selected INTEGER NOT NULL, "
         "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
         ");";
 
