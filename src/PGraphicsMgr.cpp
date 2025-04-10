@@ -140,3 +140,52 @@ QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffe
     }
     return pngPaths;
 }
+
+// Deletes the icons from filesystem
+bool PGraphicsMgr::deleteIcons(const QString &modId) {
+    QDir dir(m_outputiconsPath);
+    if (!dir.exists()) {
+        qDebug() << "Icons directory does not exist:" << m_outputiconsPath;
+        return false;
+    }
+
+    // Get the icon paths from database
+    PDatabaseMgr db;
+    db.openDatabase();
+    QStringList iconPaths = db.getModByPk(modId).iconpaths;
+    db.closeDatabase();
+
+    if (iconPaths.isEmpty()) {
+        qDebug() << "No icon paths found for mod ID:" << modId;
+        return false;
+    }
+
+    // Delete each icon file
+    for (const QString &iconPath : iconPaths) {
+        QString filePath = homePath + iconPath;
+        if (QFile::exists(filePath)) {
+            if (!QFile::remove(filePath)) {
+                qDebug() << "Failed to delete icon file:" << filePath;
+                return false;
+            } else {
+                qDebug() << "Deleted icon file:" << filePath;
+            }
+        } else {
+            qDebug() << "Icon file does not exist:" << filePath;
+        }
+    }
+
+    // Remove the directory if empty
+    if (dir.isEmpty()) {
+        if (!dir.rmdir(m_outputiconsPath)) {
+            qDebug() << "Failed to remove empty directory:" << m_outputiconsPath;
+            return false;
+        } else {
+            qDebug() << "Removed empty directory:" << m_outputiconsPath;
+        }
+    } else {
+        qDebug() << "Directory is not empty, not removing:" << m_outputiconsPath;
+    }
+
+    return true;
+}
