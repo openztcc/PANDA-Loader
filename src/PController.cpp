@@ -286,4 +286,8 @@ void PController::addModToSelection(QObject* mod)
     qDebug() << "Mod not found in list: " << modItem->modTitle();
 }
 
+void PController::updateModList(QString orderBy, QString searchTerm)
+{
+    m_model->updateModList(orderBy, searchTerm);
+}
 

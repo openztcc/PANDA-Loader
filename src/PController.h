@@ -63,6 +63,7 @@ public:
     // Q_INVOKABLE void removeFromSelectedMods(QObject* mod);
     QObject* previousMod() const { return m_previousMod.data(); }
     void reloadMod(QSharedPointer<PModItem> mod);
+    Q_INVOKABLE void updateModList(QString orderBy, QString searchTerm);
 
 signals:
     void modAdded(QSharedPointer<PModItem>);
