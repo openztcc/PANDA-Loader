@@ -68,6 +68,7 @@ public:
     QStringList searchMods(const QString &propertyName, const QString &searchTerm);
     Q_INVOKABLE PDatabaseMgr::PMod getModByPk(const QString &modId);
     PDatabaseMgr::PMod getModByPk(QSqlDatabase &db, const QString &modId);
+    PModItem queryToObject(QString property, QString value);
 
     void loadModsFromZTDs(const QStringList &ztdList);
 

@@ -110,7 +110,7 @@ void PModModel::loadMods()
         mod->setmodFilename(query.value("filename").toString());
         mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
         mod->setDependencyId(query.value("dependency_id").toString());
-        mod->setmodLocation(QUrl::fromLocalFile(query.value("location").toString()));
+        mod->setmodLocation(query.value("location").toString());
         addMod(mod);
     }
 
@@ -145,7 +145,7 @@ void PModModel::reloadMod(int index)
                 mod->setmodFilename(query.value("filename").toString());
                 mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
                 mod->setDependencyId(query.value("dependency_id").toString());
-                mod->setmodLocation(QUrl::fromLocalFile(query.value("location").toString()));
+                mod->setmodLocation(query.value("location").toString());
             }
         }
         db.closeDatabase();
@@ -207,7 +207,7 @@ void PModModel::updateModList(QString orderBy, QString searchTerm)
         mod->setmodId(query.value("mod_id").toString());
         mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
         mod->setmodFilename(query.value("filename").toString());
-        mod->setmodLocation(QUrl::fromLocalFile(query.value("location").toString()));
+        mod->setmodLocation(query.value("location").toString());
         mod->setDependencyId(query.value("dependency_id").toString());
         addMod(mod);
     }

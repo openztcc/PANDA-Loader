@@ -2,7 +2,7 @@
 #define PMODITEM_H
 
 #include <qqml.h>
-#include <QUrl>
+#include <QString>
 #include <QtQml/qqmlregistration.h>
 
 // This class contains all meta data in context of a single mod item.
@@ -20,7 +20,7 @@ class PModItem : public QObject
     Q_PROPERTY(QString modCategory READ modCategory WRITE setmodCategory NOTIFY modCategoryChanged)
     Q_PROPERTY(QString modTags READ modTags WRITE setmodTags NOTIFY modTagsChanged)
     Q_PROPERTY(QString modId READ modId WRITE setmodId NOTIFY modIdChanged)
-    Q_PROPERTY(QUrl modLocation READ modLocation WRITE setmodLocation NOTIFY modLocationChanged)
+    Q_PROPERTY(QString modLocation READ modLocation WRITE setmodLocation NOTIFY modLocationChanged)
     Q_PROPERTY(QString modFilename READ modFilename WRITE setmodFilename NOTIFY modFilenameChanged)
     Q_PROPERTY(QStringList modIconPaths READ modIconPaths WRITE setmodIconPaths NOTIFY modIconPathsChanged)
     Q_PROPERTY(QString dependencyId READ dependencyId WRITE setDependencyId NOTIFY dependencyIdChanged)
@@ -31,7 +31,7 @@ class PModItem : public QObject
 public:
     explicit PModItem(QObject *parent = nullptr);
     PModItem(const QString &title, const QString &author, const QString &desc, 
-        const QUrl &path, bool enabled, const QString &category, const QString &tags, 
+        const QString &path, bool enabled, const QString &category, const QString &tags, 
         const QStringList &iconpaths, const QString &location, const QString &filename,
         const QString &depId, QObject *parent = nullptr);
         
@@ -59,8 +59,8 @@ public:
     QString modId() const;
     void setmodId(const QString &newModId);
 
-    QUrl modLocation() const;
-    void setmodLocation(const QUrl &newModLocation);
+    QString modLocation() const;
+    void setmodLocation(const QString &newModLocation);
 
     QString modFilename() const;
     void setmodFilename(const QString &newModFilename);
@@ -107,7 +107,7 @@ private:
     QString m_mod_category;
     QString m_mod_tags;
     QString m_mod_id;
-    QUrl m_mod_location;
+    QString m_mod_location;
     QString m_mod_filename;
     QStringList m_mod_iconpaths;
     QString m_dependency_id;

@@ -634,3 +634,36 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
     // db.closeDatabase();
     qDebug() << "Loaded mods from ZTDs";
 }
+
+// Get a query result as a PModItem object
+PModItem PDatabaseMgr::queryToObject(QString property, QString value) {
+    QSqlQuery query(m_db);
+    query.prepare("SELECT * FROM mods WHERE " + property + " = :value");
+    query.bindValue(":value", value);
+
+    PModItem modItem;
+
+    if (!query.exec()) {
+        qDebug() << "Error running query:" << query.lastError();
+        return modItem;
+    }
+
+    if (query.next()) {
+        modItem.setmodTitle(query.value("title").toString());
+        modItem.setmodAuthor(query.value("author").toString());
+        modItem.setmodDescription(query.value("description").toString());
+        modItem.setmodEnabled(query.value("enabled").toBool());
+        modItem.setmodCategory(query.value("category").toString());
+        modItem.setmodTags(query.value("tags").toString());
+        modItem.setmodId(query.value("mod_id").toString());
+        modItem.setmodFilename(query.value("filename").toString());
+        modItem.setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
+        modItem.setDependencyId(query.value("dependency_id").toString());
+        modItem.setmodLocation(query.value("location").toString());
+    } else {
+        qDebug() << "Mod not found with ID:" << value;
+        return modItem;
+    }
+
+    return modItem;
+}
