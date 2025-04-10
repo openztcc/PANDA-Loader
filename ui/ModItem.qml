@@ -56,105 +56,12 @@ Item {
             }
         }
 
-        contentItem: Item { 
-            anchors.fill: parent
-            RowLayout {
-                id: modMeta
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: parent.top
-                    bottom: parent.bottom
-                    leftMargin: 10
-                    rightMargin: 20
-                }
-                Layout.fillHeight: true
-                Layout.alignment: Qt.AlignVCenter
-
-                Image {
-                    id: modIcon
-
-                    Component.onCompleted: {
-                        if (modItem.modelObject) {
-                            console.log("Checking icon for modItem:" + modItem.modelObject.modTitle + " - " + modItem.modelObject.modIconPaths.length + " icons" + " - " + modItem.modelObject.modIconPaths[0])
-                        } else {
-                            console.log("MODEL OBJECT IS NULL")
-                        }
-                    }
-
-                    property int radius: 5
-
-                    Layout.preferredWidth: 44
-                    Layout.preferredHeight: 31
-
-                    source: (modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
-                             ? modItem.modelObject.modIconPaths[0]
-                             : "")
-                    fillMode: Image.PreserveAspectCrop
-                    layer.enabled: true
-                    layer.effect: OpacityMask {
-                        id: iconMask
-                        maskSource: Rectangle {
-                            id: rectMask
-                            width: modIcon.width
-                            height: modIcon.height
-                            radius: modIcon.radius
-                        }
-                    }
-                }
-                
-                // mod name and category label
-                RowLayout {
-                    Layout.fillWidth: true
-                    // name of mod
-                    Label {
-                        id: modName
-                        leftPadding: 10
-                        text: modItem.modTitle
-                        font.pixelSize: 12
-                        color: "#424940"
-                    }
-                }
-                
-                Item {
-                    Layout.fillWidth: true
-                }
-                
-                // disable checkbox
-                CheckBox {
-                    id: modCheck
-                    z: 1
-                    Layout.alignment: Qt.AlignRight
-                    Layout.preferredWidth: 20
-                    checked: modItem.modelObject ? modItem.modelObject.modEnabled : false
-                    Material.accent: "#376a3e"
-                    enabled: true
-                    onCheckedChanged: {
-                        if (modItem.modelObject) {
-                            console.log("Checkbox changed:", modItem.modTitle, checked)
-                            if (!checked) {
-                                modController.disableMod(modItem.modelObject)
-                            }
-                        }
-                    }
-                    
-                    // Prevent click propagation to parent MouseArea
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: function(mouse) {
-                            modCheck.toggle()
-                            mouse.accepted = true
-                        }
-                    }
-                }
-            }
-        }
-        
         MouseArea {
             id: modArea
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
+            z: -1
             onClicked: function(mouse) {
                 // Sanity checks
                 console.log("Clicked on mod:", modItem.modTitle)
@@ -251,6 +158,104 @@ Item {
             }
         }
 
+
+        contentItem: Item { 
+            anchors.fill: parent
+            RowLayout {
+                id: modMeta
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+                    bottom: parent.bottom
+                    leftMargin: 10
+                    rightMargin: 20
+                }
+                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignVCenter
+
+                Image {
+                    id: modIcon
+
+                    Component.onCompleted: {
+                        if (modItem.modelObject) {
+                            console.log("Checking icon for modItem:" + modItem.modelObject.modTitle + " - " + modItem.modelObject.modIconPaths.length + " icons" + " - " + modItem.modelObject.modIconPaths[0])
+                        } else {
+                            console.log("MODEL OBJECT IS NULL")
+                        }
+                    }
+
+                    property int radius: 5
+
+                    Layout.preferredWidth: 44
+                    Layout.preferredHeight: 31
+
+                    source: (modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
+                             ? modItem.modelObject.modIconPaths[0]
+                             : "")
+                    fillMode: Image.PreserveAspectCrop
+                    layer.enabled: true
+                    layer.effect: OpacityMask {
+                        id: iconMask
+                        maskSource: Rectangle {
+                            id: rectMask
+                            width: modIcon.width
+                            height: modIcon.height
+                            radius: modIcon.radius
+                        }
+                    }
+                }
+                
+                // mod name and category label
+                RowLayout {
+                    Layout.fillWidth: true
+                    // name of mod
+                    Label {
+                        id: modName
+                        leftPadding: 10
+                        text: modItem.modTitle
+                        font.pixelSize: 12
+                        color: "#424940"
+                    }
+                }
+                
+                Item {
+                    Layout.fillWidth: true
+                }
+                
+                // disable checkbox
+                CheckBox {
+                    id: modCheck
+                    z: 1
+                    Layout.alignment: Qt.AlignRight
+                    Layout.preferredWidth: 20
+                    checked: modItem.modelObject ? modItem.modelObject.modEnabled : false
+                    Material.accent: "#376a3e"
+                    enabled: true
+                    onCheckedChanged: {
+                        if (modItem.modelObject) {
+                            console.log("Checkbox changed:", modItem.modTitle, checked)
+                            modController.clearSelection()
+                            modController.setCurrentMod(modItem.modelObject)
+                            modItem.isSelected = true
+                            if (!checked) {
+                                modController.disableSelected()
+                            }
+                        }
+                    }
+                    
+                    // Prevent click propagation to parent MouseArea
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: function(mouse) {
+                            modCheck.toggle()
+                            mouse.accepted = true
+                        }
+                    }
+                }
+            }
+        }
+        
         // allows isSelected to be dynamic; true only if the modItem matches currentMod
         // (makes select and deselect work)
         Connections {
