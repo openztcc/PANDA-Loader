@@ -126,7 +126,7 @@ void PModModel::reloadMod(int index)
     if (index >= 0 && index < m_mods_list.size())
     {
         QSharedPointer<PModItem> mod = m_mods_list[index];
-        qDebug() << "Reloading mod: " << mod->modTitle();
+        // qDebug() << "Reloading mod: " << mod->modTitle();
         PDatabaseMgr db;
         db.openDatabase();
         QSqlQuery query = db.getAllMods();
@@ -134,7 +134,7 @@ void PModModel::reloadMod(int index)
         {
             if (query.value("mod_id").toString() == mod->modId())
             {
-                qDebug() << "Loading mod from database: " << query.value("title").toString();
+                // qDebug() << "Loading mod from database: " << query.value("title").toString();
                 mod->setmodTitle(query.value("title").toString());
                 mod->setmodAuthor(query.value("author").toString());
                 mod->setmodDescription(query.value("description").toString());

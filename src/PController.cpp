@@ -112,7 +112,7 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     // Sanity checks
     qDebug() << "Checking if disabled mods folder exists: " << disabledDir;
     if (!QDir(disabledDir).exists()) {
-        QDir().mkdir(disabledDir);
+        QDir().mkpath(disabledDir);
     } else {
         qDebug() << "Disabled mods folder already exists: " << disabledDir;
     }
@@ -134,6 +134,7 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
         qDebug() << "Moved ztd file to disabled mods folder: " << newZtdFilePath;
     } else {
         qDebug() << "Failed to move ztd file: " << ztdFilePath;
+        return;
     }
 
     // Update the mod in the database
