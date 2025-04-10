@@ -30,24 +30,6 @@ public:
         QString link;
     };
 
-    struct PMod
-    {
-        QString title;
-        QVector<QString> authors;
-        QString description;
-        bool enabled;
-        QString category;
-        QVector<QString> tags;
-        QString version;
-        QString mod_id;
-        QVector<PDependency> dependencies;
-        QString location;
-        QString filename;
-        QStringList iconpaths;
-        bool isSelected = false;
-        QString oglocation;
-    };
-
     bool openDatabase();
     void closeDatabase();
     bool createTables();
