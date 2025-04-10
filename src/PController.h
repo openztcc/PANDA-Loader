@@ -51,6 +51,7 @@ public:
     Q_INVOKABLE void deleteSelected();
     Q_INVOKABLE void selectMod(int index);
     Q_INVOKABLE void deselectMod(int index);
+    Q_INVOKABLE void selectAll();
 
     // effect controls
     Q_INVOKABLE void changeOpacity(QObject* qmlItem, float opacity);

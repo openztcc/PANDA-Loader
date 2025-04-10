@@ -297,3 +297,11 @@ void PController::updateModList(QString orderBy, QString searchTerm)
     m_model->updateModList(orderBy, searchTerm);
 }
 
+void PController::selectAll()
+{
+    m_selected_mods.clear();
+    for (const auto& mod : m_model->modsList()) {
+        m_selected_mods.append(mod);
+    }
+    emit selectedModsListUpdated(m_selected_mods);
+}
