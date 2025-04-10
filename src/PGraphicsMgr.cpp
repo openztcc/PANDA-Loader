@@ -143,9 +143,11 @@ QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffe
 
 // Deletes the icons from filesystem
 bool PGraphicsMgr::deleteIcons(const QString &modId) {
-    QDir dir(m_outputiconsPath);
+    // Get the home path
+    QString homePath = QDir::homePath() + "/.panda/modicons/";
+    QDir dir(homePath);
     if (!dir.exists()) {
-        qDebug() << "Icons directory does not exist:" << m_outputiconsPath;
+        qDebug() << "Icons directory does not exist:" << homePath;
         return false;
     }
 
@@ -157,34 +159,39 @@ bool PGraphicsMgr::deleteIcons(const QString &modId) {
 
     if (iconPaths.isEmpty()) {
         qDebug() << "No icon paths found for mod ID:" << modId;
+        // print the paths for debugging
+        for (const QString &iconPath : iconPaths) {
+            qDebug() << "Icon path:" << iconPath;
+        }
         return false;
     }
 
     // Delete each icon file
     for (const QString &iconPath : iconPaths) {
-        QString filePath = homePath + iconPath;
-        if (QFile::exists(filePath)) {
-            if (!QFile::remove(filePath)) {
-                qDebug() << "Failed to delete icon file:" << filePath;
+        // Convert QUrl to local file path
+        QString localPath = QUrl(iconPath).toLocalFile();
+        if (QFile::exists(localPath)) {
+            if (!QFile::remove(localPath)) {
+                qDebug() << "Failed to delete icon file:" << localPath;
                 return false;
             } else {
-                qDebug() << "Deleted icon file:" << filePath;
+                qDebug() << "Deleted icon file:" << localPath;
             }
         } else {
-            qDebug() << "Icon file does not exist:" << filePath;
+            qDebug() << "Icon file does not exist:" << localPath;
         }
     }
 
     // Remove the directory if empty
     if (dir.isEmpty()) {
-        if (!dir.rmdir(m_outputiconsPath)) {
-            qDebug() << "Failed to remove empty directory:" << m_outputiconsPath;
+        if (!dir.rmdir(homePath)) {
+            qDebug() << "Failed to remove empty directory:" << homePath;
             return false;
         } else {
-            qDebug() << "Removed empty directory:" << m_outputiconsPath;
+            qDebug() << "Removed empty directory:" << homePath;
         }
     } else {
-        qDebug() << "Directory is not empty, not removing:" << m_outputiconsPath;
+        qDebug() << "Directory is not empty, not removing:" << homePath;
     }
 
     return true;

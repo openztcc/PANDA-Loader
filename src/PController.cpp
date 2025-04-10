@@ -56,6 +56,13 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
         return;
     }
 
+    // delete icons associated with mod
+    if (PGraphicsMgr::deleteIcons(mod->modId())) {
+        qDebug() << "Deleted icons for mod: " << mod->modId();
+    } else {
+        qDebug() << "Failed to delete icons for mod: " << mod->modId(); 
+    }
+
     // delete mod from database
     PDatabaseMgr db;
     db.openDatabase();
@@ -70,13 +77,6 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
         qDebug() << "Deleted ztd file: " << ztdFilePath;
     } else {
         qDebug() << "Failed to delete ztd file: " << ztdFilePath;
-    }
-
-    // delete icons associated with mod
-    if (PGraphicsMgr::deleteIcons(mod->modId())) {
-        qDebug() << "Deleted icons for mod: " << mod->modId();
-    } else {
-        qDebug() << "Failed to delete icons for mod: " << mod->modId(); 
     }
 
     // delete mod from model

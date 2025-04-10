@@ -448,8 +448,6 @@ QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString 
 
 // Return mod by primary key
 PDatabaseMgr::PMod PDatabaseMgr::getModByPk(const QString &modId) {
-    QSqlQuery query(m_db);
-
     return getModByPk(m_db, modId);
 }
 
@@ -459,11 +457,12 @@ PDatabaseMgr::PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &mod
     query.prepare("SELECT * FROM mods WHERE mod_id = :mod_id");
     query.bindValue(":mod_id", modId);
 
-    if (!query.exec()) {
-        qDebug() << "Error running query: " << query.lastError();
-    }
-
     PMod mod;
+
+    if (!query.exec()) {
+        qDebug() << "Error running query:" << query.lastError();
+        return mod;
+    }
 
     if (query.next()) {
         mod.title = query.value("title").toString();
@@ -477,6 +476,9 @@ PDatabaseMgr::PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &mod
         mod.iconpaths = query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts);
         mod.filename = query.value("filename").toString();
         mod.location = query.value("location").toString();
+    } else {
+        qDebug() << "Mod not found with ID:" << modId;
+        return mod;
     }
 
     return mod;
