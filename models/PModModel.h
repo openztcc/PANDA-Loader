@@ -28,7 +28,9 @@ public:
         ModFilenameRole,
         ModIconPathsRole,
         ModDependencyIdRole,
-        ModLocationRole
+        ModLocationRole,
+        ModOgLocationRole,
+        ModSelectedRole
     };
 
     explicit PModModel(QObject *parent = nullptr);

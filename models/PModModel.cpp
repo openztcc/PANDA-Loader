@@ -42,6 +42,10 @@ QVariant PModModel::data(const QModelIndex &index, int role) const
                 return mod->modLocation();
             case ModIconPathsRole:
                 return mod->modIconPaths();
+            case ModOgLocationRole:
+                return mod->oglocation();
+            case ModSelectedRole:
+                return mod->isSelected();
             case ModObjectRole:
                 qDebug() << "Returning mod object: " << mod->modTitle();
                 return QVariant::fromValue(mod.data()); // return a whole mod object
@@ -70,6 +74,9 @@ QHash<int, QByteArray> PModModel::roleNames() const
     roles[ModDependencyIdRole] = "modDependencyId";
     roles[ModLocationRole] = "modLocation";
     roles[ModObjectRole] = "modObject"; // return a whole mod object
+    roles[ModIconPathsRole] = "modIconPaths";
+    roles[ModOgLocationRole] = "modOgLocation";
+    roles[ModSelectedRole] = "modSelected";
 
     return roles;
 }
@@ -99,18 +106,8 @@ void PModModel::loadMods()
     while (query.next())
     {
         qDebug() << "Loading mod from database: " << query.value("title").toString();
-        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create();
-        mod->setmodTitle(query.value("title").toString());
-        mod->setmodAuthor(query.value("author").toString());
-        mod->setmodDescription(query.value("description").toString());
-        mod->setmodEnabled(query.value("enabled").toBool());
-        mod->setmodCategory(query.value("category").toString());
-        mod->setmodTags(query.value("tags").toString());
-        mod->setmodId(query.value("mod_id").toString());
-        mod->setmodFilename(query.value("filename").toString());
-        mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
-        mod->setDependencyId(query.value("dependency_id").toString());
-        mod->setmodLocation(query.value("location").toString());
+        PModItem modItem = db.populateModItem(query);
+        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(modItem);
         addMod(mod);
     }
 
@@ -125,29 +122,14 @@ void PModModel::reloadMod(int index)
     beginResetModel();
     if (index >= 0 && index < m_mods_list.size())
     {
-        QSharedPointer<PModItem> mod = m_mods_list[index];
+        // QSharedPointer<PModItem> mod = m_mods_list[index];
         // qDebug() << "Reloading mod: " << mod->modTitle();
         PDatabaseMgr db;
         db.openDatabase();
-        QSqlQuery query = db.getAllMods();
-        while (query.next())
-        {
-            if (query.value("mod_id").toString() == mod->modId())
-            {
-                // qDebug() << "Loading mod from database: " << query.value("title").toString();
-                mod->setmodTitle(query.value("title").toString());
-                mod->setmodAuthor(query.value("author").toString());
-                mod->setmodDescription(query.value("description").toString());
-                mod->setmodEnabled(query.value("enabled").toBool());
-                mod->setmodCategory(query.value("category").toString());
-                mod->setmodTags(query.value("tags").toString());
-                mod->setmodId(query.value("mod_id").toString());
-                mod->setmodFilename(query.value("filename").toString());
-                mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
-                mod->setDependencyId(query.value("dependency_id").toString());
-                mod->setmodLocation(query.value("location").toString());
-            }
-        }
+        PModItem modItem = db.populateModItem(query);
+        QSharedPointer<PModItem> newMod = QSharedPointer<PModItem>::create(modItem);
+        // Update the mod in the list
+        m_mods_list[index] = std::move(newMod);
         db.closeDatabase();
     }
     endResetModel();
