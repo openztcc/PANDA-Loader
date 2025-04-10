@@ -81,83 +81,79 @@ void PController::deleteSelected()
     emit selectedModsListUpdated(m_selected_mods);
 }
 
-void PController::disableMod(QSharedPointer<PModItem> mod)
+void PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
 {
+    if (!m_state) {
+        qCritical() << "PState is null, cannot toggle mod";
+        return;
+    }
     // File location variables
-    QString fileBasePath;
-    QString filename;
+    QString filename = mod->filename();
+    QString currentLocation = mod->location();
+    QString targetLocation;
 
-    // Get the game path from the state
     QString pandaHomePath = QDir::cleanPath(m_state->settings()->pandaHomePath());
-    QString disabledDir;
+    QString disabledDir = QDir::cleanPath(pandaHomePath + "/resources/mods/.disabled") + "/";
+    QString originalLocation = mod->oglocation();
+    QString sourcePath, destPath;
 
     // Calculate correct paths
-    qDebug() << "Disabling mod: " << mod->title();
-    if (!m_state) {
-        qCritical() << "PState is null, cannot disable mod";
-        return;
+    if (enabled) {
+        // disabled -> original location
+        targetLocation = QDir::cleanPath(originalLocation) + "/";
+        sourcePath = QDir::cleanPath(currentLocation + "/" + filename);
+        destPath = QDir::cleanPath(targetLocation + filename);
     } else {
-        fileBasePath = QDir::cleanPath(m_state->getGamePath());
-        filename = mod->filename();
-        // needs trailing slash because the cleanpath removes it
-        disabledDir = QDir::cleanPath(pandaHomePath + "/resources/mods/.disabled") + "/";
+        // move to .disabled folder
+        if (!QDir(disabledDir).exists()) {
+            QDir().mkpath(disabledDir);
+        }
+        targetLocation = disabledDir;
+        sourcePath = QDir::cleanPath(currentLocation + "/" + filename);
+        destPath = QDir::cleanPath(disabledDir + filename);
     }
 
-    // Sanity checks
-    qDebug() << "Checking if disabled mods folder exists: " << disabledDir;
-    if (!QDir(disabledDir).exists()) {
-        QDir().mkpath(disabledDir);
-    } else {
-        qDebug() << "Disabled mods folder already exists: " << disabledDir;
-    }
-    qDebug() << "Moving ztd file to disabled mods folder: " << disabledDir;
+    qDebug() << (enabled ? "Enabling" : "Disabling") << "mod:" << mod->title();
+    qDebug() << "Source:" << sourcePath << "-> Dest:" << destPath;
 
-    // Determine final locations for file
-    QString ztdFilePath = QDir::cleanPath(mod->location() + "/" + filename);
-    QString newZtdFilePath = QDir::cleanPath(disabledDir + filename);
-
-    // Final sanity checks
-    qDebug() << "ZTD file path: " << ztdFilePath;
-    if (!QFile::exists(ztdFilePath)) {
-        qCritical() << "ZTD file path does not exist:" << ztdFilePath;
+    if (!QFile::exists(sourcePath)) {
+        qCritical() << "Source ZTD file does not exist:" << sourcePath;
         return;
-    }    
+    }
 
-    // Move file to disabled mods folder
-    if (PZtdMgr::moveFile(ztdFilePath, newZtdFilePath)) {
-        qDebug() << "Moved ztd file to disabled mods folder: " << newZtdFilePath;
-    } else {
-        qDebug() << "Failed to move ztd file: " << ztdFilePath;
+    if (!PZtdMgr::moveFile(sourcePath, destPath)) {
+        qCritical() << "Failed to move file from" << sourcePath << "to" << destPath;
         return;
     }
 
     // Update the mod in the database
     PDatabaseMgr db;
     db.openDatabase();
-    db.updateMod(mod->id(), "location", disabledDir);
-    db.updateMod(mod->id(), "enabled", "0");
+    db.updateMod(mod->id(), "location", targetLocation);
+    db.updateMod(mod->id(), "enabled", enabled ? "1" : "0");
     db.closeDatabase();
 
     // qml stuff
     if (QObject* component = mod->uiComponent()) {
-        component->setProperty("opacity", 0.5);
+        component->setProperty("opacity", enabled ? 1.0 : 0.5);
     }
-    mod->setEnabled(false);
+    mod->setEnabled(enabled);
+    mod->setLocation(targetLocation);
 
     // Reload the mod
     reloadMod(mod);
-
 }
+
 
 void PController::reloadMod(QSharedPointer<PModItem> mod)
 {
     m_model->reloadMod(mod);
 }
 
-void PController::disableSelected()
+void PController::setSelectedModsEnabled(bool enabled)
 {
     for (const auto& mod : m_selected_mods) {
-        disableMod(mod);
+        setModEnabled(mod, enabled);
     }
 }
 
