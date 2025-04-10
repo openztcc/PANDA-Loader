@@ -72,6 +72,14 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
         qDebug() << "Failed to delete ztd file: " << ztdFilePath;
     }
 
+    // delete icons associated with mod
+    if (PGraphicsMgr::deleteIcons(mod->modId())) {
+        qDebug() << "Deleted icons for mod: " << mod->modId();
+    } else {
+        qDebug() << "Failed to delete icons for mod: " << mod->modId(); 
+    }
+
+    // delete mod from model
     m_model->removeMod(index);
 
     emit modRemoved(mod);
