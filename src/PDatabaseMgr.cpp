@@ -463,44 +463,9 @@ QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString 
     return results;
 }
 
-// Return mod by primary key
-PDatabaseMgr::PMod PDatabaseMgr::getModByPk(const QString &modId) {
-    return getModByPk(m_db, modId);
-}
-
 // Static version of getModByPk
-PDatabaseMgr::PMod PDatabaseMgr::getModByPk(QSqlDatabase &db, const QString &modId) {
-    QSqlQuery query(db);
-    query.prepare("SELECT * FROM mods WHERE mod_id = :mod_id");
-    query.bindValue(":mod_id", modId);
-
-    PMod mod;
-
-    if (!query.exec()) {
-        qDebug() << "Error running query:" << query.lastError();
-        return mod;
-    }
-
-    if (query.next()) {
-        mod.title = query.value("title").toString();
-        mod.authors = query.value("author").toString().split(", ");
-        mod.description = query.value("description").toString();
-        mod.enabled = query.value("enabled").toBool();
-        mod.tags = query.value("tags").toString().split(", ");
-        mod.category = query.value("category").toString();
-        mod.version = query.value("version").toString();
-        mod.mod_id = query.value("mod_id").toString();
-        mod.iconpaths = query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts);
-        mod.filename = query.value("filename").toString();
-        mod.location = query.value("location").toString();
-        mod.oglocation = query.value("oglocation").toString();
-        mod.isSelected = query.value("isSelected").toBool();
-    } else {
-        qDebug() << "Mod not found with ID:" << modId;
-        return mod;
-    }
-
-    return mod;
+PModItem PDatabaseMgr::getModByPk(const QString &modId) {
+    return queryAsObject("mod_id", modId);
 }
 
 // Grabs mods from ZTDs and stores them in database
