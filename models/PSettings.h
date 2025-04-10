@@ -21,6 +21,9 @@ public:
     QString zooGamePath() const { return m_zooGamePath; }
     void setZooGamePath(const QString& path);
 
+    QString pandaConfigPath() const { return m_configPath; }
+    void setPandaConfigPath(const QString& path) { m_configPath = path; }
+
     bool useIsoMounting() const { return m_useIsoMounting; }
     void setUseIsoMounting(bool use);
 

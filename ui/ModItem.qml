@@ -249,11 +249,6 @@ Item {
                             console.log("Disabling mods")
                             modController.disableSelected()
                             console.log("Disabled mods")
-                            // change opacity for disabled mods
-                            console.log("Changing opacity for disabled mods")
-                            for (let i = 0; i < modController.selectedMods.length; i++) {
-                                modItem.opacity = 0.5
-                            }
                             modItem.cDialog.close()
                         }
                         modItem.cDialog.title = "Disable " + (selectedCount > 1 ? selectedCount + " mods" : "mod")

@@ -14,6 +14,18 @@ void PSettings::setUseIsoMounting(bool use) {
     }
 }
 
+QString PSettings::zooGamePath() const {
+    return m_zooGamePath;
+}
+
+QString PSettings::pandaConfigPath() const {
+    return m_configPath;
+}
+
+void PSettings::setPandaConfigPath(const QString& path) {
+    m_configPath = path;
+}
+
 void PSettings::setIsoPath(const QString& path) {
     if (m_isoPath != path) {
         m_isoPath = path;
