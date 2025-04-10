@@ -26,9 +26,6 @@ Item {
         } else {
             console.log("MODEL OBJECT IS NULL")
         }
-
-        console.log("DELEGATE ACTIVE - modTitle:", typeof modTitle, modTitle)
-    console.log("DELEGATE ACTIVE - modObject:", typeof modObject, modObject)
     }
 
     Pane {
@@ -159,19 +156,12 @@ Item {
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onClicked: function(mouse) {
-                console.log("Clicked. Button:", mouse.button, "Modifiers:", mouse.modifiers)
-
+                // Sanity checks
                 console.log("Clicked on mod:", modItem.modTitle)
                 if (modItem.modelObject) {
                     console.log("Clicked on modItem:", modItem.modelObject.modTitle)
                 } else {
                     console.log("Clicked on modItem: NULL")
-                }
-                // print mod list
-                console.log("Mod list:")
-                var modList = modController.model.modsList()
-                for (let i = 0; i < modList.length; i++) {
-                    console.log(modList[i].modTitle)
                 }
 
                 // Ctrl + left click adds to selection
