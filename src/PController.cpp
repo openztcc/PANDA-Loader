@@ -144,6 +144,12 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     db.updateMod(mod->modId(), "enabled", "0");
     db.closeDatabase();
 
+    // qml stuff
+    if (QObject* component = mod->qmlItem()) {
+        component->setProperty("opacity", 0.5);
+    }
+    mod->setmodEnabled(false);
+
     // Reload the mod
     reloadMod(mod);
 
@@ -157,10 +163,6 @@ void PController::reloadMod(QSharedPointer<PModItem> mod)
 void PController::disableSelected()
 {
     for (const auto& mod : m_selected_mods) {
-        if (QObject* component = mod->qmlItem()) {
-            component->setProperty("opacity", 0.5);
-        }
-        mod->setmodEnabled(false);
         disableMod(mod);
     }
 }

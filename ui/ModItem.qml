@@ -126,7 +126,7 @@ Item {
                     z: 1
                     Layout.alignment: Qt.AlignRight
                     Layout.preferredWidth: 20
-                    checked: true
+                    checked: modItem.modelObject ? modItem.modelObject.modEnabled : false
                     Material.accent: "#376a3e"
                     enabled: true
                     onCheckedChanged: {
@@ -223,33 +223,19 @@ Item {
             Menu {
                 property var selection: modController.selectedMods
                 id: modContextMenu
-                MenuItem {
-                    id: modEdit
-                    text: "Edit"
-                    onTriggered: {
-                        console.log("Option 1 triggered for", modItem.modTitle)
-                        // if more than 1 mod selected, disable option
-                        if (modContextMenu.selection.length > 1) {
-                            modEdit.enabled = false
-                        } else {
-                            modEdit.enabled = true
-                        }
-                    }
-                }
+                // Disable mods
                 MenuItem {
                     text: modContextMenu.selection.length > 1 ? "Disable (" + modContextMenu.selection.length + ") mods" : "Disable mod"
                     onTriggered: {
-                        console.log("Option 2 triggered for", modItem.modTitle)
-                        var selectedCount = modContextMenu.selection.length
                         console.log("Disabling mods")
                         modController.disableSelected()
                         console.log("Disabled mods")
                     }
                 }
+                // Enable mods
                 MenuItem {
                     text: modContextMenu.selection.length > 1 ? "Delete (" + modContextMenu.selection.length + ") mods" : "Delete mod"
                     onTriggered: {
-                        console.log("Option 2 triggered for", modItem.modTitle)
                         var selectedCount = modContextMenu.selection.length
                         // Ask for confirmation before deleting
                         modItem.cDialog.action = function() {
