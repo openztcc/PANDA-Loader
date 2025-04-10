@@ -87,7 +87,7 @@ Item {
             // enabled
             InfoPaneItem {
                 fieldName: "Status"
-                innerComponent: infoPane.targetComponent ? "Enabled" : "Disabled"
+                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.modEnabled ? "Enabled" : "Disabled" : "No status"
                 iconImg: "qrc:/icons/path.svg"
                 Layout.fillWidth: true
             }

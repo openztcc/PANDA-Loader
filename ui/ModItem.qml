@@ -39,7 +39,7 @@ Item {
         rightPadding: 10
         // topPadding: -5
         anchors.bottomMargin: 1
-        opacity: determineDisabled() ? 0.5 : 1.0
+        opacity: determineDisabled() ? 1.0 : 0.5
 
         function determineBackgroundColor() {
             if (modArea.containsPress) {
@@ -55,9 +55,7 @@ Item {
 
         function determineDisabled() {
             if (modItem.modelObject) {
-                return modItem.modelObject.isDisabled
-            } else {
-                return false
+                return modItem.modelObject.modEnabled
             }
         }
 

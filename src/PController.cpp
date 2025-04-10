@@ -105,7 +105,8 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     } else {
         fileBasePath = QDir::cleanPath(m_state->getGamePath());
         filename = mod->modFilename();
-        disabledDir = QDir::cleanPath(pandaHomePath + "/resources/mods/.disabled/");
+        // needs trailing slash because the cleanpath removes it
+        disabledDir = QDir::cleanPath(pandaHomePath + "/resources/mods/.disabled") + "/";
     }
 
     // Sanity checks
