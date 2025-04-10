@@ -241,17 +241,9 @@ Item {
                     onTriggered: {
                         console.log("Option 2 triggered for", modItem.modTitle)
                         var selectedCount = modContextMenu.selection.length
-                        // Ask for confirmation before disabling
-                        modItem.cDialog.action = function() {
-                            console.log("Disabling mods")
-                            modController.disableSelected()
-                            console.log("Disabled mods")
-                            modItem.cDialog.close()
-                        }
-                        modItem.cDialog.title = "Disable " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
-                        modItem.cDialog.message = "Are you sure you want to disable " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
-                        modItem.cDialog.centerTo = modItem.centerTo
-                        modItem.cDialog.open()
+                        console.log("Disabling mods")
+                        modController.disableSelected()
+                        console.log("Disabled mods")
                     }
                 }
                 MenuItem {
