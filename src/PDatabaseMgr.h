@@ -43,13 +43,13 @@ public:
     bool updateMod(const QString &modId, const QString &key, const QString &value);
     bool addDependency(const QString &modId, const PDependency &dependency);
     bool removeDependency(const QString &dependencyId);
-    QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();
     QSqlQuery queryMods(const QString &propertyName, const QString &searchTerm);
     QStringList searchMods(const QString &propertyName, const QString &searchTerm);
     Q_INVOKABLE PModItem getModByPk(const QString &modId);
     PModItem queryToObject(QString property, QString value);
+    QVector<PModItem> queryToObjects(QString property, QString value);
 
     void loadModsFromZTDs(const QStringList &ztdList);
 

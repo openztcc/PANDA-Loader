@@ -168,8 +168,8 @@ void PModModel::reloadMod(QSharedPointer<PModItem> mod)
     reloadMod(index);
 }
 
-// Updates the mod list based on the order and search term for filtering and live search
-void PModModel::updateModList(QString orderBy, QString searchTerm) 
+// Updates the mod list based on the property (filter) and search term (value) for filtering and live search
+void PModModel::updateModList(QString property, QString value) 
 {
     // Placeholder for updating mod list; dynamic sqlite query later
     beginResetModel();
@@ -183,14 +183,14 @@ void PModModel::updateModList(QString orderBy, QString searchTerm)
     QSqlQuery query;
 
     // Checks on orderBy and searchTerm
-    if (orderBy.isEmpty() && searchTerm.isEmpty()) {
+    if (property.isEmpty() && value.isEmpty()) {
         query = db.getAllMods();
     }
-    else if (orderBy.isEmpty() && !searchTerm.isEmpty()) {
-        query = db.queryMods("title", searchTerm);
+    else if (property.isEmpty() && !value.isEmpty()) {
+        query = db.queryMods("title", value);
     }
     else {
-        query = db.queryMods(orderBy, searchTerm);
+        query = db.queryMods(property, value);
     }
 
     // Iterate through the results and create PModItem objects
