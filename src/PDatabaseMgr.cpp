@@ -596,35 +596,20 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
 QSharedPointer<PModItem> PDatabaseMgr::populateModItem(QSqlQuery &query) {
     QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
-    qDebug() << "Populating mod item from query result";
     modItem->setTitle(query.value("title").toString());
-    qDebug() << "Mod title: " << modItem->title();
-    modItem->setAuthors(query.value("authors").toStringList());
-    qDebug() << "Mod authors: " << modItem->authors();
+    modItem->setAuthors(query.value("authors").toString().split(","));
     modItem->setDescription(query.value("description").toString());
-    qDebug() << "Mod description: " << modItem->description();
     modItem->setEnabled(query.value("enabled").toBool());
-    qDebug() << "Mod enabled: " << modItem->enabled();
     modItem->setCategory(query.value("category").toString());
-    qDebug() << "Mod category: " << modItem->category();
-    modItem->setTags(query.value("tags").toStringList());
-    qDebug() << "Mod tags: " << modItem->tags();
+    modItem->setTags(query.value("tags").toString().split(","));
     modItem->setId(query.value("mod_id").toString());
-    qDebug() << "Mod ID: " << modItem->id();
     modItem->setFilename(query.value("filename").toString());
-    qDebug() << "Mod filename: " << modItem->filename();
-    modItem->setIconPaths(query.value("iconpaths").toStringList());
-    qDebug() << "Mod icon paths: " << modItem->iconpaths();
+    modItem->setIconPaths(query.value("iconpaths").toString().split(","));
     modItem->setDependencyId(query.value("dep_id").toString());
-    qDebug() << "Mod dependency ID: " << modItem->dependencyId();
     modItem->setLocation(query.value("location").toString());
-    qDebug() << "Mod location: " << modItem->location();
     modItem->setOGLocation(query.value("oglocation").toString());
-    qDebug() << "Mod original location: " << modItem->oglocation();
     modItem->setSelected(query.value("is_selected").toBool());
-    qDebug() << "Mod selected: " << modItem->selected();
     modItem->setVersion(query.value("version").toString());
-    qDebug() << "Mod version: " << modItem->version();
 
     return modItem;
 }
