@@ -40,7 +40,7 @@ public:
     void loadMods();
     void reloadMod(int index);
     void reloadMod(QSharedPointer<PModItem> mod);
-    Q_INVOKABLE void updateModList(QString orderBy, QString searchTerm);
+    Q_INVOKABLE void updateModList(QString property, QString value);
     Q_INVOKABLE QList<QSharedPointer<PModItem>> modsList() const { return m_mods_list; }
     void removeMod(int index);
     void addMod(QSharedPointer<PModItem> mod);

@@ -24,6 +24,7 @@ class PModItem : public QObject
     Q_PROPERTY(QString modFilename READ modFilename WRITE setmodFilename NOTIFY modFilenameChanged)
     Q_PROPERTY(QStringList modIconPaths READ modIconPaths WRITE setmodIconPaths NOTIFY modIconPathsChanged)
     Q_PROPERTY(QString dependencyId READ dependencyId WRITE setDependencyId NOTIFY dependencyIdChanged)
+    Q_PROPERTY(QString oglocation READ oglocation WRITE setmodOglocation NOTIFY modLocationChanged)
 
     Q_PROPERTY(QObject* qmlItem READ qmlItem WRITE setQmlItem NOTIFY qmlItemChanged)
     Q_PROPERTY(bool isSelected READ isSelected WRITE setIsSelected NOTIFY isSelectedChanged)
@@ -74,6 +75,9 @@ public:
     QObject* qmlItem() const { return m_qmlItem; }
     void setQmlItem(QObject* item);
 
+    QString oglocation() const { return m_oglocation; }
+    void setmodOglocation(const QString &oglocation) { m_oglocation = oglocation; }
+
     bool isSelected() const { return m_isSelected; }
     void setIsSelected(bool selected) { 
         if (m_isSelected != selected) {
@@ -113,6 +117,7 @@ private:
     QString m_dependency_id;
     QObject* m_qmlItem = nullptr;
     bool m_isSelected = false;
+    QString m_oglocation;
 };
 
 #endif // PMODITEM_H

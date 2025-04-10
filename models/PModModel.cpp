@@ -197,18 +197,8 @@ void PModModel::updateModList(QString property, QString value)
     while (query.next())
     {
         qDebug() << "Loading mod from database: " << query.value("title").toString();
-        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create();
-        mod->setmodTitle(query.value("title").toString());
-        mod->setmodAuthor(query.value("author").toString());
-        mod->setmodDescription(query.value("description").toString());
-        mod->setmodEnabled(query.value("enabled").toBool());
-        mod->setmodCategory(query.value("category").toString());
-        mod->setmodTags(query.value("tags").toString());
-        mod->setmodId(query.value("mod_id").toString());
-        mod->setmodIconPaths(query.value("iconpaths").toString().split(", ", Qt::SkipEmptyParts));
-        mod->setmodFilename(query.value("filename").toString());
-        mod->setmodLocation(query.value("location").toString());
-        mod->setDependencyId(query.value("dependency_id").toString());
+        PModItem modItem = db.populateModItem(query);
+        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(modItem);
         addMod(mod);
     }
     db.closeDatabase();
