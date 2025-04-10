@@ -139,6 +139,7 @@ void PController::disableMod(QSharedPointer<PModItem> mod)
     PDatabaseMgr db;
     db.openDatabase();
     db.updateMod(mod->modId(), "location", disabledDir);
+    db.updateMod(mod->modId(), "enabled", "0");
     db.closeDatabase();
 
     // Reload the mod
@@ -157,6 +158,7 @@ void PController::disableSelected()
         if (QObject* component = mod->qmlItem()) {
             component->setProperty("opacity", 0.5);
         }
+        mod->setmodEnabled(false);
         disableMod(mod);
     }
 }

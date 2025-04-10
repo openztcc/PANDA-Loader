@@ -84,6 +84,14 @@ Item {
                 Layout.fillWidth: true
             }
 
+            // enabled
+            InfoPaneItem {
+                fieldName: "Status"
+                innerComponent: infoPane.targetComponent ? "Enabled" : "Disabled"
+                iconImg: "qrc:/icons/path.svg"
+                Layout.fillWidth: true
+            }
+
             // without this content is spread too wide
             Item {
                 Layout.fillHeight: true

@@ -39,6 +39,7 @@ Item {
         rightPadding: 10
         // topPadding: -5
         anchors.bottomMargin: 1
+        opacity: determineDisabled() ? 0.5 : 1.0
 
         function determineBackgroundColor() {
             if (modArea.containsPress) {
@@ -49,6 +50,14 @@ Item {
                 return Qt.lighter("#f7fbf2", 1.05)
             } else {
                 return "#f7fbf2"
+            }
+        }
+
+        function determineDisabled() {
+            if (modItem.modelObject) {
+                return modItem.modelObject.isDisabled
+            } else {
+                return false
             }
         }
 
