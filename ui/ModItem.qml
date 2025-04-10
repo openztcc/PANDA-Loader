@@ -155,6 +155,19 @@ Item {
                         modItem.cDialog.open()
                     }
                 }
+                // Divider
+                MenuSeparator {
+                    visible: modContextMenu.selection.length > 1
+                }
+                // Select all mods
+                MenuItem {
+                    text: "Select all"
+                    onTriggered: {
+                        console.log("Selecting all mods")
+                        modController.selectAll()
+                        console.log("Selected all mods")
+                    }
+                }
             }
         }
 
