@@ -34,6 +34,9 @@ ApplicationWindow {
 
         contentItem: Navigation {
             id: navContent
+            currentPage: stack.currentPage
+            modPage: modPage
+            settingsPage: settingsPage
         }
     }
 
@@ -49,6 +52,13 @@ ApplicationWindow {
             anchors.fill: parent
             property var offset: navRail
         }
+    }
+
+    StackView {
+        id: stack
+        anchors.fill: parent
+        initialItem: modPage
+        property var currentPage: modPage
     }
 
     // Maint content
