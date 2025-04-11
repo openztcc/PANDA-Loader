@@ -22,6 +22,29 @@ ApplicationWindow {
         id: confirmDialog
     }
 
+    StackView {
+        id: stack
+        anchors.top: toolbar.bottom
+        anchors.left: navRail.right
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+
+        initialItem: modPage
+    }
+
+    Component {
+        id: modPage
+        ModPage {
+
+        }
+    }
+
+    Component {
+        id: settingsPage
+        SettingsPage { }
+    }
+
+
     // Navigation Rail
     Item {
         id: navRail
@@ -34,7 +57,11 @@ ApplicationWindow {
         Navigation {
             id: navContent
             anchors.fill: parent
+            stack: stack
+            modPage: modPage
+            settingsPage: settingsPage
         }
+
     }
 
     // Appbar
@@ -51,38 +78,4 @@ ApplicationWindow {
             anchors.fill: parent
         }
     }
-
-    StackView {
-        id: stack
-        anchors.top: toolbar.bottom
-        anchors.left: navRail.right
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-
-        initialItem: modPage
-    }
-
-    Component {
-        id: modPage
-        ModPage {
-            anchors.left: navRail.left
-            anchors.bottom: root.bottom
-            width: root.width - 70
-            height: root.height - 40
-
-        }
-    }
-
-    Component {
-        id: settingsPage
-        SettingsPage { }
-    }
-
-    Component.onCompleted: {
-        navRail.navContent.stack = stack
-        navRail.navContent.modPage = modPage
-        navRail.navContent.settingsPage = settingsPage
-        navRail.open()
-    }
-
 }

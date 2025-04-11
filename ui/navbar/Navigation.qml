@@ -5,9 +5,9 @@ Rectangle {
     id: nav
     color: "#101510"
     anchors.fill: parent
-    property StackView stack: null
-    property Component modPage: null
-    property Component settingsPage: null
+    property var stack: null
+    property var modPage: null
+    property var settingsPage: null
     Column {
         anchors.fill: parent
         anchors.topMargin: 30
@@ -21,7 +21,7 @@ Rectangle {
                 if (nav.stack && nav.modPage) {
                     nav.stack.push(nav.modPage)
                 } else {
-                    console.log("One of stack or settingsPage is null")
+                    console.log("One of stack or modPage is null")
                 }
             }
         }

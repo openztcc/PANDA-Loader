@@ -11,6 +11,11 @@ Pane {
     Material.background: "#9daa9e"
     padding: 6
     spacing: 12
+    anchors.left: navRail.left
+    anchors.bottom: root.bottom
+    width: root.width - 70
+    height: root.height - 40
+
 
     ColumnLayout {
         Layout.fillHeight: true // remaining height
