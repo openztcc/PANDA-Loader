@@ -207,7 +207,7 @@ Item {
                     Layout.preferredHeight: 31
 
                     source: (modItem.instance && modItem.instance.iconpaths.length > 0
-                             ? modItem.instance.iconpaths[0]
+                             ? "file:///" + modItem.instance.iconpaths[0]
                              : "")
                     fillMode: Image.PreserveAspectCrop
                     layer.enabled: true

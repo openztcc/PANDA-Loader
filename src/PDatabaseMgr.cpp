@@ -597,14 +597,14 @@ QSharedPointer<PModItem> PDatabaseMgr::populateModItem(QSqlQuery &query) {
     QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
     modItem->setTitle(query.value("title").toString());
-    modItem->setAuthors(query.value("authors").toString().split(","));
+    modItem->setAuthors(query.value("authors").toString().split(", "));
     modItem->setDescription(query.value("description").toString());
     modItem->setEnabled(query.value("enabled").toBool());
     modItem->setCategory(query.value("category").toString());
-    modItem->setTags(query.value("tags").toString().split(","));
+    modItem->setTags(query.value("tags").toString().split(", "));
     modItem->setId(query.value("mod_id").toString());
     modItem->setFilename(query.value("filename").toString());
-    modItem->setIconPaths(query.value("iconpaths").toString().split(","));
+    modItem->setIconPaths(query.value("iconpaths").toString().split(", "));
     modItem->setDependencyId(query.value("dep_id").toString());
     modItem->setLocation(query.value("location").toString());
     modItem->setOGLocation(query.value("oglocation").toString());
