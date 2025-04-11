@@ -170,8 +170,10 @@ void PController::setSelectedModsEnabled(bool enabled)
         }
     }
 
+    PDatabaseMgr db;
+    db.openDatabase();
     for (const auto& id : successful_mods) {
-        QSharedPointer<PModItem> mod = PDatabaseMgr::getModByPk(id);
+        QSharedPointer<PModItem> mod = db.getModByPk(id);
         if (mod) {
             // Update the mod in the model
             m_model->replaceMod(mod);
@@ -179,6 +181,7 @@ void PController::setSelectedModsEnabled(bool enabled)
             qDebug() << "Invalid mod returned at reload" << id;
         }
     }
+    db.closeDatabase();
 }
 
 void PController::changeOpacity(QObject* qmlItem, float opacity)
