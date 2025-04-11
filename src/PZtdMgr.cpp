@@ -313,31 +313,15 @@ bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileN
 }
 
 // Moves a ztd file from one location on disk to another
-bool PZtdMgr::moveZtdFile(const QString &ztdFilePath, const QString &newLocation) 
+bool PZtdMgr::moveFile(const QString &filePath, const QString &newLocation) 
 {
     // Check if the ztd file exists
-    if (!QFile::exists(ztdFilePath)) {
+    if (!QFile::exists(filePath)) {
         return false; // Ztd file does not exist
     }
 
     // Move the ztd file to the new location
-    return QFile::rename(ztdFilePath, newLocation);
-}
-
-// Renames a ztd file
-bool PZtdMgr::renameZtdFile(const QString &oldFilePath, const QString &newFileName) 
-{
-    // Check if the ztd file exists
-    if (!QFile::exists(oldFilePath)) {
-        return false; // Ztd file does not exist
-    }
-
-    // Get the directory of the old file
-    QString dirPath = QFileInfo(oldFilePath).absolutePath();
-    QString newFilePath = dirPath + "/" + newFileName;
-
-    // Rename the ztd file
-    return QFile::rename(oldFilePath, newFilePath);
+    return QFile::rename(filePath, newLocation);
 }
 
 bool PZtdMgr::copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCopyPath) 
@@ -530,4 +514,34 @@ QByteArray PZtdMgr::getFileFromRelPath(const QString &ztdFilePath, const QString
     zip.close();
 
     return data;
+}
+
+// Delete a file from the filesystem
+bool PZtdMgr::deleteFile(const QString &filePath) 
+{
+    if (QFile::exists(filePath)) {
+        return QFile::remove(filePath);
+    }
+    return false;
+}
+
+// Rename a file on the filesystem
+bool PZtdMgr::renameFile(const QString &filePath, const QString &newFileName) 
+{
+    if (QFile::exists(filePath)) {
+        QString dirPath = QFileInfo(filePath).absolutePath();
+        QString newFilePath = dirPath + "/" + newFileName;
+        return QFile::rename(filePath, newFilePath);
+    }
+    return false;
+}
+
+// Create a directory on the filesystem
+bool PZtdMgr::makeDir(const QString &dirPath) 
+{
+    QDir dir(dirPath);
+    if (!dir.exists()) {
+        return dir.mkpath(dirPath);
+    }
+    return false;
 }

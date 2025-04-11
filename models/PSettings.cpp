@@ -27,7 +27,8 @@ PSettings::PSettings(QObject* parent) : QObject(parent) {
 }
 
 bool PSettings::loadFromToml() {
-    toml::table config = PConfigMgr::getConfig(m_configPath);
+    QString configPath = m_configPath + "/config.toml";
+    toml::table config = PConfigMgr::getConfig(configPath);
     if (config.empty()) {
         // generate default settings
         m_zooGamePath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon";
@@ -40,7 +41,7 @@ bool PSettings::loadFromToml() {
         defaultConfig.insert_or_assign("useIsoMounting", m_useIsoMounting);
 
         // Save the default config to the file
-        if (!PConfigMgr::saveConfig(m_configPath, defaultConfig)) {
+        if (!PConfigMgr::saveConfig(configPath, defaultConfig)) {
             qDebug() << "Failed to save default settings to config.toml";
             return false;
         }

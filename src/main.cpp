@@ -8,6 +8,7 @@
 #include <QQmlEngine>
 #include "../models/PModItem.h"
 #include "PController.h"
+#include "../models/PModModel.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,16 +20,19 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("PandaLdr", 1, 0, "PState", p_state);
 
     // Register the PController singleton
-    PController controller;
-    controller.addState(p_state);
-    controller.loadMods();
-    engine.rootContext()->setContextProperty("modController", &controller);
-    
-    engine.addImportPath("F:/QT/6.8.1/mingw_64/qml");
-    engine.addImportPath(QCoreApplication::applicationDirPath() + "/ui");
+    PController *controller = new PController(&app, p_state);
+    engine.rootContext()->setContextProperty("modController", controller);
+    engine.rootContext()->setContextProperty("modModel", QVariant::fromValue(controller->model()));
 
-    // Register QML types
+    // models
+    qmlRegisterAnonymousType<QAbstractListModel>("PandaLdr", 1);
     qmlRegisterType<PModItem>("PandaLdr", 1, 0, "PModItem");
+    qRegisterMetaType<PModItem*>("PModItem*");
+    qmlRegisterUncreatableType<PModItem>("PandaLdr", 1, 0, "PModItem", "PModItem can only be created in C++");
+
+    // meta objects
+    qRegisterMetaType<PModModel*>("PModModel*");
+    qmlRegisterType<PModModel>("PandaLdr", 1, 0, "PModModel");
     qmlRegisterType<PController>("PandaLdr", 1, 0, "PController");
 
     // Load the main QML file
@@ -38,7 +42,11 @@ int main(int argc, char *argv[])
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
-    engine.loadFromModule("PandaLdr", "Main");
+        engine.addImportPath("F:/QT/6.8.1/mingw_64/qml");
+        engine.addImportPath(QCoreApplication::applicationDirPath() + "/ui");
+        engine.loadFromModule("PandaLdr", "Main");
+
+
 
     return app.exec();
 }

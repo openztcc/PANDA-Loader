@@ -12,7 +12,7 @@
 #include <QDir>
 #include <QtQml/qqmlregistration.h>
 #include "../models/PSettings.h"
-#include "../src/PSystemMgr.h"
+#include "PSystemMgr.h"
 
 // static functions
 
@@ -28,6 +28,7 @@ public:
     QString getGamePath();
     void setGamePath(QString);
     QStringList getZtdList();
+    PSettings* settings() const { return m_settings; }
 
 signals:
     void pathChanged();

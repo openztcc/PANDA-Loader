@@ -5,6 +5,8 @@ import QtQuick.Controls.Material
 import QtQuick.Effects
 import PandaLdr 1.0
 
+pragma ComponentBehavior: Bound
+
 ApplicationWindow {
     id: root
     width: 800
@@ -14,6 +16,11 @@ ApplicationWindow {
 
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
+
+    // Declare modals
+    SimpleModal {
+        id: confirmDialog
+    }
 
     // Navigation Rail
     Drawer {
@@ -251,20 +258,69 @@ ApplicationWindow {
                             }
                         }
                     }
-
                     // mod list view
                     ListView {                        
                         id: modsList
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         boundsBehavior: Flickable.StopAtBounds
-                        model: modController
+                        model: modModel
                         clip: true
+                        focus: true
+
+                        Component.onCompleted: {
+                            modsList.forceActiveFocus(Qt.MouseFocusReason)
+                            console.log("ListView model:", modsList.model)
+                            console.log("Model type:", typeof modsList.model)
+                            console.log("Model row count:", modsList.model ? modsList.model.rowCount() : "N/A")
+                            console.log("Context property modModel:", modModel)
+                            console.log("Context property modController:", modController)
+                        }
+
+                        Keys.onPressed: (event) => {
+                            // Escape key to deselect mod
+                            if (event.key === Qt.Key_Escape) {
+                                var selectedMods = modController.selectedMods
+
+                                for (var i = 0; i < selectedMods.length; i++) {
+                                    selectedMods[i].isSelected = false
+                                }
+                                modController.clearSelection()
+                                console.log("Deselected mods")
+                            }
+
+                            // Del key to delete mod
+                            else if (event.key === Qt.Key_Delete) {
+                                var selectedCount = modController.selectedMods.length
+                                // Ask for confirmation before deleting
+                                confirmDialog.action = function() {
+                                    modController.controller.deleteSelected()
+                                    confirmDialog.close()
+                                }
+                                confirmDialog.title = "Delete " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
+                                confirmDialog.message = "Are you sure you want to delete " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
+                                confirmDialog.centerTo = modsList.modPane
+                                confirmDialog.open()
+                            }
+                        }
+
 
                         delegate: Rectangle { // Mod list container
                             id: modPane
                             width: ListView.view.width
                             height: 50
+
+                            required property int index
+                            required property var model
+                            required property string title
+                            required property var instance
+
+                            Component.onCompleted: {
+                                console.log("Delegate created for item at index:", modPane.index)
+                                console.log("title:", modPane.title)
+                                console.log("instance:", modPane.instance)
+                                console.log("Available roles:", Object.keys(modPane.model).join(", "))
+                            }
 
                             // bottom border
                             Rectangle {
@@ -278,8 +334,10 @@ ApplicationWindow {
                             // mod list item
                             ModItem {
                                 id: modItems
-                                controller: modController
-                                modelObject: modObject
+                                title: modPane.title
+                                instance: modPane.instance
+                                cDialog: confirmDialog
+                                centerTo: mainContent
                             }
                         }
 

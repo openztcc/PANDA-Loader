@@ -9,6 +9,9 @@
 #include <QStringList>
 #include <QDir>
 #include <QCoreApplication>
+#include "PGraphicsMgr.h"
+#include "PZtdMgr.h"
+#include "../models/PModItem.h"
 
 class PDatabaseMgr : public QObject
 {
@@ -28,41 +31,30 @@ public:
         QString link;
     };
 
-    struct PMod
-    {
-        QString title;
-        QVector<QString> authors;
-        QString description;
-        bool enabled;
-        QString category;
-        QVector<QString> tags;
-        QString version;
-        QString mod_id;
-        QVector<PDependency> dependencies;
-        QString location;
-        QString filename;
-        QStringList iconpaths;
-    };
-
     bool openDatabase();
     void closeDatabase();
     bool createTables();
-    bool insertMod(const QString &name, const QString &desc, const QVector<QString> &authors,
-                   const QString &version, bool enabled, const QVector<QString> &tags,
-                   const QString category, const QString &modId, const QVector<PDependency> &dependencies = {},
-                   const QString &filename = "", const QString &location = "", const QStringList &iconpaths = {});
-    bool insertMod(const PMod &mod);
+    bool insertMod(const QString &title, const QString &description, const QStringList &authors,
+                   const QString &version, bool enabled, const QStringList &tags, const QString &category,
+                   const QString &id, const QString &depId, const QString &filename,
+                   const QString &location, const QStringList &iconpaths, const QString &oglocation,
+                   bool selected, QObject *parent = nullptr);
+    bool insertMod(const PModItem &mod);
     bool deleteMod(const QString &modId);
     bool updateMod(const QString &modId, const QString &key, const QString &value);
     bool addDependency(const QString &modId, const PDependency &dependency);
     bool removeDependency(const QString &dependencyId);
-    QVector<PMod> getModsByID(const QString &modId);
 
     QSqlQuery getAllMods();
     QSqlQuery queryMods(const QString &propertyName, const QString &searchTerm);
     QStringList searchMods(const QString &propertyName, const QString &searchTerm);
-    Q_INVOKABLE PDatabaseMgr::PMod getModByPk(const QString &modId);
-    PDatabaseMgr::PMod getModByPk(QSqlDatabase &db, const QString &modId);
+    Q_INVOKABLE QSharedPointer<PModItem> getModByPk(const QString &modId);
+    QSharedPointer<PModItem> populateModItem(QSqlQuery &query);
+    QSharedPointer<PModItem> queryToModItem(QSqlQuery &query);
+    QSharedPointer<PModItem> queryToModItem(QString property, QString value);
+    QVector<QSharedPointer<PModItem>> queryToModItems(QString property, QString value);
+
+    void loadModsFromZTDs(const QStringList &ztdList);
 
     bool doesModExist(const QString &modId);
     bool doesDependencyExist(const QString &dependencyId);
@@ -77,16 +69,19 @@ private:
         "CREATE TABLE IF NOT EXISTS mods ("
         "pk INTEGER PRIMARY KEY AUTOINCREMENT, "
         "title TEXT NOT NULL, "
-        "author TEXT NOT NULL, "
+        "authors TEXT NOT NULL, "
         "description TEXT, "
         "enabled INTEGER NOT NULL, "
         "category TEXT, "
         "tags TEXT, "
         "version TEXT NOT NULL, "
         "mod_id TEXT NOT NULL UNIQUE, "
+        "dep_id TEXT, "
         "iconpaths TEXT, "
         "filename TEXT, "
         "location TEXT, "
+        "oglocation TEXT, "
+        "is_selected INTEGER NOT NULL, "
         "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
         ");";
 

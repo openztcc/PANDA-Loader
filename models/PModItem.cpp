@@ -5,187 +5,197 @@
 
 PModItem::PModItem(QObject *parent)
 {
-    m_mod_index = 0;
-    m_mod_title = "";
-    m_mod_author = "";
-    m_mod_description = "";
-    m_mod_enabled = false;
-    m_mod_category = "";
-    m_mod_tags = "";
-    m_mod_iconpaths = QStringList();
-    m_mod_location = QUrl();
-    m_mod_filename = "";
+    m_index = 0;
+    m_title = "";
+    m_authors = {""};
+    m_description = "";
+    m_enabled = false;
+    m_category = "";
+    m_tags = {""};
+    m_iconpaths = QStringList();
+    m_location = "";
+    m_filename = "";
     m_dependency_id = "";
 }
 
-PModItem::PModItem(const QString &title, const QString &author, const QString &desc,
-                   const QUrl &path, bool enabled, const QString &category, const QString &tags,
-                   const QStringList &iconpaths, const QString &location, const QString &filename,
-                   const QString &depId, QObject *parent)
+PModItem::PModItem(const QString &title, const QString &description, const QStringList &authors,
+                   const QString &version, bool enabled, const QStringList &tags, const QString &category,
+                   const QString &id, const QString &depId, const QString &filename,
+                   const QString &location, const QStringList &iconpaths, const QString &oglocation,
+                   bool selected, QObject *parent)
 
 : QObject(parent), 
-m_mod_title(title), m_mod_author(author), m_mod_description(desc),
-m_mod_enabled(enabled), m_mod_category(category), m_mod_tags(tags),
-m_mod_location(location), m_mod_filename(filename),
-m_mod_iconpaths(iconpaths), m_dependency_id(depId)
+    m_title(title),
+    m_authors(authors),
+    m_description(description),
+    m_enabled(enabled),
+    m_category(category),
+    m_tags(tags),
+    m_id(id),
+    m_location(location),
+    m_filename(filename),
+    m_iconpaths(iconpaths),
+    m_dependency_id(depId),
+    m_oglocation(oglocation),
+    m_selected(selected)
 {
-    m_mod_index = 0;
-    m_qmlItem = nullptr;
-    m_isSelected = false;
+    m_index = 0;
+    m_ui_component = nullptr;
+    m_selected = false;
 }
 
 int PModItem::modIndex() const
 {
-    return m_mod_index;
+    return m_index;
 }
 
 void PModItem::setmodIndex(int newModIndex)
 {
-    if (m_mod_index == newModIndex)
+    if (m_index == newModIndex)
         return;
 
-    m_mod_index = newModIndex;
+    m_index = newModIndex;
     emit modIndexChanged();
 }
 
-QString PModItem::modTitle() const
+QString PModItem::title() const
 {
-    return m_mod_title;
+    return m_title;
 }
 
-void PModItem::setmodTitle(const QString &newModTitle)
+void PModItem::setTitle(const QString &newModTitle)
 {
-    if (m_mod_title == newModTitle)
+    if (m_title == newModTitle)
         return;
 
-    m_mod_title = newModTitle;
+    m_title = newModTitle;
     emit modTitleChanged();
 }
 
-QString PModItem::modAuthor() const
+QStringList PModItem::authors() const
 {
-    return m_mod_author;
+    return m_authors;
 }
 
-void PModItem::setmodAuthor(const QString &newModAuthor)
+void PModItem::setAuthors(const QStringList &newModAuthor)
 {
-    if (m_mod_author == newModAuthor)
+    if (m_authors == newModAuthor)
         return;
 
-    m_mod_author = newModAuthor;
+    m_authors = newModAuthor;
     emit modAuthorChanged();
 }
 
-QString PModItem::modDescription() const
+QString PModItem::description() const
 {
-    return m_mod_description;
+    return m_description;
 }
 
-void PModItem::setmodDescription(const QString &newModDescription)
+void PModItem::setDescription(const QString &newModDescription)
 {
-    if (m_mod_description == newModDescription)
+    if (m_description == newModDescription)
         return;
 
-    m_mod_description = newModDescription;
+    m_description = newModDescription;
     emit modDescriptionChanged();
 }
 
-bool PModItem::modEnabled() const
+bool PModItem::enabled() const
 {
-    return m_mod_enabled;
+    return m_enabled;
 }
 
-void PModItem::setmodEnabled(bool newModEnabled)
+void PModItem::setEnabled(bool newModEnabled)
 {
-    if (m_mod_enabled == newModEnabled)
+    if (m_enabled == newModEnabled)
         return;
 
-    m_mod_enabled = newModEnabled;
+    m_enabled = newModEnabled;
     emit modEnabledChanged();
 }
 
-QString PModItem::modCategory() const
+QString PModItem::category() const
 {
-    return m_mod_category;
+    return m_category;
 }
 
-void PModItem::setmodCategory(const QString &newModCategory)
+void PModItem::setCategory(const QString &newModCategory)
 {
-    if (m_mod_category == newModCategory)
+    if (m_category == newModCategory)
         return;
 
-    m_mod_category = newModCategory;
+    m_category = newModCategory;
     emit modCategoryChanged();
 }
 
-QString PModItem::modTags() const
+QStringList PModItem::tags() const
 {
-    return m_mod_tags;
+    return m_tags;
 }
 
-void PModItem::setmodTags(const QString &newModTags)
+void PModItem::setTags(const QStringList &newModTags)
 {
-    if (m_mod_tags == newModTags)
+    if (m_tags == newModTags)
         return;
 
-    m_mod_tags = newModTags;
+    m_tags = newModTags;
     emit modTagsChanged();
 }
 
-QString PModItem::modId() const
+QString PModItem::id() const
 {
-    return m_mod_id;
+    return m_id;
 }
 
-void PModItem::setmodId(const QString &newModId)
+void PModItem::setId(const QString &newModId)
 {
-    if (m_mod_id == newModId)
+    if (m_id == newModId)
         return;
 
-    m_mod_id = newModId;
+    m_id = newModId;
     emit modIdChanged();
 }
 
-QUrl PModItem::modLocation() const
+QString PModItem::location() const
 {
-    return m_mod_location;
+    return m_location;
 }
 
-void PModItem::setmodLocation(const QUrl &newModLocation)
+void PModItem::setLocation(const QString &newModLocation)
 {
-    if (m_mod_location == newModLocation)
+    if (m_location == newModLocation)
         return;
 
-    m_mod_location = newModLocation;
+    m_location = newModLocation;
     emit modLocationChanged();
 }
 
-QString PModItem::modFilename() const
+QString PModItem::filename() const
 {
-    return m_mod_filename;
+    return m_filename;
 }
 
-void PModItem::setmodFilename(const QString &newModFilename)
+void PModItem::setFilename(const QString &newModFilename)
 {
-    if (m_mod_filename == newModFilename)
+    if (m_filename == newModFilename)
         return;
 
-    m_mod_filename = newModFilename;
+    m_filename = newModFilename;
     emit modFilenameChanged();
 }
 
-QStringList PModItem::modIconPaths() const
+QStringList PModItem::iconpaths() const
 {
-    return m_mod_iconpaths;
+    return m_iconpaths;
 }
 
-void PModItem::setmodIconPaths(const QStringList &newModIconPaths)
+void PModItem::setIconPaths(const QStringList &newModIconPaths)
 {
-    if (m_mod_iconpaths == newModIconPaths)
+    if (m_iconpaths == newModIconPaths)
         return;
 
-    m_mod_iconpaths = newModIconPaths;
-    emit modIconPathsChanged();
+    m_iconpaths = newModIconPaths;
+    emit iconpathsChanged();
 }
 
 QString PModItem::dependencyId() const
@@ -202,10 +212,10 @@ void PModItem::setDependencyId(const QString &newDependencyId)
     emit dependencyIdChanged();
 }
 
-void PModItem::setQmlItem(QObject* item)
+void PModItem::setUIComponent(QObject* item)
 {
-    if (m_qmlItem != item) {
-        m_qmlItem = item;
+    if (m_ui_component != item) {
+        m_ui_component = item;
         emit qmlItemChanged();
     }
 }

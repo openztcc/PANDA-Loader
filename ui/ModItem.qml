@@ -9,27 +9,22 @@ pragma ComponentBehavior: Bound
 
 Item {
     id: modItem
-    property var controller: null
-    property var modelObject: null
+
+    property string title: "Unknown"
+
+    property var instance
     property var prevObject: null
-    property bool isSelected: false
+    property bool selected: false
+    property var cDialog: null
+    property var centerTo: null
     anchors.fill: parent
     signal selectedMod(var mod)
 
     Component.onCompleted: {
-        if (modItem.modelObject) {
-            modItem.modelObject.qmlItem = modItem            
-        }
-        modItem.forceActiveFocus()
-    }
-
-    Keys.onPressed: (event) => {
-        // Escape key to deselect mod
-        if (event.key === Qt.Key_Escape) {
-            var modTitle = modItem.modelObject.modTitle
-            modItem.isSelected = false
-            modItem.controller.clearSelection()
-            console.log("Deselected mod:", modTitle)
+        if (modItem.instance) {
+            modItem.instance.uiComponent = modItem            
+        } else {
+            console.log("MODEL OBJECT IS NULL")
         }
     }
 
@@ -41,11 +36,12 @@ Item {
         rightPadding: 10
         // topPadding: -5
         anchors.bottomMargin: 1
+        opacity: determineDisabled() ? 1.0 : 0.5
 
         function determineBackgroundColor() {
             if (modArea.containsPress) {
                 return Qt.darker("#f7fbf2", 1.2)
-            } else if (isSelected) {
+            } else if (selected) {
                 return Qt.darker("#f7fbf2", 1.1)
             } else if (modArea.containsMouse) {
                 return Qt.lighter("#f7fbf2", 1.05)
@@ -53,6 +49,131 @@ Item {
                 return "#f7fbf2"
             }
         }
+
+        function determineDisabled() {
+            if (modItem.instance) {
+                return modItem.instance.enabled
+            }
+        }
+
+        MouseArea {
+            id: modArea
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            z: -1
+            onClicked: function(mouse) {
+                // Sanity checks
+                console.log("Clicked on mod:", modItem.title)
+                if (modItem.instance) {
+                    console.log("Clicked on modItem:", modItem.instance.title)
+                } else {
+                    console.log("Clicked on modItem: NULL")
+                }
+
+                // Ctrl + left click adds to selection
+                if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
+                    modController.addModToSelection(modItem.instance)
+                    modItem.selected = true
+
+                    // print selected mods
+                    console.log("Selected mods:")
+                    for (let i = 0; i < modController.selectedMods.length; i++) {
+                        console.log(modController.selectedMods[i].title)
+                    }
+                }
+
+                // Left click selects single mod
+                else if (mouse.button === Qt.LeftButton) {
+                    modController.clearSelection()
+                    modController.setCurrentMod(modItem.instance)
+                    modItem.selected = true
+
+                    // print selected mods
+                    console.log("Selected mods:")
+                    for (let i = 0; i < modController.selectedMods.length; i++) {
+                        console.log(modController.selectedMods[i].title)
+                    }
+                }
+
+                // Right click only clears selection if the clicked mod isn't already selected
+                else if (mouse.button === Qt.RightButton) {
+                    const selected = modController.selectedMods
+                    let alreadySelected = false
+                    for (let i = 0; i < selected.length; i++) {
+                        if (selected[i] === modItem.instance) {
+                            alreadySelected = true
+                            break
+                        }
+                    }
+
+                    if (!alreadySelected) {
+                        modController.clearSelection()
+                        modController.setCurrentMod(modItem.instance)
+                        modItem.selected = true
+                    }
+
+                    // set the selection so that the context menu gets updated array
+                    modContextMenu.selection = modController.selectedMods
+                    modContextMenu.popup()
+
+                    // print selected mods
+                    console.log("Selected mods:")
+                    for (let i = 0; i < modController.selectedMods.length; i++) {
+                        console.log(modController.selectedMods[i].title)
+                    }
+                }
+            }
+
+            hoverEnabled: true
+
+            Menu {
+                property var selection: modController.selectedMods
+                id: modContextMenu
+                // Disable/Enable mods
+                MenuItem {
+                    text: modContextMenu.selection.length > 1
+                        ? (modItem.instance.enabled ? "Disable (" + modContextMenu.selection.length + ") mods"
+                                                    : "Enable (" + modContextMenu.selection.length + ") mods")
+                        : (modItem.instance.enabled ? "Disable mod" : "Enable mod")
+                    onTriggered: {
+                        console.log("Disabling mods")
+                        modController.setSelectedModsEnabled(!(modItem.instance.enabled))
+                        console.log("Disabled mods")
+                    }
+                }
+                // Enable mods
+                MenuItem {
+                    text: modContextMenu.selection.length > 1 ? "Delete (" + modContextMenu.selection.length + ") mods" : "Delete mod"
+                    onTriggered: {
+                        var selectedCount = modContextMenu.selection.length
+                        // Ask for confirmation before deleting
+                        modItem.cDialog.action = function() {
+                            modController.deleteSelected()
+                            modItem.cDialog.close()
+                        }
+                        modItem.cDialog.title = "Delete " + (selectedCount > 1 ? selectedCount + " mods" : "mod")
+                        modItem.cDialog.message = "Are you sure you want to delete " + (selectedCount > 1 ? selectedCount + " mods" : "this mod") + "?"
+                        modItem.cDialog.centerTo = modItem.centerTo
+                        modItem.cDialog.open()
+                    }
+                }
+                // Divider
+                MenuSeparator {
+                    visible: modContextMenu.selection.length > 1
+                }
+                // Select all mods
+                MenuItem {
+                    text: "Select all"
+                    onTriggered: {
+                        console.log("Selecting all mods")
+                        modController.selectAll()
+                        console.log("Selected all mods")
+                    }
+                }
+            }
+        }
+
 
         contentItem: Item { 
             anchors.fill: parent
@@ -72,13 +193,21 @@ Item {
                 Image {
                     id: modIcon
 
+                    Component.onCompleted: {
+                        if (modItem.instance) {
+                            console.log("Checking icon for modItem:" + modItem.instance.title + " - " + modItem.instance.iconpaths.length + " icons" + " - " + modItem.instance.iconpaths[0])
+                        } else {
+                            console.log("MODEL OBJECT IS NULL")
+                        }
+                    }
+
                     property int radius: 5
 
                     Layout.preferredWidth: 44
                     Layout.preferredHeight: 31
 
-                    source: (modItem.modelObject && modItem.modelObject.modIconPaths.length > 0
-                             ? modItem.modelObject.modIconPaths[0]
+                    source: (modItem.instance && modItem.instance.iconpaths.length > 0
+                             ? modItem.instance.iconpaths[0]
                              : "")
                     fillMode: Image.PreserveAspectCrop
                     layer.enabled: true
@@ -100,7 +229,7 @@ Item {
                     Label {
                         id: modName
                         leftPadding: 10
-                        text: modItem.modelObject && modItem.modelObject.modTitle ? modItem.modelObject.modTitle : "No title"
+                        text: modItem.title
                         font.pixelSize: 12
                         color: "#424940"
                     }
@@ -116,12 +245,16 @@ Item {
                     z: 1
                     Layout.alignment: Qt.AlignRight
                     Layout.preferredWidth: 20
-                    checked: true
+                    checked: modItem.instance ? modItem.instance.enabled : false
                     Material.accent: "#376a3e"
                     enabled: true
                     onCheckedChanged: {
-                        if (modItem.modelObject) {
-                            console.log("Checkbox changed:", modItem.modelObject.modTitle, checked)
+                        if (modItem.instance) {
+                            console.log("Checkbox changed:", modItem.title, checked)
+                            modController.clearSelection()
+                            modController.setCurrentMod(modItem.instance)
+                            modItem.selected = true
+                            modController.setSelectedModsEnabled(checked)
                         }
                     }
                     
@@ -137,72 +270,18 @@ Item {
             }
         }
         
-        MouseArea {
-            id: modArea
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
-            onClicked: function(mouse) {
-                console.log(modItem.modelObject.modIconPaths[0])
-                console.log("Clicked. Button:", mouse.button, "Modifiers:", mouse.modifiers)
-                // if ctrl + left click, toggle selection
-                if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
-                    console.log("Ctrl + Left Click")
-                    modItem.controller.addModToSelection(modItem.modelObject)
-                    console.log("Selected mods after toggle:")
-                    for (var i = 0; i < modItem.controller.selectedMods.length; i++) {
-                        console.log("", modItem.controller.selectedMods[i].modTitle)
-                    }
-                    modItem.isSelected = true
-                }
-                // left click to select mod
-                else if (modItem.controller && modItem.modelObject) {
-
-                    // set new current mod 
-                    modItem.controller.setCurrentMod(modItem.modelObject);
-                    modItem.isSelected = true
-                }
-
-
-
-                // right click context menu
-                if (mouse.button === Qt.RightButton) {
-                    modContextMenu.popup()
-                }
-            }
-
-            hoverEnabled: true
-
-            Menu {
-                id: modContextMenu
-                MenuItem {
-                    text: "Edit"
-                    onTriggered: {
-                        console.log("Option 1 triggered for", modItem.modelObject.modTitle)
-                    }
-                }
-                MenuItem {
-                    text: "Disable"
-                    onTriggered: {
-                        console.log("Option 2 triggered for", modItem.modelObject.modTitle)
-                    }
-                }
-                MenuItem {
-                    text: "Delete"
-                    onTriggered: {
-                        console.log("Option 2 triggered for", modItem.modelObject.modTitle)
-                    }
-                }
-            }
-        }
-
-        // allows isSelected to be dynamic; true only if the modItem matches currentMod
+        // allows selected to be dynamic; true only if the modItem matches currentMod
         // (makes select and deselect work)
         Connections {
-            target: modItem.controller
+            target: modController
             function onCurrentModChanged() {
-                modItem.isSelected = (modItem.controller.currentMod === modItem.modelObject)
+                modItem.selected = (modController.currentMod === modItem.instance)
             }
+
+            function onSelectedModsListUpdated() {
+                modItem.selected = modController.selectedMods.includes(modItem.instance);
+            }
+
         }
 
 

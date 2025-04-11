@@ -45,7 +45,7 @@ Item {
                 }
 
                 Label {
-                    text: infoPaneItem.innerComponent ? infoPaneItem.innerComponent : "No text"
+                    text: infoPaneItem.innerComponent
                     font.pixelSize: 12
                     color: "#424940"
                     clip: true
