@@ -87,14 +87,23 @@ void PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
         qCritical() << "PState is null, cannot toggle mod";
         return;
     }
+
+    // Check if the mod is already in the correct state
+    if (mod->enabled() == enabled) {
+        qDebug() << "Mod is already "<< (enabled ? "enabled" : "disabled") << ":" << mod->title();
+        return;
+    }
+
     // File location variables
     QString filename = mod->filename();
     QString currentLocation = mod->location();
+    qDebug() << "Current location:" << currentLocation;
     QString targetLocation;
 
     QString pandaHomePath = QDir::cleanPath(m_state->settings()->pandaHomePath());
     QString disabledDir = QDir::cleanPath(pandaHomePath + "/resources/mods/.disabled") + "/";
     QString originalLocation = mod->oglocation();
+    qDebug() << "Original location:" << originalLocation;
     QString sourcePath, destPath;
 
     // Calculate correct paths
@@ -152,7 +161,8 @@ void PController::reloadMod(QSharedPointer<PModItem> mod)
 
 void PController::setSelectedModsEnabled(bool enabled)
 {
-    for (const auto& mod : m_selected_mods) {
+    QList<QSharedPointer<PModItem>> mods = m_selected_mods;
+    for (const auto& mod : mods) {
         setModEnabled(mod, enabled);
     }
 }

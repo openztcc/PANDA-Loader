@@ -130,12 +130,15 @@ Item {
             Menu {
                 property var selection: modController.selectedMods
                 id: modContextMenu
-                // Disable mods
+                // Disable/Enable mods
                 MenuItem {
-                    text: modContextMenu.selection.length > 1 ? "Disable (" + modContextMenu.selection.length + ") mods" : "Disable mod"
+                    text: modContextMenu.selection.length > 1
+                        ? (modItem.instance.enabled ? "Disable (" + modContextMenu.selection.length + ") mods"
+                                                    : "Enable (" + modContextMenu.selection.length + ") mods")
+                        : (modItem.instance.enabled ? "Disable mod" : "Enable mod")
                     onTriggered: {
                         console.log("Disabling mods")
-                        modController.disableSelected()
+                        modController.setSelectedModsEnabled(!(modItem.instance.enabled))
                         console.log("Disabled mods")
                     }
                 }
@@ -251,9 +254,7 @@ Item {
                             modController.clearSelection()
                             modController.setCurrentMod(modItem.instance)
                             modItem.selected = true
-                            if (!checked) {
-                                modController.disableSelected()
-                            }
+                            modController.setSelectedModsEnabled(checked)
                         }
                     }
                     

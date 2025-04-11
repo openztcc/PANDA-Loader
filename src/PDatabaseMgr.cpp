@@ -579,7 +579,7 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
             mod.setFilename(filename);
             mod.setLocation(location);
             mod.setIconPaths(iconPaths);
-            mod.setOGLocation(ztd);
+            mod.setOGLocation(location);
             mod.setSelected(false);
         }
 
