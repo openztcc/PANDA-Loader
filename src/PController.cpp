@@ -81,17 +81,17 @@ void PController::deleteSelected()
     emit selectedModsListUpdated(m_selected_mods);
 }
 
-void PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
+bool PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
 {
     if (!m_state) {
         qCritical() << "PState is null, cannot toggle mod";
-        return;
+        return false;
     }
 
     // Check if the mod is already in the correct state
     if (mod->enabled() == enabled) {
         qDebug() << "Mod is already "<< (enabled ? "enabled" : "disabled") << ":" << mod->title();
-        return;
+        return false;
     }
 
     // File location variables
@@ -127,12 +127,12 @@ void PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
 
     if (!QFile::exists(sourcePath)) {
         qCritical() << "Source ZTD file does not exist:" << sourcePath;
-        return;
+        return false;
     }
 
     if (!PZtdMgr::moveFile(sourcePath, destPath)) {
         qCritical() << "Failed to move file from" << sourcePath << "to" << destPath;
-        return;
+        return false;
     }
 
     // Update the mod in the database
@@ -148,6 +148,8 @@ void PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
     }
     mod->setEnabled(enabled);
     mod->setLocation(targetLocation);
+
+    return true;
 }
 
 
