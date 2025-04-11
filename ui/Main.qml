@@ -23,20 +23,17 @@ ApplicationWindow {
     }
 
     // Navigation Rail
-    Drawer {
+    Item {
         id: navRail
-        height: parent.height
         width: 70
-        edge: Qt.LeftEdge
-        modal: false  // Keep it always open
-        interactive: false // prevents from closing when click away
-        Component.onCompleted: navRail.open()
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        z: 1
 
-        contentItem: Navigation {
+        Navigation {
             id: navContent
-            stack: root.stack
-            modPage: root.mainContent.modPage
-            settingsPage: root.mainContent.settingsPage
+            anchors.fill: parent
         }
     }
 
@@ -44,43 +41,48 @@ ApplicationWindow {
     ToolBar {
         id: toolbar
         Material.background: "#f7fbf2"
-        width: parent.width - navRail.width
+        anchors.left: navRail.right
         anchors.right: parent.right
-        
+        anchors.top: parent.top
+        height: 40
+
         AppBarLayout {
-            id: appbar 
+            id: appbar
             anchors.fill: parent
-            property var offset: navRail
         }
     }
 
     StackView {
         id: stack
-        anchors.fill: parent
-        initialItem: mainContent.modPage
-
-        // if (stack.currentItem !== modPage) {
-        //     stack.push(modPage);
-        // }
-    }
-
-    // Maint content
-    Pane {
-        id: mainContent
-        width: parent.width - navRail.width
-        height: parent.height - toolbar.height
-        Material.background: "#9daa9e"
+        anchors.top: toolbar.bottom
+        anchors.left: navRail.right
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        padding: 6
-        spacing: 12
 
+        initialItem: modPage
+    }
+
+    Component {
+        id: modPage
         ModPage {
-            id: modPage
-        }
+            anchors.left: navRail.left
+            anchors.bottom: root.bottom
+            width: root.width - 70
+            height: root.height - 40
 
-        SettingsPage {
-            id: settingsPage
         }
     }
+
+    Component {
+        id: settingsPage
+        SettingsPage { }
+    }
+
+    Component.onCompleted: {
+        navRail.navContent.stack = stack
+        navRail.navContent.modPage = modPage
+        navRail.navContent.settingsPage = settingsPage
+        navRail.open()
+    }
+
 }

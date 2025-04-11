@@ -3,10 +3,20 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls.Material 2.15
 import QtQuick.Effects
-import PandaLdr 1.0
+import PandaUI 1.0
 
-Rectangle {
-    anchors.fill: parent
+Pane {
+    id: mainContent
+    property var navRail: null
+
+    width: parent.width - 70
+    height: parent.height - 40
+    Material.background: "#9daa9e"
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    padding: 6
+    spacing: 12
+
     ColumnLayout {
         Layout.fillHeight: true // remaining height
         Layout.fillWidth: true

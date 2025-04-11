@@ -6,8 +6,8 @@ Rectangle {
     color: "#101510"
     anchors.fill: parent
     property StackView stack: null
-    property var modPage: null
-    property var settingsPage: null
+    property Component modPage: null
+    property Component settingsPage: null
     Column {
         anchors.fill: parent
         anchors.topMargin: 30
@@ -18,7 +18,11 @@ Rectangle {
             icon: "qrc:/icons/mods.svg"
             onClicked: {
                 console.log("Home clicked")
-                nav.stack.push(nav.modPage)
+                if (nav.stack && nav.modPage) {
+                    nav.stack.push(nav.modPage)
+                } else {
+                    console.log("One of stack or settingsPage is null")
+                }
             }
         }
 
@@ -27,7 +31,11 @@ Rectangle {
             icon: "qrc:/icons/about.svg"
             onClicked: {
                 console.log("Settings clicked")
-                nav.stack.push(nav.settingsPage)
+                if (nav.stack && nav.settingsPage) {
+                    nav.stack.push(nav.settingsPage)
+                } else {
+                    console.log("One of stack or settingsPage is null")
+                }
             }
         }
 
