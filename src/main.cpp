@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
         engine.addImportPath(":/");
         engine.addImportPath(QCoreApplication::applicationDirPath());
-        const QUrl url(QStringLiteral("file:///") + QCoreApplication::applicationDirPath() + "/ui/Main.qml");
+        const QUrl url(QStringLiteral("file:///") + QCoreApplication::applicationDirPath() + "/PandaUI/ui/Main.qml");
         engine.load(url);
 
 
