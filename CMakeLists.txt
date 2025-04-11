@@ -61,16 +61,23 @@ qt_add_qml_module(appPandaLdr
     URI PandaLdr
     VERSION 1.0
     QML_FILES
+        # main
         ui/Main.qml
-        ui/RailButton.qml
-        ui/SvgIcon.qml
-        ui/ActionButton.qml
-        ui/ModItem.qml
-        ui/InfoPane.qml
-        ui/InfoPaneItem.qml
-        ui/SearchBar.qml
-        ui/FilterTag.qml
-        ui/SimpleModal.qml
+        # infopane
+        ui/infopane/InfoPane.qml
+        ui/infopane/InfoPaneItem.qml
+        # modlist
+        ui/modlist/ModItem.qml
+        # navbar
+        ui/navbar/RailButton.qml
+        ui/navbar/Navigation.qml
+        # misc
+        ui/misc/SvgIcon.qml
+        ui/misc/ActionButton.qml
+        ui/misc/SimpleModal.qml
+        # searchbar
+        ui/searchbar/SearchBar.qml
+        ui/searchbar/FilterTag.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         # sources

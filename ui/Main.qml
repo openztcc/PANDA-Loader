@@ -24,40 +24,16 @@ ApplicationWindow {
 
     // Navigation Rail
     Drawer {
-        width: 70
-        height: parent.height
         id: navRail
+        height: parent.height
+        width: 70
         edge: Qt.LeftEdge
         modal: false  // Keep it always open
         interactive: false // prevents from closing when click away
         Component.onCompleted: navRail.open()
 
-        contentItem: Rectangle {
-            color: "#101510"
-            anchors.fill: parent
-            Column {
-                anchors.fill: parent
-                anchors.topMargin: 30
-                spacing: 20
-
-                RailButton {
-                    text: qsTr("Home")
-                    icon: "qrc:/icons/mods.svg"
-                    onClicked: console.log("Home clicked")
-                }
-
-                RailButton {
-                    text: qsTr("About")
-                    icon: "qrc:/icons/about.svg"
-                }
-
-                // exit button at bottom
-                RailButton {
-                    text: qsTr("Exit")
-                    icon: "qrc:/icons/exit_app.svg"
-                    onClicked: Qt.quit()
-                }
-            }
+        contentItem: Navigation {
+            id: navContent
         }
     }
 
