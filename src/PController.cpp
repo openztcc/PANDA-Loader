@@ -161,8 +161,23 @@ void PController::reloadMod(QSharedPointer<PModItem> mod)
 void PController::setSelectedModsEnabled(bool enabled)
 {
     QList<QSharedPointer<PModItem>> mods = m_selected_mods;
+    QVector<QString> successful_mods;
     for (const auto& mod : mods) {
-        setModEnabled(mod, enabled);
+        if (setModEnabled(mod, enabled)) {
+            successful_mods.append(mod->id());
+        } else {
+            qDebug() << "Failed to update enable status for:" << mod->title();
+        }
+    }
+
+    for (const auto& id : successful_mods) {
+        QSharedPointer<PModItem> mod = PDatabaseMgr::getModByPk(id);
+        if (mod) {
+            // Update the mod in the model
+            m_model->replaceMod(mod);
+        } else {
+            qDebug() << "Invalid mod returned at reload" << id;
+        }
     }
 }
 
