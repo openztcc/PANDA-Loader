@@ -80,6 +80,8 @@ qt_add_qml_module(appPandaLdr
         ui/searchbar/FilterTag.qml
         # appbar
         ui/appbar/AppBarLayout.qml
+        # layouts
+        ui/layouts/mods/ModPage.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         # sources

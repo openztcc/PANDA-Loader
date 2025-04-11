@@ -62,6 +62,8 @@ ApplicationWindow {
         padding: 6
         spacing: 12
 
-
+        ModPage {
+            id: modPage
+        }
     }
 }
