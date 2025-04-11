@@ -148,9 +148,6 @@ void PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
     }
     mod->setEnabled(enabled);
     mod->setLocation(targetLocation);
-
-    // Reload the mod
-    reloadMod(mod);
 }
 
 
@@ -305,3 +302,4 @@ void PController::selectAll()
     }
     emit selectedModsListUpdated(m_selected_mods);
 }
+

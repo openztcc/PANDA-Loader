@@ -48,6 +48,7 @@ public:
     void removeMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
     void addState(PState *state);
+    void replaceMod(QSharedPointer<PModItem> mod);
 
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;

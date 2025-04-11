@@ -211,3 +211,21 @@ void PModModel::addState(PState *state)
 {
     m_state = state;
 }
+
+void PModModel::replaceMod(QSharedPointer<PModItem> newMod) {
+    int index = m_mods_list.indexOf(newMod);
+    if (index == -1) {
+        for (int i = 0; i < m_mods_list.size(); ++i) {
+            if (m_mods_list[i]->id() == newMod->id()) {
+                index = i;
+                break;
+            }
+        }
+    }
+
+    if (index != -1) {
+        beginResetModel();
+        m_mods_list[index] = newMod;
+        endResetModel();
+    }
+}
