@@ -1,9 +1,11 @@
 import QtQuick
+import QtQuick.Controls 2.15
 
 Rectangle {
+    id: nav
     color: "#101510"
     anchors.fill: parent
-    property var currentPage: null
+    property StackView stack: null
     property var modPage: null
     property var settingsPage: null
     Column {
@@ -16,7 +18,7 @@ Rectangle {
             icon: "qrc:/icons/mods.svg"
             onClicked: {
                 console.log("Home clicked")
-                currentPage.push(modPage)
+                nav.stack.push(nav.modPage)
             }
         }
 
@@ -25,7 +27,7 @@ Rectangle {
             icon: "qrc:/icons/about.svg"
             onClicked: {
                 console.log("Settings clicked")
-                currentPage.push(settingsPage)
+                nav.stack.push(nav.settingsPage)
             }
         }
 

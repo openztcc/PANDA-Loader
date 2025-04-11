@@ -1,1 +1,20 @@
-
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>ui/Main.qml</file>
+        <file>ui/infopane/InfoPane.qml</file>
+        <file>ui/infopane/InfoPaneItem.qml</file>
+        <file>ui/modlist/ModItem.qml</file>
+        <file>ui/navbar/RailButton.qml</file>
+        <file>ui/navbar/Navigation.qml</file>
+        <file>ui/misc/SvgIcon.qml</file>
+        <file>ui/misc/ActionButton.qml</file>
+        <file>ui/misc/SimpleModal.qml</file>
+        <file>ui/searchbar/SearchBar.qml</file>
+        <file>ui/searchbar/FilterTag.qml</file>
+        <file>ui/appbar/AppBarLayout.qml</file>
+        <file>ui/layouts/mods/ModPage.qml</file>
+        <file>ui/layouts/settings/SettingsPage.qml</file>
+        <file>images/launch_bg.jpg</file>
+    </qresource>
+</RCC>

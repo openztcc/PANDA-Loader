@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
 import QtQuick.Effects
-import PandaLdr 1.0
+import PandaUI 1.0
 
 pragma ComponentBehavior: Bound
 
@@ -34,9 +34,9 @@ ApplicationWindow {
 
         contentItem: Navigation {
             id: navContent
-            currentPage: stack.currentPage
-            modPage: modPage
-            settingsPage: settingsPage
+            stack: root.stack
+            modPage: root.mainContent.modPage
+            settingsPage: root.mainContent.settingsPage
         }
     }
 
@@ -57,8 +57,11 @@ ApplicationWindow {
     StackView {
         id: stack
         anchors.fill: parent
-        initialItem: modPage
-        property var currentPage: modPage
+        initialItem: mainContent.modPage
+
+        // if (stack.currentItem !== modPage) {
+        //     stack.push(modPage);
+        // }
     }
 
     // Maint content
@@ -74,6 +77,10 @@ ApplicationWindow {
 
         ModPage {
             id: modPage
+        }
+
+        SettingsPage {
+            id: settingsPage
         }
     }
 }

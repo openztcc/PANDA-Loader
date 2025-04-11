@@ -58,7 +58,7 @@ target_include_directories(
 
 qt_policy(SET QTP0004 NEW)
 qt_add_qml_module(appPandaLdr
-    URI PandaLdr
+    URI PandaUI
     VERSION 1.0
     QML_FILES
         # main
@@ -82,6 +82,7 @@ qt_add_qml_module(appPandaLdr
         ui/appbar/AppBarLayout.qml
         # layouts
         ui/layouts/mods/ModPage.qml
+        ui/layouts/settings/SettingsPage.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         # sources
@@ -94,10 +95,10 @@ qt_add_qml_module(appPandaLdr
         src/PSystemMgr.cpp
         # models
         models/PModItem.h
-       models/PSettings.h
-       models/PEntityType.h
-       models/PSettings.h
-       models/PModModel.h
+        models/PSettings.h
+        models/PEntityType.h
+        models/PSettings.h
+        models/PModModel.h
 )
 
 qt_add_resources(appPandaLdr "resources"

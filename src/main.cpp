@@ -42,9 +42,10 @@ int main(int argc, char *argv[])
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
-        engine.addImportPath("F:/QT/6.8.1/mingw_64/qml");
-        engine.addImportPath(QCoreApplication::applicationDirPath() + "/ui");
-        engine.loadFromModule("PandaLdr", "Main");
+        engine.addImportPath(":/");
+        engine.addImportPath(QCoreApplication::applicationDirPath());
+        const QUrl url(QStringLiteral("file:///") + QCoreApplication::applicationDirPath() + "/ui/Main.qml");
+        engine.load(url);
 
 
 
