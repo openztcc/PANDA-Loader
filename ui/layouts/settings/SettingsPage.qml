@@ -8,51 +8,68 @@ import PandaUI 1.0
 Pane {
     id: mainContent
     property var navRail: null
-
+    height: parent.height
     Material.background: "#9daa9e"
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
+    anchors.fill: parent
     padding: 0
     spacing: 0
 
-    Column {
-        Layout.fillHeight: true // remaining height
-        Layout.preferredWidth: 200
-        width: 200
-        anchors.left: parent.left
+    RowLayout {
+        id: mainLayout
+        anchors.fill: parent
         spacing: 0
-        background: Rectangle {
-            color: "#9daa9e"
-            radius: 0
-        }
 
-        SettingsButton {
-            text: "PANDA Settings"
-        }
+        Rectangle {
+            id: settingsPane
+            Layout.fillHeight: true
+            Layout.preferredWidth: 200
 
-        SettingsButton {
-            text: "Video"
-        }
+            color: "#2c6431"
 
-        SettingsButton {
-            text: "Sound"
-        }
+            Column {
+                anchors.fill: parent
+                spacing: 0
 
-        SettingsButton {
-            text: "Gameplay"
-        }
+                SettingsButton {
+                    text: "PANDA Settings"
+                    source: "qrc:/icons/paw.svg"
+                }
 
-        SettingsButton {
-            text: "Scenarios"
-        }
+                SettingsButton {
+                    text: "Video"
+                    source: "qrc:/icons/tv.svg"
+                }
 
-        SettingsButton {
-            text: "Resource Paths"
-        }
+                SettingsButton {
+                    text: "Sound"
+                    source: "qrc:/icons/sound.svg"
+                }
 
-        SettingsButton {
-            text: "Advanced"
+                SettingsButton {
+                    text: "Gameplay"
+                    source: "qrc:/icons/keyboard.svg"
+                }
+
+                SettingsButton {
+                    text: "Scenarios"
+                    source: "qrc:/icons/article.svg"
+                }
+
+                SettingsButton {
+                    text: "Resource Paths"
+                    source: "qrc:/icons/folder.svg"
+                }
+
+                SettingsButton {
+                    text: "Advanced"
+                    source: "qrc:/icons/plumbing.svg"
+                }
+            }
+            Rectangle {
+                color: "#eeeeee"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
         }
     }
-
 }

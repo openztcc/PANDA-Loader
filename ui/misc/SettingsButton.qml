@@ -15,7 +15,7 @@ Button {
     anchors.topMargin: 0
     anchors.bottomMargin: 0
 
-    property alias icon: icon.source
+    required property string source
 
     background: Rectangle {
         id: bg
@@ -35,7 +35,7 @@ Button {
             anchors.leftMargin: 10
             width: 20
             height: 20
-            icon: control.icon
+            icon: control.source
             color: "white"
         }
 
