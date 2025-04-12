@@ -110,23 +110,8 @@ Item {
                 }
             }
 
-            Button {
+            ClearButton {
                 id: clearButton
-                height: textField.height - 7 // to avoid overlap with border    
-                width: 35
-                flat: true
-                background: Rectangle {
-                    id: clearBg
-                    property bool hovered: false
-                    color: clearButton.hovered ? Qt.darker(rField.bg, 1.05) : rField.bg
-                    anchors.fill: parent
-                    MouseArea {
-                        anchors.fill: parent
-                        z: -1
-                        cursorShape: Qt.PointingHandCursor
-                    }
-                }
-                text: ""
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: {
                     if (textField.isFileBrowser) {
@@ -135,19 +120,13 @@ Item {
                         textField.right
                     }
                 }
-                visible: textField.text.length > 0
-                contentItem: SvgIcon {
-                    id: clearIcon
-                    icon: "qrc:/icons/close.svg"
-                    color: rField.placeholderColor
-                    iconWidth: 15
-                    iconHeight: 15
-                }
-                onClicked: {
-                    console.log("Clear clicked")
-                    textField.text = ""
-                    textField.focus = false
-                }
+                anchors.rightMargin: 0
+                width: 35
+                height: textField.height - 7
+                textField: textField
+                fg: rField.placeholderColor 
+                bg: rField.bg
+                z: 1
             }
 
             Button {
