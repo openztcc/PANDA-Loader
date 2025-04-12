@@ -84,10 +84,11 @@ Item {
             color: rField.fg
 
             property var isFileBrowser: false
+            property bool textFieldHovered: false
 
             background: Rectangle {
                 id: textFieldBg
-                color: rField.bg
+                color: textField.textFieldHovered ? Qt.darker(rField.bg, 1.05) : rField.bg
                 radius: 5
                 border.width: 1
                 border.color: rField.error ? rField.errorColor : Qt.darker(rField.bg, 1.2)
@@ -109,19 +110,9 @@ Item {
                 }
             }
 
-            Row {
-                id: textContainer
-                spacing: 5
-                anchors.fill: parent
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
-
-            }
-
             Button {
                 id: clearButton
                 height: textField.height - 7 // to avoid overlap with border    
-                z: -1
                 width: 35
                 flat: true
                 background: Rectangle {
@@ -129,6 +120,11 @@ Item {
                     property bool hovered: false
                     color: clearButton.hovered ? Qt.darker(rField.bg, 1.05) : rField.bg
                     anchors.fill: parent
+                    MouseArea {
+                        anchors.fill: parent
+                        z: -1
+                        cursorShape: Qt.PointingHandCursor
+                    }
                 }
                 text: ""
                 anchors.verticalCenter: parent.verticalCenter
@@ -223,6 +219,20 @@ Item {
                     // remove focus from search field
                     textField.focus = false
                 }
+            }
+
+            MouseArea {
+                id: textFieldMouseArea
+                anchors.fill: parent
+                hoverEnabled: true 
+                acceptedButtons: Qt.NoButton
+                onEntered: {
+                    textField.textFieldHovered = true
+                }
+                onExited: {
+                    textField.textFieldHovered = false
+                }
+                cursorShape: Qt.IBeamCursor
             }
         }
 
