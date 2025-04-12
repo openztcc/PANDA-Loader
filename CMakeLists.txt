@@ -75,6 +75,7 @@ qt_add_qml_module(appPandaLdr
         ui/misc/SvgIcon.qml
         ui/misc/ActionButton.qml
         ui/misc/SimpleModal.qml
+        ui/misc/SettingsButton.qml
         # searchbar
         ui/searchbar/SearchBar.qml
         ui/searchbar/FilterTag.qml

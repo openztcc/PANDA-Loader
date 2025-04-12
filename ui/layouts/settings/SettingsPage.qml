@@ -20,81 +20,44 @@ Pane {
         Layout.preferredWidth: 200
         anchors.fill: parent
 
-        Button {
+        SettingsButton {
             text: "PANDA Settings"
-            width: 200
-            height: 50
-
-            background: Rectangle {
-                radius: 0
-                color: hovered ? "#66bb6a" : "#4caf50"
-            }
-
-            padding: 0
-            flat: true
         }
 
-
-        Button {
-            width: parent.width
-
-            id: debugSettings
+        SettingsButton {
             text: "Debug"
         }
 
-        Button {
-            width: parent.width
-
-            id: mgrSettings
+        SettingsButton {
             text: "Managers"
         }
 
-        Button {
-            width: parent.width
-
-            id: langSettings
+        SettingsButton {
             text: "Language"
         }
 
-        Button {
-            width: parent.width
-
-            id: libSettings
+        SettingsButton {
             text: "Libraries"
         }
 
-        Button {
-            width: parent.width
-
-            id: resSettings
+        SettingsButton {
             text: "Resource Paths"
         }
 
-        Button {
-            width: parent.width
-
-            id: videoSettings
+        SettingsButton {
             text: "Video"
         }
 
-        Button {
-            width: parent.width
+        SettingsButton {
 
-            id: soundSettings
             text: "Sound"
         }
 
-        Button {
-            width: parent.width
-
-            id: uiSettings
+        SettingsButton {
             text: "UI"
         }
 
-        Button {
-            width: parent.width
-
-            id: saveSettings
+        SettingsButton {
             text: "Game Progress"
         }
     }
