@@ -12,37 +12,22 @@ Pane {
     Material.background: "#9daa9e"
     anchors.right: parent.right
     anchors.bottom: parent.bottom
-    padding: 6
-    spacing: 12
+    padding: 0
+    spacing: 0
 
     Column {
         Layout.fillHeight: true // remaining height
         Layout.preferredWidth: 200
-        anchors.fill: parent
+        width: 200
+        anchors.left: parent.left
         spacing: 0
+        background: Rectangle {
+            color: "#9daa9e"
+            radius: 0
+        }
 
         SettingsButton {
             text: "PANDA Settings"
-        }
-
-        SettingsButton {
-            text: "Debug"
-        }
-
-        SettingsButton {
-            text: "Managers"
-        }
-
-        SettingsButton {
-            text: "Language"
-        }
-
-        SettingsButton {
-            text: "Libraries"
-        }
-
-        SettingsButton {
-            text: "Resource Paths"
         }
 
         SettingsButton {
@@ -50,16 +35,23 @@ Pane {
         }
 
         SettingsButton {
-
             text: "Sound"
         }
 
         SettingsButton {
-            text: "UI"
+            text: "Gameplay"
         }
 
         SettingsButton {
-            text: "Game Progress"
+            text: "Scenarios"
+        }
+
+        SettingsButton {
+            text: "Resource Paths"
+        }
+
+        SettingsButton {
+            text: "Advanced"
         }
     }
 

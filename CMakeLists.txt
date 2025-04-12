@@ -105,15 +105,33 @@ qt_add_qml_module(appPandaLdr
 qt_add_resources(appPandaLdr "resources"
     PREFIX "/"
     FILES
+        # ----------- icons
+        # navrail
         icons/mods.svg
         icons/about.svg
         icons/exit_app.svg
+
+        # appbar
         icons/notifications.svg
+
+        # misc controls
         icons/add.svg
         icons/delete.svg
         icons/refresh.svg
         icons/author.svg
         icons/path.svg
+
+        # settings
+        icons/settings.svg
+        icons/tv.svg 
+        icons/paw.svg 
+        icons/sound.svg 
+        icons/keyboard.svg 
+        icons/map.svg 
+        icons/article.svg 
+        icons/plumbing.svg
+
+        # ----------- images
         images/launch_bg.jpg
 )
 
