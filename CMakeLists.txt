@@ -84,6 +84,7 @@ qt_add_qml_module(appPandaLdr
         # layouts
         ui/layouts/mods/ModPage.qml
         ui/layouts/settings/SettingsPage.qml
+        ui/layouts/settings/SettingsPane.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         # sources

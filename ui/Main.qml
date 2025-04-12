@@ -41,7 +41,9 @@ ApplicationWindow {
 
     Component {
         id: settingsPage
-        SettingsPage { }
+        SettingsPage { 
+            mainColor: "#77956C"
+        }
     }
 
 
