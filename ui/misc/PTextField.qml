@@ -2,6 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import Qt.labs.platform 1.1
+
+pragma ComponentBehavior: Bound
 
 Item {
     id: rField
@@ -16,10 +19,34 @@ Item {
     property var errorText: "Error"
     property var descriptionText: "Description"
     property var error: false
+    property var filters: ["All files (*)"]
+    property var mode: FileDialog.ExistingFiles
     property alias isFileBrowser: textField.isFileBrowser
 
     // signals
     signal searchTextChanged(text: string)
+
+    Component {
+        id: fileDialogComponent
+
+
+        FileDialog {
+            title: "Select a file"
+            folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+            nameFilters: ["All files (*)"]
+            fileMode: FileDialog.ExistingFiles
+
+            onAccepted: {
+                if (file) {
+                    textField.text = file.toString();
+                }
+            }
+
+            onRejected: {
+                console.log("File dialog canceled");
+            }
+        }
+    }
 
     MouseArea {
         id: backgroundMouseArea
@@ -138,14 +165,24 @@ Item {
                 contentItem: SvgIcon {
                     id: browseFilesIcon
                     icon: "qrc:/icons/folder.svg"
-                    color: Qt.darker(rField.bg, 2.0)
+                    color: rField.placeholderColor
                     iconWidth: 20
                     iconHeight: 20
                 }
                 onClicked: {
                     // Open file dialog here
+                    // TODO: update dialog to support multiple files
                     console.log("Open file dialog")
-                    // Implement file browsing logic here
+
+                    var dialog = fileDialogComponent.createObject(rField);
+                    // set properties
+                    dialog.fileMode = rField.mode;
+                    dialog.nameFilters = rField.filters;
+                    if (dialog) {
+                        dialog.open();
+                    } else {
+                        console.error("Failed to create FileDialog");
+                    }
                 }
             }
 
