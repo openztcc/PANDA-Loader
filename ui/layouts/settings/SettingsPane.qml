@@ -4,30 +4,36 @@ import QtQuick.Controls
 
 Item {
     id: section
-
     property string title: ""
     property color textColor: "white"
     property real spacing: 10
-    default property alias content: contentArea.data
+    default property alias content: contentContainer.data
+    anchors.fill: parent
 
-    ColumnLayout {
-        id: layout
+    Flickable {
+        id: flick
         anchors.fill: parent
-        spacing: section.spacing
-
-        // Optional heading
-        Label {
-            text: section.title
-            visible: section.title !== ""
-            color: section.textColor
-            font.bold: true
-            font.pixelSize: 14
-        }
-
-        // User-defined content goes here
-        Item {
-            id: contentArea
+        width: parent.width
+        contentWidth: flick.width
+        contentHeight: layout.implicitHeight
+        clip: true
+        
+        default property alias content: contentContainer.children
+        ColumnLayout {
+            id: contentContainer
+            width: flick.width
+            spacing: section.spacing
             Layout.fillWidth: true
+
+            Label {
+                text: section.title
+                visible: section.title !== ""
+                color: section.textColor
+                font.bold: true
+                font.pixelSize: 14
+                Layout.margins: 4
+            }
         }
     }
 }
+

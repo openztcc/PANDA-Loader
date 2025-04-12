@@ -103,71 +103,100 @@ Pane {
 
                 StackView {
                     id: settingsStack
-                    initialItem: videoSettings
+                    anchors.fill: parent
+                    initialItem: pandaSettings
                 }
 
                 Component {
                     id: pandaSettings
                     // Forms and fields
-                    TextField {
-                        id: pandaSettingsField
-                        placeholderText: "PANDA Settings"
-                        color: settingsPane.color
+                    SettingsPane {
+                        id: pandaSettingsPane
+                        TextField {
+                            id: pandaSettingsField
+                            placeholderText: "PANDA Settings"
+                            color: "#ffffff"
+                            Layout.fillWidth: true
+                        }
                     }
 
                 }
 
                 Component {
                     id: videoSettings
-                    TextField {
-                        id: videoSettingsField
-                        placeholderText: "Video Settings"
-                        color: settingsPane.color
+                    SettingsPane {
+                        id: videoSettingsPane
+                        TextField {
+                            id: videoSettingsField
+                            placeholderText: "Video Settings"
+                            color: settingsPane.color
+                            Layout.fillWidth: true
+                        }
                     }
                 }
 
                 Component {
                     id: soundSettings
-                    TextField {
-                        id: soundSettingsField
-                        placeholderText: "Sound Settings"
-                        color: settingsPane.color
+                    SettingsPane {
+                        id: soundSettingsPane
+                        TextField {
+                            id: soundSettingsField
+                            placeholderText: "Sound Settings"
+                            color: settingsPane.color
+                            Layout.fillWidth: true
+                        }
                     }
                 }
 
                 Component {
                     id: gameplaySettings
-                    TextField {
-                        id: gameplaySettingsField
-                        placeholderText: "Gameplay Settings"
-                        color: settingsPane.color
+                    SettingsPane {
+                        id: gameplaySettingsPane
+                        TextField {
+                            id: gameplaySettingsField
+                            placeholderText: "Gameplay Settings"
+                            color: settingsPane.color
+                            Layout.fillWidth: true
+                        }
                     }
                 }
 
                 Component {
                     id: scenariosSettings
-                    TextField {
-                        id: scenariosSettingsField
-                        placeholderText: "Scenarios Settings"
-                        color: settingsPane.color
+                    SettingsPane {
+                        id: scenariosSettingsPane
+                        TextField {
+                            id: scenariosSettingsField
+                            placeholderText: "Scenarios Settings"
+                            color: settingsPane.color
+                            Layout.fillWidth: true
+                        }
                     }
                 }
 
                 Component {
                     id: resourcePathsSettings
-                    TextField {
-                        id: resourcePathsSettingsField
-                        placeholderText: "Resource Paths Settings"
-                        color: settingsPane.color
+                    SettingsPane {
+                        id: resourcePathsSettingsPane
+                        TextField {
+                            id: resourcePathsSettingsField
+                            placeholderText: "Resource Paths Settings"
+                            color: settingsPane.color
+                            Layout.fillWidth: true
+                        }
                     }
                 }
 
                 Component {
                     id: advancedSettings
-                    TextField {
-                        id: advancedSettingsField
-                        placeholderText: "Advanced Settings"
-                        color: settingsPane.color
+                    SettingsPane {
+                        id: advancedSettingsPane
+                        TextField {
+                            id: advancedSettingsField
+                            placeholderText: "Advanced Settings"
+                            color: settingsPane.color
+                            Layout.fillWidth: true
+                        }
                     }
                 }
 
