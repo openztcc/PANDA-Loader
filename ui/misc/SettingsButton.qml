@@ -5,6 +5,7 @@ import PandaUI 1.0
 Button {
     id: control
     property var color: "#2c6431"
+    property var fg: "#E8E8CF"
     width: parent ? parent.width : 200
     height: 35
     flat: true
@@ -44,15 +45,15 @@ Button {
             width: 20
             height: 20
             icon: control.source
-            color: "white"
+            color: control.fg
         }
 
         Text {
             text: control.text
             leftPadding: 40
             anchors.verticalCenter: parent.verticalCenter
-            color: "white"
-            font.bold: true
+            color: control.fg
+            // font.bold: true
             font.pixelSize: 12
         }
     }

@@ -10,8 +10,9 @@ pragma ComponentBehavior: Bound
 Pane {
     id: mainContent
     property var mainColor: "#2c6431"
+    property var mainTextColor: "#E8E8CF"
     height: parent.height
-    Material.background: "#9daa9e"
+    Material.background: "#57704E"
     anchors.fill: parent
     padding: 0
     spacing: 0
@@ -36,42 +37,49 @@ Pane {
                     text: "PANDA Settings"
                     source: "qrc:/icons/paw.svg"
                     color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
                 }
 
                 SettingsButton {
                     text: "Video"
                     source: "qrc:/icons/tv.svg"
                     color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
                 }
 
                 SettingsButton {
                     text: "Sound"
                     source: "qrc:/icons/sound.svg"
                     color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
                 }
 
                 SettingsButton {
                     text: "Gameplay"
                     source: "qrc:/icons/keyboard.svg"
                     color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
                 }
 
                 SettingsButton {
                     text: "Scenarios"
                     source: "qrc:/icons/article.svg"
                     color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
                 }
 
                 SettingsButton {
                     text: "Resource Paths"
                     source: "qrc:/icons/folder.svg"
                     color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
                 }
 
                 SettingsButton {
                     text: "Advanced"
                     source: "qrc:/icons/plumbing.svg"
                     color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
                 }
             }
 
@@ -116,16 +124,19 @@ Pane {
                             id: pandaSettingsField
                             placeholderText: "PANDA Home Path"
                             Layout.fillWidth: true
+                            descriptionText: "Path to the PANDA home directory"
                         }
                         PTextField {
                             id: pandaSettingsField2
                             placeholderText: "Zoo Game Path"
                             Layout.fillWidth: true
+                            descriptionText: "Path to the zoo.exe install directory"
                         }
                         PTextField {
                             id: pandaSettingsField3
                             placeholderText: "ISO Path"
                             Layout.fillWidth: true
+                            descriptionText: "Path to the ISO in local drive"
                         }
                     }
 

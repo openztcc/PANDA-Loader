@@ -5,10 +5,17 @@ import QtQuick.Controls.Material
 
 Item {
     id: rField
-    Layout.preferredHeight: 40
+    Layout.preferredHeight: 60
     Layout.fillWidth: true
 
     property string placeholderText: "Text"
+    property var bg: "#627D58"
+    property var fg: "#ffffff"
+    property var placeholderColor: "#E8E8CF"
+    property var errorColor: "#FF0000"
+    property var errorText: "Error"
+    property var descriptionText: "Description"
+    property var error: false
 
     // signals
     signal searchTextChanged(text: string)
@@ -22,49 +29,119 @@ Item {
         }
     }
 
-    TextField {
-        id: textField
-        placeholderText: "Text"
-        placeholderTextColor: "#424940"
+    Column {
+        id: textFieldContainer
+        spacing: 10
         anchors.fill: parent
-        readOnly: false
-        leftPadding: 8
+        anchors.leftMargin: 5
+        anchors.rightMargin: 5
 
-        background: Rectangle {
-            id: textFieldBg
-            color: "#f7fbf2"
-            radius: 0
+        Label {
+            id: titleLabel
+            text: rField.placeholderText
+            color: rField.placeholderColor
+            font.pixelSize: 12
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            visible: textField.text === ""
         }
 
-        Row {
-            id: textContainer
-            spacing: 5
-            anchors.fill: parent
-            anchors.leftMargin: 5
-            anchors.rightMargin: 5
+        TextField {
+            id: textField
+            placeholderText: "Text"
+            placeholderTextColor: rField.placeholderColor
+            height: 35
+            anchors.top: titleLabel.bottom
+            anchors.topMargin: 5
+            anchors.left: parent.left
+            anchors.right: parent.right
+            readOnly: false
+            leftPadding: 8
+            color: rField.fg
 
-        }
+            background: Rectangle {
+                id: textFieldBg
+                color: rField.bg
+                radius: 5
+            }
 
-        onFocusChanged: {
-            if (focus) {
-                textField.placeholderText = ""
-            } else {
-                if (textField.text == "") {
-                    textField.placeholderText = "Text"
+            Row {
+                id: textContainer
+                spacing: 5
+                anchors.fill: parent
+                anchors.leftMargin: 5
+                anchors.rightMargin: 5
+
+            }
+
+            Button {
+                id: clearButton
+                text: ""
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                visible: textField.text !== ""
+                contentItem: SvgIcon {
+                    id: clearIcon
+                    icon: "qrc:/icons/close.svg"
+                    color: rField.placeholderColor
+                    width: 20
+                    height: 20
+                }
+                onClicked: {
+                    rField.activeFilter = ""
+                    textField.text = ""
+                    rField.searchTextChanged(textField.text)
+                    textField.focus = false
+                }
+            }
+
+            onFocusChanged: {
+                if (focus) {
+                    textField.placeholderText = ""
+                } else {
+                    if (textField.text == "") {
+                        textField.placeholderText = "Text"
+                    }
+                }
+            }
+
+            // Key handling
+            Keys.onPressed: function(event) {
+                // Allow Escape key to clear textfield
+                if (event.key === Qt.Key_Escape) {
+                    rField.activeFilter = ""
+                    textField.text = ""
+                    event.accepted = true
+                    // remove focus from search field
+                    textField.focus = false
                 }
             }
         }
 
-        // Key handling
-        Keys.onPressed: function(event) {
-            // Allow Escape key to clear textfield
-            if (event.key === Qt.Key_Escape) {
-                rField.activeFilter = ""
-                textField.text = ""
-                event.accepted = true
-                // remove focus from search field
-                textField.focus = false
-            }
+        Label {
+            id: descriptionLabel
+            text: rField.descriptionText
+            color: rField.placeholderColor
+            font.pixelSize: 10
+            anchors.top: textField.bottom
+            anchors.topMargin: 5
+            anchors.left: parent.left
+            anchors.leftMargin: 10
         }
+
+        Label {
+            id: errorLabel
+            text: rField.errorText
+            color: "red"
+            font.pixelSize: 12
+            visible: false
+            anchors.top: descriptionLabel.bottom
+            anchors.topMargin: 5
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+        }
+
     }
+
 }

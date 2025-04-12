@@ -6,7 +6,7 @@ Item {
     id: section
     property string title: ""
     property color textColor: "white"
-    property real spacing: 10
+    property real spacing: 30
     default property alias content: contentContainer.data
     anchors.fill: parent
 
