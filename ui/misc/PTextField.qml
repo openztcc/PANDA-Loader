@@ -26,7 +26,7 @@ Item {
         anchors.fill: rField
         propagateComposedEvents: true
         onClicked: {
-            searchField.focus = false;
+            textField.focus = false;
         }
     }
 
@@ -81,6 +81,16 @@ Item {
 
             Button {
                 id: clearButton
+                signal clicked()
+                height: textField.height - 2 // to avoid overlap with border    
+                width: 35
+                flat: true
+                background: Rectangle {
+                    id: clearBg
+                    property bool hovered: false
+                    color: clearButton.hovered ? Qt.darker(rField.bg, 1.05) : rField.bg
+                    anchors.fill: parent
+                }
                 text: ""
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: {
@@ -90,19 +100,16 @@ Item {
                         textField.right
                     }
                 }
-                anchors.rightMargin: 10
                 visible: textField.text !== ""
                 contentItem: SvgIcon {
                     id: clearIcon
                     icon: "qrc:/icons/close.svg"
                     color: rField.placeholderColor
-                    width: 20
-                    height: 20
+                    iconWidth: 15
+                    iconHeight: 15
                 }
                 onClicked: {
-                    rField.activeFilter = ""
                     textField.text = ""
-                    rField.searchTextChanged(textField.text)
                     textField.focus = false
                 }
             }
@@ -135,9 +142,9 @@ Item {
                 contentItem: SvgIcon {
                     id: browseFilesIcon
                     icon: "qrc:/icons/folder.svg"
-                    color: rField.placeholderColor
-                    width: 20
-                    height: 20
+                    color: Qt.darker(rField.bg, 2.0)
+                    iconWidth: 20
+                    iconHeight: 20
                 }
                 onClicked: {
                     // Open file dialog here
