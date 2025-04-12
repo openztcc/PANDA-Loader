@@ -66,6 +66,8 @@ Item {
                 id: textFieldBg
                 color: rField.bg
                 radius: 5
+                border.width: 1
+                border.color: rField.error ? rField.errorColor : Qt.darker(rField.bg, 1.2)
             }
 
             Row {
@@ -108,9 +110,27 @@ Item {
             Button {
                 id: browseFilesButton
                 text: "Open"
+                height: textField.height
+                width: 55
+                flat: true
+                background: Rectangle {
+                    id: browseFilesBg
+                    property bool hovered: false
+                    color: browseFilesButton.hovered ? Qt.darker(rField.bg, 1.5) : Qt.darker(rField.bg, 1.2)
+                    anchors.fill: parent
+                    topRightRadius: 5
+                    bottomRightRadius: 5
+
+                    Rectangle {
+                        height: 2
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        color: Qt.darker(rField.bg, 1.2)
+                        anchors.rightMargin: 3
+                    }
+                }
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: textField.right
-                anchors.rightMargin: 10
                 visible: textField.isFileBrowser
                 contentItem: SvgIcon {
                     id: browseFilesIcon
