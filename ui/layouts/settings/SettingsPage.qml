@@ -19,6 +19,7 @@ Pane {
         Layout.fillHeight: true // remaining height
         Layout.preferredWidth: 200
         anchors.fill: parent
+        spacing: 0
 
         SettingsButton {
             text: "PANDA Settings"
