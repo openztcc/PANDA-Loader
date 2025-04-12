@@ -4,6 +4,7 @@ import PandaUI 1.0
 
 Button {
     id: control
+    property var color: "#2c6431"
     width: parent ? parent.width : 200
     height: 35
     flat: true
@@ -22,7 +23,14 @@ Button {
         property bool hovered: false
         anchors.fill: parent
         radius: 0
-        color: control.hovered ? "#66bb6a" : "#4caf50"
+        color: control.hovered ? Qt.darker(control.color, 1.2) : control.color
+
+        Rectangle {
+            height: 1
+            anchors.bottom: parent.bottom
+            width: parent.width
+            color: Qt.darker(control.color, 1.2)
+        }
     }
 
     contentItem: Item {
@@ -41,6 +49,8 @@ Button {
 
         Text {
             text: control.text
+            leftPadding: 40
+            anchors.verticalCenter: parent.verticalCenter
             color: "white"
             font.bold: true
             font.pixelSize: 12

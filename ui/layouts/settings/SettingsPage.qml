@@ -7,7 +7,7 @@ import PandaUI 1.0
 
 Pane {
     id: mainContent
-    property var navRail: null
+    property var mainColor: "#2c6431"
     height: parent.height
     Material.background: "#9daa9e"
     anchors.fill: parent
@@ -24,7 +24,7 @@ Pane {
             Layout.fillHeight: true
             Layout.preferredWidth: 200
 
-            color: "#2c6431"
+            color: mainContent.mainColor
 
             Column {
                 anchors.fill: parent
@@ -33,36 +33,43 @@ Pane {
                 SettingsButton {
                     text: "PANDA Settings"
                     source: "qrc:/icons/paw.svg"
+                    color: mainContent.mainColor
                 }
 
                 SettingsButton {
                     text: "Video"
                     source: "qrc:/icons/tv.svg"
+                    color: mainContent.mainColor
                 }
 
                 SettingsButton {
                     text: "Sound"
                     source: "qrc:/icons/sound.svg"
+                    color: mainContent.mainColor
                 }
 
                 SettingsButton {
                     text: "Gameplay"
                     source: "qrc:/icons/keyboard.svg"
+                    color: mainContent.mainColor
                 }
 
                 SettingsButton {
                     text: "Scenarios"
                     source: "qrc:/icons/article.svg"
+                    color: mainContent.mainColor
                 }
 
                 SettingsButton {
                     text: "Resource Paths"
                     source: "qrc:/icons/folder.svg"
+                    color: mainContent.mainColor
                 }
 
                 SettingsButton {
                     text: "Advanced"
                     source: "qrc:/icons/plumbing.svg"
+                    color: mainContent.mainColor
                 }
             }
             Rectangle {
