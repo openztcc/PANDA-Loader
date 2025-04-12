@@ -112,10 +112,19 @@ Pane {
                     // Forms and fields
                     SettingsPane {
                         id: pandaSettingsPane
-                        TextField {
+                        PTextField {
                             id: pandaSettingsField
-                            placeholderText: "PANDA Settings"
-                            color: "#ffffff"
+                            placeholderText: "PANDA Home Path"
+                            Layout.fillWidth: true
+                        }
+                        PTextField {
+                            id: pandaSettingsField2
+                            placeholderText: "Zoo Game Path"
+                            Layout.fillWidth: true
+                        }
+                        PTextField {
+                            id: pandaSettingsField3
+                            placeholderText: "ISO Path"
                             Layout.fillWidth: true
                         }
                     }
@@ -126,10 +135,11 @@ Pane {
                     id: videoSettings
                     SettingsPane {
                         id: videoSettingsPane
-                        TextField {
+                        // Group of settings for drawfps, drawfpsx, drawfpsy
+
+                        PTextField {
                             id: videoSettingsField
                             placeholderText: "Video Settings"
-                            color: settingsPane.color
                             Layout.fillWidth: true
                         }
                     }
@@ -139,10 +149,9 @@ Pane {
                     id: soundSettings
                     SettingsPane {
                         id: soundSettingsPane
-                        TextField {
+                        PTextField {
                             id: soundSettingsField
                             placeholderText: "Sound Settings"
-                            color: settingsPane.color
                             Layout.fillWidth: true
                         }
                     }
@@ -152,10 +161,9 @@ Pane {
                     id: gameplaySettings
                     SettingsPane {
                         id: gameplaySettingsPane
-                        TextField {
+                        PTextField {
                             id: gameplaySettingsField
                             placeholderText: "Gameplay Settings"
-                            color: settingsPane.color
                             Layout.fillWidth: true
                         }
                     }
@@ -165,10 +173,14 @@ Pane {
                     id: scenariosSettings
                     SettingsPane {
                         id: scenariosSettingsPane
-                        TextField {
+                        PTextField {
                             id: scenariosSettingsField
-                            placeholderText: "Scenarios Settings"
-                            color: settingsPane.color
+                            placeholderText: "Update Rate"
+                            Layout.fillWidth: true
+                        }
+                        PTextField {
+                            id: scenariosSettingsField2
+                            placeholderText: "Draw Rate"
                             Layout.fillWidth: true
                         }
                     }
@@ -178,10 +190,10 @@ Pane {
                     id: resourcePathsSettings
                     SettingsPane {
                         id: resourcePathsSettingsPane
+                        // custom component for resource paths
                         TextField {
                             id: resourcePathsSettingsField
                             placeholderText: "Resource Paths Settings"
-                            color: settingsPane.color
                             Layout.fillWidth: true
                         }
                     }
@@ -194,7 +206,6 @@ Pane {
                         TextField {
                             id: advancedSettingsField
                             placeholderText: "Advanced Settings"
-                            color: settingsPane.color
                             Layout.fillWidth: true
                         }
                     }
