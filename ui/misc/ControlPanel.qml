@@ -16,9 +16,14 @@ Item {
     Column {
         id: controlColumn
         anchors.fill: parent
+        spacing: 10
 
         Row {
             id: switchRow
+            width: parent.width
+            height: 30
+            visible: controlGroup.showSwitch || controlGroup.label !== ""
+            spacing: 5
 
             CheckBox {
                 id: controlSwitch
@@ -31,6 +36,7 @@ Item {
                 }
                 visible: controlGroup.showSwitch
                 enabled: controlGroup.enabled
+                anchors.left: parent.left
             }
         
             Label {
@@ -38,7 +44,13 @@ Item {
                 text: controlGroup.label
                 font.pixelSize: 12
                 color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
-                anchors.left: parent.left
+                anchors.left: {
+                    if (controlGroup.showSwitch) {
+                        return controlSwitch.right
+                    } else {
+                        return parent.left
+                    }
+                }
                 anchors.leftMargin: 10
                 visible: {
                     if (controlGroup.label !== "") {
@@ -52,7 +64,17 @@ Item {
 
         Pane {
             id: controlPanel
-            anchors.fill: parent
+            anchors.top: {
+                if (switchRow.visible) {
+                    return switchRow.bottom
+                } else {
+                    return parent.top
+                }
+            }
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
             background: Rectangle {
                 id: bg
@@ -61,7 +83,6 @@ Item {
                 radius: 5
                 border.width: 1
                 border.color: Qt.darker(color, 1.2)
-                border.radius: 5
                 opacity: 0.9
                 visible: controlGroup.hasFrame
             }

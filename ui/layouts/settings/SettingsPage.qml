@@ -121,25 +121,31 @@ Pane {
                     SettingsPane {
                         id: pandaSettingsPane
                         PTextField {
-                            id: pandaSettingsField
+                            id: homePath
                             title: "PANDA Home Path"
                             Layout.fillWidth: true
                             descriptionText: "Path to the PANDA home directory"
                             isFileBrowser: true
                         }
                         PTextField {
-                            id: pandaSettingsField2
+                            id: zooPath
                             title: "Zoo Game Path"
                             Layout.fillWidth: true
                             descriptionText: "Path to the zoo.exe install directory"
                             isFileBrowser: true
                         }
-                        PTextField {
-                            id: pandaSettingsField3
-                            title: "ISO Path"
-                            Layout.fillWidth: true
-                            descriptionText: "Path to the ISO in local drive"
-                            isFileBrowser: true
+                        ControlPanel {
+                            id: isoControls
+                            label: "Load game from ISO"
+                            showSwitch: true
+                            PTextField {
+                                id: isoPath
+                                title: "ISO Path"
+                                Layout.fillWidth: true
+                                descriptionText: "Path to the ISO in local drive"
+                                isFileBrowser: true
+                            }
+
                         }
                     }
 
