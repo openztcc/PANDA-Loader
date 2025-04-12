@@ -56,6 +56,13 @@ Item {
             clearBg.hovered = false
         }
         z: 1
+        visible: {
+            if (clear.textField.text.length > 0) {
+                return true
+            } else {
+                return false
+            }
+        }
     }
 }
 
