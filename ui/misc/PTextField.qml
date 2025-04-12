@@ -16,6 +16,7 @@ Item {
     property var errorText: "Error"
     property var descriptionText: "Description"
     property var error: false
+    property alias isFileBrowser: textField.isFileBrowser
 
     // signals
     signal searchTextChanged(text: string)
@@ -59,6 +60,8 @@ Item {
             leftPadding: 8
             color: rField.fg
 
+            property var isFileBrowser: false
+
             background: Rectangle {
                 id: textFieldBg
                 color: rField.bg
@@ -78,7 +81,13 @@ Item {
                 id: clearButton
                 text: ""
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
+                anchors.right: {
+                    if (textField.isFileBrowser) {
+                        browseFilesButton.left
+                    } else {
+                        textField.right
+                    }
+                }
                 anchors.rightMargin: 10
                 visible: textField.text !== ""
                 contentItem: SvgIcon {
@@ -93,6 +102,27 @@ Item {
                     textField.text = ""
                     rField.searchTextChanged(textField.text)
                     textField.focus = false
+                }
+            }
+
+            Button {
+                id: browseFilesButton
+                text: "Open"
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: textField.right
+                anchors.rightMargin: 10
+                visible: textField.isFileBrowser
+                contentItem: SvgIcon {
+                    id: browseFilesIcon
+                    icon: "qrc:/icons/folder.svg"
+                    color: rField.placeholderColor
+                    width: 20
+                    height: 20
+                }
+                onClicked: {
+                    // Open file dialog here
+                    console.log("Open file dialog")
+                    // Implement file browsing logic here
                 }
             }
 

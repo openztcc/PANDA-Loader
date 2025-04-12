@@ -125,18 +125,21 @@ Pane {
                             placeholderText: "PANDA Home Path"
                             Layout.fillWidth: true
                             descriptionText: "Path to the PANDA home directory"
+                            isFileBrowser: true
                         }
                         PTextField {
                             id: pandaSettingsField2
                             placeholderText: "Zoo Game Path"
                             Layout.fillWidth: true
                             descriptionText: "Path to the zoo.exe install directory"
+                            isFileBrowser: true
                         }
                         PTextField {
                             id: pandaSettingsField3
                             placeholderText: "ISO Path"
                             Layout.fillWidth: true
                             descriptionText: "Path to the ISO in local drive"
+                            isFileBrowser: true
                         }
                     }
 
