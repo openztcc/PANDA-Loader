@@ -91,6 +91,22 @@ Item {
                 radius: 5
                 border.width: 1
                 border.color: rField.error ? rField.errorColor : Qt.darker(rField.bg, 1.2)
+
+                // shadow effect
+                Rectangle {
+                    anchors.top: parent.top
+                    color: Qt.darker(rField.bg, 1.18)
+                    height: 4
+                    width: {
+                        if (textField.isFileBrowser) {
+                            parent.width - browseFilesButton.width
+                        } else {
+                            parent.width
+                        }
+                    }
+                    topLeftRadius: 5
+                    topRightRadius: 5
+                }
             }
 
             Row {
@@ -104,7 +120,8 @@ Item {
 
             Button {
                 id: clearButton
-                height: textField.height - 2 // to avoid overlap with border    
+                height: textField.height - 7 // to avoid overlap with border    
+                z: -1
                 width: 35
                 flat: true
                 background: Rectangle {
@@ -140,6 +157,7 @@ Item {
             Button {
                 id: browseFilesButton
                 text: "Open"
+                z: 1
                 height: textField.height
                 width: 55
                 flat: true
