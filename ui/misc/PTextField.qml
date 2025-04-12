@@ -8,7 +8,7 @@ Item {
     Layout.preferredHeight: 60
     Layout.fillWidth: true
 
-    property string placeholderText: "Text"
+    property alias title: titleLabel.text
     property var bg: "#627D58"
     property var fg: "#ffffff"
     property var placeholderColor: "#E8E8CF"
@@ -39,18 +39,14 @@ Item {
 
         Label {
             id: titleLabel
-            text: rField.placeholderText
             color: rField.placeholderColor
             font.pixelSize: 12
             anchors.left: parent.left
             anchors.leftMargin: 10
-            visible: textField.text === ""
         }
 
         TextField {
             id: textField
-            placeholderText: "Text"
-            placeholderTextColor: rField.placeholderColor
             height: 35
             anchors.top: titleLabel.bottom
             anchors.topMargin: 5
@@ -81,7 +77,6 @@ Item {
 
             Button {
                 id: clearButton
-                signal clicked()
                 height: textField.height - 2 // to avoid overlap with border    
                 width: 35
                 flat: true
@@ -109,8 +104,10 @@ Item {
                     iconHeight: 15
                 }
                 onClicked: {
+                    console.log("Clear clicked")
                     textField.text = ""
                     textField.focus = false
+                    clearButton.visible = false
                 }
             }
 
@@ -154,20 +151,19 @@ Item {
             }
 
             onFocusChanged: {
-                if (focus) {
-                    textField.placeholderText = ""
-                } else {
-                    if (textField.text == "") {
-                        textField.placeholderText = "Text"
-                    }
-                }
+                // if (focus) {
+                //     textField.placeholderText = ""
+                // } else {
+                //     if (textField.text == "") {
+                //         textField.placeholderText = "Text"
+                //     }
+                // }
             }
 
             // Key handling
             Keys.onPressed: function(event) {
                 // Allow Escape key to clear textfield
                 if (event.key === Qt.Key_Escape) {
-                    rField.activeFilter = ""
                     textField.text = ""
                     event.accepted = true
                     // remove focus from search field

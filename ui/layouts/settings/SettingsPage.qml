@@ -122,21 +122,21 @@ Pane {
                         id: pandaSettingsPane
                         PTextField {
                             id: pandaSettingsField
-                            placeholderText: "PANDA Home Path"
+                            title: "PANDA Home Path"
                             Layout.fillWidth: true
                             descriptionText: "Path to the PANDA home directory"
                             isFileBrowser: true
                         }
                         PTextField {
                             id: pandaSettingsField2
-                            placeholderText: "Zoo Game Path"
+                            title: "Zoo Game Path"
                             Layout.fillWidth: true
                             descriptionText: "Path to the zoo.exe install directory"
                             isFileBrowser: true
                         }
                         PTextField {
                             id: pandaSettingsField3
-                            placeholderText: "ISO Path"
+                            title: "ISO Path"
                             Layout.fillWidth: true
                             descriptionText: "Path to the ISO in local drive"
                             isFileBrowser: true
@@ -153,7 +153,7 @@ Pane {
 
                         PTextField {
                             id: videoSettingsField
-                            placeholderText: "Video Settings"
+                            title: "Video Settings"
                             Layout.fillWidth: true
                         }
                     }
@@ -165,7 +165,7 @@ Pane {
                         id: soundSettingsPane
                         PTextField {
                             id: soundSettingsField
-                            placeholderText: "Sound Settings"
+                            title: "Sound Settings"
                             Layout.fillWidth: true
                         }
                     }
@@ -177,7 +177,7 @@ Pane {
                         id: gameplaySettingsPane
                         PTextField {
                             id: gameplaySettingsField
-                            placeholderText: "Gameplay Settings"
+                            title: "Gameplay Settings"
                             Layout.fillWidth: true
                         }
                     }
@@ -189,12 +189,12 @@ Pane {
                         id: scenariosSettingsPane
                         PTextField {
                             id: scenariosSettingsField
-                            placeholderText: "Update Rate"
+                            title: "Update Rate"
                             Layout.fillWidth: true
                         }
                         PTextField {
                             id: scenariosSettingsField2
-                            placeholderText: "Draw Rate"
+                            title: "Draw Rate"
                             Layout.fillWidth: true
                         }
                     }
@@ -205,9 +205,9 @@ Pane {
                     SettingsPane {
                         id: resourcePathsSettingsPane
                         // custom component for resource paths
-                        TextField {
+                        PTextField {
                             id: resourcePathsSettingsField
-                            placeholderText: "Resource Paths Settings"
+                            title: "Resource Paths Settings"
                             Layout.fillWidth: true
                         }
                     }
@@ -217,9 +217,9 @@ Pane {
                     id: advancedSettings
                     SettingsPane {
                         id: advancedSettingsPane
-                        TextField {
+                        PTextField {
                             id: advancedSettingsField
-                            placeholderText: "Advanced Settings"
+                            title: "Advanced Settings"
                             Layout.fillWidth: true
                         }
                     }
