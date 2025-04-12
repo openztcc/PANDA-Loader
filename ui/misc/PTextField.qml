@@ -95,7 +95,7 @@ Item {
                         textField.right
                     }
                 }
-                visible: textField.text !== ""
+                visible: textField.text.length > 0
                 contentItem: SvgIcon {
                     id: clearIcon
                     icon: "qrc:/icons/close.svg"
@@ -107,7 +107,6 @@ Item {
                     console.log("Clear clicked")
                     textField.text = ""
                     textField.focus = false
-                    clearButton.visible = false
                 }
             }
 
