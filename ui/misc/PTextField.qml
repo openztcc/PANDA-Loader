@@ -129,54 +129,18 @@ Item {
                 z: 1
             }
 
-            Button {
+            BrowseButton {
                 id: browseFilesButton
-                text: "Open"
-                z: 1
-                height: textField.height
-                width: 55
-                flat: true
-                background: Rectangle {
-                    id: browseFilesBg
-                    property bool hovered: false
-                    color: browseFilesButton.hovered ? Qt.darker(rField.bg, 1.5) : Qt.darker(rField.bg, 1.2)
-                    anchors.fill: parent
-                    topRightRadius: 5
-                    bottomRightRadius: 5
-
-                    Rectangle {
-                        height: 2
-                        anchors.bottom: parent.bottom
-                        width: parent.width
-                        color: Qt.darker(rField.bg, 1.2)
-                        anchors.rightMargin: 3
-                    }
-                }
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: textField.right
-                visible: textField.isFileBrowser
-                contentItem: SvgIcon {
-                    id: browseFilesIcon
-                    icon: "qrc:/icons/folder.svg"
-                    color: rField.placeholderColor
-                    iconWidth: 20
-                    iconHeight: 20
-                }
-                onClicked: {
-                    // Open file dialog here
-                    // TODO: update dialog to support multiple files
-                    console.log("Open file dialog")
-
-                    var dialog = fileDialogComponent.createObject(rField);
-                    // set properties
-                    dialog.fileMode = rField.mode;
-                    dialog.nameFilters = rField.filters;
-                    if (dialog) {
-                        dialog.open();
-                    } else {
-                        console.error("Failed to create FileDialog");
-                    }
-                }
+                anchors.rightMargin: 0
+                height: textField.height - 7
+                textField: textField
+                fg: rField.placeholderColor 
+                bg: rField.bg
+                fileDialog: fileDialogComponent
+                component: rField
+                z: 1
             }
 
             onFocusChanged: {

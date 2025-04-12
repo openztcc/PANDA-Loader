@@ -78,6 +78,7 @@ qt_add_qml_module(appPandaLdr
         ui/misc/SettingsButton.qml
         ui/misc/PTextField.qml
         ui/misc/ClearButton.qml
+        ui/misc/BrowseButton.qml
         # searchbar
         ui/searchbar/SearchBar.qml
         ui/searchbar/FilterTag.qml
