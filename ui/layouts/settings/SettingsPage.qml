@@ -114,13 +114,13 @@ Pane {
                 }
 
                 SettingsButton {
-                    id: advancedSettingsButton
-                    text: "Advanced"
+                    id: debugSettingsButton
+                    text: "Debug Settings"
                     source: "qrc:/icons/plumbing.svg"
                     color: mainContent.mainColor
                     fg: mainContent.mainTextColor
                     onClicked: {
-                        replaceSettingsPane(advancedSettings, settingsStack, advancedSettingsButton)
+                        replaceSettingsPane(debugSettings, settingsStack, debugSettingsButton)
                     }
                 }
             }
@@ -534,6 +534,59 @@ Pane {
                             isFileBrowser: true
                             descriptionText: "Path to the last zoo played"
                         }
+                        // resource paths (TODO)
+                        ControlPanel {
+                            id: advancedResControls
+                            label: "Advanced Resources"
+                            showSwitch: true
+                            Layout.fillWidth: true
+                            enabled: false
+                            PTextField { // aimgr
+                                id: aimgrPath
+                                title: "aimgr"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // worldmgr
+                                id: worldmgrPath
+                                title: "worldmgr"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // gamemgr
+                                id: gamemgrPath
+                                title: "gamemgr"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // scenariomgr
+                                id: scenarioMgrPath
+                                title: "scenarioMgr"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // scriptmgr
+                                id: scriptMgrPath
+                                title: "scriptMgr"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // soundmgr
+                                id: soundMgrPath
+                                title: "soundMgr"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // terrainmgr
+                                id: terrainMgrPath
+                                title: "terrainMgr"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // res 
+                                id: resPath
+                                title: "res"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // lang 
+                                id: langPath
+                                title: "lang"
+                                Layout.fillWidth: true
+                            }
+                        }
                     }
                 }
 
@@ -554,53 +607,53 @@ Pane {
                                 id: showAIInfoCheckBox
                                 text: "Show AI Info"
                             }
-                            PTextField { // ShowName
-                                id: showNameField
-                                title: "Show Names"
+                            PCheckBox { // ShowName
+                                id: showNameCheckBox
+                                text: "Show Names"
                             }
-                            PTextField { // ShowPosition
-                                id: showPositionField
-                                title: "Show Position"
+                            PCheckBox { // ShowPosition
+                                id: showPositionCheckBox
+                                text: "Show Position"
                             }
-                            PTextField { // ShowAnimalAIInfo
-                                id: showAnimalAIInfoField
-                                title: "Show Animal AI Info"
+                            PCheckBox { // ShowAnimalAIInfo
+                                id: showAnimalAIInfoCheckBox
+                                text: "Show Animal AI Info"
                             }
-                            PTextField { // ShowGuesAIInfo
-                                id: showGuestAIInfoField
-                                title: "Show Guest AI Info"
+                            PCheckBox { // ShowGuesAIInfo
+                                id: showGuestAIInfoCheckBox
+                                text: "Show Guest AI Info"
                             }
-                            PTextField { // ShowStaffAIInfo
-                                id: showStaffAIInfoField
-                                title: "Show Staff AI Info"
+                            PCheckBox { // ShowStaffAIInfo
+                                id: showStaffAIInfoCheckBox
+                                text: "Show Staff AI Info"
                             }
-                            PTextField { // ShowStatusVars
-                                id: showStatusVarsField
-                                title: "Show Status Variables"
+                            PCheckBox { // ShowStatusVars
+                                id: showStatusVarsCheckBox
+                                text: "Show Status Variables"
                             }
-                            PTextField { // ShowFunctionCall
-                                id: showFunctionCallField
-                                title: "Show Function Calls"
+                            PCheckBox { // ShowFunctionCall
+                                id: showFunctionCallCheckBox
+                                text: "Show Function Calls"
                             }
-                            PTextField { // ShowEvents
-                                id: showEventsField
-                                title: "Show Events"
+                            PCheckBox { // ShowEvents
+                                id: showEventsCheckBox
+                                text: "Show Events"
                             }
-                            PTextField { // ShowBuildingAIInfo
-                                id: showBuildingAIInfoField
-                                title: "Show Building AI Info"
+                            PCheckBox { // ShowBuildingAIInfo
+                                id: showBuildingAIInfoCheckBox
+                                text: "Show Building AI Info"
                             }
-                            PTextField { // ShowSelected 
-                                id: showSelectedField
-                                title: "Show Selected"
+                            PCheckBox { // ShowSelected 
+                                id: showSelectedCheckBox
+                                text: "Show Selected"
                             }
-                            PTextField { // ShowFrame 
-                                id: showFrameField
-                                title: "Show Frame"
+                            PCheckBox { // ShowFrame 
+                                id: showFrameCheckBox
+                                text: "Show Frame"
                             }
-                            PTextField { // ShowGoal 
-                                id: showGoalField
-                                title: "Show Goal"
+                            PCheckBox { // ShowGoal 
+                                id: showGoalCheckBox
+                                text: "Show Goal"
                             }
                         }
                         ControlPanel {
