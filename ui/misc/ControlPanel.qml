@@ -31,7 +31,7 @@ Item {
             PCheckBox {
                 id: controlSwitch
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                height: parent.height
+                height: implicitHeight
                 onCheckedChanged: {
                     controlGroup.enabled = controlSwitch.checked
                     if (controlGroup.data) {
@@ -43,20 +43,12 @@ Item {
 
             Item {
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                height: parent.height
+                height: implicitHeight
                 Text {
                     id: titleLabel
                     height: parent.height
                     anchors.left: parent.left
                     anchors.leftMargin: 4
-                    anchors.bottomMargin: {
-                        if (controlGroup.showSwitch) {
-                            return 2
-                        } else {
-                            return 15
-                        }
-                    }
-                    anchors.bottom: parent.bottom
                     text: controlGroup.label
                     font.pixelSize: 12
                     color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
