@@ -458,6 +458,66 @@ Pane {
                                 id: cnCheckBox
                                 text: "Completed Southeast Asian Zoo (Intermediate)"
                             }
+                            PCheckBox { // da - Island Zoo (Advanced)
+                                id: daCheckBox
+                                text: "Completed Island Zoo (Advanced)"
+                            }
+                            PCheckBox { // db - African Savannah Zoo (Advanced)
+                                id: dbCheckBox
+                                text: "Completed African Savannah Zoo (Advanced)"
+                            }
+                            PCheckBox { // dc - Mountain Zoo (Advanced)
+                                id: dcCheckBox
+                                text: "Completed Mountain Zoo (Advanced)"
+                            }
+                            PCheckBox { // dd - Tropical Rainforest Zoo (Advanced)
+                                id: ddCheckBox
+                                text: "Completed Tropical Rainforest Zoo (Advanced)"
+                            }
+                            PCheckBox { // de - Dinosaur Digs: Dinosaur Island Research Lab (Advanced)
+                                id: deCheckBox
+                                text: "Completed Dinosaur Digs: Dinosaur Island Research Lab (Advanced)"
+                            }
+                            PCheckBox { // df - Marine Mania: Marine Conservation (Advanced)
+                                id: dfCheckBox
+                                text: "Completed Marine Mania: Marine Conservation (Advanced)"
+                            }
+                            PCheckBox { // dg - Marine Mania: Save the Zoo (Advanced)
+                                id: dgCheckBox
+                                text: "Completed Marine Mania: Save the Zoo (Advanced)"
+                            }
+                            PCheckBox { // dh - Conservation Zoo (Advanced)
+                                id: dhCheckBox
+                                text: "Completed Conservation Zoo (Advanced)"
+                            }
+                            PCheckBox { // ea - Paradise Island (Very Advanced)
+                                id: eaCheckBox
+                                text: "Completed Paradise Island (Very Advanced)"
+                            }
+                            PCheckBox { // fa - Breeding Giant Pandas (Very Advanced)
+                                id: faCheckBox
+                                text: "Completed Breeding Giant Pandas (Very Advanced)"
+                            }
+                            PCheckBox { // fb - Dinosaur Digs: Return to Dinosaur Island Research Lab (Very Advanced)
+                                id: fbCheckBox
+                                text: "Completed Dinosaur Digs: Return to Dinosaur Island Research Lab (Very Advanced)"
+                            }
+                            PCheckBox { // ga - Dinosaur Digs: Breeding the T.rex (Very Advanced)
+                                id: gaCheckBox
+                                text: "Completed Dinosaur Digs: Breeding the T.rex (Very Advanced)"
+                            }
+                            PCheckBox { // gb - Marine Mania: Giant Marine Park (Very Advanced)
+                                id: gbCheckBox
+                                text: "Completed Marine Mania: Giant Marine Park (Very Advanced)"
+                            }
+                            PCheckBox { // gc - Marine Mania: Super Zoo (Very Advanced)
+                                id: gcCheckBox
+                                text: "Completed Marine Mania: Super Zoo (Very Advanced)"
+                            }
+                            PCheckBox { // gd - Marine Mania: Ultimate Zoo (Very Advanced)
+                                id: gdCheckBox
+                                text: "Completed Marine Mania: Ultimate Zoo (Very Advanced)"
+                            }
                         }
                     }
                 }
