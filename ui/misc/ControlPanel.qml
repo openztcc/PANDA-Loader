@@ -26,6 +26,7 @@ Item {
             visible: controlGroup.showSwitch || controlGroup.label !== ""
             spacing: 1
             Layout.bottomMargin: 0
+            height: implicitHeight
 
             PCheckBox {
                 id: controlSwitch
@@ -45,22 +46,17 @@ Item {
                 height: parent.height
                 Text {
                     id: titleLabel
+                    height: parent.height
                     anchors.left: parent.left
                     anchors.leftMargin: 4
                     anchors.bottomMargin: {
                         if (controlGroup.showSwitch) {
-                            return 6
+                            return 2
                         } else {
-                            return 0
+                            return 15
                         }
                     }
-                    anchors.bottom: {
-                        if (controlGroup.showSwitch) {
-                            return 0
-                        } else {
-                            return parent.bottom
-                        }
-                    }
+                    anchors.bottom: parent.bottom
                     text: controlGroup.label
                     font.pixelSize: 12
                     color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
