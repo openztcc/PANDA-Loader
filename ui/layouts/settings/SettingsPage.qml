@@ -186,6 +186,7 @@ Pane {
                             showSwitch: true
                             Layout.preferredHeight: 120
                             Layout.fillWidth: true
+                            enabled: false
                             
                             PTextField {
                                 id: isoPath
@@ -206,10 +207,26 @@ Pane {
                         id: videoSettingsPane
                         // Group of settings for drawfps, drawfpsx, drawfpsy
 
-                        PTextField {
-                            id: videoSettingsField
-                            title: "Video Settings"
+                        ControlPanel { // drawfps
+                            id: drawFPSControl
+                            label: "Display FPS Counter"
+                            showSwitch: true
+                            Layout.preferredHeight: implicitHeight
                             Layout.fillWidth: true
+                            enabled: false
+
+                            PTextField { // drawfpsx
+                                id: drawFPSX
+                                title: "X Position"
+                                Layout.fillWidth: true
+                                descriptionText: "X position of the FPS counter"
+                            }
+                            PTextField { // drawfpsy
+                                id: drawFPSY
+                                title: "Y Position"
+                                Layout.fillWidth: true
+                                descriptionText: "Y position of the FPS counter"
+                            }
                         }
                     }
                 }
@@ -230,10 +247,30 @@ Pane {
                     id: gameplaySettings
                     SettingsPane {
                         id: gameplaySettingsPane
-                        PTextField {
-                            id: gameplaySettingsField
-                            title: "Gameplay Settings"
+                        PTextField { // MSStartingCash
+                            id: startingCashField
+                            title: "Starting Cash"
                             Layout.fillWidth: true
+                            descriptionText: "How much cash to start with in freeform mode"
+                        }
+                        PTextField { // MSCashIncrement
+                            id: cashIncrementField
+                            title: "Cash Increment"
+                            Layout.fillWidth: true
+                            descriptionText: "How much cash to increment by in freeform mode"
+                        }
+
+                        PTextField { // MSMinCash
+                            id: minCashField
+                            title: "Minimum Cash"
+                            Layout.fillWidth: true
+                            descriptionText: "Minimum cash in freeform mode"
+                        }
+                        PTextField { // MSMaxCash
+                            id: maxCashField
+                            title: "Maximum Cash"
+                            Layout.fillWidth: true
+                            descriptionText: "Maximum cash in freeform mode"
                         }
                     }
                 }
@@ -242,15 +279,33 @@ Pane {
                     id: scenariosSettings
                     SettingsPane {
                         id: scenariosSettingsPane
-                        PTextField {
-                            id: scenariosSettingsField
-                            title: "Update Rate"
-                            Layout.fillWidth: true
+                        PCheckBox { // startedFirstTutorial
+                            id: zooTycoonCheckBox
+                            text: "Started Zoo Tycoon Tutorial"
                         }
-                        PTextField {
-                            id: scenariosSettingsField2
-                            title: "Draw Rate"
+                        PCheckBox { // startedDinoTutorial
+                            id: dinoDigsCheckBox
+                            text: "Started Dino Digs Tutorial"                            
+                        }
+                        PCheckBox { // startedAquaTutorial
+                            id: marineManiaCheckBox
+                            text: "Started Marine Mania Tutorial"
+                        }
+                        ControlPanel {
+                            id: scenarioControls
+                            label: "Completed Scenarios"
+                            Layout.preferredHeight: implicitHeight
                             Layout.fillWidth: true
+                            enabled: true
+
+                            PCheckBox { // tutorial
+                                id: tutorialZooCheckBox
+                                text: "Completed Tutorial Zoo"
+                            }
+                            PCheckBox {  // ba
+                                id: basicZooCheckBox
+                                text: "Completed Basic Zoo"
+                            }
                         }
                     }
                 }
@@ -261,9 +316,11 @@ Pane {
                         id: resourcePathsSettingsPane
                         // custom component for resource paths
                         PTextField {
-                            id: resourcePathsSettingsField
-                            title: "Resource Paths Settings"
+                            id: lastZooPlayedPath
+                            title: "Last zoo played"
                             Layout.fillWidth: true
+                            isFileBrowser: true
+                            descriptionText: "Path to the last zoo played"
                         }
                     }
                 }

@@ -8,6 +8,7 @@ Item {
     width: 30
     property alias checked: pCheckBox.checked
     property alias implicitHeight: pCheckBox.implicitHeight
+    property alias text: pCheckBox.text
     property var bg: "#627D58"
 
     CheckBox {
@@ -57,7 +58,7 @@ Item {
             // }
         }
 
-        contentItem: {}
+        // contentItem: {}
     }
     
     // MouseArea {
