@@ -25,6 +25,7 @@ Item {
             Layout.preferredHeight: implicitHeight
             visible: controlGroup.showSwitch || controlGroup.label !== ""
             spacing: 5
+            Layout.bottomMargin: 5
 
             CheckBox {
                 id: controlSwitch
@@ -53,7 +54,6 @@ Item {
                         return parent.left
                     }
                 }
-                anchors.leftMargin: 10
                 visible: {
                     if (controlGroup.label !== "") {
                         return true
