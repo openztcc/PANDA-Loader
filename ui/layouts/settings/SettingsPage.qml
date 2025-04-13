@@ -381,6 +381,109 @@ Pane {
                             Layout.fillWidth: true
                             descriptionText: "Maximum cash in freeform mode"
                         }
+                        ControlPanel { // mouse controls 
+                            id: controlsSettings
+                            label: "Controls"
+                            showSwitch: true
+                            Layout.fillWidth: true
+                            enabled: false
+
+                            PTextField { // drag 
+                                id: dragField
+                                title: "Drag"
+                                Layout.fillWidth: true
+                            }
+
+                            PTextField { // Click
+                                id: clickField
+                                title: "Click"
+                                Layout.fillWidth: true
+                            }
+
+                            PTextField { // normal
+                                id: normalField
+                                title: "Normal"
+                                Layout.fillWidth: true
+                            }
+
+                            PTextField { // level 
+                                id: levelField
+                                title: "Level"
+                                Layout.fillWidth: true
+                            }
+
+                            PTextField { // mouseScrollThreshold
+                                id: mouseScrollThresholdField
+                                title: "Mouse Scroll Threshold"
+                                Layout.fillWidth: true
+                                descriptionText: "Threshold for mouse scroll"
+                            }
+
+                            PTextField { // mouseScrollDelay
+                                id: mouseScrollDelayField
+                                title: "Mouse Scroll Delay"
+                                Layout.fillWidth: true
+                                descriptionText: "Delay for mouse scroll"
+                            }
+
+                            PTextField { // mouseScrollX
+                                id: mouseScrollXField
+                                title: "Mouse Scroll X"
+                                Layout.fillWidth: true
+                                descriptionText: "X rate of mouse scroll"
+                            }
+
+                            PTextField { // mouseScrollY
+                                id: mouseScrollYField
+                                title: "Mouse Scroll Y"
+                                Layout.fillWidth: true
+                                descriptionText: "Y rate of mouse scroll"
+                            }
+                        }
+
+                        ControlPanel { // key controls 
+                            id: keyControlsSettings
+                            label: "Key Controls"
+                            showSwitch: true
+                            Layout.fillWidth: true
+                            enabled: false
+
+                            PTextField { // keyScrollX
+                                id: keyScrollXField
+                                title: "Key Scroll X"
+                                Layout.fillWidth: true
+                                descriptionText: "X rate of x-directional panning"
+                            }
+
+                            PTextField { // keyScrollY
+                                id: keyScrollYField
+                                title: "Key Scroll Y"
+                                Layout.fillWidth: true
+                                descriptionText: "Y rate of y-directional panning"
+                            }
+                        }
+
+                        ControlPanel { // map size
+                            id: mapSizeControls
+                            label: "Map Size"
+                            showSwitch: true
+                            Layout.fillWidth: true
+                            enabled: false
+
+                            PTextField { // mapX
+                                id: mapXField
+                                title: "Map X"
+                                Layout.fillWidth: true
+                                descriptionText: "X size of the map (note: this does not change the map size)"
+                            }
+
+                            PTextField { // mapY
+                                id: mapYField
+                                title: "Map Y"
+                                Layout.fillWidth: true
+                                descriptionText: "Y size of the map (note: this does not change the map size)"
+                            }
+                        }
                     }
                 }
 
