@@ -81,6 +81,7 @@ qt_add_qml_module(appPandaLdr
         ui/misc/BrowseButton.qml
         ui/misc/ControlPanel.qml
         ui/misc/PCheckBox.qml
+        ui/misc/AppendTable.qml
         # searchbar
         ui/searchbar/SearchBar.qml
         ui/searchbar/FilterTag.qml

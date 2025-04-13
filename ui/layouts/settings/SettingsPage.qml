@@ -383,10 +383,8 @@ Pane {
                         }
                         ControlPanel { // mouse controls 
                             id: controlsSettings
-                            label: "Controls"
-                            showSwitch: true
+                            label: "Mouse Settings"
                             Layout.fillWidth: true
-                            enabled: false
 
                             PTextField { // drag 
                                 id: dragField
@@ -443,7 +441,7 @@ Pane {
 
                         ControlPanel { // key controls 
                             id: keyControlsSettings
-                            label: "Key Controls"
+                            label: "Keyboard Settings"
                             showSwitch: true
                             Layout.fillWidth: true
                             enabled: false
@@ -667,13 +665,13 @@ Pane {
                                 id: lastWindowXField
                                 title: "Last Window X"
                                 Layout.fillWidth: true
-                                descriptionText: "X position of the last window"
+                                descriptionText: "Relative to the main monitor, X position where the game was last closed"
                             }
                             PTextField { // lastWindowY
                                 id: lastWindowYField
                                 title: "Last Window Y"
                                 Layout.fillWidth: true
-                                descriptionText: "Y position of the last window"
+                                descriptionText: "Relative to the main monitor, Y position where the game was last closed"
                             }        
                         }                        
                     
@@ -903,7 +901,12 @@ Pane {
                             isFileBrowser: true
                             descriptionText: "Path to the last zoo played"
                         }
-                        // resource paths (TODO)
+                        // resource paths
+                        AppendTable {
+                            id: pathTable
+                            model: pathModel
+                            Layout.fillWidth: true
+                        }
                         ControlPanel {
                             id: advancedResControls
                             label: "Advanced Resources"
