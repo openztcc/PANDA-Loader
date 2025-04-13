@@ -529,7 +529,7 @@ Pane {
                         // custom component for resource paths
                         PTextField {
                             id: lastZooPlayedPath
-                            title: "Last zoo played"
+                            title: "Last Zoo Played"
                             Layout.fillWidth: true
                             isFileBrowser: true
                             descriptionText: "Path to the last zoo played"
@@ -538,13 +538,98 @@ Pane {
                 }
 
                 Component {
-                    id: advancedSettings
+                    id: debugSettings
                     SettingsPane {
-                        id: advancedSettingsPane
-                        PTextField {
-                            id: advancedSettingsField
-                            title: "Advanced Settings"
+                        id: debugSettingsPane
+                        PCheckBox {
+                            id: devModeCheckBox
+                            text: "Developer Mode Enabled"
+                        }
+                        ControlPanel {
+                            id: debugControls
+                            label: "Debug Settings (Applies to placed entities)"
                             Layout.fillWidth: true
+
+                            PCheckBox { // ShowAIInfo
+                                id: showAIInfoCheckBox
+                                text: "Show AI Info"
+                            }
+                            PTextField { // ShowName
+                                id: showNameField
+                                title: "Show Names"
+                            }
+                            PTextField { // ShowPosition
+                                id: showPositionField
+                                title: "Show Position"
+                            }
+                            PTextField { // ShowAnimalAIInfo
+                                id: showAnimalAIInfoField
+                                title: "Show Animal AI Info"
+                            }
+                            PTextField { // ShowGuesAIInfo
+                                id: showGuestAIInfoField
+                                title: "Show Guest AI Info"
+                            }
+                            PTextField { // ShowStaffAIInfo
+                                id: showStaffAIInfoField
+                                title: "Show Staff AI Info"
+                            }
+                            PTextField { // ShowStatusVars
+                                id: showStatusVarsField
+                                title: "Show Status Variables"
+                            }
+                            PTextField { // ShowFunctionCall
+                                id: showFunctionCallField
+                                title: "Show Function Calls"
+                            }
+                            PTextField { // ShowEvents
+                                id: showEventsField
+                                title: "Show Events"
+                            }
+                            PTextField { // ShowBuildingAIInfo
+                                id: showBuildingAIInfoField
+                                title: "Show Building AI Info"
+                            }
+                            PTextField { // ShowSelected 
+                                id: showSelectedField
+                                title: "Show Selected"
+                            }
+                            PTextField { // ShowFrame 
+                                id: showFrameField
+                                title: "Show Frame"
+                            }
+                            PTextField { // ShowGoal 
+                                id: showGoalField
+                                title: "Show Goal"
+                            }
+                        }
+                        ControlPanel {
+                            id: advancedDebugControls
+                            label: "Advanced Settings"
+                            showSwitch: true
+                            Layout.fillWidth: true
+                            enabled: false
+                            PCheckBox { // sendLogFile
+                                id: sendLogFileCheckBox
+                                text: "Send Log File"
+                            }
+                            PCheckBox { // sendDebugger
+                                id: sendDebuggerCheckBox
+                                text: "Send Debugger"
+                            }
+                            PTextField { // logCutOff
+                                id: logCutOffField
+                                title: "Log Cut-off"
+                                Layout.fillWidth: true
+                            }
+                            PCheckBox { // deltaLog1
+                                id: deltaLog1CheckBox
+                                text: "Delta Log 1"
+                            }
+                            PCheckBox { // deltaLog0
+                                id: deltaLog0CheckBox
+                                text: "Delta Log 0"
+                            }
                         }
                     }
                 }
