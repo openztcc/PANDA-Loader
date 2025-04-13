@@ -52,9 +52,14 @@ Pane {
                 Item { Layout.fillWidth: true }  // Spacer to push buttons to the right
 
                 Button {
-                    Material.background: "#376a3e"
-                    Material.foreground: "#d4e8d1"
+                    Material.background: "#FED286"
+                    Material.foreground: "#4D523B"
                     text: "Launch"
+
+                    background: Rectangle {
+                        color: "#FED286"
+                        radius: 5
+                    }
 
                     MouseArea {
                         anchors.fill: parent
@@ -67,8 +72,13 @@ Pane {
 
                 Button {
                     text: "Install OpenZT"
-                    Material.foreground: "#376a3e"
-                    Material.background: "#9cd49f"
+                    Material.foreground: "#4D523B"
+                    Material.background: "#FEB886"
+
+                    background: Rectangle {
+                        color: "#FEB886"
+                        radius: 5
+                    }
 
                     MouseArea {
                         anchors.fill: parent
