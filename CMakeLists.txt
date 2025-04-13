@@ -80,6 +80,7 @@ qt_add_qml_module(appPandaLdr
         ui/misc/ClearButton.qml
         ui/misc/BrowseButton.qml
         ui/misc/ControlPanel.qml
+        ui/misc/PCheckBox.qml
         # searchbar
         ui/searchbar/SearchBar.qml
         ui/searchbar/FilterTag.qml
@@ -126,6 +127,7 @@ qt_add_resources(appPandaLdr "resources"
         icons/author.svg
         icons/folder.svg
         icons/close.svg
+        icons/check.svg
 
         # settings
         icons/settings.svg

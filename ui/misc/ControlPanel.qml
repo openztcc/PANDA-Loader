@@ -27,7 +27,7 @@ Item {
             spacing: 5
             Layout.bottomMargin: 5
 
-            CheckBox {
+            PCheckBox {
                 id: controlSwitch
                 anchors.verticalCenter: parent.verticalCenter
                 onCheckedChanged: {
@@ -38,6 +38,7 @@ Item {
                 }
                 visible: controlGroup.showSwitch
                 anchors.left: parent.left
+                implicitHeight: 30
             }
         
             Label {
