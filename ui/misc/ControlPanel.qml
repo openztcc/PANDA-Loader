@@ -11,6 +11,7 @@ Item {
     property var label: ""
     property bool showSwitch: false
     default property alias contents: panelContents.children
+    implicitHeight: controlColumn.implicitHeight
     width: parent.width
 
     ColumnLayout {

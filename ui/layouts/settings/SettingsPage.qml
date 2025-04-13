@@ -131,7 +131,7 @@ Pane {
             id: settingsPaneDivider
             Layout.alignment: Qt.AlignRight
             Layout.preferredWidth: 1
-            color: "#4d4d4d"
+            color: Qt.darker(mainContent.mainColor, 1.2)
         }
 
         Pane {
@@ -207,11 +207,46 @@ Pane {
                         id: videoSettingsPane
                         // Group of settings for drawfps, drawfpsx, drawfpsy
 
+                        ControlPanel {
+                            id: displayControls
+                            label: "Display Settings"
+                            Layout.fillWidth: true
+
+                            PCheckBox { // fullscreen
+                                id: fullscreenCheckBox
+                                text: "Fullscreen"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // screenWidth
+                                id: screenWidthField
+                                title: "Resolution Width"
+                                Layout.fillWidth: true
+                                descriptionText: "Width of the screen resolution"
+                            }
+                            PTextField { // screenHeight
+                                id: screenHeightField
+                                title: "Resolution Height"
+                                Layout.fillWidth: true
+                                descriptionText: "Height of the screen resolution"
+                            }
+                            PTextField { // UpdateRate
+                                id: updateRateField
+                                title: "Update Rate"
+                                Layout.fillWidth: true
+                                descriptionText: "Update rate of the game"
+                            }
+                            PTextField { // DrawRate
+                                id: drawRateField
+                                title: "Draw Rate"
+                                Layout.fillWidth: true
+                                descriptionText: "Draw rate of the game"
+                            }
+                        }
+
                         ControlPanel { // drawfps
                             id: drawFPSControl
                             label: "Display FPS Counter"
                             showSwitch: true
-                            Layout.preferredHeight: implicitHeight
                             Layout.fillWidth: true
                             enabled: false
 

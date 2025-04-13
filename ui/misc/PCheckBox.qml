@@ -58,7 +58,15 @@ Item {
             // }
         }
 
-        // contentItem: {}
+        contentItem: Text {
+                text: pCheckBox.text
+                anchors.verticalCenter: parent.verticalCenter
+                leftPadding: 5
+                color: pCheckBox.checked ? "#E8E8CF" : "#A0A0A0"
+                font.pixelSize: 12
+        }
+
+
     }
     
     // MouseArea {
