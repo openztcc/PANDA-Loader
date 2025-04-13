@@ -11,9 +11,9 @@ Item {
 
     required property string text
     required property string icon
-    property string fg: "#d4e8d1"  // Foreground (text/icon color)
+    property string fg: "#E8E8CF"  // Foreground (text/icon color)
     property string bg: "transparent"  // Background color for rounded icon area
-    property string color: "#3a4b3a"  // Default icon bg color
+    property string color: "#34472D"  // Default icon bg color
 
     signal clicked()
 
@@ -25,22 +25,26 @@ Item {
         Rectangle {
             width: 56
             height: 30
-            radius: 16
+            radius: 5
             color: if (hoverArea.containsPress) {
-                return Qt.lighter(railButton.color, 1.2)
+                "#627D58"
             } else if (hoverArea.containsMouse) {
-                return Qt.darker(railButton.color, 1.1)
+                Qt.darker("#627D58", 1.1)
             } else {
-                return railButton.bg
+                railButton.bg
             }
-            // animate
-            Behavior on color { ColorAnimation { duration: 70 } }
-
 
             SvgIcon {
                 bgWidth: parent.width
                 bgHeight: parent.height
                 icon: railButton.icon
+                color: if (hoverArea.containsPress) {
+                    "#FED286"
+                } else if (hoverArea.containsMouse) {
+                    Qt.darker("#FED286", 1.1)
+                } else {
+                    railButton.fg
+                }
             }
         }
 

@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 
 Rectangle {
     id: nav
-    color: "#101510"
+    color: "#34472D"
     anchors.fill: parent
     property var stack: null
     property var modPage: null

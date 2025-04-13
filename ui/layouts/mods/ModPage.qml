@@ -48,8 +48,8 @@ Pane {
                 spacing: 8
                 anchors.bottom: parent.bottom
 
-
-                Item { Layout.fillWidth: true }  // Spacer to push buttons to the right
+                // Spacer to push buttons to the right
+                Item { Layout.fillWidth: true }  
 
                 Button {
                     Material.background: "#FED286"
