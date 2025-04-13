@@ -329,18 +329,134 @@ Pane {
                         }
                         ControlPanel {
                             id: scenarioControls
-                            label: "Completed Scenarios"
+                            label: "Completed Scenarios (To unlock other scenarios)"
                             Layout.preferredHeight: implicitHeight
                             Layout.fillWidth: true
                             enabled: true
 
-                            PCheckBox { // tutorial
-                                id: tutorialZooCheckBox
-                                text: "Completed Tutorial Zoo"
+                            // PCheckBox { // tutorial
+                            //     id: tutorialZooCheckBox
+                            //     text: "Completed Tutorial Zoo"
+                            // }
+                            PCheckBox { // aa - Tutorial 1 - Game Controls
+                                id: aaCheckBox
+                                text: "Completed Tutorial 1 - Game Controls"
                             }
-                            PCheckBox {  // ba
-                                id: basicZooCheckBox
-                                text: "Completed Basic Zoo"
+                            PCheckBox {  // ab - Tutorial 2 - Basic Gameplay
+                                id: abCheckBox
+                                text: "Completed Tutorial 2 - Basic Gameplay"
+                            }
+                            PCheckBox { // ac - Tutorial 3 - Making Animals Happy
+                                id: acCheckBox
+                                text: "Completed Tutorial 3 - Making Animals Happy"
+                            }
+                            PCheckBox { // ad - Dinosaur Digs Tutorial 1
+                                id: adCheckBox
+                                text: "Completed Dinosaur Digs: Tutorial 1"
+                            }
+                            PCheckBox { // ae - Marine Mania: Tutorial 1
+                                id: aeCheckBox
+                                text: "Completed Marine Mania: Tutorial 1"
+                            }
+                            PCheckBox { // af - Marine Mania: Tutorial 2
+                                id: afCheckBox
+                                text: "Completed Marine Mania: Tutorial 2"
+                            }
+                            PCheckBox { // ag - Marine Mania: Tutorial 3
+                                id: agCheckBox
+                                text: "Completed Marine Mania: Tutorial 3"
+                            }
+                            PCheckBox { // ba - Small Zoo (Beginner)
+                                id: baCheckBox
+                                text: "Completed Small Zoo (Beginner)"
+                            }
+                            PCheckBox { // bb - Seaside Zoo (Beginner)
+                                id: bbCheckBox
+                                text: "Completed Seaside Zoo (Beginner)"
+                            }
+                            PCheckBox { // bc - Forest Zoo (Beginner)
+                                id: bcCheckBox
+                                text: "Completed Forest Zoo (Beginner)"
+                            }
+                            PCheckBox { // bd - Holiday Tree Farm (Beginner)
+                                id: bdCheckBox
+                                text: "Completed Holiday Tree Farm (Beginner)"
+                            }
+                            PCheckBox { // be - Dinosaur Digs: Ice Age Animal Zoo (Beginner)
+                                id: beCheckBox
+                                text: "Completed Dinosaur Digs: Ice Age Animal Zoo (Beginner)"
+                            }
+                            PCheckBox { // bf - Marine Mania: Orca Show (Beginner)
+                                id: bfCheckBox
+                                text: "Completed Marine Mania: Orca Show (Beginner)"
+                            }
+                            PCheckBox { // bg - Marine Mania: Seasideville Dolphin Park (Beginner)
+                                id: bgCheckBox
+                                text: "Completed Marine Mania: Seasideville Dolphin Park (Beginner)"
+                            }
+                            PCheckBox { // bh - Marine Mania: Shark World (Beginner)
+                                id: bhCheckBox
+                                text: "Completed Marine Mania: Shark World (Beginner)"
+                            }
+                            PCheckBox { // bi - Marine Mania: Surf and Turf Zoo (Beginner)
+                                id: biCheckBox
+                                text: "Completed Marine Mania: Surf and Turf Zoo (Beginner)"
+                            }
+                            PCheckBox { // ca - Revitalize Burkitsville Zoo (Intermediate)
+                                id: caCheckBox
+                                text: "Completed Revitalize Burkitsville Zoo (Intermediate)"
+                            }
+                            PCheckBox { // cb - Inner City Zoo (Intermediate)
+                                id: cbCheckBox
+                                text: "Completed Inner City Zoo (Intermediate)"
+                            }
+                            PCheckBox { // cc - Saving the Great Cats (Intermediate)
+                                id: ccCheckBox
+                                text: "Completed Saving the Great Cats (Intermediate)"
+                            }
+                            PCheckBox { // cd - Endangered Species Zoo (Intermediate)
+                                id: cdCheckBox
+                                text: "Completed Endangered Species Zoo (Intermediate)"
+                            }
+                            PCheckBox { // ce - Arctic Zoo (Intermediate)
+                                id: ceCheckBox
+                                text: "Completed Arctic Zoo (Intermediate)"
+                            }
+                            PCheckBox { // cf - Beach Resort Zoo (Intermediate)
+                                id: cfCheckBox
+                                text: "Completed Beach Resort Zoo (Intermediate)"
+                            }
+                            PCheckBox { // cg - Dinosaur Digs: Valley of the Dinosaurs (Intermediate)
+                                id: cgCheckBox
+                                text: "Completed Dinosaur Digs: Valley of the Dinosaurs (Intermediate)"
+                            }
+                            PCheckBox { // ch - Dinosaur Digs: Jurassic Zoo (Intermediate)
+                                id: chCheckBox
+                                text: "Completed Dinosaur Digs: Jurassic Zoo (Intermediate)"
+                            }
+                            PCheckBox { // ci - Marine Mania: Oceans of the Zoo (Intermediate)
+                                id: ciCheckBox
+                                text: "Completed Marine Mania: Oceans of the Zoo (Intermediate)"
+                            }
+                            PCheckBox { // cj - Marine Mania: Save the Marine Animals (Intermediate)
+                                id: cjCheckBox
+                                text: "Completed Marine Mania: Save the Marine Animals (Intermediate)"
+                            }
+                            PCheckBox { // ck - Marine Mania: Free Admission Zoo (Intermediate)
+                                id: ckCheckBox
+                                text: "Completed Marine Mania: Free Admission Zoo (Intermediate)"
+                            }
+                            PCheckBox { // cl - Marine Mania: Aquatic Show Park (Intermediate)
+                                id: clCheckBox
+                                text: "Completed Marine Mania: Aquatic Show Park (Intermediate)"
+                            }
+                            PCheckBox { // cm - Dinosaur Digs: Carnivore Zoo (Intermediate)
+                                id: cmCheckBox
+                                text: "Completed Dinosaur Digs: Carnivore Zoo (Intermediate)"
+                            }
+                            PCheckBox { // cn - Southeast Asian Zoo (Intermediate)
+                                id: cnCheckBox
+                                text: "Completed Southeast Asian Zoo (Intermediate)"
                             }
                         }
                     }
