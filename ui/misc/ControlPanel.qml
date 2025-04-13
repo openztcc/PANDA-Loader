@@ -26,12 +26,11 @@ Item {
             visible: controlGroup.showSwitch || controlGroup.label !== ""
             spacing: 1
             Layout.bottomMargin: 0
-            height: implicitHeight
+            height: Math.max(controlSwitch.implicitHeight, titleLabel.implicitHeight) + 3
 
             PCheckBox {
                 id: controlSwitch
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                height: implicitHeight
                 onCheckedChanged: {
                     controlGroup.enabled = controlSwitch.checked
                     if (controlGroup.data) {
@@ -41,25 +40,21 @@ Item {
                 visible: controlGroup.showSwitch
             }
 
-            Item {
-                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                height: implicitHeight
-                Text {
-                    id: titleLabel
-                    height: parent.height
-                    anchors.left: parent.left
-                    anchors.leftMargin: 4
-                    text: controlGroup.label
-                    font.pixelSize: 12
-                    color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
-                    visible: {
-                        if (controlGroup.label !== "") {
-                            return true
-                        } else {
-                            return false
-                        }
+
+            Text {
+                id: titleLabel
+                text: controlGroup.label
+                font.pixelSize: 12
+                color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
+                Layout.alignment: Qt.AlignVCenter
+                visible: {
+                    if (controlGroup.label !== "") {
+                        return true
+                    } else {
+                        return false
                     }
                 }
+
             }
         }
 
