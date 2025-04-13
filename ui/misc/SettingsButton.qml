@@ -6,6 +6,7 @@ Button {
     id: control
     property var color: "#2c6431"
     property var fg: "#E8E8CF"
+    property bool current: false
     width: parent ? parent.width : 200
     height: 35
     flat: true
@@ -24,7 +25,17 @@ Button {
         property bool hovered: false
         anchors.fill: parent
         radius: 0
-        color: control.hovered ? Qt.darker(control.color, 1.2) : control.color
+        color: {//control.hovered ? Qt.darker(control.color, 1.2) : control.color 
+            if (control.current) {
+                Qt.darker(control.color, 1.25)
+            } else {
+                if (control.hovered) {
+                    return Qt.darker(control.color, 1.05)
+                } else {
+                    return control.color
+                }
+            }
+        }
 
         Rectangle {
             height: 1
