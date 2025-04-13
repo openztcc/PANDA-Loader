@@ -114,6 +114,17 @@ Pane {
                 }
 
                 SettingsButton {
+                    id: languageSettingsButton
+                    text: "Language"
+                    source: "qrc:/icons/language.svg"
+                    color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
+                    onClicked: {
+                        replaceSettingsPane(languageSettings, settingsStack, languageSettingsButton)
+                    }
+                }
+
+                SettingsButton {
                     id: debugSettingsButton
                     text: "Debug Settings"
                     source: "qrc:/icons/plumbing.svg"
@@ -123,16 +134,6 @@ Pane {
                         replaceSettingsPane(debugSettings, settingsStack, debugSettingsButton)
                     }
                 }
-
-                SettingsButton {
-                    id: languageSettingsButton
-                    text: "Language"
-                    source: "qrc:/icons/language.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-                    onClicked: {
-                        replaceSettingsPane(languageSettings, settingsStack, languageSettingsButton)
-                    }
             }
 
         }
@@ -198,7 +199,7 @@ Pane {
                             Layout.preferredHeight: 120
                             Layout.fillWidth: true
                             enabled: false
-                            
+
                             PTextField {
                                 id: isoPath
                                 title: "ISO Path"
@@ -281,10 +282,56 @@ Pane {
                     id: soundSettings
                     SettingsPane {
                         id: soundSettingsPane
-                        PTextField {
-                            id: soundSettingsField
-                            title: "Sound Settings"
+                        PCheckBox { // use8BitSound
+                            id: use8BitSoundCheckBox
+                            text: "Use 8 Bit Sound"
+                        }
+                        PTextField { // userAttenuation 
+                            id: userAttenuationTextField
+                            title: "User Attenuation"
                             Layout.fillWidth: true
+                        }
+                        PTextField { // completedExhibitAttenuation
+                            id: completedExhibitAttenuationTextField
+                            title: "Completed Exhibit Attenuation"
+                            Layout.fillWidth: true
+                        }
+
+                        ControlPanel { // menu music controls
+                            id: menuMusicControls
+                            label: "Menu Music Enabled"
+                            showSwitch: true
+                            Layout.fillWidth: true
+                            enabled: false
+                            PTextField { // menuMusicAttenuation
+                                id: menuMusicAttenuationField
+                                title: "Menu Music Volume"
+                                Layout.fillWidth: true
+                            }
+                            PTextField { // menuMusic 
+                                id: menuMusicField
+                                title: "Menu Music"
+                                Layout.fillWidth: true
+                                isFileBrowser: true
+                                descriptionText: "Path to the menu music file"
+                            }
+                        }
+                        ControlPanel { // boot music controls
+                            id: bootMusicControls
+                            label: "Boot Music Enabled"
+                            Layout.fillWidth: true
+                            PTextField { // movevolume1
+                                id: moveVolume1Field
+                                title: "Volume for Splash Screen 1"
+                                Layout.fillWidth: true
+                                descriptionText: "Volume for the first splash screen that plays"
+                            }
+                            PTextField { // movevolume2
+                                id: moveVolume2Field
+                                title: "Volume for Splash Screen 2"
+                                Layout.fillWidth: true
+                                descriptionText: "Volume for the second splash screen that plays"
+                            }
                         }
                     }
                 }
@@ -331,7 +378,7 @@ Pane {
                         }
                         PCheckBox { // startedDinoTutorial
                             id: dinoDigsCheckBox
-                            text: "Started Dino Digs Tutorial"                            
+                            text: "Started Dino Digs Tutorial"
                         }
                         PCheckBox { // startedAquaTutorial
                             id: marineManiaCheckBox
@@ -586,16 +633,33 @@ Pane {
                                 title: "terrainMgr"
                                 Layout.fillWidth: true
                             }
-                            PTextField { // res 
+                            PTextField { // res
                                 id: resPath
                                 title: "res"
                                 Layout.fillWidth: true
                             }
-                            PTextField { // lang 
+                            PTextField { // lang
                                 id: langPath
                                 title: "lang"
                                 Layout.fillWidth: true
                             }
+                        }
+                    }
+                }
+
+                Component {
+                    id: languageSettings
+                    SettingsPane {
+                        id: languageSettingsPane
+                        PTextField { // lang
+                            id: languageField
+                            title: "Language"
+                            Layout.fillWidth: true
+                        }
+                        PTextField { // sublang
+                            id: subLanguageField
+                            title: "Sub Language"
+                            Layout.fillWidth: true
                         }
                     }
                 }
@@ -653,15 +717,15 @@ Pane {
                                 id: showBuildingAIInfoCheckBox
                                 text: "Show Building AI Info"
                             }
-                            PCheckBox { // ShowSelected 
+                            PCheckBox { // ShowSelected
                                 id: showSelectedCheckBox
                                 text: "Show Selected"
                             }
-                            PCheckBox { // ShowFrame 
+                            PCheckBox { // ShowFrame
                                 id: showFrameCheckBox
                                 text: "Show Frame"
                             }
-                            PCheckBox { // ShowGoal 
+                            PCheckBox { // ShowGoal
                                 id: showGoalCheckBox
                                 text: "Show Goal"
                             }
@@ -697,24 +761,9 @@ Pane {
                     }
                 }
 
-                Component {
-                    id: languageSettings
-                    SettingsPane {
-                        id: languageSettingsPane
-                        PTextField { // lang
-                            id: languageField
-                            title: "Language"
-                            Layout.fillWidth: true
-                        }
-                        PTextField { // sublang
-                            id: subLanguageField
-                            title: "Sub Language"
-                            Layout.fillWidth: true
-                        }
-                    }
-                }
+
             }
-        
+
         }
 
     }
