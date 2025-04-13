@@ -123,6 +123,16 @@ Pane {
                         replaceSettingsPane(debugSettings, settingsStack, debugSettingsButton)
                     }
                 }
+
+                SettingsButton {
+                    id: languageSettingsButton
+                    text: "Language"
+                    source: "qrc:/icons/language.svg"
+                    color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
+                    onClicked: {
+                        replaceSettingsPane(languageSettings, settingsStack, languageSettingsButton)
+                    }
             }
 
         }
@@ -687,6 +697,22 @@ Pane {
                     }
                 }
 
+                Component {
+                    id: languageSettings
+                    SettingsPane {
+                        id: languageSettingsPane
+                        PTextField { // lang
+                            id: languageField
+                            title: "Language"
+                            Layout.fillWidth: true
+                        }
+                        PTextField { // sublang
+                            id: subLanguageField
+                            title: "Sub Language"
+                            Layout.fillWidth: true
+                        }
+                    }
+                }
             }
         
         }
