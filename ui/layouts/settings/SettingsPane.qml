@@ -6,7 +6,7 @@ Item {
     id: section
     property string title: ""
     property color textColor: "white"
-    property real spacing: 30
+    property real spacing: 10
     default property alias content: contentContainer.children
     anchors.fill: parent
 
@@ -16,7 +16,10 @@ Item {
         width: parent.width
         contentWidth: width
         contentHeight: contentContainer.implicitHeight
-        clip: true
+        clip: false
+        boundsBehavior: Flickable.StopAtBounds
+        Layout.topMargin: 6
+        Layout.bottomMargin: 6
         
         ColumnLayout {
             id: contentContainer
@@ -29,8 +32,8 @@ Item {
                 color: section.textColor
                 font.bold: true
                 font.pixelSize: 14
-                Layout.margins: 4
-                topPadding: 6
+                
+                Layout.topMargin: 6
             }
         }
     }

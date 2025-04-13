@@ -4,87 +4,99 @@ import QtQuick.Controls.Material
 
 Item {
     id: check
-    height: 30
-    width: 30
+    implicitHeight: 30
+    implicitWidth: 30
+    width: implicitWidth
+    height: implicitHeight
     property alias checked: pCheckBox.checked
-    property alias implicitHeight: pCheckBox.implicitHeight
     property alias text: pCheckBox.text
     property var bg: "#627D58"
 
     CheckBox {
         id: pCheckBox
+        anchors.fill: parent
+        indicator: {}
 
-        indicator: Rectangle {
-            width: 15
-            height: 15
-            anchors.verticalCenter: pCheckBox.verticalCenter
-            radius: 3
-            border.width: 1
-            border.color: Qt.darker(check.bg, 1.2)
-            color: {
-                if (pCheckBox.checked) {
-                    if (pCheckBox.hovered) {
-                        return Qt.darker(check.bg, 1.25)
-                    } 
-                    else {
-                        return Qt.darker(check.bg, 1.2)
-                    }
-                } else {
-                    if (pCheckBox.hovered) {
-                        return Qt.darker(check.bg, 1.05)
+        contentItem: Row {
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 6
+
+            Rectangle {
+                id: checkBox
+                width: 15
+                height: 15
+                radius: 3
+                color: {
+                    if (pCheckBox.checked) {
+                        if (pCheckBox.hovered) {
+                            return Qt.darker(check.bg, 1.25)
+                        } 
+                        else {
+                            return Qt.darker(check.bg, 1.2)
+                        }
                     } else {
-                        return check.bg
+                        if (pCheckBox.hovered) {
+                            return Qt.darker(check.bg, 1.05)
+                        } else {
+                            return check.bg
+                        }
                     }
+                }
+                border.width: 1
+                border.color: Qt.darker(color, 1.2)
+                anchors.left: parent.left
+
+                SvgIcon {
+                    anchors.centerIn: parent
+                    icon: "qrc:/icons/check.svg"
+                    iconWidth: 12
+                    iconHeight: 12
+                    color: pCheckBox.checked ? "#E8E8CF" : "#A0A0A0"
+                    visible: pCheckBox.checked
                 }
             }
 
-            SvgIcon {
-                id: checkIcon
-                anchors.centerIn: parent
-                iconWidth: 14
-                iconHeight: 14
-                icon: "qrc:/icons/check.svg"
-                color: pCheckBox.checked ? "#E8E8CF" : "#A0A0A0"
-                visible: pCheckBox.checked
-            }
-
-            // onClicked: {
-            //     if (pCheckBox.checked) {
-            //         checkIcon.icon = "qrc:/icons/close.svg"
-            //         checkIcon.visible = true
-            //     } else {
-            //         checkIcon.visible = false
-            //     }
-            // }
-        }
-
-        contentItem: Text {
+            Text {
                 text: pCheckBox.text
-                anchors.verticalCenter: parent.verticalCenter
-                leftPadding: 5
                 color: pCheckBox.checked ? "#E8E8CF" : "#A0A0A0"
                 font.pixelSize: 12
+                verticalAlignment: Text.AlignVCenter
+                anchors.leftMargin: 10
+                anchors.bottomMargin: 7
+                anchors.left: checkBox.right
+            }
+
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: pCheckBox.toggle()
+            }
+            
         }
 
 
     }
-    
-    // MouseArea {
-    //     id: checkBoxMouseArea
-    //     anchors.fill: pCheckBox
-    //     hoverEnabled: true
-    //     propagateComposedEvents: true
-    //     onEntered: {
-    //         checkIcon.color = "#E8E8CF"
-    //     }
-    //     onExited: {
-    //         checkIcon.color = pCheckBox.checked ? "#E8E8CF" : "#A0A0A0"
-    //     }
 
-    //     onClicked: {
-    //         pCheckBox.checked = !pCheckBox.checked
-    //         checkIcon.visible = pCheckBox.checked
-    //     }
-    // }
+
+
+        // MouseArea {
+        //     id: checkBoxMouseArea
+        //     anchors.fill: pCheckBox
+        //     hoverEnabled: true
+        //     propagateComposedEvents: true
+        //     onEntered: {
+        //         checkIcon.color = "#E8E8CF"
+        //     }
+        //     onExited: {
+        //         checkIcon.color = pCheckBox.checked ? "#E8E8CF" : "#A0A0A0"
+        //     }
+
+        //     onClicked: {
+        //         pCheckBox.checked = !pCheckBox.checked
+        //         checkIcon.visible = pCheckBox.checked
+        //     }
+        // }
 
 }

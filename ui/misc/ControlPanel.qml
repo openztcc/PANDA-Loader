@@ -20,17 +20,17 @@ Item {
         spacing: 10
         width: parent.width
 
-        Row {
+        RowLayout {
             id: switchRow
             Layout.fillWidth: true
-            Layout.preferredHeight: implicitHeight
             visible: controlGroup.showSwitch || controlGroup.label !== ""
-            spacing: 5
-            Layout.bottomMargin: 5
+            spacing: 1
+            Layout.bottomMargin: 0
 
             PCheckBox {
                 id: controlSwitch
-                anchors.verticalCenter: parent.verticalCenter
+                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                height: parent.height
                 onCheckedChanged: {
                     controlGroup.enabled = controlSwitch.checked
                     if (controlGroup.data) {
@@ -38,29 +38,38 @@ Item {
                     }
                 }
                 visible: controlGroup.showSwitch
-                anchors.left: parent.left
-                implicitHeight: 30
             }
-        
-            Label {
-                id: titleLabel
-                text: controlGroup.label
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.top: parent.top
-                font.pixelSize: 12
-                color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
-                anchors.left: {
-                    if (controlGroup.showSwitch) {
-                        return controlSwitch.right
-                    } else {
-                        return parent.left
+
+            Item {
+                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                height: parent.height
+                Text {
+                    id: titleLabel
+                    anchors.left: parent.left
+                    anchors.leftMargin: 4
+                    anchors.bottomMargin: {
+                        if (controlGroup.showSwitch) {
+                            return 6
+                        } else {
+                            return 0
+                        }
                     }
-                }
-                visible: {
-                    if (controlGroup.label !== "") {
-                        return true
-                    } else {
-                        return false
+                    anchors.bottom: {
+                        if (controlGroup.showSwitch) {
+                            return 0
+                        } else {
+                            return parent.bottom
+                        }
+                    }
+                    text: controlGroup.label
+                    font.pixelSize: 12
+                    color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
+                    visible: {
+                        if (controlGroup.label !== "") {
+                            return true
+                        } else {
+                            return false
+                        }
                     }
                 }
             }
