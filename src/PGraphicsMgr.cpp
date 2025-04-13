@@ -116,7 +116,7 @@ QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffe
         QString graphicName = it.key();
         QString homePath = QDir::homePath() + "/.panda/modicons/";
         QString pngPath = homePath + graphicName + ".png";
-        QString fileUrl = QUrl::fromLocalFile(pngPath).toString();
+        QString fileUrl = pngPath;
 
         // check if file already exists
         if (QFile::exists(pngPath)) {
@@ -169,16 +169,15 @@ bool PGraphicsMgr::deleteIcons(const QString &modId) {
     // Delete each icon file
     for (const QString &iconPath : iconPaths) {
         // Convert QUrl to local file path
-        QString localPath = QUrl(iconPath).toLocalFile();
-        if (QFile::exists(localPath)) {
-            if (!QFile::remove(localPath)) {
-                qDebug() << "Failed to delete icon file:" << localPath;
+        if (QFile::exists(iconPath)) {
+            if (!QFile::remove(iconPath)) {
+                qDebug() << "Failed to delete icon file:" << iconPath;
                 return false;
             } else {
-                qDebug() << "Deleted icon file:" << localPath;
+                qDebug() << "Deleted icon file:" << iconPath;
             }
         } else {
-            qDebug() << "Icon file does not exist:" << localPath;
+            qDebug() << "Icon file does not exist:" << iconPath;
         }
     }
 

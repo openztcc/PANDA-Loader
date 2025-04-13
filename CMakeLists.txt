@@ -58,19 +58,39 @@ target_include_directories(
 
 qt_policy(SET QTP0004 NEW)
 qt_add_qml_module(appPandaLdr
-    URI PandaLdr
+    URI PandaUI
     VERSION 1.0
     QML_FILES
+        # main
         ui/Main.qml
-        ui/RailButton.qml
-        ui/SvgIcon.qml
-        ui/ActionButton.qml
-        ui/ModItem.qml
-        ui/InfoPane.qml
-        ui/InfoPaneItem.qml
-        ui/SearchBar.qml
-        ui/FilterTag.qml
-        ui/SimpleModal.qml
+        # infopane
+        ui/infopane/InfoPane.qml
+        ui/infopane/InfoPaneItem.qml
+        # modlist
+        ui/modlist/ModItem.qml
+        # navbar
+        ui/navbar/RailButton.qml
+        ui/navbar/Navigation.qml
+        # misc
+        ui/misc/SvgIcon.qml
+        ui/misc/ActionButton.qml
+        ui/misc/SimpleModal.qml
+        ui/misc/SettingsButton.qml
+        ui/misc/PTextField.qml
+        ui/misc/ClearButton.qml
+        ui/misc/BrowseButton.qml
+        ui/misc/ControlPanel.qml
+        ui/misc/PCheckBox.qml
+        ui/misc/AppendTable.qml
+        # searchbar
+        ui/searchbar/SearchBar.qml
+        ui/searchbar/FilterTag.qml
+        # appbar
+        ui/appbar/AppBarLayout.qml
+        # layouts
+        ui/layouts/mods/ModPage.qml
+        ui/layouts/settings/SettingsPage.qml
+        ui/layouts/settings/SettingsPane.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         # sources
@@ -83,24 +103,46 @@ qt_add_qml_module(appPandaLdr
         src/PSystemMgr.cpp
         # models
         models/PModItem.h
-       models/PSettings.h
-       models/PEntityType.h
-       models/PSettings.h
-       models/PModModel.h
+        models/PSettings.h
+        models/PEntityType.h
+        models/PSettings.h
+        models/PModModel.h
 )
 
 qt_add_resources(appPandaLdr "resources"
     PREFIX "/"
     FILES
+        # ----------- icons
+        # navrail
         icons/mods.svg
         icons/about.svg
         icons/exit_app.svg
+
+        # appbar
         icons/notifications.svg
+
+        # misc controls
         icons/add.svg
         icons/delete.svg
         icons/refresh.svg
         icons/author.svg
-        icons/path.svg
+        icons/folder.svg
+        icons/close.svg
+        icons/check.svg
+        icons/language.svg
+        icons/ui.svg
+
+        # settings
+        icons/settings.svg
+        icons/tv.svg 
+        icons/paw.svg 
+        icons/sound.svg 
+        icons/keyboard.svg 
+        icons/map.svg 
+        icons/article.svg 
+        icons/plumbing.svg
+
+        # ----------- images
         images/launch_bg.jpg
 )
 
