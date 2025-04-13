@@ -46,6 +46,7 @@ Item {
                 id: titleLabel
                 text: controlGroup.label
                 anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.top
                 font.pixelSize: 12
                 color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
                 anchors.left: {
@@ -70,7 +71,6 @@ Item {
             Layout.fillWidth: true
             enabled: controlGroup.enabled
             Layout.preferredHeight: implicitHeight
-            Layout.bottomMargin: 10
             opacity: controlGroup.enabled ? 1 : 0.5
 
             background: Rectangle {
@@ -88,7 +88,6 @@ Item {
                 id: panelContents
                 anchors.fill: parent
                 width: parent.width
-                anchors.margins: 5
                 spacing: 5
                 enabled: controlGroup.enabled
             }

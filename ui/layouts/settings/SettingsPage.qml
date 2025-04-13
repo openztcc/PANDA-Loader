@@ -144,16 +144,17 @@ Pane {
             }
             opacity: 0.8
 
-            padding: 10
 
             ColumnLayout {
                 id: settingsContent
                 anchors.fill: parent
+                anchors.topMargin: 10
                 spacing: 4
 
                 StackView {
                     id: settingsStack
-                    anchors.fill: parent
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
                     initialItem: pandaSettings
 
                     Component.onCompleted: {
