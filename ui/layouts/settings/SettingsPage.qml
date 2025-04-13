@@ -91,6 +91,17 @@ Pane {
                     }
                 }
 
+                SettingsButton  {
+                    id: uiSettingsButton
+                    text: "UI"
+                    source: "qrc:/icons/ui.svg"
+                    color: mainContent.mainColor
+                    fg: mainContent.mainTextColor
+                    onClicked: {
+                        replaceSettingsPane(uiSettings, settingsStack, uiSettingsButton)
+                    }
+                }
+
                 SettingsButton {
                     id: scenariosSettingsButton
                     text: "Scenarios"
@@ -219,6 +230,11 @@ Pane {
                         id: videoSettingsPane
                         // Group of settings for drawfps, drawfpsx, drawfpsy
 
+                        PCheckBox { // loadHalfAnims
+                            id: loadHalfAnimsCheckBox
+                            text: "Load Half Animations"
+                        }
+
                         ControlPanel {
                             id: displayControls
                             label: "Display Settings"
@@ -318,7 +334,7 @@ Pane {
                         }
                         ControlPanel { // boot music controls
                             id: bootMusicControls
-                            label: "Boot Music Enabled"
+                            label: "Boot Music Volume"
                             Layout.fillWidth: true
                             PTextField { // movevolume1
                                 id: moveVolume1Field
@@ -365,6 +381,199 @@ Pane {
                             Layout.fillWidth: true
                             descriptionText: "Maximum cash in freeform mode"
                         }
+                    }
+                }
+
+                Component {
+                    id: uiSettings
+                    SettingsPane {
+                        id: uiSettingsPane
+
+                        PTextField { // defaultEditCharLimit
+                            id: defaultEditCharLimitField
+                            title: "Default Edit Character Limit"
+                            Layout.fillWidth: true
+                            descriptionText: "Default character limit for edit fields"
+                        }
+
+                        ControlPanel { // Tooltip delay
+                            id: tooltipDelayControl
+                            label: "Tooltip Delay"
+                            showSwitch: true
+                            Layout.fillWidth: true
+                            enabled: true
+
+                            PTextField { // tooltipDuration
+                                id: tooltipDurationField
+                                title: "Tooltip Duration"
+                                Layout.fillWidth: true
+                                descriptionText: "Duration of the tooltip"
+                            }
+                        }
+
+                        ControlPanel { // Tooltip Widths
+                            id: tooltipWidthControl
+                            label: "Tooltip Widths"
+                            Layout.fillWidth: true
+
+                            PTextField { // maxShortTooltipWidth
+                                id: maxShortTooltipWidthField
+                                title: "Max Short Tooltip Width"
+                                Layout.fillWidth: true
+                                descriptionText: "Maximum width of short tooltips"
+                            }
+
+                            PTextField { // maxLongTooltipWidth
+                                id: maxLongTooltipWidthField
+                                title: "Max Long Tooltip Width"
+                                Layout.fillWidth: true
+                                descriptionText: "Maximum width of long tooltips"
+                            }
+                        }
+
+                        PTextField { // helpType
+                            id: helpTypeField
+                            title: "Help Type"
+                            Layout.fillWidth: true
+                        }
+
+                        ControlPanel { // MessageDisplay
+                            id: messageDisplayControl
+                            label: "Message Display"
+                            showSwitch: true
+                            Layout.fillWidth: true
+                            enabled: true
+
+                            PTextField { // minimumMessageInterval
+                                id: minimumMessageIntervalField
+                                title: "Minimum Message Interval"
+                                Layout.fillWidth: true
+                                descriptionText: "Minimum interval between messages"
+                            }
+                        }
+
+                        ControlPanel { // progress bar location
+                            id: progressBarControls
+                            label: "Progress Bar Settings"
+                            Layout.fillWidth: true
+
+                            PTextField { // progressLeft
+                                id: progressBarLeftField
+                                title: "Left"
+                                Layout.fillWidth: true
+                                descriptionText: "Left position of the progress bar"
+                            }
+                            PTextField { // progressTop
+                                id: progressBarTopField
+                                title: "Top"
+                                Layout.fillWidth: true
+                                descriptionText: "Top position of the progress bar"
+                            }
+                            PTextField { // progressBottom
+                                id: progressBarBottomField
+                                title: "Bottom"
+                                Layout.fillWidth: true
+                                descriptionText: "Bottom position of the progress bar"
+                            }
+                            PTextField { // progressRight
+                                id: progressBarRightField
+                                title: "Right"
+                                Layout.fillWidth: true
+                                descriptionText: "Right position of the progress bar"
+                            }
+                        }
+
+                        ControlPanel { // progress bar color
+                            id: progressBarColorControls
+                            label: "Progress Bar Color"
+                            Layout.fillWidth: true
+
+                            PTextField { // progressRed
+                                id: progressBarRedField
+                                title: "Red"
+                                Layout.fillWidth: true
+                                descriptionText: "Red color value of the progress bar"
+                            }
+
+                            PTextField { // progressGreen
+                                id: progressBarGreenField
+                                title: "Green"
+                                Layout.fillWidth: true
+                                descriptionText: "Green color value of the progress bar"
+                            }
+                            PTextField { // progressBlue
+                                id: progressBarBlueField
+                                title: "Blue"
+                                Layout.fillWidth: true
+                                descriptionText: "Blue color value of the progress bar"
+                            }
+
+                        }
+
+                        ControlPanel { // progress bar shadow offset
+                            id: progressBarShadowControls
+                            label: "Progress Bar Shadow Offset"
+                            Layout.fillWidth: true
+
+                            PTextField { //progressShadowXOffset 
+                                id: progressBarShadowXOffsetTextField
+                                title: "X Offset"
+                                Layout.fillWidth: true
+                                descriptionText: "X offset of the progress bar shadow"
+                            }
+                            PTextField { // progressShadowYOffset
+                                id: progressBarShadowYOffsetTextField
+                                title: "Y Offset"
+                                Layout.fillWidth: true
+                                descriptionText: "Y offset of the progress bar shadow"
+                            }
+                        }
+
+                        ControlPanel { // progress bar shadow color
+                            id: progressBarShadowColorControls
+                            label: "Progress Bar Shadow Color"
+                            Layout.fillWidth: true
+
+                            PTextField { // progressShadowRed
+                                id: progressBarShadowRedField
+                                title: "Red"
+                                Layout.fillWidth: true
+                                descriptionText: "Red color value of the progress bar shadow"
+                            }
+
+                            PTextField { // progressShadowGreen
+                                id: progressBarShadowGreenField
+                                title: "Green"
+                                Layout.fillWidth: true
+                                descriptionText: "Green color value of the progress bar shadow"
+                            }
+                            PTextField { // progressShadowBlue
+                                id: progressBarShadowBlueField
+                                title: "Blue"
+                                Layout.fillWidth: true
+                                descriptionText: "Blue color value of the progress bar shadow"
+                            }
+                        }
+
+                        ControlPanel { // last window position
+                            id: lastWindowPositionControls
+                            label: "Last Window Position"
+                            Layout.fillWidth: true
+
+                            PTextField { // lastWindowX
+                                id: lastWindowXField
+                                title: "Last Window X"
+                                Layout.fillWidth: true
+                                descriptionText: "X position of the last window"
+                            }
+                            PTextField { // lastWindowY
+                                id: lastWindowYField
+                                title: "Last Window Y"
+                                Layout.fillWidth: true
+                                descriptionText: "Y position of the last window"
+                            }        
+                        }                        
+                    
                     }
                 }
 
