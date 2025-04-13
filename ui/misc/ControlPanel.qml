@@ -37,7 +37,6 @@ Item {
                     }
                 }
                 visible: controlGroup.showSwitch
-                enabled: controlGroup.enabled
                 anchors.left: parent.left
             }
         
