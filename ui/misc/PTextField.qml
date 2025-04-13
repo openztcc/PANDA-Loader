@@ -8,7 +8,7 @@ pragma ComponentBehavior: Bound
 
 Item {
     id: rField
-    Layout.preferredHeight: 60
+    Layout.preferredHeight: 90
     Layout.fillWidth: true
 
     property alias title: titleLabel.text

@@ -13,15 +13,16 @@ Item {
     default property alias contents: panelContents.children
     width: parent.width
 
-    Column {
+    ColumnLayout {
         id: controlColumn
         anchors.fill: parent
         spacing: 10
+        width: parent.width
 
         Row {
             id: switchRow
-            width: parent.width
-            height: 30
+            Layout.fillWidth: true
+            Layout.preferredHeight: implicitHeight
             visible: controlGroup.showSwitch || controlGroup.label !== ""
             spacing: 5
 
@@ -42,6 +43,7 @@ Item {
             Label {
                 id: titleLabel
                 text: controlGroup.label
+                anchors.verticalCenter: parent.verticalCenter
                 font.pixelSize: 12
                 color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
                 anchors.left: {
@@ -64,17 +66,10 @@ Item {
 
         Pane {
             id: controlPanel
-            anchors.top: {
-                if (switchRow.visible) {
-                    return switchRow.bottom
-                } else {
-                    return parent.top
-                }
-            }
-
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            Layout.fillWidth: true
+            enabled: controlGroup.enabled
+            Layout.preferredHeight: implicitHeight
+            Layout.bottomMargin: 10
 
             background: Rectangle {
                 id: bg
@@ -90,6 +85,7 @@ Item {
             ColumnLayout {
                 id: panelContents
                 anchors.fill: parent
+                width: parent.width
                 anchors.margins: 5
                 spacing: 5
                 enabled: controlGroup.enabled

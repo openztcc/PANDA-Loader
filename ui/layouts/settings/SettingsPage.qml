@@ -138,6 +138,9 @@ Pane {
                             id: isoControls
                             label: "Load game from ISO"
                             showSwitch: true
+                            Layout.preferredHeight: 120
+                            Layout.fillWidth: true
+                            
                             PTextField {
                                 id: isoPath
                                 title: "ISO Path"
