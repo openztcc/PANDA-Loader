@@ -69,6 +69,7 @@ Item {
             enabled: controlGroup.enabled
             Layout.preferredHeight: implicitHeight
             Layout.bottomMargin: 10
+            opacity: controlGroup.enabled ? 1 : 0.5
 
             background: Rectangle {
                 id: bg
