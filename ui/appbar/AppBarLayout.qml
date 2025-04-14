@@ -11,6 +11,13 @@ Rectangle {
     anchors.fill: parent
     color: "#34472D"
 
+    Rectangle {
+        color: Qt.darker(parent.color, 1.2)
+        height: 1
+        width: parent.width
+        anchors.bottom: parent.bottom
+    }
+
     RowLayout {
         anchors.fill: parent
         spacing: 16

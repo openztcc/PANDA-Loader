@@ -20,6 +20,13 @@ ColumnLayout {
         property string orderBy: ""
         property string searchTerm: ""
 
+        Rectangle {
+            color: Qt.darker(modList.itemColor, 2.0)
+            width: parent.width
+            height: 1
+            anchors.top: parent.top
+        }
+
         onFilterBy: (filter) => {
             console.log("Filter by:", filter)
             searchBar.orderBy = filter
@@ -39,6 +46,13 @@ ColumnLayout {
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#627D58" }
             GradientStop { position: 1.0; color: "#44603A" }
+        }
+
+        Rectangle {
+            color: Qt.darker("#627D58", 1.2)
+            anchors.top: parent.top
+            width: parent.width
+            height: 1
         }
 
         RowLayout {

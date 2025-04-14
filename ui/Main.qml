@@ -65,6 +65,15 @@ ApplicationWindow {
             property var stack: null
             property var modPage: null
             property var settingsPage: null
+
+            Rectangle {
+                z: 10
+                height: parent.height
+                width: 1
+                color: Qt.darker(parent.color, 1.2)
+                anchors.right: parent.right
+            }
+
             Column {
                 anchors.fill: parent
                 anchors.topMargin: 30

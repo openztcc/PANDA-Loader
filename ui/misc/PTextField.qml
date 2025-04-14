@@ -30,6 +30,7 @@ Item {
     property alias placeholderText: textField.placeholderText
     property alias radius: textFieldBg.radius
     property alias trailingIcon: textFieldIcon.icon
+    property alias border: textFieldBg.textFieldBorder
     property var pHeight: null
 
     // signals
@@ -110,10 +111,11 @@ Item {
 
             background: Rectangle {
                 id: textFieldBg
+                property var textFieldBorder: 1
                 color: textField.textFieldHovered ? Qt.darker(pTextField.bg, 1.05) : pTextField.bg
                 radius: 5
-                border.width: 1
-                border.color: pTextField.error ? pTextField.errorColor : Qt.darker(pTextField.bg, 1.2)
+                border.width: textFieldBorder
+                border.color: pTextField.error ? pTextField.errorColor : Qt.darker(pTextField.bg, 1.3)
 
                 // shadow effect
                 Rectangle {

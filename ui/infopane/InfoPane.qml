@@ -16,6 +16,20 @@ Item {
         radius: 0
         anchors.fill: parent
         width: parent.width
+
+        Rectangle {
+            anchors.left: parent.left
+            height: parent.height
+            color: Qt.darker(parent.color, 1.2)
+            width: 1
+        }
+
+        Rectangle {
+            anchors.top: parent.top
+            width: parent.width
+            color: Qt.darker(parent.color, 1.2)
+            height: 1
+        }
         
         // Item to create a padding
         ColumnLayout {

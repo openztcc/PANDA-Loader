@@ -31,6 +31,13 @@ Item {
             color: "#4F6846"
             Layout.alignment: Qt.AlignBottom
 
+            Rectangle {
+                anchors.top: parent.top
+                color: Qt.darker(statusBar.color, 1.2)
+                height: 1
+                width: parent.width
+            }
+
             // Text {
             //     id: statusLabel
             //     text: "Status: " + statusLabel.model

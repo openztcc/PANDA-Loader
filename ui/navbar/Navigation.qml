@@ -8,6 +8,8 @@ Rectangle {
     property var stack: null
     property var modPage: null
     property var settingsPage: null
+
+
     Column {
         anchors.fill: parent
         anchors.topMargin: 30

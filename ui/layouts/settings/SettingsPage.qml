@@ -40,6 +40,16 @@ LayoutFrame {
 
             property var currentButton: settingsButton
 
+            Rectangle {
+                z: 1
+                color: Qt.darker(mainContent.rightPaneColor, 1.2)
+                width: 1
+                height: parent.height
+                anchors.right: parent.right
+            }
+
+
+
             Column {
                 anchors.fill: parent
                 spacing: 0
@@ -154,7 +164,7 @@ LayoutFrame {
             Layout.alignment: Qt.AlignRight
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Material.background: mainContent.rightPaneColor
+            Material.background: mainContent.rightPaneColor            
 
             ColumnLayout {
                 id: settingsContent

@@ -33,6 +33,7 @@ Item {
         leftPadding: searchBar.isTagOpen ? activeFilterTag.width + 15 : 8
         radius: 0
         trailingIcon: "qrc:/icons/search.svg"
+        border: 0
 
         Row {
             id: textContainer
