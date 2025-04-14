@@ -95,6 +95,7 @@ bool PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
     }
 
     // File location variables
+
     QString filename = mod->filename();
     QString currentLocation = mod->location();
     qDebug() << "Current location:" << currentLocation;

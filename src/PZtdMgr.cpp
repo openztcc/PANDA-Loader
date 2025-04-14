@@ -313,15 +313,43 @@ bool PZtdMgr::removeFileFromZtd(const QString &ztdFilePath, const QString &fileN
 }
 
 // Moves a ztd file from one location on disk to another
-bool PZtdMgr::moveFile(const QString &filePath, const QString &newLocation) 
+bool PZtdMgr::moveFile(const QString &filePath, const QString &newLocation)
 {
-    // Check if the ztd file exists
-    if (!QFile::exists(filePath)) {
-        return false; // Ztd file does not exist
+    QFileInfo sourceInfo(filePath);
+    QFileInfo destInfo(newLocation);
+    
+    // check if dest exists
+    QDir destDir = destInfo.dir();
+    if (!destDir.exists()) {
+        destDir.mkpath(".");
     }
-
-    // Move the ztd file to the new location
-    return QFile::rename(filePath, newLocation);
+    
+    // does file exist
+    if (!sourceInfo.exists() || !sourceInfo.isFile()) {
+        qDebug() << "Source file doesn't exist or isn't a file:" << filePath;
+        return false;
+    }
+    
+    // try classic rename to move file ( same drive solution)
+    if (QFile::rename(filePath, newLocation)) {
+        return true;
+    }
+    
+    // try copy and delte (diff drives)
+    if (QFile::copy(filePath, newLocation)) {
+        // Ensure copy was successful before deleting source
+        if (QFile::exists(newLocation)) {
+            if (QFile::remove(filePath)) {
+                return true;
+            } else {
+                qDebug() << "Copied file but couldn't remove source:" << filePath;
+                return true; 
+            }
+        }
+    }
+    
+    qDebug() << "Failed to move file:" << filePath << "to" << newLocation;
+    return false;
 }
 
 bool PZtdMgr::copyZtdFile(const QString &ztdFilePath, const QString &ztdOutputCopyPath) 

@@ -56,6 +56,12 @@ Item {
             }
         }
 
+        Rectangle {
+            height: 1
+            width: parent.width
+            color: Qt.darker(modItem.itemColor, 1.2)
+        }
+
         MouseArea {
             id: modArea
             anchors.fill: parent
