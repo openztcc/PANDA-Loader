@@ -14,11 +14,13 @@ ApplicationWindow {
     height: 675
     visible: true
     title: qsTr("PANDA")
+    property var currentButton
+
 
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
 
-    function replacePage(oldPage, newPage) {
+    function replacePage(oldPage, newPage, newButton) {
         if (oldPage == newPage) {
             console.log("Old page is the same as new page, not replacing")
             return
@@ -30,6 +32,9 @@ ApplicationWindow {
             console.log("Pushing new page: " + newPage)
             stack.push(newPage)
         }
+
+        root.currentButton = newButton
+
     }
 
 
@@ -46,7 +51,13 @@ ApplicationWindow {
         anchors.bottom: parent.bottom
 
         initialItem: modPage
+
     }
+
+    Component.onCompleted: {
+        root.currentButton = modButton
+    }
+
 
     // Navigation Rail
     Item {
@@ -76,22 +87,26 @@ ApplicationWindow {
 
             Column {
                 anchors.fill: parent
-                anchors.topMargin: 30
-                spacing: 20
+                anchors.topMargin: 40
 
                 RailButton {
+                    id: modButton
                     text: qsTr("Mods")
                     icon: "qrc:/icons/mods.svg"
+                    selected: root.currentButton == modButton
+                    topButton: true
                     onClicked: {
-                        replacePage(stack.currentItem, modPage)
+                        replacePage(stack.currentItem, modPage, modButton)
                     }
                 }
 
                 RailButton {
+                    id: settingsButton
                     text: qsTr("Settings")
                     icon: "qrc:/icons/about.svg"
+                    selected: root.currentButton == settingsButton
                     onClicked: {
-                        replacePage(stack.currentItem, settingsPage)
+                        replacePage(stack.currentItem, settingsPage, settingsButton)
                     }
                 }
 
@@ -111,7 +126,7 @@ ApplicationWindow {
 
                 Component {
                     id: settingsPage
-                    SettingsPage { 
+                    SettingsPage {
                         mainColor: "#77956C"
                     }
                 }

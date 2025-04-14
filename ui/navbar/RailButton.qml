@@ -1,64 +1,79 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import QtQuick.Layouts
 
 Item {
     id: railButton
-    width: parent ? parent.width : 80
-    height: 40
-
-    // padding
+    width: parent.width
+    height: buttonContent.height
 
     required property string text
     required property string icon
-    property string fg: "#E8E8CF"  // Foreground (text/icon color)
-    property string bg: "transparent"  // Background color for rounded icon area
-    property string color: "#34472D"  // Default icon bg color
+    property string fg: "#E8E8CF"
+    property string bg: "transparent"
+    property string color: "#34472D"
+    property bool selected: false
+    property bool topButton: false
 
     signal clicked()
 
-    Column {
-        anchors.centerIn: parent
-        spacing: 2
+    Rectangle {
+        id: buttonContent
+        width: parent.width
+        height: colId.height + 20
+        color: if (hoverArea.containsPress) {
+            "#627D58"
+        } else if (hoverArea.containsMouse || railButton.selected) {
+            Qt.darker("#627D58", 1.1)
+        } else {
+            railButton.bg
+        }
 
-        // Rounded icon background
-        Rectangle {
-            width: 56
-            height: 30
-            radius: 5
-            color: if (hoverArea.containsPress) {
-                "#627D58"
-            } else if (hoverArea.containsMouse) {
-                Qt.darker("#627D58", 1.1)
-            } else {
-                railButton.bg
-            }
+
+
+        ColumnLayout {
+            id: colId
+            anchors.centerIn: parent
+            width: parent.width
+
 
             SvgIcon {
-                bgWidth: parent.width
-                bgHeight: parent.height
                 icon: railButton.icon
-                color: if (hoverArea.containsPress) {
+                color: if (hoverArea.containsPress || railButton.selected) {
                     "#FED286"
                 } else if (hoverArea.containsMouse) {
                     Qt.darker("#FED286", 1.1)
                 } else {
                     railButton.fg
                 }
+                Layout.alignment: Qt.AlignHCenter
+
+            }
+
+            // Label below the icon
+            Label {
+                text: railButton.text
+                font.pixelSize: 10
+                color: railButton.fg
+                Layout.alignment: Qt.AlignHCenter
             }
         }
+        Rectangle {
+            anchors.bottom: parent.bottom
+            height: 1
+            color: Qt.darker(railButton.color, 1.2)
+            width: parent.width
+        }
 
-        // Label below the icon
-        Label {
-            text: railButton.text
-            font.pixelSize: 10
-            color: railButton.fg
-            horizontalAlignment: Text.AlignHCenter
-            anchors.horizontalCenter: parent.horizontalCenter
+        Rectangle {
+            anchors.top: parent.top
+            height: railButton.topButton ? 1 : 0
+            color: Qt.darker(railButton.color, 1.2)
+            width: parent.width
         }
     }
 
-    // hover area config for the button
     MouseArea {
         id: hoverArea
         anchors.fill: parent
