@@ -11,7 +11,7 @@ ColumnLayout {
     SearchBar {
         id: searchBar
         Layout.fillWidth: true
-        Layout.preferredHeight: 40
+        Layout.preferredHeight: 35
         property string orderBy: ""
         property string searchTerm: ""
 
@@ -31,7 +31,6 @@ ColumnLayout {
         id: listHead
         Layout.preferredHeight: 50
         Layout.fillWidth: true
-        Layout.bottomMargin: -5
         color: "#e3e8dd"
 
         RowLayout {

@@ -20,7 +20,6 @@ LayoutFrame {
 
         // Bottom panel
         RowLayout {
-            Layout.topMargin: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
 

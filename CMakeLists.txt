@@ -134,6 +134,7 @@ qt_add_resources(appPandaLdr "resources"
         icons/check.svg
         icons/language.svg
         icons/ui.svg
+        icons/search.svg
 
         # settings
         icons/settings.svg
