@@ -22,7 +22,6 @@ Item {
             anchors.margins: 24
             anchors.fill: parent
             Layout.fillWidth: true
-            spacing: 10
 
             ColumnLayout {
                 Layout.fillWidth: true

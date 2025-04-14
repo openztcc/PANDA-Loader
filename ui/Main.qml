@@ -10,7 +10,7 @@ pragma ComponentBehavior: Bound
 
 ApplicationWindow {
     id: root
-    width: 800
+    width: 1050
     height: 675
     visible: true
     title: qsTr("PANDA")

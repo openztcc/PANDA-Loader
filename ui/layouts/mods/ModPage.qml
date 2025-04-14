@@ -12,6 +12,7 @@ LayoutFrame {
         Layout.fillHeight: true // remaining height
         Layout.fillWidth: true
         anchors.fill: parent
+        spacing: 0
 
         // top launch panel
         LaunchArea {
@@ -22,14 +23,14 @@ LayoutFrame {
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.topMargin: 0
+            spacing: 0
 
             // (Left pane) mods list
             ModsList {
                 id: modList
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredWidth: 300
-                Layout.preferredHeight: 600
 
                 Connections {
                     target: modController

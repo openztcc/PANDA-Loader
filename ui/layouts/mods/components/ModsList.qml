@@ -8,6 +8,7 @@ ColumnLayout {
     id: modList
     Layout.fillWidth: true
     Layout.fillHeight: true
+    spacing: 0
 
     property var textColor: "#E8E8CF"
     property var itemColor: "#8FA888"

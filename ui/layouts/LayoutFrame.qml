@@ -13,6 +13,7 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
+        spacing: 0
 
         ColumnLayout {
             id: contentContainer
