@@ -1,17 +1,13 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import QtQuick.Controls.Material 2.15
 
 // generic content area for the main application
 
-Pane {
+Item {
     id: mainContent
     property var offset: null
     default property alias content: contentContainer.children
     anchors.fill: parent
-    width: parent.width - 70
-    height: parent.height - 40
 
     ColumnLayout {
         id: contentContainer

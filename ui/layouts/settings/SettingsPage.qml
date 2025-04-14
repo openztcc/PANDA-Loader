@@ -7,15 +7,13 @@ import PandaUI 1.0
 
 pragma ComponentBehavior: Bound
 
-Pane {
+LayoutFrame {
     id: mainContent
     property var mainColor: "#2c6431"
     property var mainTextColor: "#E8E8CF"
     height: parent.height
     Material.background: "#57704E"
     anchors.fill: parent
-    padding: 0
-    spacing: 0
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)

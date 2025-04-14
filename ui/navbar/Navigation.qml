@@ -45,5 +45,20 @@ Rectangle {
             icon: "qrc:/icons/exit_app.svg"
             onClicked: Qt.quit()
         }
+
+        Component {
+            RailButton {
+                text: qsTr("Mods")
+                icon: "qrc:/icons/mods.svg"
+                onClicked: {
+                    console.log("Mods clicked")
+                    if (nav.stack && nav.modPage) {
+                        nav.stack.push(nav.modPage)
+                    } else {
+                        console.log("One of stack or modPage is null")
+                    }
+                }
+            }
+        }
     }
 }

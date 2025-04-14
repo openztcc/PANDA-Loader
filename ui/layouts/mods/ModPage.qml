@@ -5,17 +5,8 @@ import QtQuick.Controls.Material 2.15
 import QtQuick.Effects
 import PandaUI 1.0
 
-Pane {
-    id: mainContent
-    property var offset: null
-    Material.background: "#9daa9e"
-    padding: 6
-    spacing: 12
-    anchors.left: navRail.left
-    anchors.bottom: root.bottom
-    width: root.width - 70
-    height: root.height - 40
-
+LayoutFrame {
+    id: modPage
 
     ColumnLayout {
         Layout.fillHeight: true // remaining height
@@ -232,7 +223,7 @@ Pane {
                             title: modPane.title
                             instance: modPane.instance
                             cDialog: confirmDialog
-                            centerTo: mainContent
+                            centerTo: modPage
                         }
                     }
 

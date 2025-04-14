@@ -7,6 +7,7 @@ import PandaUI 1.0
 
 pragma ComponentBehavior: Bound
 
+
 ApplicationWindow {
     id: root
     width: 800
@@ -16,6 +17,21 @@ ApplicationWindow {
 
     Material.theme: Material.Light
     Material.accent: Material.LightGreen
+
+    function replacePage(oldPage, newPage) {
+        if (oldPage == newPage) {
+            console.log("Old page is the same as new page, not replacing")
+            return
+        } else if (oldPage) {
+            console.log("Popping old page: " + oldPage)
+            stack.pop()
+        }
+        if (newPage) {
+            console.log("Pushing new page: " + newPage)
+            stack.push(newPage)
+        }
+    }
+
 
     // Declare modals
     SimpleModal {
@@ -32,21 +48,6 @@ ApplicationWindow {
         initialItem: modPage
     }
 
-    Component {
-        id: modPage
-        ModPage {
-
-        }
-    }
-
-    Component {
-        id: settingsPage
-        SettingsPage { 
-            mainColor: "#77956C"
-        }
-    }
-
-
     // Navigation Rail
     Item {
         id: navRail
@@ -56,12 +57,56 @@ ApplicationWindow {
         anchors.left: parent.left
         z: 1
 
-        Navigation {
-            id: navContent
+        // ---------------------- Navigation Rail ----------------------
+        Rectangle {
+            id: nav
+            color: "#34472D"
             anchors.fill: parent
-            stack: stack
-            modPage: modPage
-            settingsPage: settingsPage
+            property var stack: null
+            property var modPage: null
+            property var settingsPage: null
+            Column {
+                anchors.fill: parent
+                anchors.topMargin: 30
+                spacing: 20
+
+                RailButton {
+                    text: qsTr("Mods")
+                    icon: "qrc:/icons/mods.svg"
+                    onClicked: {
+                        replacePage(stack.currentItem, modPage)
+                    }
+                }
+
+                RailButton {
+                    text: qsTr("Settings")
+                    icon: "qrc:/icons/about.svg"
+                    onClicked: {
+                        replacePage(stack.currentItem, settingsPage)
+                    }
+                }
+
+                // exit button at bottom
+                RailButton {
+                    text: qsTr("Exit")
+                    icon: "qrc:/icons/exit_app.svg"
+                    onClicked: Qt.quit()
+                }
+
+                Component {
+                    id: modPage
+                    ModPage {
+
+                    }
+                }
+
+                Component {
+                    id: settingsPage
+                    SettingsPage { 
+                        mainColor: "#77956C"
+                    }
+                }
+            }
         }
 
     }
@@ -69,7 +114,6 @@ ApplicationWindow {
     // Appbar
     ToolBar {
         id: toolbar
-        Material.background: "#f7fbf2"
         anchors.left: navRail.right
         anchors.right: parent.right
         anchors.top: parent.top
