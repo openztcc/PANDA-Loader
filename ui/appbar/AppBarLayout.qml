@@ -9,6 +9,7 @@ Rectangle {
     id: toolbar
     property var offset: null
     anchors.fill: parent
+    color: "#34472D"
 
     RowLayout {
         anchors.fill: parent
@@ -19,12 +20,26 @@ Rectangle {
         }
 
         // Appbar label
-        Label {
-            id: toolbarLabel
-            text: "PANDA Loader"
-            font.pixelSize: 14
-            color: "#424940"
-            Layout.alignment: Qt.AlignHCenter
+        Row {
+            id: appbarLabel
+            spacing: 3
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            Text {
+                id: toolbarLabel
+                text: "PANDA"
+                font.pixelSize: 14
+                color: "#E8E8CF"
+                font.bold: true
+            }
+
+            Text {
+                id: toolbarLabel2
+                text: "Loader"
+                font.pixelSize: 14
+                color: "#FED286"
+                font.bold: true
+            }
         }
 
         Item {
@@ -41,8 +56,8 @@ Rectangle {
                 id: notif
                 icon.source: "qrc:/icons/notifications.svg"
                 Layout.alignment: Qt.AlignRight
-                width: 40
-                height: 40
+                width: 30
+                height: 30
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: toolbar.offset.open()
             }
@@ -51,7 +66,7 @@ Rectangle {
                 source: notif
                 anchors.fill: notif
                 colorization: 1.0
-                colorizationColor: "#424940"
+                colorizationColor: "#E8E8CF"
             }
 
             MouseArea {
