@@ -18,6 +18,7 @@ Item {
     property var cDialog: null
     property var centerTo: null
     property var itemColor: "#77956C"
+    property var disabledColor: "#5F7955"
     anchors.fill: parent
     signal selectedMod(var mod)
 
@@ -32,21 +33,20 @@ Item {
     Pane {
         id: modPane
         anchors.fill: parent
-        Material.background: determineBackgroundColor()
+        Material.background: modItem.instance.enabled ? determineBackgroundColor(modItem.itemColor) : determineBackgroundColor(modItem.disabledColor)
         leftPadding: 10
         rightPadding: 10
         // topPadding: -5
-        opacity: determineDisabled() ? 1.0 : 0.5
 
-        function determineBackgroundColor() {
-            if (modArea.containsPress) {
-                return Qt.darker(modItem.itemColor, 1.25)
+        function determineBackgroundColor(_color) {
+            if (modArea.containsPress && !determineDisabled()) {
+                return Qt.darker(_color, 1.25)
             } else if (selected) {
-                return Qt.darker(modItem.itemColor, 1.15)
+                return Qt.darker(_color, 1.15)
             } else if (modArea.containsMouse) {
-                return Qt.darker(modItem.itemColor, 1.10)
+                return Qt.darker(_color, 1.10)
             } else {
-                return Qt.darker(modItem.itemColor, 1.05)
+                return Qt.darker(_color, 1.05)
             }
         }
 
@@ -197,7 +197,7 @@ Item {
 
                 Rectangle {
                     Layout.alignment: Qt.AlignLeft
-                    color: "#6B8760"
+                    color: modItem.instance.enabled ? modPane.determineBackgroundColor("#6B8760") : modPane.determineBackgroundColor(modItem.disabledColor)
                     Layout.preferredWidth: 64
                     Layout.fillHeight: true
                     
