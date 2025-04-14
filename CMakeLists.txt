@@ -88,6 +88,7 @@ qt_add_qml_module(appPandaLdr
         # appbar
         ui/appbar/AppBarLayout.qml
         # layouts
+        ui/layouts/MainContent.qml
         ui/layouts/mods/ModPage.qml
         ui/layouts/settings/SettingsPage.qml
         ui/layouts/settings/SettingsPane.qml
