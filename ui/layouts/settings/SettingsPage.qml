@@ -11,8 +11,8 @@ LayoutFrame {
     id: mainContent
     property var mainColor: "#2c6431"
     property var mainTextColor: "#E8E8CF"
+    property var rightPaneColor: "#57704E"
     height: parent.height
-    Material.background: "#57704E"
     anchors.fill: parent
 
     function replaceSettingsPane(pane, stack, currentButton) {
@@ -33,6 +33,7 @@ LayoutFrame {
             id: settingsPane
             Layout.fillHeight: true
             Layout.preferredWidth: 200
+            Layout.alignment: Qt.AlignLeft
 
             color: mainContent.mainColor
 
@@ -144,26 +145,14 @@ LayoutFrame {
                     }
                 }
             }
-
-        }
-
-        Rectangle {
-            id: settingsPaneDivider
-            Layout.alignment: Qt.AlignRight
-            Layout.preferredWidth: 1
-            color: Qt.darker(mainContent.mainColor, 1.2)
         }
 
         Pane {
             id: settingsRightPane
-            Layout.preferredWidth: parent.width - settingsPane.width - settingsPaneDivider.width
+            Layout.preferredWidth: parent.width - settingsPane.width
             Layout.alignment: Qt.AlignRight
             Layout.fillHeight: true
-            background: {
-                color: "#9daa9e"
-            }
-            opacity: 0.8
-
+            Material.background: mainContent.rightPaneColor
 
             ColumnLayout {
                 id: settingsContent
