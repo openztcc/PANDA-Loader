@@ -165,6 +165,7 @@ Item {
                 iconHeight: 20
                 color: "#ffffff"
                 width: icon ? 35 : 0
+                icon: ""
             }
 
             BrowseButton {

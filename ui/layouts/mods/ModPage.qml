@@ -54,9 +54,6 @@ LayoutFrame {
 
         // status bar
         Rectangle {
-            Layout.bottomMargin: -5
-            Layout.rightMargin: -5
-            Layout.leftMargin: -5
             Layout.preferredHeight: 30
             Layout.fillWidth: true
             Material.background: "#f7fbf2"

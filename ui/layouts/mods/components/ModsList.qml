@@ -5,8 +5,12 @@ import QtQuick.Controls.Material
 import PandaUI 1.0
 
 ColumnLayout {
+    id: modList
     Layout.fillWidth: true
     Layout.fillHeight: true
+
+    property var textColor: "#E8E8CF"
+    property var itemColor: "#8FA888"
 
     SearchBar {
         id: searchBar
@@ -29,9 +33,12 @@ ColumnLayout {
 
     Rectangle {
         id: listHead
-        Layout.preferredHeight: 50
+        Layout.preferredHeight: 40
         Layout.fillWidth: true
-        color: "#e3e8dd"
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "#627D58" }
+            GradientStop { position: 1.0; color: "#44603A" }
+        }
 
         RowLayout {
             anchors.fill: parent
@@ -39,20 +46,27 @@ ColumnLayout {
             Text {
                 text: "Mod Name"
                 Layout.alignment: Qt.AlignLeft
-                anchors.leftMargin: 10
+                Layout.leftMargin: 79
+                color: modList.textColor
+            }
+
+            Item {
+                Layout.fillWidth: true
             }
 
             Text {
                 text: "Enabled"
                 Layout.alignment: Qt.AlignRight
+                Layout.rightMargin: 10
+                color: modList.textColor
             }
 
-            CheckBox {
+            PCheckBox {
                 id: headCheck
                 Layout.alignment: Qt.AlignRight
-                anchors.rightMargin: 10
                 Material.accent: "#376a3e"
                 checked: true
+                Layout.rightMargin: 20
             }
         }
     }
@@ -126,7 +140,7 @@ ColumnLayout {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 height: 1
-                color: "#c1c9be"
+                color: Qt.darker(modList.itemColor, 1.2)
             }
 
             // mod list item
@@ -136,6 +150,7 @@ ColumnLayout {
                 instance: modPane.instance
                 cDialog: confirmDialog
                 centerTo: modPage
+                itemColor: modList.itemColor
             }
         }
 
