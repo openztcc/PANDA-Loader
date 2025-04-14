@@ -91,6 +91,7 @@ qt_add_qml_module(appPandaLdr
         ui/layouts/LayoutFrame.qml
         ui/layouts/mods/ModPage.qml
         ui/layouts/mods/components/LaunchArea.qml
+        ui/layouts/mods/components/ModsList.qml
         ui/layouts/settings/SettingsPage.qml
         ui/layouts/settings/SettingsPane.qml
     RESOURCES images/launch_bg.jpg
