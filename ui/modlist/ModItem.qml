@@ -271,7 +271,7 @@ Item {
                     checked: modItem.instance ? modItem.instance.enabled : false
                     Material.accent: "#376a3e"
                     enabled: true
-                    onCheckedChanged: {
+                    onCheckChanged: (checked) => {
                         if (modItem.instance) {
                             console.log("Checkbox changed:", modItem.title, checked)
                             modController.clearSelection()
@@ -284,9 +284,9 @@ Item {
                     // Prevent click propagation to parent MouseArea
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: function(mouse) {
-                            modCheck.toggle()
+                        onClicked: function(mouse) {     
                             mouse.accepted = true
+                            modCheck.onCheckChanged(!modCheck.checked)
                         }
                     }
                 }
