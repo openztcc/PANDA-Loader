@@ -11,8 +11,9 @@ Item {
         id: tagRect
         height: parent.height
         width: tagText.width + 10
-        color: "#424940"
-        radius: 5
+        color: Qt.darker("#627D58", 1.3)
+        topLeftRadius: 3
+        bottomLeftRadius: 3
         Text {
             id: tagText
             anchors.centerIn: parent
