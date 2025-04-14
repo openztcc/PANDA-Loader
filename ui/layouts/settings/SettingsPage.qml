@@ -12,8 +12,8 @@ LayoutFrame {
     property var mainColor: "#2c6431"
     property var mainTextColor: "#E8E8CF"
     property var rightPaneColor: "#57704E"
-    height: parent.height
-    anchors.fill: parent
+    Layout.fillWidth: true
+    Layout.fillHeight: true
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
@@ -26,7 +26,8 @@ LayoutFrame {
 
     RowLayout {
         id: mainLayout
-        anchors.fill: parent
+        Layout.fillWidth: true
+        Layout.fillHeight: true
         spacing: 0
 
         Rectangle {
@@ -152,6 +153,7 @@ LayoutFrame {
             Layout.preferredWidth: parent.width - settingsPane.width
             Layout.alignment: Qt.AlignRight
             Layout.fillHeight: true
+            Layout.fillWidth: true
             Material.background: mainContent.rightPaneColor
 
             ColumnLayout {

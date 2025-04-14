@@ -12,44 +12,53 @@ Item {
 
     Rectangle {
         id: modDetailsPane
-        color: "#e5e9e1"
+        color: "#57704E"
         radius: 0
         anchors.fill: parent
         width: parent.width
         
         // Item to create a padding
         ColumnLayout {
-            anchors.margins: 10
+            anchors.margins: 24
             anchors.fill: parent
             Layout.fillWidth: true
             spacing: 10
 
-            // mod title
-            Text {
-                id: modDetailsText
-                text: infoPane.targetComponent ? infoPane.targetComponent.title : "No mod selected"
-                color: "#424940"
-                font.pixelSize: 16
-                font.bold: true
+            ColumnLayout {
                 Layout.fillWidth: true
                 Layout.preferredHeight: contentHeight
-                lineHeight: 18
-                lineHeightMode: Text.FixedHeight
-                Layout.alignment: Qt.AlignTop
-            }
+                spacing: 10
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
+                Layout.bottomMargin: 20
 
-            // description
-            Text {
-                id: modDetailsDesc
-                text: infoPane.targetComponent ? infoPane.targetComponent.description : "No description"
-                color: "#424940"
-                font.pixelSize: 12
-                wrapMode: Text.WordWrap
-                Layout.fillWidth: true
-                Layout.preferredHeight: contentHeight
-                lineHeight: 14
-                lineHeightMode: Text.FixedHeight
-                Layout.alignment: Qt.AlignTop
+                // mod title
+                Text {
+                    id: modDetailsText
+                    text: infoPane.targetComponent ? infoPane.targetComponent.title : "No mod selected"
+                    color: "#ffffff"
+                    font.pixelSize: 20
+                    font.bold: true
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: contentHeight
+                    lineHeight: 18
+                    lineHeightMode: Text.FixedHeight
+                    Layout.alignment: Qt.AlignTop
+                }
+
+                // description
+                Text {
+                    id: modDetailsDesc
+                    text: infoPane.targetComponent ? infoPane.targetComponent.description : "No description"
+                    color: "#ffffff"
+                    font.pixelSize: 14
+                    wrapMode: Text.WordWrap
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: contentHeight
+                    lineHeight: 14
+                    lineHeightMode: Text.FixedHeight
+                    Layout.alignment: Qt.AlignTop
+                }
             }
 
             // authors

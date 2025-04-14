@@ -17,7 +17,7 @@ Item {
     property bool selected: false
     property var cDialog: null
     property var centerTo: null
-    property var itemColor: "#597250"
+    property var itemColor: "#77956C"
     anchors.fill: parent
     signal selectedMod(var mod)
 
@@ -41,13 +41,13 @@ Item {
 
         function determineBackgroundColor() {
             if (modArea.containsPress) {
-                return Qt.darker(modItem.itemColor, 1.2)
+                return Qt.darker(modItem.itemColor, 1.25)
             } else if (selected) {
-                return Qt.darker(modItem.itemColor, 1.1)
+                return Qt.darker(modItem.itemColor, 1.15)
             } else if (modArea.containsMouse) {
-                return Qt.darker(modItem.itemColor, 1.05)
+                return Qt.darker(modItem.itemColor, 1.10)
             } else {
-                return modItem.itemColor
+                return Qt.darker(modItem.itemColor, 1.10)
             }
         }
 
@@ -235,12 +235,22 @@ Item {
                 RowLayout {
                     Layout.fillWidth: true
                     // name of mod
-                    Label {
+                    Text {
                         id: modName
                         leftPadding: 10
                         text: modItem.title
                         font.pixelSize: 12
-                        color: "#424940"
+                        color: "#E8E8CF"
+                    }
+
+                    DropShadow {
+                        anchors.fill: modName
+                        source: modName
+                        horizontalOffset: 2
+                        verticalOffset: 2
+                        radius: 4
+                        samples: 16
+                        color: "#2f000000" // semi-transparent black
                     }
                 }
                 

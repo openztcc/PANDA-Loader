@@ -17,8 +17,8 @@ Item {
         ColumnLayout {
             id: contentContainer
             Layout.preferredHeight: implicitHeight - statusBar.height
-            anchors.fill: parent.width
-            anchors.top: parent.top
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
 
         }
         // status bar
