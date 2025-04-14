@@ -18,6 +18,7 @@ Item {
     property var cDialog: null
     property var centerTo: null
     property var itemColor: "#77956C"
+    property var disabledColor: "#5F7955"
     anchors.fill: parent
     signal selectedMod(var mod)
 
@@ -32,22 +33,20 @@ Item {
     Pane {
         id: modPane
         anchors.fill: parent
-        Material.background: determineBackgroundColor()
+        Material.background: modItem.instance.enabled ? determineBackgroundColor(modItem.itemColor) : determineBackgroundColor(modItem.disabledColor)
         leftPadding: 10
         rightPadding: 10
         // topPadding: -5
-        anchors.bottomMargin: 1
-        opacity: determineDisabled() ? 1.0 : 0.5
 
-        function determineBackgroundColor() {
-            if (modArea.containsPress) {
-                return Qt.darker(modItem.itemColor, 1.25)
+        function determineBackgroundColor(_color) {
+            if (modArea.containsPress && !determineDisabled()) {
+                return Qt.darker(_color, 1.25)
             } else if (selected) {
-                return Qt.darker(modItem.itemColor, 1.15)
+                return Qt.darker(_color, 1.15)
             } else if (modArea.containsMouse) {
-                return Qt.darker(modItem.itemColor, 1.10)
+                return Qt.darker(_color, 1.10)
             } else {
-                return Qt.darker(modItem.itemColor, 1.10)
+                return Qt.darker(_color, 1.05)
             }
         }
 
@@ -55,6 +54,12 @@ Item {
             if (modItem.instance) {
                 return modItem.instance.enabled
             }
+        }
+
+        Rectangle {
+            height: 1
+            width: parent.width
+            color: Qt.darker(modItem.itemColor, 1.2)
         }
 
         MouseArea {
@@ -192,7 +197,7 @@ Item {
 
                 Rectangle {
                     Layout.alignment: Qt.AlignLeft
-                    color: "#6B8760"
+                    color: modItem.instance.enabled ? modPane.determineBackgroundColor("#6B8760") : modPane.determineBackgroundColor(modItem.disabledColor)
                     Layout.preferredWidth: 64
                     Layout.fillHeight: true
                     
@@ -266,7 +271,7 @@ Item {
                     checked: modItem.instance ? modItem.instance.enabled : false
                     Material.accent: "#376a3e"
                     enabled: true
-                    onCheckedChanged: {
+                    onCheckChanged: (checked) => {
                         if (modItem.instance) {
                             console.log("Checkbox changed:", modItem.title, checked)
                             modController.clearSelection()
@@ -279,9 +284,9 @@ Item {
                     // Prevent click propagation to parent MouseArea
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: function(mouse) {
-                            modCheck.toggle()
+                        onClicked: function(mouse) {     
                             mouse.accepted = true
+                            modCheck.onCheckChanged(!modCheck.checked)
                         }
                     }
                 }

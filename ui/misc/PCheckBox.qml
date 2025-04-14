@@ -12,12 +12,23 @@ Item {
     property alias text: labelText.text
     property var bg: "#627D58"
 
+    signal toggled(bool checked)
+    signal checkChanged(bool checked)
+
     CheckBox {
         id: pCheckBox
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: parent.height
+        
+        onToggled: {
+            check.toggled(checked)
+        }
+
+        onCheckedChanged: {
+            check.checkChanged(checked)
+        }
 
         indicator: Item {}
         background: Item {}
