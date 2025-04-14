@@ -165,7 +165,6 @@ ColumnLayout {
                 instance: modPane.instance
                 cDialog: confirmDialog
                 centerTo: modPage
-                itemColor: modList.itemColor
             }
         }
 

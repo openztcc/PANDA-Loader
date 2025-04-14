@@ -36,7 +36,6 @@ Item {
         leftPadding: 10
         rightPadding: 10
         // topPadding: -5
-        anchors.bottomMargin: 1
         opacity: determineDisabled() ? 1.0 : 0.5
 
         function determineBackgroundColor() {
@@ -47,7 +46,7 @@ Item {
             } else if (modArea.containsMouse) {
                 return Qt.darker(modItem.itemColor, 1.10)
             } else {
-                return Qt.darker(modItem.itemColor, 1.10)
+                return Qt.darker(modItem.itemColor, 1.05)
             }
         }
 
