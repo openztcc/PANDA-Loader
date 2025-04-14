@@ -13,8 +13,8 @@ Item {
 
     Rectangle {
         id: infoPaneItemRoot
-        color: "#f7fbf2"
-        radius: 0
+        color: "#506648"
+        radius: 5
         anchors.fill: parent
 
         RowLayout {
@@ -25,11 +25,11 @@ Item {
             SvgIcon {
                 id: infoPaneItemIcon
                 icon: infoPaneItem.iconImg
-                iconWidth: 24
-                iconHeight: 24
+                iconWidth: 20
+                iconHeight: 20
                 bgWidth: 24
                 bgHeight: 24
-                color: "#424940"
+                color: "#E8E8CF"
                 Layout.alignment: Qt.AlignTop
                 Layout.leftMargin: 15
                 Layout.topMargin: 15
@@ -42,12 +42,13 @@ Item {
                 Label {
                     text: infoPaneItem.fieldName
                     font.pixelSize: 10
+                    color: "#E8E8CF"
                 }
 
                 Label {
                     text: infoPaneItem.innerComponent
                     font.pixelSize: 12
-                    color: "#424940"
+                    color: "#ffffff"
                     clip: true
                 }
             }

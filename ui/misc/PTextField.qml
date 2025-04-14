@@ -3,11 +3,12 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import Qt.labs.platform 1.1
+import PandaUI 1.0
 
 pragma ComponentBehavior: Bound
 
 Item {
-    id: rField
+    id: pTextField
     Layout.preferredHeight: 90
     Layout.fillWidth: true
 
@@ -17,14 +18,24 @@ Item {
     property var placeholderColor: "#E8E8CF"
     property var errorColor: "#FF0000"
     property var errorText: "Error"
-    property var descriptionText: "Description"
+    property var descriptionText: ""
     property var error: false
     property var filters: ["All files (*)"]
     property var mode: FileDialog.ExistingFiles
     property alias isFileBrowser: textField.isFileBrowser
+    property alias leftPadding: textField.leftPadding
+    property alias rightPadding: textField.rightPadding
+    property alias topPadding: textField.topPadding
+    property alias bottomPadding: textField.bottomPadding
+    property alias placeholderText: textField.placeholderText
+    property alias radius: textFieldBg.radius
+    property alias trailingIcon: textFieldIcon.icon
+    property alias border: textFieldBg.textFieldBorder
+    property var pHeight: null
 
     // signals
     signal searchTextChanged(text: string)
+    signal textChanged(text: string)
 
     Component {
         id: fileDialogComponent
@@ -50,7 +61,7 @@ Item {
 
     MouseArea {
         id: backgroundMouseArea
-        anchors.fill: rField
+        anchors.fill: pTextField
         propagateComposedEvents: true
         onClicked: {
             textField.focus = false;
@@ -59,44 +70,57 @@ Item {
 
     Column {
         id: textFieldContainer
-        spacing: 10
+        spacing: 0
         anchors.fill: parent
-        anchors.leftMargin: 5
-        anchors.rightMargin: 5
 
         Label {
             id: titleLabel
-            color: rField.placeholderColor
+            color: pTextField.placeholderColor
             font.pixelSize: 12
             anchors.left: parent.left
             anchors.leftMargin: 10
+            visible: if (pTextField.title) {
+                return true
+            } else {
+                return false
+            }
+            height: visible ? implicitHeight : 0
         }
 
         TextField {
             id: textField
-            height: 35
-            anchors.top: titleLabel.bottom
-            anchors.topMargin: 5
+            height: pTextField.pHeight ? pTextField.pHeight : 35
+            anchors.top: if (pTextField.title) {
+                titleLabel.bottom
+            } else {
+                parent.top
+            }
+            anchors.topMargin: if (pTextField.title) {
+                5
+            } else {
+                0
+            }
             anchors.left: parent.left
             anchors.right: parent.right
             readOnly: false
             leftPadding: 8
-            color: rField.fg
+            color: pTextField.fg
 
             property var isFileBrowser: false
             property bool textFieldHovered: false
 
             background: Rectangle {
                 id: textFieldBg
-                color: textField.textFieldHovered ? Qt.darker(rField.bg, 1.05) : rField.bg
+                property var textFieldBorder: 1
+                color: textField.textFieldHovered ? Qt.darker(pTextField.bg, 1.05) : pTextField.bg
                 radius: 5
-                border.width: 1
-                border.color: rField.error ? rField.errorColor : Qt.darker(rField.bg, 1.2)
+                border.width: textFieldBorder
+                border.color: pTextField.error ? pTextField.errorColor : Qt.darker(pTextField.bg, 1.3)
 
                 // shadow effect
                 Rectangle {
                     anchors.top: parent.top
-                    color: Qt.darker(rField.bg, 1.18)
+                    color: Qt.darker(pTextField.bg, 1.18)
                     height: 4
                     width: {
                         if (textField.isFileBrowser) {
@@ -114,7 +138,9 @@ Item {
                 id: clearButton
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: {
-                    if (textField.isFileBrowser) {
+                    if (pTextField.trailingIcon) {
+                        textFieldIcon.left
+                    } else if (textField.isFileBrowser) {
                         browseFilesButton.left
                     } else {
                         textField.right
@@ -124,9 +150,24 @@ Item {
                 width: 35
                 height: textField.height - 7
                 textField: textField
-                fg: rField.placeholderColor 
-                bg: rField.bg
+                fg: pTextField.placeholderColor 
+                bg: pTextField.bg
                 z: 1
+            }
+            
+            SvgIcon {
+                z: 5
+                id: textFieldIcon
+                anchors.right: textField.isFileBrowser ? browseFilesButton.left : textField.right
+                anchors.rightMargin: 5
+                height: textField.height
+                visible: icon ? true : false
+                anchors.verticalCenter: parent.verticalCenter
+                iconWidth: 20
+                iconHeight: 20
+                color: "#ffffff"
+                width: icon ? 35 : 0
+                icon: ""
             }
 
             BrowseButton {
@@ -136,11 +177,16 @@ Item {
                 anchors.rightMargin: 0
                 height: textField.height - 7
                 textField: textField
-                fg: rField.placeholderColor 
-                bg: rField.bg
+                fg: pTextField.placeholderColor 
+                bg: pTextField.bg
                 fileDialog: fileDialogComponent
-                component: rField
+                component: pTextField
                 z: 1
+                width: if (textField.isFileBrowser) {
+                    35
+                } else {
+                    0
+                }
             }
 
             onFocusChanged: {
@@ -164,6 +210,10 @@ Item {
                 }
             }
 
+            onTextChanged: {
+                pTextField.textChanged(textField.text)
+            }
+
             MouseArea {
                 id: textFieldMouseArea
                 anchors.fill: parent
@@ -181,25 +231,32 @@ Item {
 
         Label {
             id: descriptionLabel
-            text: rField.descriptionText
-            color: rField.placeholderColor
+            text: pTextField.descriptionText
+            visible: text.trim().length > 0
+            color: pTextField.placeholderColor
             font.pixelSize: 10
             anchors.top: textField.bottom
-            anchors.topMargin: 5
+            anchors.topMargin: visible ? 5 : 0
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: visible ? 10 : 0
+
+            height: visible ? implicitHeight : 0
         }
+
+
 
         Label {
             id: errorLabel
-            text: rField.errorText
+            text: pTextField.errorText
             color: "red"
             font.pixelSize: 12
             visible: false
             anchors.top: descriptionLabel.bottom
-            anchors.topMargin: 5
+            anchors.topMargin: visible ? 5 : 0
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: visible ? 10 : 0
+
+            height: visible ? implicitHeight : 0
         }
 
     }

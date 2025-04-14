@@ -5,8 +5,8 @@ import QtQuick.Controls.Material
 
 Item {
     id: searchBar
-    Layout.preferredHeight: 40
     Layout.fillWidth: true
+    height: implicitHeight
 
     property bool isTagOpen: false
     property string activeFilter: ""
@@ -24,21 +24,16 @@ Item {
         }
     }
 
-    TextField {
+    PTextField {
         id: searchField
-        placeholderText: "Search"
-        // Material.background: "#f7fbf2"
-        // Material.foreground: "#424940"
-        placeholderTextColor: "#424940"
+        placeholderText: ""
+        placeholderColor: "#E8E8CF"
         anchors.fill: parent
-        readOnly: false
+        bg: "#627D58"
         leftPadding: searchBar.isTagOpen ? activeFilterTag.width + 15 : 8
-
-        background: Rectangle {
-            id: searchFieldBg
-            color: "#f7fbf2"
-            radius: 0
-        }
+        radius: 0
+        trailingIcon: "qrc:/icons/search.svg"
+        border: 0
 
         Row {
             id: textContainer

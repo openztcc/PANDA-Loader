@@ -3,7 +3,7 @@ import QtQuick.Controls 6.5
 import QtQuick.Layouts
 import QtQuick.Controls.Material
 import Qt5Compat.GraphicalEffects
-import PandaLdr 1.0
+import PandaUI 1.0
 
 pragma ComponentBehavior: Bound
 
@@ -17,6 +17,7 @@ Item {
     property bool selected: false
     property var cDialog: null
     property var centerTo: null
+    property var itemColor: "#77956C"
     anchors.fill: parent
     signal selectedMod(var mod)
 
@@ -40,13 +41,13 @@ Item {
 
         function determineBackgroundColor() {
             if (modArea.containsPress) {
-                return Qt.darker("#f7fbf2", 1.2)
+                return Qt.darker(modItem.itemColor, 1.25)
             } else if (selected) {
-                return Qt.darker("#f7fbf2", 1.1)
+                return Qt.darker(modItem.itemColor, 1.15)
             } else if (modArea.containsMouse) {
-                return Qt.lighter("#f7fbf2", 1.05)
+                return Qt.darker(modItem.itemColor, 1.10)
             } else {
-                return "#f7fbf2"
+                return Qt.darker(modItem.itemColor, 1.10)
             }
         }
 
@@ -184,40 +185,48 @@ Item {
                     right: parent.right
                     top: parent.top
                     bottom: parent.bottom
-                    leftMargin: 10
                     rightMargin: 20
                 }
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignVCenter
 
-                Image {
-                    id: modIcon
+                Rectangle {
+                    Layout.alignment: Qt.AlignLeft
+                    color: "#6B8760"
+                    Layout.preferredWidth: 64
+                    Layout.fillHeight: true
+                    
+                    Image {
+                        id: modIcon
 
-                    Component.onCompleted: {
-                        if (modItem.instance) {
-                            console.log("Checking icon for modItem:" + modItem.instance.title + " - " + modItem.instance.iconpaths.length + " icons" + " - " + modItem.instance.iconpaths[0])
-                        } else {
-                            console.log("MODEL OBJECT IS NULL")
+                        Component.onCompleted: {
+                            if (modItem.instance) {
+                                console.log("Checking icon for modItem:" + modItem.instance.title + " - " + modItem.instance.iconpaths.length + " icons" + " - " + modItem.instance.iconpaths[0])
+                            } else {
+                                console.log("MODEL OBJECT IS NULL")
+                            }
                         }
-                    }
 
-                    property int radius: 5
+                        property int radius: 5
 
-                    Layout.preferredWidth: 44
-                    Layout.preferredHeight: 31
+                        Layout.preferredWidth: 44
+                        Layout.preferredHeight: 31
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
 
-                    source: (modItem.instance && modItem.instance.iconpaths.length > 0
-                             ? "file:///" + modItem.instance.iconpaths[0]
-                             : "")
-                    fillMode: Image.PreserveAspectCrop
-                    layer.enabled: true
-                    layer.effect: OpacityMask {
-                        id: iconMask
-                        maskSource: Rectangle {
-                            id: rectMask
-                            width: modIcon.width
-                            height: modIcon.height
-                            radius: modIcon.radius
+                        source: (modItem.instance && modItem.instance.iconpaths.length > 0
+                                ? "file:///" + modItem.instance.iconpaths[0]
+                                : "")
+                        fillMode: Image.PreserveAspectCrop
+                        layer.enabled: true
+                        layer.effect: OpacityMask {
+                            id: iconMask
+                            maskSource: Rectangle {
+                                id: rectMask
+                                width: modIcon.width
+                                height: modIcon.height
+                                radius: modIcon.radius
+                            }
                         }
                     }
                 }
@@ -226,12 +235,22 @@ Item {
                 RowLayout {
                     Layout.fillWidth: true
                     // name of mod
-                    Label {
+                    Text {
                         id: modName
                         leftPadding: 10
                         text: modItem.title
                         font.pixelSize: 12
-                        color: "#424940"
+                        color: "#E8E8CF"
+                    }
+
+                    DropShadow {
+                        anchors.fill: modName
+                        source: modName
+                        horizontalOffset: 2
+                        verticalOffset: 2
+                        radius: 4
+                        samples: 16
+                        color: "#2f000000" // semi-transparent black
                     }
                 }
                 
@@ -240,11 +259,10 @@ Item {
                 }
                 
                 // disable checkbox
-                CheckBox {
+                PCheckBox {
                     id: modCheck
                     z: 1
                     Layout.alignment: Qt.AlignRight
-                    Layout.preferredWidth: 20
                     checked: modItem.instance ? modItem.instance.enabled : false
                     Material.accent: "#376a3e"
                     enabled: true

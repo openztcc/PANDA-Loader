@@ -7,15 +7,13 @@ import PandaUI 1.0
 
 pragma ComponentBehavior: Bound
 
-Pane {
+LayoutFrame {
     id: mainContent
     property var mainColor: "#2c6431"
     property var mainTextColor: "#E8E8CF"
-    height: parent.height
-    Material.background: "#57704E"
-    anchors.fill: parent
-    padding: 0
-    spacing: 0
+    property var rightPaneColor: "#57704E"
+    Layout.fillWidth: true
+    Layout.fillHeight: true
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
@@ -28,17 +26,29 @@ Pane {
 
     RowLayout {
         id: mainLayout
-        anchors.fill: parent
+        Layout.fillWidth: true
+        Layout.fillHeight: true
         spacing: 0
 
         Rectangle {
             id: settingsPane
             Layout.fillHeight: true
             Layout.preferredWidth: 200
+            Layout.alignment: Qt.AlignLeft
 
             color: mainContent.mainColor
 
             property var currentButton: settingsButton
+
+            Rectangle {
+                z: 1
+                color: Qt.darker(mainContent.rightPaneColor, 1.2)
+                width: 1
+                height: parent.height
+                anchors.right: parent.right
+            }
+
+
 
             Column {
                 anchors.fill: parent
@@ -146,26 +156,15 @@ Pane {
                     }
                 }
             }
-
-        }
-
-        Rectangle {
-            id: settingsPaneDivider
-            Layout.alignment: Qt.AlignRight
-            Layout.preferredWidth: 1
-            color: Qt.darker(mainContent.mainColor, 1.2)
         }
 
         Pane {
             id: settingsRightPane
-            Layout.preferredWidth: parent.width - settingsPane.width - settingsPaneDivider.width
+            Layout.preferredWidth: parent.width - settingsPane.width
             Layout.alignment: Qt.AlignRight
             Layout.fillHeight: true
-            background: {
-                color: "#9daa9e"
-            }
-            opacity: 0.8
-
+            Layout.fillWidth: true
+            Material.background: mainContent.rightPaneColor            
 
             ColumnLayout {
                 id: settingsContent

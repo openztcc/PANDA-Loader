@@ -88,7 +88,10 @@ qt_add_qml_module(appPandaLdr
         # appbar
         ui/appbar/AppBarLayout.qml
         # layouts
+        ui/layouts/LayoutFrame.qml
         ui/layouts/mods/ModPage.qml
+        ui/layouts/mods/components/LaunchArea.qml
+        ui/layouts/mods/components/ModsList.qml
         ui/layouts/settings/SettingsPage.qml
         ui/layouts/settings/SettingsPane.qml
     RESOURCES images/launch_bg.jpg
@@ -131,6 +134,7 @@ qt_add_resources(appPandaLdr "resources"
         icons/check.svg
         icons/language.svg
         icons/ui.svg
+        icons/search.svg
 
         # settings
         icons/settings.svg
