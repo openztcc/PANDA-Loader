@@ -51,26 +51,5 @@ LayoutFrame {
             }
 
         }
-
-        // status bar
-        Rectangle {
-            Layout.preferredHeight: 30
-            Layout.fillWidth: true
-            Material.background: "#f7fbf2"
-
-            Text {
-                id: statusLabel
-                text: "Status: " + statusLabel.model
-                anchors.left: parent.left
-                anchors.leftMargin: 10
-                anchors.verticalCenter: parent.verticalCenter
-                color: "#424940"
-                font.pixelSize: 10
-
-                property string model: "No status to show"
-            }
-        }
-
     }
-
 }
