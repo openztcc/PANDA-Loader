@@ -141,14 +141,10 @@ class PZooConfig : public QObject {
     Q_PROPERTY(QString gb READ getGb WRITE setGb NOTIFY gbChanged)
     Q_PROPERTY(QString gc READ getGc WRITE setGc NOTIFY gcChanged)
     Q_PROPERTY(QString gd READ getGd WRITE setGd NOTIFY gdChanged)
-    
+
 
 public:
-    explicit PZooConfig(QObject *parent = nullptr, QString zooConfigPath = "") : QObject(parent), m_zooConfigPath(zooConfigPath) {
-        if (m_zooConfigPath.isEmpty()) {
-            m_zooConfigPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.ini";
-        }
-    }
+    explicit PZooConfig(QObject *parent = nullptr, QString zooConfigPath = "");
     PZooConfig(const PZooConfig&) = delete;
     PZooConfig& operator=(const PZooConfig&) = delete;
     PZooConfig(PZooConfig&&) = default;
@@ -159,443 +155,314 @@ public:
     // ---------------------------------------------------- [debug]
 
     QString getLogCutoff() const { return m_logCutoff; }
-    void setLogCutoff(const QString &logCutoff) { m_logCutoff = logCutoff; }
-
+    void setLogCutoff(const QString &logCutoff);
     QString getSendLogfile() const { return m_sendLogfile; }
-    void setSendLogfile(const QString &sendLogfile) { m_sendLogfile = sendLogfile; }
-
+    void setSendLogfile(const QString &sendLogfile);
     QString getSendDebugger() const { return m_sendDebugger; }
-    void setSendDebugger(const QString &sendDebugger) { m_sendDebugger = sendDebugger; }
-
+    void setSendDebugger(const QString &sendDebugger);
     QString getDeltaLog1() const { return m_deltaLog1; }
-    void setDeltaLog1(const QString &deltaLog1) { m_deltaLog1 = deltaLog1; }
-
+    void setDeltaLog1(const QString &deltaLog1);
     QString getDeltaLog0() const { return m_deltaLog0; }
-    void setDeltaLog0(const QString &deltaLog0) { m_deltaLog0 = deltaLog0; }
-
+    void setDeltaLog0(const QString &deltaLog0);
     QString getDrawfps() const { return m_drawfps; }
-    void setDrawfps(const QString &drawfps) { m_drawfps = drawfps; }
-
+    void setDrawfps(const QString &drawfps);
     QString getDrawfpsx() const { return m_drawfpsx; }
-    void setDrawfpsx(const QString &drawfpsx) { m_drawfpsx = drawfpsx; }
-
+    void setDrawfpsx(const QString &drawfpsx);
     QString getDrawfpsy() const { return m_drawfpsy; }
-    void setDrawfpsy(const QString &drawfpsy) { m_drawfpsy = drawfpsy; }
+    void setDrawfpsy(const QString &drawfpsy);
 
     // ---------------------------------------------------- [mgr]
 
     QString getAimgr() const { return m_aimgr; }
-    void setAimgr(const QString &aimgr) { m_aimgr = aimgr; }
-
+    void setAimgr(const QString &aimgr);
     QString getWorldmgr() const { return m_worldmgr; }
-    void setWorldmgr(const QString &worldmgr) { m_worldmgr = worldmgr; }
-
+    void setWorldmgr(const QString &worldmgr);
     QString getGamemgr() const { return m_gamemgr; }
-    void setGamemgr(const QString &gamemgr) { m_gamemgr = gamemgr; }
-
+    void setGamemgr(const QString &gamemgr);
     QString getScenariomgr() const { return m_scenariomgr; }
-    void setScenariomgr(const QString &scenariomgr) { m_scenariomgr = scenariomgr; }
-
+    void setScenariomgr(const QString &scenariomgr);
     QString getScriptmgr() const { return m_scriptmgr; }
-    void setScriptmgr(const QString &scriptmgr) { m_scriptmgr = scriptmgr; }
-
+    void setScriptmgr(const QString &scriptmgr);
     QString getSoundmgr() const { return m_soundmgr; }
-    void setSoundmgr(const QString &soundmgr) { m_soundmgr = soundmgr; }
-
+    void setSoundmgr(const QString &soundmgr);
     QString getTerrainmgr() const { return m_terrainmgr; }
-    void setTerrainmgr(const QString &terrainmgr) { m_terrainmgr = terrainmgr; }
+    void setTerrainmgr(const QString &terrainmgr);
 
     // ---------------------------------------------------- [language]
 
     QString getLang() const { return m_lang; }
-    void setLang(const QString &lang) { m_lang = lang; }
-
+    void setLang(const QString &lang);
     QString getSublang() const { return m_sublang; }
-    void setSublang(const QString &sublang) { m_sublang = sublang; }
-
+    void setSublang(const QString &sublang);
+    
     // ---------------------------------------------------- [lib]
 
     QString getRes() const { return m_res; }
-    void setRes(const QString &res) { m_res = res; }
-
+    void setRes(const QString &res);
     QString getLangLib() const { return m_langLib; }
-    void setLangLib(const QString &langLib) { m_langLib = langLib; }
+    void setLangLib(const QString &langLib);
 
     // ---------------------------------------------------- [resource]
 
     QStringList getPath() const { return m_path; }
-    void setPath(const QStringList &path) { m_path = path; }
+    void setPath(const QStringList &path);
 
     // ---------------------------------------------------- [user]
 
     QString getFullscreen() const { return m_fullscreen; }
-    void setFullscreen(const QString &fullscreen) { m_fullscreen = fullscreen; }
-
+    void setFullscreen(const QString &fullscreen);
     QString getScreenwidth() const { return m_screenwidth; }
-    void setScreenwidth(const QString &screenwidth) { m_screenwidth = screenwidth; }
-
+    void setScreenwidth(const QString &screenwidth);
     QString getScreenheight() const { return m_screenheight; }
-    void setScreenheight(const QString &screenheight) { m_screenheight = screenheight; }
-
+    void setScreenheight(const QString &screenheight);
     QString getUpdateRate() const { return m_UpdateRate; }
-    void setUpdateRate(const QString &updateRate) { m_UpdateRate = updateRate; }
-
+    void setUpdateRate(const QString &updateRate);
     QString getDrawRate() const { return m_DrawRate; }
-    void setDrawRate(const QString &drawRate) { m_DrawRate = drawRate; }
-
+    void setDrawRate(const QString &drawRate);
     QString getLastfile() const { return m_lastfile; }
-    void setLastfile(const QString &lastfile) { m_lastfile = lastfile; }
-
+    void setLastfile(const QString &lastfile);
     QString getUnlockCount() const { return m_unlockCount; }
-    void setUnlockCount(const QString &unlockCount) { m_unlockCount = unlockCount; }
-
+    void setUnlockCount(const QString &unlockCount);
     QStringList getUnlockEntity() const { return m_unlockEntity; }
-    void setUnlockEntity(const QStringList &unlockEntity) { m_unlockEntity = unlockEntity; }
-
-    void addUnlockEntity(const QString &unlockEntity) { m_unlockEntity.append(unlockEntity); }
-    void removeUnlockEntity(const QString &unlockEntity) { m_unlockEntity.removeAll(unlockEntity); }
+    void setUnlockEntity(const QStringList &unlockEntity);
+    void addUnlockEntity(const QString &unlockEntity);
+    void removeUnlockEntity(const QString &unlockEntity);
 
     // ---------------------------------------------------- [advanced]
 
     QString getDrag() const { return m_drag; }
-    void setDrag(const QString &drag) { m_drag = drag; }
-
+    void setDrag(const QString &drag);
     QString getClick() const { return m_click; }
-    void setClick(const QString &click) { m_click = click; }
-
+    void setClick(const QString &click);
     QString getNormal() const { return m_normal; }
-    void setNormal(const QString &normal) { m_normal = normal; }
-
+    void setNormal(const QString &normal);
     QString getLoadHalfAnims() const { return m_loadHalfAnims; }
-    void setLoadHalfAnims(const QString &loadHalfAnims) { m_loadHalfAnims = loadHalfAnims; }
-
+    void setLoadHalfAnims(const QString &loadHalfAnims);
     QString getUse8BitSound() const { return m_use8BitSound; }
-    void setUse8BitSound(const QString &use8BitSound) { m_use8BitSound = use8BitSound; }
-
+    void setUse8BitSound(const QString &use8BitSound);
     QString getLevel() const { return m_level; }
-    void setLevel(const QString &level) { m_level = level; }
-
+    void setLevel(const QString &level);
     QString getDevModeEnabled() const { return m_devModeEnabled; }
-    void setDevModeEnabled(const QString &devModeEnabled) { m_devModeEnabled = devModeEnabled; }
+    void setDevModeEnabled(const QString &devModeEnabled);
 
     // ---------------------------------------------------- [Map]
 
     QString getMapX() const { return m_mapX; }
-    void setMapX(const QString &mapX) { m_mapX = mapX; }
-
+    void setMapX(const QString &mapX);
     QString getMapY() const { return m_mapY; }
-    void setMapY(const QString &mapY) { m_mapY = mapY; }
+    void setMapY(const QString &mapY);
 
     // ---------------------------------------------------- [UI]
 
     QString getUseAlternateCursors() const { return m_useAlternateCursors; }
-    void setUseAlternateCursors(const QString &useAlternateCursors) { m_useAlternateCursors = useAlternateCursors; }
-
+    void setUseAlternateCursors(const QString &useAlternateCursors);
     QString getTooltipDelay() const { return m_tooltipDelay; }
-    void setTooltipDelay(const QString &tooltipDelay) { m_tooltipDelay = tooltipDelay; }
-
+    void setTooltipDelay(const QString &tooltipDelay);
     QString getTooltipDuration() const { return m_tooltipDuration; }
-    void setTooltipDuration(const QString &tooltipDuration) { m_tooltipDuration = tooltipDuration; }
-
+    void setTooltipDuration(const QString &tooltipDuration);
     QString getMessageDisplay() const { return m_MessageDisplay; }
-    void setMessageDisplay(const QString &messageDisplay) { m_MessageDisplay = messageDisplay; }
-
+    void setMessageDisplay(const QString &messageDisplay);
     QString getMouseScrollThreshold() const { return m_mouseScrollThreshold; }
-    void setMouseScrollThreshold(const QString &mouseScrollThreshold) { m_mouseScrollThreshold = mouseScrollThreshold; }
-
+    void setMouseScrollThreshold(const QString &mouseScrollThreshold);
     QString getMouseScrollDelay() const { return m_mouseScrollDelay; }
-    void setMouseScrollDelay(const QString &mouseScrollDelay) { m_mouseScrollDelay = mouseScrollDelay; }
-
+    void setMouseScrollDelay(const QString &mouseScrollDelay);
     QString getMouseScrollX() const { return m_mouseScrollX; }
-    void setMouseScrollX(const QString &mouseScrollX) { m_mouseScrollX = mouseScrollX; }
-
+    void setMouseScrollX(const QString &mouseScrollX);
     QString getMouseScrollY() const { return m_mouseScrollY; }
-    void setMouseScrollY(const QString &mouseScrollY) { m_mouseScrollY = mouseScrollY; }
-
+    void setMouseScrollY(const QString &mouseScrollY);
     QString getKeyScrollX() const { return m_keyScrollX; }
-    void setKeyScrollX(const QString &keyScrollX) { m_keyScrollX = keyScrollX; }
-
+    void setKeyScrollX(const QString &keyScrollX);
     QString getKeyScrollY() const { return m_keyScrollY; }
-    void setKeyScrollY(const QString &keyScrollY) { m_keyScrollY = keyScrollY; }
-
+    void setKeyScrollY(const QString &keyScrollY);
     QString getMinimumMessageInterval() const { return m_minimumMessageInterval; }
-    void setMinimumMessageInterval(const QString &minimumMessageInterval) { m_minimumMessageInterval = minimumMessageInterval; }
-
+    void setMinimumMessageInterval(const QString &minimumMessageInterval);
     QString getDefaultEditCharLimit() const { return m_defaultEditCharLimit; }
-    void setDefaultEditCharLimit(const QString &defaultEditCharLimit) { m_defaultEditCharLimit = defaultEditCharLimit; }
-
+    void setDefaultEditCharLimit(const QString &defaultEditCharLimit);
     QString getNoMenuMusic() const { return m_noMenuMusic; }
-    void setNoMenuMusic(const QString &noMenuMusic) { m_noMenuMusic = noMenuMusic; }
-
+    void setNoMenuMusic(const QString &noMenuMusic);
     QString getMenuMusic() const { return m_menuMusic; }
-    void setMenuMusic(const QString &menuMusic) { m_menuMusic = menuMusic; }
-
+    void setMenuMusic(const QString &menuMusic);
     QString getMenuMusicAttenuation() const { return m_menuMusicAttenuation; }
-    void setMenuMusicAttenuation(const QString &menuMusicAttenuation) { m_menuMusicAttenuation = menuMusicAttenuation; }
-
+    void setMenuMusicAttenuation(const QString &menuMusicAttenuation);
     QString getUserAttenuation() const { return m_userAttenuation; }
-    void setUserAttenuation(const QString &userAttenuation) { m_userAttenuation = userAttenuation; }
-
+    void setUserAttenuation(const QString &userAttenuation);
     QString getHelpType() const { return m_helpType; }
-    void setHelpType(const QString &helpType) { m_helpType = helpType; }
-
+    void setHelpType(const QString &helpType);
     QString getPlayMovie() const { return m_playMovie; }
-    void setPlayMovie(const QString &playMovie) { m_playMovie = playMovie; }
-
+    void setPlayMovie(const QString &playMovie);
     QString getMovievolume1() const { return m_movievolume1; }
-    void setMovievolume1(const QString &movievolume1) { m_movievolume1 = movievolume1; }
-
+    void setMovievolume1(const QString &movievolume1);
     QString getPlaySecondMovie() const { return m_playSecondMovie; }
-    void setPlaySecondMovie(const QString &playSecondMovie) { m_playSecondMovie = playSecondMovie; }
-
+    void setPlaySecondMovie(const QString &playSecondMovie);
     QString getMovievolume2() const { return m_movievolume2; }
-    void setMovievolume2(const QString &movievolume2) { m_movievolume2 = movievolume2; }
-
+    void setMovievolume2(const QString &movievolume2);
     QString getMaxShortTooltipWidth() const { return m_maxShortTooltipWidth; }
-    void setMaxShortTooltipWidth(const QString &maxShortTooltipWidth) { m_maxShortTooltipWidth = maxShortTooltipWidth; }
-
+    void setMaxShortTooltipWidth(const QString &maxShortTooltipWidth);
     QString getMaxLongTooltipWidth() const { return m_maxLongTooltipWidth; }
-    void setMaxLongTooltipWidth(const QString &maxLongTooltipWidth) { m_maxLongTooltipWidth = maxLongTooltipWidth; }
-
+    void setMaxLongTooltipWidth(const QString &maxLongTooltipWidth);
     QString getProgressLeft() const { return m_progressLeft; }
-    void setProgressLeft(const QString &progressLeft) { m_progressLeft = progressLeft; }
-
+    void setProgressLeft(const QString &progressLeft);
     QString getProgressTop() const { return m_progressTop; }
-    void setProgressTop(const QString &progressTop) { m_progressTop = progressTop; }
-
+    void setProgressTop(const QString &progressTop);
     QString getProgressRight() const { return m_progressRight; }
-    void setProgressRight(const QString &progressRight) { m_progressRight = progressRight; }
-
+    void setProgressRight(const QString &progressRight);
     QString getProgressBottom() const { return m_progressBottom; }
-    void setProgressBottom(const QString &progressBottom) { m_progressBottom = progressBottom; }
-
+    void setProgressBottom(const QString &progressBottom);
     QString getProgressRed() const { return m_progressRed; }
-    void setProgressRed(const QString &progressRed) { m_progressRed = progressRed; }
-
+    void setProgressRed(const QString &progressRed);
     QString getProgressGreen() const { return m_progressGreen; }
-    void setProgressGreen(const QString &progressGreen) { m_progressGreen = progressGreen; }
-
+    void setProgressGreen(const QString &progressGreen);
     QString getProgressBlue() const { return m_progressBlue; }
-    void setProgressBlue(const QString &progressBlue) { m_progressBlue = progressBlue; }
-
+    void setProgressBlue(const QString &progressBlue);
     QString getProgressShadowXOffset() const { return m_progressShadowXOffset; }
-    void setProgressShadowXOffset(const QString &progressShadowXOffset) { m_progressShadowXOffset = progressShadowXOffset; }
-
+    void setProgressShadowXOffset(const QString &progressShadowXOffset);
     QString getProgressShadowYOffset() const { return m_progressShadowYOffset; }
-    void setProgressShadowYOffset(const QString &progressShadowYOffset) { m_progressShadowYOffset = progressShadowYOffset; }
-
+    void setProgressShadowYOffset(const QString &progressShadowYOffset);
     QString getProgressShadowRed() const { return m_progressShadowRed; }
-    void setProgressShadowRed(const QString &progressShadowRed) { m_progressShadowRed = progressShadowRed; }
-
+    void setProgressShadowRed(const QString &progressShadowRed);
     QString getProgressShadowGreen() const { return m_progressShadowGreen; }
-    void setProgressShadowGreen(const QString &progressShadowGreen) { m_progressShadowGreen = progressShadowGreen; }
-
+    void setProgressShadowGreen(const QString &progressShadowGreen);
     QString getProgressShadowBlue() const { return m_progressShadowBlue; }
-    void setProgressShadowBlue(const QString &progressShadowBlue) { m_progressShadowBlue = progressShadowBlue; }
-
+    void setProgressShadowBlue(const QString &progressShadowBlue);
     QString getCompletedExhibitAttenuation() const { return m_completedExhibitAttenuation; }
-    void setCompletedExhibitAttenuation(const QString &completedExhibitAttenuation) { m_completedExhibitAttenuation = completedExhibitAttenuation; }
-
+    void setCompletedExhibitAttenuation(const QString &completedExhibitAttenuation);
     QString getMSStartingCash() const { return m_MSStartingCash; }
-    void setMSStartingCash(const QString &MSStartingCash) { m_MSStartingCash = MSStartingCash; }
-
+    void setMSStartingCash(const QString &MSStartingCash);
     QString getMSCashIncrement() const { return m_MSCashIncrement; }
-    void setMSCashIncrement(const QString &MSCashIncrement) { m_MSCashIncrement = MSCashIncrement; }
-
+    void setMSCashIncrement(const QString &MSCashIncrement);
     QString getMSMinCash() const { return m_MSMinCash; }
-    void setMSMinCash(const QString &MSMinCash) { m_MSMinCash = MSMinCash; }
-
+    void setMSMinCash(const QString &MSMinCash);
     QString getMSMaxCash() const { return m_MSMaxCash; }
-    void setMSMaxCash(const QString &MSMaxCash) { m_MSMaxCash = MSMaxCash; }
-
+    void setMSMaxCash(const QString &MSMaxCash);
     QString getStartedFirstTutorial() const { return m_startedFirstTutorial; }
-    void setStartedFirstTutorial(const QString &startedFirstTutorial) { m_startedFirstTutorial = startedFirstTutorial; }
-
+    void setStartedFirstTutorial(const QString &startedFirstTutorial);
     QString getProgresscalls() const { return m_progresscalls; }
-    void setProgresscalls(const QString &progresscalls) { m_progresscalls = progresscalls; }
-
+    void setProgresscalls(const QString &progresscalls);
     QString getStartedDinoTutorial() const { return m_startedDinoTutorial; }
-    void setStartedDinoTutorial(const QString &startedDinoTutorial) { m_startedDinoTutorial = startedDinoTutorial; }
-
+    void setStartedDinoTutorial(const QString &startedDinoTutorial);
     QString getStartedAquaTutorial() const { return m_startedAquaTutorial; }
-    void setStartedAquaTutorial(const QString &startedAquaTutorial) { m_startedAquaTutorial = startedAquaTutorial; }
-
+    void setStartedAquaTutorial(const QString &startedAquaTutorial);
     QString getLastWindowX() const { return m_lastWindowX; }
-    void setLastWindowX(const QString &lastWindowX) { m_lastWindowX = lastWindowX; }
-
+    void setLastWindowX(const QString &lastWindowX);
     QString getLastWindowY() const { return m_lastWindowY; }
-    void setLastWindowY(const QString &lastWindowY) { m_lastWindowY = lastWindowY; }
+    void setLastWindowY(const QString &lastWindowY);
 
     // ---------------------------------------------------- [scenario]
     QString getTutorial() const { return m_tutorial; }
-    void setTutorial(const QString &tutorial) { m_tutorial = tutorial; }
-
+    void setTutorial(const QString &tutorial);
     QString getAa() const { return m_aa; }
-    void setAa(const QString &aa) { m_aa = aa; }
-
+    void setAa(const QString &aa);
     QString getAb() const { return m_ab; }
-    void setAb(const QString &ab) { m_ab = ab; }
-
+    void setAb(const QString &ab);
     QString getAc() const { return m_ac; }
-    void setAc(const QString &ac) { m_ac = ac; }
-
+    void setAc(const QString &ac);
     QString getAd() const { return m_ad; }
-    void setAd(const QString &ad) { m_ad = ad; }
-
+    void setAd(const QString &ad);
     QString getAe() const { return m_ae; }
-    void setAe(const QString &ae) { m_ae = ae; }
-
+    void setAe(const QString &ae);
     QString getAf() const { return m_af; }
-    void setAf(const QString &af) { m_af = af; }
-
+    void setAf(const QString &af);
     QString getAg() const { return m_ag; }
-    void setAg(const QString &ag) { m_ag = ag; }
-
+    void setAg(const QString &ag);
     QString getBa() const { return m_ba; }
-    void setBa(const QString &ba) { m_ba = ba; }
-
+    void setBa(const QString &ba);
     QString getBb() const { return m_bb; }
-    void setBb(const QString &bb) { m_bb = bb; }
-
+    void setBb(const QString &bb);
     QString getBc() const { return m_bc; }
-    void setBc(const QString &bc) { m_bc = bc; }
-
+    void setBc(const QString &bc);
     QString getBd() const { return m_bd; }
-    void setBd(const QString &bd) { m_bd = bd; }
-
+    void setBd(const QString &bd);
     QString getBe() const { return m_be; }
-    void setBe(const QString &be) { m_be = be; }
-
+    void setBe(const QString &be);
     QString getBf() const { return m_bf; }
-    void setBf(const QString &bf) { m_bf = bf; }
-
+    void setBf(const QString &bf);
     QString getBg() const { return m_bg; }
-    void setBg(const QString &bg) { m_bg = bg; }
-
+    void setBg(const QString &bg);
     QString getBh() const { return m_bh; }
-    void setBh(const QString &bh) { m_bh = bh; }
-
+    void setBh(const QString &bh);
     QString getBi() const { return m_bi; }
-    void setBi(const QString &bi) { m_bi = bi; }
-
+    void setBi(const QString &bi);
     QString getCa() const { return m_ca; }
-    void setCa(const QString &ca) { m_ca = ca; }
-
+    void setCa(const QString &ca);
     QString getCb() const { return m_cb; }
-    void setCb(const QString &cb) { m_cb = cb; }
-
+    void setCb(const QString &cb);
     QString getCc() const { return m_cc; }
-    void setCc(const QString &cc) { m_cc = cc; }
-
+    void setCc(const QString &cc);
     QString getCd() const { return m_cd; }
-    void setCd(const QString &cd) { m_cd = cd; }
-
+    void setCd(const QString &cd);
     QString getCe() const { return m_ce; }
-    void setCe(const QString &ce) { m_ce = ce; }
-
+    void setCe(const QString &ce);
     QString getCf() const { return m_cf; }
-    void setCf(const QString &cf) { m_cf = cf; }
-
+    void setCf(const QString &cf);
     QString getCg() const { return m_cg; }
-    void setCg(const QString &cg) { m_cg = cg; }
-
+    void setCg(const QString &cg);
     QString getCh() const { return m_ch; }
-    void setCh(const QString &ch) { m_ch = ch; }
-    
+    void setCh(const QString &ch);
     QString getCi() const { return m_ci; }
-    void setCi(const QString &ci) { m_ci = ci; }
-
+    void setCi(const QString &ci);
     QString getCj() const { return m_cj; }
-    void setCj(const QString &cj) { m_cj = cj; }
-
+    void setCj(const QString &cj);
     QString getCk() const { return m_ck; }
-    void setCk(const QString &ck) { m_ck = ck; }
-
+    void setCk(const QString &ck);
     QString getCl() const { return m_cl; }
-    void setCl(const QString &cl) { m_cl = cl; }
-
+    void setCl(const QString &cl);
     QString getCm() const { return m_cm; }
-    void setCm(const QString &cm) { m_cm = cm; }
-
+    void setCm(const QString &cm);
     QString getCn() const { return m_cn; }
-    void setCn(const QString &cn) { m_cn = cn; }
-
+    void setCn(const QString &cn);
     QString getDa() const { return m_da; }
-    void setDa(const QString &da) { m_da = da; }
-
+    void setDa(const QString &da);
     QString getDb() const { return m_db; }
-    void setDb(const QString &db) { m_db = db; }
-
+    void setDb(const QString &db);
     QString getDc() const { return m_dc; }
-    void setDc(const QString &dc) { m_dc = dc; }
-
+    void setDc(const QString &dc);
     QString getDd() const { return m_dd; }
-    void setDd(const QString &dd) { m_dd = dd; }
-
+    void setDd(const QString &dd);
     QString getDe() const { return m_de; }
-    void setDe(const QString &de) { m_de = de; }
-
+    void setDe(const QString &de);
     QString getDf() const { return m_df; }
-    void setDf(const QString &df) { m_df = df; }
-
+    void setDf(const QString &df);
     QString getDg() const { return m_dg; }
-    void setDg(const QString &dg) { m_dg = dg; }
-
+    void setDg(const QString &dg);
     QString getDh() const { return m_dh; }
-    void setDh(const QString &dh) { m_dh = dh; }
-
+    void setDh(const QString &dh);
     QString getEa() const { return m_ea; }
-    void setEa(const QString &ea) { m_ea = ea; }
-
+    void setEa(const QString &ea);
     QString getFa() const { return m_fa; }
-    void setFa(const QString &fa) { m_fa = fa; }
-
+    void setFa(const QString &fa);
     QString getFb() const { return m_fb; }
-    void setFb(const QString &fb) { m_fb = fb; }
-
+    void setFb(const QString &fb);
     QString getGa() const { return m_ga; }
-    void setGa(const QString &ga) { m_ga = ga; }
-
+    void setGa(const QString &ga);
     QString getGb() const { return m_gb; }
-    void setGb(const QString &gb) { m_gb = gb; }
-
+    void setGb(const QString &gb);
     QString getGc() const { return m_gc; }
-    void setGc(const QString &gc) { m_gc = gc; }
-
+    void setGc(const QString &gc);
     QString getGd() const { return m_gd; }
-    void setGd(const QString &gd) { m_gd = gd; }
+    void setGd(const QString &gd);
 
     // ---------------------------------------------------- [ai]
     QString getShowAIInfo() const { return m_showAIInfo; }
-    void setShowAIInfo(const QString &showAIInfo) { m_showAIInfo = showAIInfo; }
-
+    void setShowAIInfo(const QString &showAIInfo);
     QString getShowName() const { return m_showName; }
-    void setShowName(const QString &showName) { m_showName = showName; }
-
+    void setShowName(const QString &showName);
     QString getShowPosition() const { return m_showPosition; }
-    void setShowPosition(const QString &showPosition) { m_showPosition = showPosition; }
-
+    void setShowPosition(const QString &showPosition);
     QString getShowAnimalAIInfo() const { return m_showAnimalAIInfo; }
-    void setShowAnimalAIInfo(const QString &showAnimalAIInfo) { m_showAnimalAIInfo = showAnimalAIInfo; }
-
+    void setShowAnimalAIInfo(const QString &showAnimalAIInfo);
     QString getShowGuestAIInfo() const { return m_showGuestAIInfo; }
-    void setShowGuestAIInfo(const QString &showGuestAIInfo) { m_showGuestAIInfo = showGuestAIInfo; }
-
+    void setShowGuestAIInfo(const QString &showGuestAIInfo);
     QString getShowStaffAIInfo() const { return m_showStaffAIInfo; }
-    void setShowStaffAIInfo(const QString &showStaffAIInfo) { m_showStaffAIInfo = showStaffAIInfo; }
-
+    void setShowStaffAIInfo(const QString &showStaffAIInfo);
     QString getShowStatusVars() const { return m_showStatusVars; }
-    void setShowStatusVars(const QString &showStatusVars) { m_showStatusVars = showStatusVars; }
-
+    void setShowStatusVars(const QString &showStatusVars);
     QString getShowFunctionCall() const { return m_showFunctionCall; }
-    void setShowFunctionCall(const QString &showFunctionCall) { m_showFunctionCall = showFunctionCall; }
-
+    void setShowFunctionCall(const QString &showFunctionCall);
     QString getShowEvents() const { return m_showEvents; }
-    void setShowEvents(const QString &showEvents) { m_showEvents = showEvents; }
-
+    void setShowEvents(const QString &showEvents);
     QString getShowBuildingAIInfo() const { return m_showBuildingAIInfo; }
-    void setShowBuildingAIInfo(const QString &showBuildingAIInfo) { m_showBuildingAIInfo = showBuildingAIInfo; }
-
+    void setShowBuildingAIInfo(const QString &showBuildingAIInfo);
+    
     Q_INVOKABLE PZooConfig defaultConfig();
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
     Q_INVOKABLE void updateUnlockEntity(const QString &key, const QString &value);
@@ -741,6 +608,7 @@ signals:
 private:
     QString m_zooConfigPath;
     toml::table m_configTable;
+    bool m_dirty;
     // [debug]
     QString m_logCutoff;
     QString m_sendLogfile;

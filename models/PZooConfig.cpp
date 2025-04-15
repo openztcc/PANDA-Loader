@@ -1,7 +1,15 @@
 #include "PZooConfig.h"
 
-PZooConfig::PZooConfig(QObject *parent) : QObject(parent) {
+PZooConfig::PZooConfig(QObject *parent) : QObject(parent), m_zooConfigPath("") {
+    if (m_zooConfigPath.isEmpty()) {
+        m_zooConfigPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.ini";
+    }
 
+    // Initialize the config table with default values
+    m_configTable = {
+        {"debug", {}}, {"mgr", {}}, {"language", {}}, {"lib", {}}, {"resource", {}}, {"user", {}}, {"advanced", {}}, {"Map", {}}, {"UI", {}}, {"scenario", {}}, {"ai", {}},
+    };
+    m_dirty = false;
 }
 
 // for when user wants the default settings
@@ -111,6 +119,13 @@ PZooConfig PZooConfig::defaultConfig() {
 
     // [scenario]
     config.m_tutorial = "0";
+    config.m_aa = "0";
+    config.m_ab = "0";
+    config.m_ac = "0";
+    config.m_ad = "0";
+    config.m_ae = "0";
+    config.m_af = "0";
+    config.m_ag = "0";
     config.m_ba = "0";
     config.m_bb = "0";
     config.m_bc = "0";
@@ -166,4 +181,15 @@ PZooConfig PZooConfig::defaultConfig() {
     config.m_showGoal = "0";
 
     return config;
+}
+
+void PZooConfig::updateTable(const QString &section, const QString &key, const QString &value) {
+    m_configTable[section][key] = value.toStdString();
+    emit configUpdated(section, key, value);
+}
+
+void PZooConfig::updateUnlockEntity(const QString &key, const QString &value) {
+    m_unlockEntity.append(value);
+    m_configTable["user"][key] = value.toStdString();
+    emit unlockEntityUpdated(key, value);
 }
