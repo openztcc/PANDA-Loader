@@ -62,15 +62,16 @@ Item {
         }
 
         onTextChange: (text) => {
-            if (text === "by:" || text === "category:" || text === "disabled:" || text === "enabled:") {
+            if (text === "by:" || text === "in:" || text === "disabled:" || text === "enabled:") {
                 console.log("Found tag: " + text + " in SearchBar.qml")
                 searchBar.activeFilter = text;
                 searchBar.isTagOpen = true;
 
                 // send signals for filtering
                 if (text === "by:") {
-                    searchBar.filterBy("author");
-                } else {
+                    searchBar.filterBy("authors");
+                } else if (text === "")
+                else {
                     searchBar.filterBy(text.slice(0, -1)); // remove the colon
                 }
 
