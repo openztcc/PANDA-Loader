@@ -86,8 +86,8 @@ public:
 
     // ---------------------------------------------------- [resource]
 
-    QString getPath() const { return m_path; }
-    void setPath(const QString &path) { m_path = path; }
+    QStringList getPath() const { return m_path; }
+    void setPath(const QStringList &path) { m_path = path; }
 
     // ---------------------------------------------------- [user]
 
@@ -487,7 +487,7 @@ private:
     QString m_langLib; // this is actually just "lang", but its different than the one in [language]
 
     // [resource]
-    QString m_path;
+    QStringList m_path;
 
     // [user]
     QString m_fullscreen;
