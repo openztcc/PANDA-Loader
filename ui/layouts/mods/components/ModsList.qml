@@ -11,7 +11,7 @@ ColumnLayout {
     spacing: 0
 
     property var textColor: "#E8E8CF"
-    property var itemColor: "#8FA888"
+    property var itemColor: "#77956C"
 
     SearchBar {
         id: searchBar
@@ -27,16 +27,17 @@ ColumnLayout {
             anchors.top: parent.top
         }
 
-        onFilterBy: (filter) => {
-            console.log("Filter by:", filter)
-            searchBar.orderBy = filter
-        }
+        // onFilterBy: (filter, search) => {
+        //     console.log("Filter by:", filter)
+        //     searchBar.orderBy = filter
+        //     searchBar.searchTerm = search
+        // }
 
-        onSearchTextChanged: (text) => {
-            console.log("Search text changed:", text)
-            searchBar.searchTerm = text
-            modController.updateModList(searchBar.orderBy, searchBar.searchTerm)
-        }
+        // onSearchTextChanged: (text) => {
+        //     console.log("Search text changed:", text)
+        //     searchBar.searchTerm = text
+        //     modController.updateModList(searchBar.orderBy, searchBar.searchTerm)
+        // }
     }
 
     Rectangle {
@@ -170,16 +171,20 @@ ColumnLayout {
 
         ScrollBar.vertical: ScrollBar {
             id: vScroll
-            policy: ScrollBar.AsNeeded
-            visible: modsList.moving || modsList.dragging
-            width: 8
+            visible: true
+            width: 10
+            policy: ScrollBar.AlwaysOn
             // background: Rectangle {
             //     color: "#289662"
             //     radius: 4
             // }
+            background: {
+                color: Qt.darker(modList.itemColor, 1.1)
+                width: 12
+            }
 
             contentItem: Rectangle {
-                color: "#486d48"
+                color: Qt.darker(modList.itemColor, 1.5)
                 radius: 4
                 opacity: vScroll.hovered ? 1.0 : 0.7
             }

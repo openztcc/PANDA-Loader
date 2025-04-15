@@ -17,7 +17,7 @@ ApplicationWindow {
     property var currentButton
 
 
-    Material.theme: Material.Light
+    Material.theme: Material.Dark
     Material.accent: Material.LightGreen
 
     function replacePage(oldPage, newPage, newButton) {

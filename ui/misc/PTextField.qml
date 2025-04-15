@@ -31,11 +31,14 @@ Item {
     property alias radius: textFieldBg.radius
     property alias trailingIcon: textFieldIcon.icon
     property alias border: textFieldBg.textFieldBorder
+    property alias text: textField.text
     property var pHeight: null
 
     // signals
     signal searchTextChanged(text: string)
-    signal textChanged(text: string)
+    signal textChange(text: string)
+    signal pressed(event: var)
+    signal cleared()
 
     Component {
         id: fileDialogComponent
@@ -134,6 +137,44 @@ Item {
                 }
             }
 
+            // change cursor color
+            cursorDelegate: Rectangle {
+                    id: cursor
+                    visible: false
+                    color: "#FED286"
+                    width: 2
+
+                    // add animation back since t his overrides default b ehavior
+                    SequentialAnimation {
+                        loops: Animation.Infinite
+                        running: textField.cursorVisible
+
+                        PropertyAction {
+                            target: cursor
+                            property: 'visible'
+                            value: true
+                        }
+
+                        PauseAnimation {
+                            duration: 600
+                        }
+
+                        PropertyAction {
+                            target: cursor
+                            property: 'visible'
+                            value: false
+                        }
+
+                        PauseAnimation {
+                            duration: 600
+                        }
+
+                        onStopped: {
+                            cursor.visible = false
+                        }
+                    }
+                }
+
             ClearButton {
                 id: clearButton
                 anchors.verticalCenter: parent.verticalCenter
@@ -153,6 +194,10 @@ Item {
                 fg: pTextField.placeholderColor 
                 bg: pTextField.bg
                 z: 1
+
+                onClicked: {
+                    pTextField.cleared()
+                }
             }
             
             SvgIcon {
@@ -201,6 +246,8 @@ Item {
 
             // Key handling
             Keys.onPressed: function(event) {
+                // forward key events to the parent
+                pTextField.pressed(event)
                 // Allow Escape key to clear textfield
                 if (event.key === Qt.Key_Escape) {
                     textField.text = ""
@@ -211,7 +258,7 @@ Item {
             }
 
             onTextChanged: {
-                pTextField.textChanged(textField.text)
+                pTextField.textChange(textField.text)
             }
 
             MouseArea {

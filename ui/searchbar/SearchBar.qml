@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import PandaUI 1.0
 
 Item {
     id: searchBar
@@ -9,10 +10,11 @@ Item {
     height: implicitHeight
 
     property bool isTagOpen: false
+    property string activeTag: ""
     property string activeFilter: ""
 
     // signals
-    signal filterBy(filter: string)
+    signal filterBy(filter: string, search: string)
     signal searchTextChanged(text: string)
 
     MouseArea {
@@ -22,6 +24,12 @@ Item {
         onClicked: {
             searchField.focus = false;
         }
+    }
+
+    onFilterBy: (filter, search) => {
+        console.log("Searching by " + filter + " and query: " + search)
+        console.log("Current enabled status: " + modController.currentMod.enabled)
+        modController.updateModList(filter, search)
     }
 
     PTextField {
@@ -44,7 +52,7 @@ Item {
 
             FilterTag {
                 id: activeFilterTag
-                filter: searchBar.activeFilter
+                filter: searchBar.activeTag
                 visible: searchBar.isTagOpen
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -61,30 +69,49 @@ Item {
             }
         }
 
-        onTextChanged: {
-            if (text === "by:" || text === "category:" || text === "disabled:" || text === "enabled:") {
-                searchBar.activeFilter = text;
+        onTextChange: (text) => {
+            if (text === "by:" || text === "in:" || text === "on:" || text === "off:") {
+                console.log("Found tag: " + text + " in SearchBar.qml")
+                searchBar.activeTag = text;
                 searchBar.isTagOpen = true;
 
-                // send signals for filtering
                 if (text === "by:") {
-                    searchBar.filterBy("author");
-                } else {
-                    searchBar.filterBy(text.slice(0, -1)); // remove the colon
+                    searchBar.activeFilter = "authors";
+                } else if (text === "in:") {
+                    searchBar.activeFilter = "categories";
+                } else if (text === "on:" || text === "off:") {
+                    searchBar.activeFilter = "enabled";
+                    var query = (text === "on:") ? "true" : "false";
+                    searchBar.filterBy(searchBar.activeFilter, query);
                 }
 
                 searchField.text = "";
 
-                // wait until frame update to change padding
-                // TODO: remove...might not be effective
+                // wait for frame update
                 Qt.callLater(() => {
                     searchField.leftPadding = activeFilterTag.width + 15;
                 });
-            } 
+            }
             else {
-                // emit signal for text change
+                if (searchBar.isTagOpen && searchBar.activeFilter !== "enabled") {
+                    // non-boolean filter search
+                    searchBar.filterBy(searchBar.activeFilter, text);
+                } else if (!searchBar.isTagOpen) {
+                    // no active tag: do regular search
+                    searchBar.filterBy("", text);
+                }
+
+                // emit signal that search has changed (TODO: combine signals, redundant)
                 searchBar.searchTextChanged(text);
             }
+        }
+
+        onCleared: {
+            searchBar.activeTag = ""
+            searchBar.isTagOpen = false
+            searchField.leftPadding = 8
+            searchBar.searchTextChanged("");
+            searchBar.filterBy("");
         }
 
         // timer to allow backspace to work without immediately clearing filter
@@ -101,28 +128,30 @@ Item {
         // }
 
         // Key handling
-        Keys.onPressed: function(event) {
+        onPressed: (event) => {
+            console.log("Key event logged at SearchBar.qml")
             // Allow Escape key to clear filter
             if (event.key === Qt.Key_Escape) {
+                console.log("Escape key hit at SearchBar.qml")
                 searchBar.isTagOpen = false
-                searchBar.activeFilter = ""
-                searchField.text = ""
+                searchBar.activeTag = ""
                 event.accepted = true
                 searchField.leftPadding = 8
                 // remove focus from search field
                 searchField.focus = false
                 // update signals
                 searchBar.searchTextChanged("");
-                searchBar.filterBy("");
+                searchBar.filterBy("", "");
             }
 
             // Delete filter tag when backspace is pressed
             if (event.key === Qt.Key_Backspace && searchBar.isTagOpen && searchField.text === "") {
+                console.log("Attempted to delete tag at SearchBar.qml with key event.")
                 searchBar.isTagOpen = false
-                searchBar.activeFilter = ""
+                searchBar.activeTag = ""
                 searchField.leftPadding = 8
                 // update signals
-                searchBar.filterBy("");
+                searchBar.filterBy("", "");
             }
         }
 
