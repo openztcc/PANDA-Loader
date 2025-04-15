@@ -38,6 +38,8 @@ LayoutFrame {
                         modList.currentMod = modController.currentMod;
                     }
                 }
+
+                SplitView.fillWidth: true
             }
 
             // mod details
@@ -49,6 +51,10 @@ LayoutFrame {
                         infoPane.targetComponent = modController.currentMod;
                     }
                 }
+                SplitView.minimumWidth: 300
+                SplitView.maximumWidth: 500
+                SplitView.preferredWidth: 400
+                Layout.alignment: Qt.AlignRight
             }
 
         }
