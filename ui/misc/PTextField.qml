@@ -134,6 +134,44 @@ Item {
                 }
             }
 
+            // change cursor color
+            cursorDelegate: Rectangle {
+                    id: cursor
+                    visible: false
+                    color: "#FED286"
+                    width: 2
+
+                    // add animation back since t his overrides default b ehavior
+                    SequentialAnimation {
+                        loops: Animation.Infinite
+                        running: textField.cursorVisible
+
+                        PropertyAction {
+                            target: cursor
+                            property: 'visible'
+                            value: true
+                        }
+
+                        PauseAnimation {
+                            duration: 600
+                        }
+
+                        PropertyAction {
+                            target: cursor
+                            property: 'visible'
+                            value: false
+                        }
+
+                        PauseAnimation {
+                            duration: 600
+                        }
+
+                        onStopped: {
+                            cursor.visible = false
+                        }
+                    }
+                }
+
             ClearButton {
                 id: clearButton
                 anchors.verticalCenter: parent.verticalCenter
