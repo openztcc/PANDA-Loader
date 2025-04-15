@@ -9,53 +9,43 @@ Item {
     property var innerComponent: null
     property var iconImg: null
     width: parent ? parent.width : 300
-    height: 50
+    Layout.preferredHeight: 50
 
     Rectangle {
         id: infoPaneItemRoot
         color: "#506648"
-        radius: 5
         anchors.fill: parent
 
         RowLayout {
             id: infoPaneItemLayout
             spacing: 12
             anchors.fill: parent
+            anchors.leftMargin: 15
 
-            SvgIcon {
-                id: infoPaneItemIcon
-                icon: infoPaneItem.iconImg
-                iconWidth: 20
-                iconHeight: 20
-                bgWidth: 24
-                bgHeight: 24
+            // property i.e. author
+            Label {
+                text: infoPaneItem.fieldName
+                font.pixelSize: 10
                 color: "#E8E8CF"
-                Layout.alignment: Qt.AlignTop
-                Layout.leftMargin: 15
-                Layout.topMargin: 15
             }
 
-            ColumnLayout {
+            // value i.e. goosifer
+            Text {
+                text: infoPaneItem.innerComponent
                 Layout.fillWidth: true
-                spacing: 3
-
-                Label {
-                    text: infoPaneItem.fieldName
-                    font.pixelSize: 10
-                    color: "#E8E8CF"
-                }
-
-                Label {
-                    text: infoPaneItem.innerComponent
-                    font.pixelSize: 12
-                    color: "#ffffff"
-                    clip: true
-                }
+                wrapMode: Text.WordWrap
+                font.pixelSize: 12
+                color: "#ffffff"
+                clip: true
             }
+        }
 
-            Item {
-                Layout.fillWidth: true
-            }
+        Rectangle {
+            id: bottomBorder
+            color: Qt.darker("#506648", 1.2)
+            width: parent.width
+            height: 1
+            anchors.bottom: parent.bottom
         }
     }
 }
