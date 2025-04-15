@@ -61,8 +61,9 @@ Item {
             }
         }
 
-        onTextChanged: {
+        onTextChange: (text) => {
             if (text === "by:" || text === "category:" || text === "disabled:" || text === "enabled:") {
+                console.log("Found tag: " + text + " in SearchBar.qml")
                 searchBar.activeFilter = text;
                 searchBar.isTagOpen = true;
 
@@ -105,6 +106,7 @@ Item {
             console.log("Key event logged at SearchBar.qml")
             // Allow Escape key to clear filter
             if (event.key === Qt.Key_Escape) {
+                console.log("Escape key hit at SearchBar.qml")
                 searchBar.isTagOpen = false
                 searchBar.activeFilter = ""
                 event.accepted = true
@@ -118,6 +120,7 @@ Item {
 
             // Delete filter tag when backspace is pressed
             if (event.key === Qt.Key_Backspace && searchBar.isTagOpen && searchField.text === "") {
+                console.log("Attempted to delete tag at SearchBar.qml with key event.")
                 searchBar.isTagOpen = false
                 searchBar.activeFilter = ""
                 searchField.leftPadding = 8

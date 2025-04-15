@@ -31,11 +31,12 @@ Item {
     property alias radius: textFieldBg.radius
     property alias trailingIcon: textFieldIcon.icon
     property alias border: textFieldBg.textFieldBorder
+    property alias text: textField.text
     property var pHeight: null
 
     // signals
     signal searchTextChanged(text: string)
-    signal textChanged(text: string)
+    signal textChange(text: string)
     signal pressed(event: var)
 
     Component {
@@ -252,7 +253,7 @@ Item {
             }
 
             onTextChanged: {
-                pTextField.textChanged(textField.text)
+                pTextField.textChange(textField.text)
             }
 
             MouseArea {
