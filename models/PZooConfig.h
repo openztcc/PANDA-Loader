@@ -11,7 +11,11 @@ class PZooConfig : public QObject {
     Q_OBJECT
 
 public:
-    explicit PZooConfig(QObject *parent = nullptr) : QObject(parent) {}
+    explicit PZooConfig(QObject *parent = nullptr, QString zooConfigPath = "") : QObject(parent), m_zooConfigPath(zooConfigPath) {
+        if (m_zooConfigPath.isEmpty()) {
+            m_zooConfigPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.ini";
+        }
+    }
     PZooConfig(const PZooConfig&) = delete;
     PZooConfig& operator=(const PZooConfig&) = delete;
     PZooConfig(PZooConfig&&) = default;
@@ -459,9 +463,13 @@ public:
     QString getShowBuildingAIInfo() const { return m_showBuildingAIInfo; }
     void setShowBuildingAIInfo(const QString &showBuildingAIInfo) { m_showBuildingAIInfo = showBuildingAIInfo; }
 
-    Q_INVOKABLE void PZooConfig resetZooConfig();
+    Q_INVOKABLE PZooConfig defaultConfig();
+    Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
+    Q_INVOKABLE void saveConfig();
+    Q_INVOKABLE void loadConfig();
 private:
     QString m_zooConfigPath;
+    toml::table m_configTable;
     // [debug]
     QString m_logCutoff;
     QString m_sendLogfile;
