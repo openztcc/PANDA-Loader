@@ -11,6 +11,7 @@ Item {
 
     width: 35
     height: textField.height - 7
+    signal clicked()
 
     Button {
         id: clearButton
@@ -38,6 +39,7 @@ Item {
         }
         onClicked: {
             console.log("Clear clicked")
+            clear.clicked()
             clear.textField.text = ""
             clear.textField.focus = false
         }

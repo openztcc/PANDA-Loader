@@ -38,6 +38,7 @@ Item {
     signal searchTextChanged(text: string)
     signal textChange(text: string)
     signal pressed(event: var)
+    signal cleared()
 
     Component {
         id: fileDialogComponent
@@ -193,6 +194,10 @@ Item {
                 fg: pTextField.placeholderColor 
                 bg: pTextField.bg
                 z: 1
+
+                onClicked: {
+                    pTextField.cleared()
+                }
             }
             
             SvgIcon {

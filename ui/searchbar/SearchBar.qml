@@ -88,6 +88,14 @@ Item {
             }
         }
 
+        onCleared: {
+            searchBar.activeFilter = ""
+            searchBar.isTagOpen = false
+            searchField.leftPadding = 8
+            searchBar.searchTextChanged("");
+            searchBar.filterBy("");
+        }
+
         // timer to allow backspace to work without immediately clearing filter
         // Timer {
         //     id: clearFilterTimer
