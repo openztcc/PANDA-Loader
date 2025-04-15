@@ -101,12 +101,12 @@ Item {
         // }
 
         // Key handling
-        Keys.onPressed: function(event) {
+        onPressed: (event) => {
+            console.log("Key event logged at SearchBar.qml")
             // Allow Escape key to clear filter
             if (event.key === Qt.Key_Escape) {
                 searchBar.isTagOpen = false
                 searchBar.activeFilter = ""
-                searchField.text = ""
                 event.accepted = true
                 searchField.leftPadding = 8
                 // remove focus from search field

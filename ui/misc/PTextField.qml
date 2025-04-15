@@ -36,6 +36,7 @@ Item {
     // signals
     signal searchTextChanged(text: string)
     signal textChanged(text: string)
+    signal pressed(event: var)
 
     Component {
         id: fileDialogComponent
@@ -239,6 +240,8 @@ Item {
 
             // Key handling
             Keys.onPressed: function(event) {
+                // forward key events to the parent
+                pTextField.pressed(event)
                 // Allow Escape key to clear textfield
                 if (event.key === Qt.Key_Escape) {
                     textField.text = ""
