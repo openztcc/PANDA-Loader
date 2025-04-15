@@ -5,6 +5,8 @@ import QtQuick.Controls.Material 2.15
 import QtQuick.Effects
 import PandaUI 1.0
 
+pragma ComponentBehavior: Bound
+
 LayoutFrame {
     id: modPage
 
@@ -20,11 +22,35 @@ LayoutFrame {
         }
 
         // Bottom panel
-        RowLayout {
+        SplitView {
+            id: bottomPanel
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.topMargin: 0
             spacing: 0
+
+
+            handle: Rectangle {
+                    // TODO: this is not returning desired values. Potentially override signals.
+                    function hoverState(onHoverValue, defaultValue) {
+                        if (SplitHandle.pressed || SplitHandle.hovered) {
+                            return onHoverValue
+                        } else {
+                            return defaultValue
+                        }
+                    }
+
+                    id: handleDelegate
+                    implicitWidth: hoverState(4, 0)
+                    implicitHeight: 4
+                    color: hoverState("#FED286", "#627D58")
+
+                    containmentMask: Item {
+                        x: (handleDelegate.width - width) / 2
+                        width: 4
+                        height: bottomPanel.height
+                    }
+                }
 
             // (Left pane) mods list
             ModsList {
@@ -38,6 +64,8 @@ LayoutFrame {
                         modList.currentMod = modController.currentMod;
                     }
                 }
+
+                SplitView.fillWidth: true
             }
 
             // mod details
@@ -49,6 +77,10 @@ LayoutFrame {
                         infoPane.targetComponent = modController.currentMod;
                     }
                 }
+                SplitView.minimumWidth: 300
+                SplitView.maximumWidth: 500
+                SplitView.preferredWidth: 400
+                Layout.alignment: Qt.AlignRight
             }
 
         }

@@ -16,7 +16,6 @@ ApplicationWindow {
     title: qsTr("PANDA")
     property var currentButton
 
-
     Material.theme: Material.Dark
     Material.accent: Material.LightGreen
 

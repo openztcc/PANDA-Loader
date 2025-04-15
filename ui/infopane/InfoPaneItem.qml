@@ -3,59 +3,51 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
 
-Item {
+Rectangle {
     id: infoPaneItem
+    color: "#506648"
+    radius: 0
     property string fieldName: "No field name"
     property var innerComponent: null
     property var iconImg: null
-    width: parent ? parent.width : 300
-    height: 50
+    Layout.fillWidth: true
+    Layout.preferredHeight: implicitHeight
+    implicitWidth: contentRow.implicitWidth
+    implicitHeight: contentRow.implicitHeight + bottomBorder.height
+
+    RowLayout {
+        id: contentRow
+        anchors.fill: parent
+        spacing: 8
+
+        Text {
+            id: fieldName
+            text: infoPaneItem.fieldName
+            font.pixelSize: 10
+            color: "#E8E8CF"
+            wrapMode: Text.WordWrap
+            Layout.preferredWidth: parent.width * 0.3
+            Layout.fillHeight: true
+            padding: 10
+        }
+
+        Text {
+            id: valueName
+            text: infoPaneItem.innerComponent
+            wrapMode: Text.WordWrap
+            font.pixelSize: 12
+            color: "#ffffff"
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            padding: 10
+        }
+    }
 
     Rectangle {
-        id: infoPaneItemRoot
-        color: "#506648"
-        radius: 5
-        anchors.fill: parent
-
-        RowLayout {
-            id: infoPaneItemLayout
-            spacing: 12
-            anchors.fill: parent
-
-            SvgIcon {
-                id: infoPaneItemIcon
-                icon: infoPaneItem.iconImg
-                iconWidth: 20
-                iconHeight: 20
-                bgWidth: 24
-                bgHeight: 24
-                color: "#E8E8CF"
-                Layout.alignment: Qt.AlignTop
-                Layout.leftMargin: 15
-                Layout.topMargin: 15
-            }
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 3
-
-                Label {
-                    text: infoPaneItem.fieldName
-                    font.pixelSize: 10
-                    color: "#E8E8CF"
-                }
-
-                Label {
-                    text: infoPaneItem.innerComponent
-                    font.pixelSize: 12
-                    color: "#ffffff"
-                    clip: true
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-        }
+        id: bottomBorder
+        color: Qt.darker("#506648", 1.2)
+        width: parent.width
+        height: 1
+        anchors.bottom: parent.bottom
     }
 }
