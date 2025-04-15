@@ -35,7 +35,8 @@ signals:
 
 private:
     QString m_zooConfigPath;
-    QSettings m_configTable;
+    QUniquePointer<QSettings> m_settings;
+    QUniquePointer<QSettings> m_settingsBackup;
     bool m_dirty;
 
 };
