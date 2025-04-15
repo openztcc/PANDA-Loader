@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE int launchZT();
     QString getGamePath();
     void setGamePath(QString);
+    void loadConfig();
     QStringList getZtdList();
     PSettings* settings() const { return m_settings; }
 
