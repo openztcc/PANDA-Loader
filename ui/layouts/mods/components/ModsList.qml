@@ -27,16 +27,17 @@ ColumnLayout {
             anchors.top: parent.top
         }
 
-        onFilterBy: (filter) => {
-            console.log("Filter by:", filter)
-            searchBar.orderBy = filter
-        }
+        // onFilterBy: (filter, search) => {
+        //     console.log("Filter by:", filter)
+        //     searchBar.orderBy = filter
+        //     searchBar.searchTerm = search
+        // }
 
-        onSearchTextChanged: (text) => {
-            console.log("Search text changed:", text)
-            searchBar.searchTerm = text
-            modController.updateModList(searchBar.orderBy, searchBar.searchTerm)
-        }
+        // onSearchTextChanged: (text) => {
+        //     console.log("Search text changed:", text)
+        //     searchBar.searchTerm = text
+        //     modController.updateModList(searchBar.orderBy, searchBar.searchTerm)
+        // }
     }
 
     Rectangle {
