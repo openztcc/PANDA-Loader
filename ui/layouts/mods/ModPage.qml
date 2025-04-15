@@ -20,7 +20,7 @@ LayoutFrame {
         }
 
         // Bottom panel
-        RowLayout {
+        SplitView {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.topMargin: 0
