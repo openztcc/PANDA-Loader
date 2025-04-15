@@ -3,125 +3,124 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
 
-Item {
+pragma ComponentBehavior: Bound
+
+Rectangle {
     id: infoPane
+    color: "#57704E"
     property string text: "No text"
     property var targetComponent: null
-    implicitWidth: 300
     Layout.fillHeight: true
+    Layout.fillWidth: true
 
+    // Border elements
     Rectangle {
-        id: modDetailsPane
-        color: "#57704E"
-        radius: 0
-        anchors.fill: parent
-        width: parent.width
-
-        Rectangle {
-            anchors.left: parent.left
-            height: parent.height
-            color: Qt.darker(parent.color, 1.2)
-            width: 1
-        }
-
-        Rectangle {
-            anchors.top: parent.top
-            width: parent.width
-            color: Qt.darker(parent.color, 1.2)
-            height: 1
-        }
-        
-        // Item to create a padding
-        ColumnLayout {
-            anchors.margins: 24
-            anchors.fill: parent
-            Layout.fillWidth: true
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.preferredHeight: contentHeight
-                spacing: 10
-                Layout.leftMargin: 10
-                Layout.rightMargin: 10
-                Layout.bottomMargin: 20
-
-                // mod title
-                Text {
-                    id: modDetailsText
-                    text: infoPane.targetComponent ? infoPane.targetComponent.title : "No mod selected"
-                    color: "#ffffff"
-                    font.pixelSize: 20
-                    font.bold: true
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: contentHeight
-                    lineHeight: 18
-                    lineHeightMode: Text.FixedHeight
-                    Layout.alignment: Qt.AlignTop
-                }
-
-                // description
-                Text {
-                    id: modDetailsDesc
-                    text: infoPane.targetComponent ? infoPane.targetComponent.description : "No description"
-                    color: "#ffffff"
-                    font.pixelSize: 14
-                    wrapMode: Text.WordWrap
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: contentHeight
-                    lineHeight: 14
-                    lineHeightMode: Text.FixedHeight
-                    Layout.alignment: Qt.AlignTop
-                }
-            }
-
-            // authors
-            InfoPaneItem {
-                fieldName: "Authors"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.authors : "No authors"
-                iconImg: "qrc:/icons/author.svg"
-                Layout.fillWidth: true
-            }
-
-            // mod path
-            InfoPaneItem {
-                fieldName: "Path"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.location : "No path"
-                iconImg: "qrc:/icons/path.svg"
-                Layout.fillWidth: true
-            }
-
-            // File Name
-            InfoPaneItem {
-                fieldName: "File Name"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.filename : "No file name"
-                iconImg: "qrc:/icons/path.svg"
-                Layout.fillWidth: true
-            }
-
-            // mod ID
-            InfoPaneItem {
-                fieldName: "Mod ID"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.id : "No ID"
-                iconImg: "qrc:/icons/path.svg"
-                Layout.fillWidth: true
-            }
-
-            // enabled
-            InfoPaneItem {
-                fieldName: "Status"
-                innerComponent: infoPane.targetComponent ? infoPane.targetComponent.enabled ? "Enabled" : "Disabled" : "No status"
-                iconImg: "qrc:/icons/path.svg"
-                Layout.fillWidth: true
-            }
-
-            // without this content is spread too wide
-            Item {
-                Layout.fillHeight: true
-            }
-        }
-
+      anchors.left: parent.left
+      height: parent.height
+      color: Qt.darker(parent.color, 1.2)
+      width: 1
     }
 
+    Rectangle {
+      anchors.top: parent.top
+      width: parent.width
+      color: Qt.darker(parent.color, 1.2)
+      height: 1
+    }
+
+    Rectangle {
+      id: modDetailsPane
+      radius: 0
+      anchors.fill: parent
+      anchors.margins: 15
+      color: parent.color
+
+      ScrollView {
+          id: scrollView
+          anchors.fill: parent
+          clip: true
+          ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+          ColumnLayout {
+              id: metaLayout
+              width: scrollView.width
+              spacing: 0
+
+              // Mod title
+              Text {
+                  id: modDetailsText
+                  text: infoPane.targetComponent ? infoPane.targetComponent.title : "No mod selected"
+                  color: "#ffffff"
+                  font.pixelSize: 20
+                  font.bold: true
+                  width: metaLayout.width
+                  Layout.fillWidth: true
+                  lineHeight: 18
+                  lineHeightMode: Text.FixedHeight
+                  wrapMode: Text.WordWrap
+                  padding: 10
+              }
+
+              // Description
+              Text {
+                  id: modDetailsDesc
+                  text: infoPane.targetComponent ? infoPane.targetComponent.description : "No description"
+                  color: "#ffffff"
+                  font.pixelSize: 14
+                  wrapMode: Text.WordWrap
+                  width: metaLayout.width
+                  Layout.fillWidth: true
+                  lineHeight: 14
+                  lineHeightMode: Text.FixedHeight
+                  rightPadding: 10
+                  leftPadding: 10
+                  topPadding: 10
+                  bottomPadding: 20
+              }
+
+              // Authors
+              InfoPaneItem {
+                  fieldName: "Authors"
+                  innerComponent: infoPane.targetComponent ? infoPane.targetComponent.authors : "No authors"
+                  Layout.fillWidth: true
+              }
+
+              // Mod path
+              InfoPaneItem {
+                  fieldName: "Path"
+                  innerComponent: infoPane.targetComponent ? infoPane.targetComponent.location : "No path"
+                  Layout.fillWidth: true
+              }
+
+              // File Name
+              InfoPaneItem {
+                  fieldName: "File Name"
+                  innerComponent: infoPane.targetComponent ? infoPane.targetComponent.filename : "No file name"
+                  Layout.fillWidth: true
+              }
+
+              // Mod ID
+              InfoPaneItem {
+                  fieldName: "Mod ID"
+                  innerComponent: infoPane.targetComponent ? infoPane.targetComponent.id : "No ID"
+                  Layout.fillWidth: true
+              }
+
+              // Enabled
+              InfoPaneItem {
+                  fieldName: "Status"
+                  innerComponent: infoPane.targetComponent ?
+                      (infoPane.targetComponent.enabled ? "Enabled" : "Disabled") : "No status"
+                  Layout.fillWidth: true
+              }
+                // spacer or else it sinks to bottom
+              Item {
+                  Layout.fillHeight: true
+              }
+          }
+      }
+    }
+}
     // Connections {
     //     target: infoPane.targetComponent
     //     onSelectedMod: (mod) => {
@@ -129,4 +128,4 @@ Item {
     //         console.log("Selected mod: " + mod.modTitle)
     //     }
     // }
-}
+
