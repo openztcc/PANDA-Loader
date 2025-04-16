@@ -46,9 +46,7 @@ signals:
 private:
     QString m_zooConfigPath;
     QMap<QString, QMap<QString, QString>> m_settings;
-    QSettings m_zooini;
-    QBuffer m_configBuffer;
-    QBuffer m_settingsBackup;
+    std::unique_ptr<QSettings> m_zooini;
     bool m_dirty;
 
 };

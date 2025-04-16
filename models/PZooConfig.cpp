@@ -254,7 +254,7 @@ void PZooConfig::saveConfig() {
     if (m_dirty) {
         int keyCount = 0;
 
-        for (QString section : m_settings->childKeys()) {
+        for (QString section : m_settings.childKeys()) {
 
             // remove empty keys from these sections
             if (section == "ai" || section == "scenario") {
@@ -262,16 +262,16 @@ void PZooConfig::saveConfig() {
             }
 
             // get the number of keys in the section
-            keyCount = m_settings->childKeys(section).size();
+            keyCount = m_settings.childKeys(section).size();
 
             // if there are keys in the section, save them to the config
             if (keyCount) {
-                m_zooini.beginGroup(section);
-                for (QString key : m_settings->childKeys(section)) {
+                m_zooini->beginGroup(section);
+                for (QString key : m_settings.childKeys(section)) {
                     QString value = key.value();
                     m_zooini->setValue(key, value);
                 }
-                m_zooini.endGroup();
+                m_zooini->endGroup();
             }
         }
 
@@ -287,22 +287,28 @@ void PZooConfig::saveConfig() {
 }
 
 void PZooConfig::loadConfig() {
-    QFile file(m_zooConfigPath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        emit configError("Failed to open config file: " + m_zooConfigPath);
+    m_settings->clear();
+    QStringList validSections = {"debug", "mgr", "language", "lib", "resource", "user", "advanced", "Map", "UI", "scenario", "ai"};
+    m_zooini = std::make_unique<QSettings>(m_zooConfigPath, QSettings::IniFormat);
+
+    // load the config file into the QMap
+    for (const auto &section : validSections) {
+        if (m_zooini->childGroups().contains(section)) {
+            m_zooini->beginGroup(section);
+            for (const auto &key : m_zooini->childKeys()) {
+                QString value = m_zooini->value(key).toString();
+                m_settings[section][key] = value;
+            }
+            m_zooini->endGroup();
+        }
+    }
+
+    if (m_settings->size() == 0) {
+        emit configError("Failed to load config file.");
         return;
     }
 
-    // load file contents to buffer
-    QByteArray data = file.readAll();
-    file.close();
-
-    m_configBuffer.setData(data);
-    m_configBuffer.open(QIODevice::ReadOnly);
-
-    // load to backup
-    m_settingsBackup->setData(data);
-    m_settingsBackup->open(QIODevice::ReadOnly);
+    emit configLoaded(m_zooConfigPath);
 }
 
 // helper that removes empty keys from the settings
