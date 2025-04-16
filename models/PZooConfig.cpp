@@ -8,13 +8,19 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
     }
 
     // Initialize the config table with default values
-    m_settings = std::make_unique<QSettings>(m_zooConfigPath, QSettings::IniFormat);
+    m_settings = std::make_unique<QSettings>(m_configBuffer, QSettings::IniFormat);
     m_settings->setIniCodec("UTF-8");
     // copy the settings to a backup
-    m_settingsBackup = std::make_unique<QSettings>(m_zooConfigPath + ".bak", QSettings::IniFormat);
+    m_settingsBackup = *m_settings;
     m_settingsBackup->setIniCodec("UTF-8");
 
     m_dirty = false;
+}
+
+// cleanup
+PZooConfig::~PZooConfig() {
+    // delete stuff
+    delete m_settings;
 }
 
 // for when user wants the default settings
@@ -225,43 +231,70 @@ void PZooConfig::setZooConfigPath(const QString &path) {
     }
 }
 
+// TODO: Add validation for unlockEntity and path=
 void PZooConfig::saveConfig() {
     if (m_dirty) {
         int keyCount = 0;
-        // debug handling
-        m_settings->beginGroup("debug");
-        for (const auto &key : m_settings->childKeys()) {
-            if (m_configTable["debug"].find(key.toStdString()) != m_configTable["debug"].end()) {
-                m_settings->setValue(key, QString::fromStdString(m_configTable["debug"][key.toStdString()]));
-            }
-        }
-
+        
         // ui handling
         m_settings->beginGroup("ai");
         keyCount = m_settings->childKeys().size();
         if (keyCount == 0) {
             m_settings->remove("ai");
         } else {
-            for (const auto &key : m_settings->childKeys()) {
-                // remove keys if values are false or empty
-                if (m_configTable["ai"].find(key.toStdString()) != m_configTable["ai"].end()) {
-                    if (m_configTable["ai"][key.toStdString()] == "0") {
-                        m_settings->remove(key);
-                    }
-                }
-            }
+            removeEmptyKeys("ai", "0");
         }
         m_settings->endGroup();
         return;
+
+        // scenario handling
+        m_settings->beginGroup("scenario");
+        keyCount = m_settings->childKeys().size();
+        if (keyCount == 0) {
+            m_settings->remove("scenario");
+        } else {
+            removeEmptyKeys("scenario", "0");
+        }
+        m_settings->endGroup();
+
+        // save the settings to the file
+        m_settings->sync();
+        m_dirty = false;
     }
 }
 
-void PZooConfig::removeEmptyKeys(const QString &section, const QString &key, const QString &test) {
+void PZooConfig::loadConfig() {
+    QFile file(m_zooConfigPath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        emit configError("Failed to open config file: " + m_zooConfigPath);
+        return;
+    }
+
+    // load file contents to buffer
+    QByteArray data = file.readAll();
+    file.close();
+
+    m_configBuffer.setData(data);
+    m_configBuffer.open(QIODevice::ReadOnly);
+
+    // load to backup
+    m_settingsBackup->setData(data);
+    m_settingsBackup->open(QIODevice::ReadOnly);
+}
+
+void PZooConfig::removeEmptyKeys(const QString &section, const QString &test) {
     for (const auto &key : m_settings->childKeys()) {
         if (m_configTable[section].find(key.toStdString()) != m_configTable[section].end()) {
-            if (m_configTable[section][key.toStdString()] == "0") {
+            if (m_configTable[section][key.toStdString()] == test) {
                 m_settings->remove(key);
             }
         }
     }
+}
+
+void PZooConfig::revertChanges() {
+    m_settings->clear();
+    m_settings->copy(m_settingsBackup);
+    m_dirty = false;
+    emit configReverted(m_zooConfigPath);
 }

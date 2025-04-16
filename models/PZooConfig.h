@@ -17,6 +17,7 @@ public:
     PZooConfig(const PZooConfig&) = delete;
     PZooConfig& operator=(const PZooConfig&) = delete;
     PZooConfig(PZooConfig&&) = default;
+    ~PZooConfig() = default;
 
     Q_INVOKABLE QSettings defaultConfig();
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
@@ -24,7 +25,12 @@ public:
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
     Q_INVOKABLE void revertChanges();
-    void removeEmptyKeys(const QString &section, const QString &key, const QString &test);
+    void removeEmptyKeys(const QString &section, const QString &test);
+
+    // validation
+    Q_INVOKABLE bool isInteger(const QString &value, bool test = false) const;
+    Q_INVOKABLE bool isFloat(const QString &value, bool test = false, int precision = 0) const;
+    
 
 signals:
     void configUpdated(const QString &section, const QString &key, const QString &value);
@@ -34,8 +40,9 @@ signals:
 
 private:
     QString m_zooConfigPath;
-    QUniquePointer<QSettings> m_settings;
-    QUniquePointer<QSettings> m_settingsBackup;
+    std::unique_ptr<QSettings> m_settings;
+    QBuffer m_configBuffer;
+    QBuffer m_settingsBackup;
     bool m_dirty;
 
 };
