@@ -368,12 +368,14 @@ LayoutFrame {
                             title: "Starting Cash"
                             Layout.fillWidth: true
                             descriptionText: "How much cash to start with in freeform mode"
+                            text: zoo.getString("ui", "MSStartingCash")   
                         }
                         PTextField { // MSCashIncrement
                             id: cashIncrementField
                             title: "Cash Increment"
                             Layout.fillWidth: true
                             descriptionText: "How much cash to increment by in freeform mode"
+                            text: zoo.getString("ui", "MSCashIncrement")
                         }
 
                         PTextField { // MSMinCash
@@ -381,12 +383,14 @@ LayoutFrame {
                             title: "Minimum Cash"
                             Layout.fillWidth: true
                             descriptionText: "Minimum cash in freeform mode"
+                            text: zoo.getString("ui", "MSMinCash")
                         }
                         PTextField { // MSMaxCash
                             id: maxCashField
                             title: "Maximum Cash"
                             Layout.fillWidth: true
                             descriptionText: "Maximum cash in freeform mode"
+                            text: zoo.getString("ui", "MSMaxCash")
                         }
                         ControlPanel { // mouse controls 
                             id: controlsSettings
@@ -397,24 +401,28 @@ LayoutFrame {
                                 id: dragField
                                 title: "Drag"
                                 Layout.fillWidth: true
+                                text: zoo.getString("advanced", "drag")
                             }
 
                             PTextField { // Click
                                 id: clickField
                                 title: "Click"
                                 Layout.fillWidth: true
+                                text: zoo.getString("advanced", "Click")
                             }
 
                             PTextField { // normal
                                 id: normalField
                                 title: "Normal"
                                 Layout.fillWidth: true
+                                text: zoo.getString("advanced", "normal")
                             }
 
                             PTextField { // level 
                                 id: levelField
                                 title: "Level"
                                 Layout.fillWidth: true
+                                text: zoo.getString("advanced", "level")
                             }
 
                             PTextField { // mouseScrollThreshold
@@ -422,6 +430,7 @@ LayoutFrame {
                                 title: "Mouse Scroll Threshold"
                                 Layout.fillWidth: true
                                 descriptionText: "Threshold for mouse scroll"
+                                text: zoo.getString("ui", "mouseScrollThreshold")
                             }
 
                             PTextField { // mouseScrollDelay
@@ -429,6 +438,7 @@ LayoutFrame {
                                 title: "Mouse Scroll Delay"
                                 Layout.fillWidth: true
                                 descriptionText: "Delay for mouse scroll"
+                                text: zoo.getString("ui", "mouseScrollDelay")
                             }
 
                             PTextField { // mouseScrollX
@@ -436,6 +446,7 @@ LayoutFrame {
                                 title: "Mouse Scroll X"
                                 Layout.fillWidth: true
                                 descriptionText: "X rate of mouse scroll"
+                                text: zoo.getString("ui", "mouseScrollX")
                             }
 
                             PTextField { // mouseScrollY
@@ -443,6 +454,7 @@ LayoutFrame {
                                 title: "Mouse Scroll Y"
                                 Layout.fillWidth: true
                                 descriptionText: "Y rate of mouse scroll"
+                                text: zoo.getString("ui", "mouseScrollY")
                             }
                         }
 
@@ -458,6 +470,7 @@ LayoutFrame {
                                 title: "Key Scroll X"
                                 Layout.fillWidth: true
                                 descriptionText: "X rate of x-directional panning"
+                                text: zoo.getString("ui", "keyScrollX")
                             }
 
                             PTextField { // keyScrollY
@@ -465,6 +478,7 @@ LayoutFrame {
                                 title: "Key Scroll Y"
                                 Layout.fillWidth: true
                                 descriptionText: "Y rate of y-directional panning"
+                                text: zoo.getString("ui", "keyScrollY")
                             }
                         }
 
@@ -480,6 +494,7 @@ LayoutFrame {
                                 title: "Map X"
                                 Layout.fillWidth: true
                                 descriptionText: "X size of the map (note: this does not change the map size)"
+                                text: zoo.getString("Map", "mapX")
                             }
 
                             PTextField { // mapY
@@ -487,6 +502,7 @@ LayoutFrame {
                                 title: "Map Y"
                                 Layout.fillWidth: true
                                 descriptionText: "Y size of the map (note: this does not change the map size)"
+                                text: zoo.getString("Map", "mapY")
                             }
                         }
                     }
@@ -502,6 +518,7 @@ LayoutFrame {
                             title: "Default Edit Character Limit"
                             Layout.fillWidth: true
                             descriptionText: "Default character limit for edit fields"
+                            text: zoo.getString("ui", "defaultEditCharLimit")
                         }
 
                         ControlPanel { // Tooltip delay
@@ -509,13 +526,14 @@ LayoutFrame {
                             label: "Tooltip Delay"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: true
+                            enabled: zoo.getBool("ui", "tooltipDelay")
 
                             PTextField { // tooltipDuration
                                 id: tooltipDurationField
                                 title: "Tooltip Duration"
                                 Layout.fillWidth: true
                                 descriptionText: "Duration of the tooltip"
+                                text: zoo.getString("ui", "tooltipDuration")
                             }
                         }
 
@@ -529,6 +547,7 @@ LayoutFrame {
                                 title: "Max Short Tooltip Width"
                                 Layout.fillWidth: true
                                 descriptionText: "Maximum width of short tooltips"
+                                text: zoo.getString("ui", "maxShortTooltipWidth")
                             }
 
                             PTextField { // maxLongTooltipWidth
@@ -536,6 +555,7 @@ LayoutFrame {
                                 title: "Max Long Tooltip Width"
                                 Layout.fillWidth: true
                                 descriptionText: "Maximum width of long tooltips"
+                                text: zoo.getString("ui", "maxLongTooltipWidth")
                             }
                         }
 
@@ -543,6 +563,7 @@ LayoutFrame {
                             id: helpTypeField
                             title: "Help Type"
                             Layout.fillWidth: true
+                            text: zoo.getString("ui", "helpType")
                         }
 
                         ControlPanel { // MessageDisplay
@@ -550,13 +571,14 @@ LayoutFrame {
                             label: "Message Display"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: true
+                            enabled: zoo.getBool("ui", "MessageDisplay")
 
                             PTextField { // minimumMessageInterval
                                 id: minimumMessageIntervalField
                                 title: "Minimum Message Interval"
                                 Layout.fillWidth: true
                                 descriptionText: "Minimum interval between messages"
+                                text: zoo.getString("ui", "minimumMessageInterval")
                             }
                         }
 
@@ -570,24 +592,28 @@ LayoutFrame {
                                 title: "Left"
                                 Layout.fillWidth: true
                                 descriptionText: "Left position of the progress bar"
+                                text: zoo.getString("ui", "progressLeft")
                             }
                             PTextField { // progressTop
                                 id: progressBarTopField
                                 title: "Top"
                                 Layout.fillWidth: true
                                 descriptionText: "Top position of the progress bar"
+                                text: zoo.getString("ui", "progressTop")
                             }
                             PTextField { // progressBottom
                                 id: progressBarBottomField
                                 title: "Bottom"
                                 Layout.fillWidth: true
                                 descriptionText: "Bottom position of the progress bar"
+                                text: zoo.getString("ui", "progressBottom")
                             }
                             PTextField { // progressRight
                                 id: progressBarRightField
                                 title: "Right"
                                 Layout.fillWidth: true
                                 descriptionText: "Right position of the progress bar"
+                                text: zoo.getString("ui", "progressRight")
                             }
                         }
 
@@ -601,6 +627,7 @@ LayoutFrame {
                                 title: "Red"
                                 Layout.fillWidth: true
                                 descriptionText: "Red color value of the progress bar"
+                                text: zoo.getString("ui", "progressRed")
                             }
 
                             PTextField { // progressGreen
@@ -608,12 +635,14 @@ LayoutFrame {
                                 title: "Green"
                                 Layout.fillWidth: true
                                 descriptionText: "Green color value of the progress bar"
+                                text: zoo.getString("ui", "progressGreen")
                             }
                             PTextField { // progressBlue
                                 id: progressBarBlueField
                                 title: "Blue"
                                 Layout.fillWidth: true
                                 descriptionText: "Blue color value of the progress bar"
+                                text: zoo.getString("ui", "progressBlue")
                             }
 
                         }
@@ -628,12 +657,14 @@ LayoutFrame {
                                 title: "X Offset"
                                 Layout.fillWidth: true
                                 descriptionText: "X offset of the progress bar shadow"
+                                text: zoo.getString("ui", "progressShadowXOffset")
                             }
                             PTextField { // progressShadowYOffset
                                 id: progressBarShadowYOffsetTextField
                                 title: "Y Offset"
                                 Layout.fillWidth: true
                                 descriptionText: "Y offset of the progress bar shadow"
+                                text: zoo.getString("ui", "progressShadowYOffset")
                             }
                         }
 
@@ -647,6 +678,7 @@ LayoutFrame {
                                 title: "Red"
                                 Layout.fillWidth: true
                                 descriptionText: "Red color value of the progress bar shadow"
+                                text: zoo.getString("ui", "progressShadowRed")
                             }
 
                             PTextField { // progressShadowGreen
@@ -654,12 +686,14 @@ LayoutFrame {
                                 title: "Green"
                                 Layout.fillWidth: true
                                 descriptionText: "Green color value of the progress bar shadow"
+                                text: zoo.getString("ui", "progressShadowGreen")
                             }
                             PTextField { // progressShadowBlue
                                 id: progressBarShadowBlueField
                                 title: "Blue"
                                 Layout.fillWidth: true
                                 descriptionText: "Blue color value of the progress bar shadow"
+                                text: zoo.getString("ui", "progressShadowBlue")
                             }
                         }
 
@@ -673,12 +707,14 @@ LayoutFrame {
                                 title: "Last Window X"
                                 Layout.fillWidth: true
                                 descriptionText: "Relative to the main monitor, X position where the game was last closed"
+                                text: zoo.getString("ui", "lastWindowX")
                             }
                             PTextField { // lastWindowY
                                 id: lastWindowYField
                                 title: "Last Window Y"
                                 Layout.fillWidth: true
                                 descriptionText: "Relative to the main monitor, Y position where the game was last closed"
+                                text: zoo.getString("ui", "lastWindowY")
                             }        
                         }                        
                     
