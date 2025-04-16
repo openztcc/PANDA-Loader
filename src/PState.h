@@ -32,7 +32,7 @@ public:
     void loadConfig();
     QStringList getZtdList();
     Q_INVOKABLE PSettings* settings() const { return m_settings; }
-    Q_INVOKABLE PZooConfig* zoo() const { return m_zooConfig; }
+    Q_INVOKABLE PZooConfig* zooConfig() const { return m_zooConfig; }
 
 signals:
     void pathChanged();

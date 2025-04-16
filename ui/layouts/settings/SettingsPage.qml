@@ -183,6 +183,14 @@ LayoutFrame {
                     }
                 }
 
+                function zooBool(section, key) {
+                    return state.zoo().getBool(section, key)
+                }
+
+                function zooString(section, key) {
+                    return state.zoo().getString(section, key)
+                }
+
                 Component {
                     id: pandaSettings
                     // Forms and fields
@@ -232,7 +240,7 @@ LayoutFrame {
                         PCheckBox { // loadHalfAnims
                             id: loadHalfAnimsCheckBox
                             text: "Load Half Animations"
-                            checked: state.
+                            checked: state.zoo().getBool("
                         }
 
                         ControlPanel {
