@@ -21,8 +21,10 @@ PZooConfig::~PZooConfig() {
 }
 
 // for when user wants the default settings
-QSettings PZooConfig::defaultConfig() {
-    QSettings config(QSettings::IniFormat);
+QBuffer PZooConfig::defaultConfig() {
+    // create a new buffer for the default config
+    QBuffer configBuffer;
+    QSettings config(configBuffer, QSettings::IniFormat);
     
     // [debug]
     config.beginGroup("debug");
@@ -207,7 +209,7 @@ QSettings PZooConfig::defaultConfig() {
     // config.m_showFrame = "0";
     // config.m_showGoal = "0";
 
-    return config;
+    return configBuffer;
 }
 
 void PZooConfig::updateTable(const QString &section, const QString &key, const QString &value) {
@@ -262,6 +264,15 @@ void PZooConfig::saveConfig() {
         m_settings->sync();
         m_dirty = false;
 
+        m_configBuffer.seek(0);
+        QFile file(m_zooConfigPath);
+        if (!file.open(QIODevice::WriteOnly)) {
+            emit configError("Failed to open config file for writing: " + m_zooConfigPath);
+            return;
+        }
+
+        file.write(m_configBuffer.data());
+        file.close();
 
         emit configSaved(m_zooConfigPath);
         emit dirtyChanged(m_dirty);

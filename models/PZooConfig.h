@@ -19,7 +19,7 @@ public:
     PZooConfig(PZooConfig&&) = default;
     ~PZooConfig() = default;
 
-    Q_INVOKABLE QSettings defaultConfig();
+    Q_INVOKABLE QBuffer defaultConfig();
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
     Q_INVOKABLE void updateUnlockEntity(const QString &key, const QString &value);
     Q_INVOKABLE void saveConfig();
@@ -42,6 +42,7 @@ signals:
     void configError(const QString &errorMessage);
     void configReverted();
     void dirtyChanged(bool dirty);
+    void saveAttempted
 
 private:
     QString m_zooConfigPath;
