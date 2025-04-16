@@ -18,16 +18,16 @@ class PSettings : public QObject
 public:
     explicit PSettings(QObject* parent = nullptr);
 
-    QString zooGamePath() const { return m_zooGamePath; }
+    Q_INVOKABLE QString zooGamePath() const { return m_zooGamePath; }
     void setZooGamePath(const QString& path);
 
-    QString pandaHomePath() const { return m_configPath; }
+    Q_INVOKABLE QString pandaHomePath() const { return m_configPath; }
     void setPandaHomePath(const QString& path) { m_configPath = path; }
 
-    bool useIsoMounting() const { return m_useIsoMounting; }
+    Q_INVOKABLE bool useIsoMounting() const { return m_useIsoMounting; }
     void setUseIsoMounting(bool use);
 
-    QString isoPath() const { return m_isoPath; }
+    Q_INVOKABLE QString isoPath() const { return m_isoPath; }
     void setIsoPath(const QString& path);
 
     bool loadFromToml();

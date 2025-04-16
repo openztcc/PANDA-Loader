@@ -194,6 +194,7 @@ LayoutFrame {
                             Layout.fillWidth: true
                             descriptionText: "Path to the PANDA home directory"
                             isFileBrowser: true
+                            text: psettings.pandaHomePath()
                         }
                         PTextField {
                             id: zooPath
@@ -201,6 +202,7 @@ LayoutFrame {
                             Layout.fillWidth: true
                             descriptionText: "Path to the zoo.exe install directory"
                             isFileBrowser: true
+                            text: psettings.zooGamePath()
                         }
                         ControlPanel {
                             id: isoControls
@@ -208,7 +210,7 @@ LayoutFrame {
                             showSwitch: true
                             Layout.preferredHeight: 120
                             Layout.fillWidth: true
-                            enabled: false
+                            enabled: psettings.useIsoMounting()
 
                             PTextField {
                                 id: isoPath
@@ -216,6 +218,7 @@ LayoutFrame {
                                 Layout.fillWidth: true
                                 descriptionText: "Path to the ISO in local drive"
                                 isFileBrowser: true
+                                text: psettings.isoPath()
                             }
 
                         }
@@ -1058,13 +1061,13 @@ LayoutFrame {
                                 id: resPath
                                 title: "res"
                                 Layout.fillWidth: true
-                                text: zoo.getString("mgr", "res")
+                                text: zoo.getString("lib", "res")
                             }
                             PTextField { // lang
                                 id: langPath
                                 title: "lang"
                                 Layout.fillWidth: true
-                                text: zoo.getString("mgr", "lang")
+                                text: zoo.getString("lib", "lang")
                             }
                         }
                     }
@@ -1106,7 +1109,7 @@ LayoutFrame {
                             PCheckBox { // ShowAIInfo
                                 id: showAIInfoCheckBox
                                 text: "Show AI Info"
-                                check: zoo.getBool("debug", "ShowAIInfo")
+                                checked: zoo.getBool("debug", "ShowAIInfo")
                             }
                             PCheckBox { // ShowName
                                 id: showNameCheckBox
@@ -1189,7 +1192,7 @@ LayoutFrame {
                                 id: logCutOffField
                                 title: "Log Cut-off"
                                 Layout.fillWidth: true
-                                text: zoo.getString("debug", "logCutOff")
+                                text: zoo.getString("debug", "logCutoff")
                             }
                             PCheckBox { // deltaLog1
                                 id: deltaLog1CheckBox
