@@ -226,15 +226,15 @@ void PZooConfig::updateTable(const QString &path, const QString &key, bool value
 void PZooConfig::updateUnlockEntity(const QString &key, const QString &value) {
     // m_unlockEntity.append(value);
     // m_configTable["user"][key] = value.toStdString();
-    emit unlockEntityUpdated(key, value);
+    // emit unlockEntityUpdated(key, value);
 }
 
-void PZooConfig::setZooConfigPath(const QString &path) {
-    if (m_zooConfigPath != path) {
-        m_zooConfigPath = path;
-        emit zooConfigPathChanged(m_zooConfigPath);
-    }
-}
+// void PZooConfig::setZooConfigPath(const QString &path) {
+//     if (m_zooConfigPath != path) {
+//         m_zooConfigPath = path;
+//         emit zooConfigPathChanged(m_zooConfigPath);
+//     }
+// }
 
 // TODO: Add validation for unlockEntity and path=
 void PZooConfig::saveConfig() {
@@ -264,8 +264,8 @@ void PZooConfig::saveConfig() {
             // if there are keys in the section, save them to the config
             if (keyCount) {
                 m_zooini->beginGroup(section);
-                for (QString key : m_settings.keys(section)) {
-                    QString value = key.value();
+                for (QString key : m_settings[section].keys()) {
+                    QString value = m_settings[section][key];
                     m_zooini->setValue(key, value);
                 }
                 m_zooini->endGroup();
@@ -288,17 +288,39 @@ void PZooConfig::loadConfig() {
     QStringList validSections = {"debug", "mgr", "language", "lib", "resource", "user", "advanced", "Map", "UI", "scenario", "ai"};
     m_zooini = std::make_unique<QSettings>(m_zooConfigPath, QSettings::IniFormat);
 
+    if (!m_zooini) {
+        qDebug() << "Failed to load config file: " << m_zooConfigPath;
+        emit configError("Failed to load config file.");
+        return;
+    }
+
+    qDebug() << "Loaded config file: " << m_zooConfigPath;
+    qDebug() << "Config file format: " << m_zooini->format();
+    m_zooini->beginGroup("debug");
+    qDebug() << "Sample section key value: " << m_zooini->value("sendLogfile").toString();
+    m_zooini->endGroup();
+    m_zooini->beginGroup("mgr");
+    qDebug() << "Sample section key value: " << m_zooini->value("aimgr").toString();
+    m_zooini->endGroup();
+
+    int keyCount = 0;
+    int sectionCount = 0;
+
     // load the config file into the QMap
-    for (const auto &section : validSections) {
+    for (QString section : validSections) {
         if (m_zooini->childGroups().contains(section)) {
             m_zooini->beginGroup(section);
-            for (const auto &key : m_zooini->childKeys()) {
+            for (QString key : m_zooini->childKeys()) {
                 QString value = m_zooini->value(key).toString();
                 m_settings[section][key] = value;
+                keyCount++;
             }
             m_zooini->endGroup();
+            sectionCount++;
         }
     }
+
+    qDebug() << "Loaded config file with " << sectionCount << " sections and " << keyCount << " keys.";
 
     if (m_settings.size() == 0) {
         emit configError("Failed to load config file.");
@@ -307,7 +329,7 @@ void PZooConfig::loadConfig() {
 
     // backup the settings
     m_settingsBackup.clear();
-    for (const auto &section : m_settings.keys()) {
+    for (QString section : m_settings.keys()) {
         m_settingsBackup[section] = m_settings[section];
     }
 
@@ -318,7 +340,7 @@ void PZooConfig::loadConfig() {
 void PZooConfig::removeEmptyKeys(const QString &section, const QString &test) {
     for (QString section : m_settings.keys()) {
         for (QString key : m_settings[section].keys()) {
-            if (key.value() == test) {
+            if (m_settings[section][key] == test) {
                 m_settings[section].remove(key);
             }
         }
@@ -327,7 +349,7 @@ void PZooConfig::removeEmptyKeys(const QString &section, const QString &test) {
 
 void PZooConfig::revertChanges() {
     m_settings.clear();
-    for (const auto &section : m_settingsBackup.keys()) {
+    for (QString section : m_settingsBackup.keys()) {
         m_settings[section] = m_settingsBackup[section];
     }
     m_dirty = false;
@@ -336,11 +358,11 @@ void PZooConfig::revertChanges() {
 }
 
 bool PZooConfig::getBool(const QString &section, const QString &key) const {
-    bool value = m_settings[section][key].toBool();
+    bool value = m_settings[section][key].toInt();
     return value;
 }
 
 QString PZooConfig::getString(const QString &section, const QString &key) const {
-    QString value = m_settings[section][key].toString();
+    QString value = m_settings[section][key];
     return value;
 }

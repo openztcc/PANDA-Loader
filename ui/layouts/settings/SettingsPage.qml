@@ -183,14 +183,6 @@ LayoutFrame {
                     }
                 }
 
-                function zooBool(section, key) {
-                    return state.zoo().getBool(section, key)
-                }
-
-                function zooString(section, key) {
-                    return state.zoo().getString(section, key)
-                }
-
                 Component {
                     id: pandaSettings
                     // Forms and fields
@@ -240,7 +232,7 @@ LayoutFrame {
                         PCheckBox { // loadHalfAnims
                             id: loadHalfAnimsCheckBox
                             text: "Load Half Animations"
-                            checked: zooBool("advanced", "loadHalfAnims")
+                            checked: zoo.getBool("advanced", "loadHalfAnims")
                         }
 
                         ControlPanel {
@@ -252,30 +244,35 @@ LayoutFrame {
                                 id: fullscreenCheckBox
                                 text: "Fullscreen"
                                 Layout.fillWidth: true
+                                checked: zoo.getBool("user", "fullscreen")
                             }
                             PTextField { // screenWidth
                                 id: screenWidthField
                                 title: "Resolution Width"
                                 Layout.fillWidth: true
                                 descriptionText: "Width of the screen resolution"
+                                text: zoo.getString("user", "screenWidth")
                             }
                             PTextField { // screenHeight
                                 id: screenHeightField
                                 title: "Resolution Height"
                                 Layout.fillWidth: true
                                 descriptionText: "Height of the screen resolution"
+                                text: zoo.getString("user", "screenHeight")
                             }
                             PTextField { // UpdateRate
                                 id: updateRateField
                                 title: "Update Rate"
                                 Layout.fillWidth: true
                                 descriptionText: "Update rate of the game"
+                                text: zoo.getString("user", "UpdateRate")
                             }
                             PTextField { // DrawRate
                                 id: drawRateField
                                 title: "Draw Rate"
                                 Layout.fillWidth: true
                                 descriptionText: "Draw rate of the game"
+                                text: zoo.getString("user", "DrawRate")
                             }
                         }
 
@@ -284,19 +281,21 @@ LayoutFrame {
                             label: "Display FPS Counter"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: false
+                            enabled: zoo.getBool("debug", "drawfps")
 
                             PTextField { // drawfpsx
                                 id: drawFPSX
                                 title: "X Position"
                                 Layout.fillWidth: true
                                 descriptionText: "X position of the FPS counter"
+                                text: zoo.getString("debug", "drawfpsx")
                             }
                             PTextField { // drawfpsy
                                 id: drawFPSY
                                 title: "Y Position"
                                 Layout.fillWidth: true
                                 descriptionText: "Y position of the FPS counter"
+                                text: zoo.getString("debug", "drawfpsy")
                             }
                         }
                     }

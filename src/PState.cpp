@@ -16,7 +16,7 @@ PState::PState(QObject *parent) : QObject(parent) {
     }
 
     // Load the Zoo Tycoon config file
-    m_zooConfig = new PZooConfig(this, m_path + "zoo.ini");
+    m_zooConfig = new PZooConfig(this, m_path + "\\zoo.ini");
     if (!m_zooConfig) {
         qDebug() << "Failed to load Zoo Tycoon config file.";
     } else {
