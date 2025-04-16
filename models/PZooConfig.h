@@ -37,6 +37,7 @@ signals:
     void configLoaded(const QString &configPath);
     void configSaved(const QString &configPath);
     void configError(const QString &errorMessage);
+    void configReverted();
 
 private:
     QString m_zooConfigPath;

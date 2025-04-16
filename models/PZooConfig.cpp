@@ -214,7 +214,10 @@ QSettings PZooConfig::defaultConfig() {
 }
 
 void PZooConfig::updateTable(const QString &section, const QString &key, const QString &value) {
-    m_configTable[section][key] = value.toStdString();
+    m_settings.beginGroup(section);
+    m_settings.setValue(key, value);
+    m_settings.endGroup();
+    m_dirty = true;
     emit configUpdated(section, key, value);
 }
 
@@ -296,5 +299,5 @@ void PZooConfig::revertChanges() {
     m_settings->clear();
     m_settings->copy(m_settingsBackup);
     m_dirty = false;
-    emit configReverted(m_zooConfigPath);
+    emit configReverted();
 }
