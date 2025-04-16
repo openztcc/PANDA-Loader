@@ -4,6 +4,7 @@
 #include <QSettings>
 #include <QDir>
 #include "../src/PConfigMgr.h"
+#include <QBuffer>
 
 class PZooConfig : public QObject {
     Q_OBJECT
@@ -14,16 +15,11 @@ class PZooConfig : public QObject {
 
 public:
     explicit PZooConfig(QObject *parent = nullptr, QString zooConfigPath = "");
-    PZooConfig(const PZooConfig&) = delete;
-    PZooConfig& operator=(const PZooConfig&) = delete;
-    PZooConfig(PZooConfig&&) = default;
-    ~PZooConfig() = default;
 
-    Q_INVOKABLE QBuffer defaultConfig();
+    Q_INVOKABLE std::unique_ptr<QBuffer> defaultConfig();
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
     Q_INVOKABLE void updateTable(const QString &path, const QString &key, bool value);
     Q_INVOKABLE void updateUnlockEntity(const QString &key, const QString &value);
-    Q
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
     Q_INVOKABLE void revertChanges();
@@ -46,11 +42,11 @@ signals:
     void configError(const QString &errorMessage);
     void configReverted();
     void dirtyChanged(bool dirty);
-    void saveAttempted
 
 private:
     QString m_zooConfigPath;
-    std::unique_ptr<QSettings> m_settings;
+    QMap<QString, QMap<QString, QString>> m_settings;
+    QSettings m_zooini;
     QBuffer m_configBuffer;
     QBuffer m_settingsBackup;
     bool m_dirty;

@@ -240,7 +240,7 @@ LayoutFrame {
                         PCheckBox { // loadHalfAnims
                             id: loadHalfAnimsCheckBox
                             text: "Load Half Animations"
-                            checked: state.zoo().getBool("
+                            checked: zooBool("advanced", "loadHalfAnims")
                         }
 
                         ControlPanel {

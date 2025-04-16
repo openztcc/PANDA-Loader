@@ -36,6 +36,7 @@ qt_add_executable(appPandaLdr
     models/PEntityType.cpp models/PEntityType.h
     models/PIconData.h
     models/PModModel.cpp models/PModModel.h
+    models/PZooConfig.h models/PZooConfig.cpp
 )
 
 add_subdirectory(libs/apecore)
@@ -110,6 +111,7 @@ qt_add_qml_module(appPandaLdr
         models/PEntityType.h
         models/PSettings.h
         models/PModModel.h
+        models/PZooConfig.h
 )
 
 qt_add_resources(appPandaLdr "resources"

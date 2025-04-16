@@ -1,6 +1,6 @@
 #include "PZooConfig.h"
 
-PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent), m_zooConfigPath("") {
+PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent), m_zooConfigPath(zooConfigPath) {
     if (zooConfigPath.isEmpty()) {
         m_zooConfigPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.ini";
     } else {
@@ -9,23 +9,18 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
 
     // Initialize the config table with default values
     loadConfig();
-    m_settings = std::make_unique<QSettings>(m_configBuffer, QSettings::IniFormat);
+    m_settings = std::make_unique<QSettings>(&m_configBuffer, QSettings::IniFormat);
 
     m_dirty = false;
 }
 
-// cleanup
-PZooConfig::~PZooConfig() {
-    // delete stuff
-    delete m_settings;
-}
-
 // for when user wants the default settings
-QBuffer PZooConfig::defaultConfig() {
+std::unique_ptr<QBuffer> PZooConfig::defaultConfig() {
     // create a new buffer for the default config
-    QBuffer configBuffer;
-    QSettings config(configBuffer, QSettings::IniFormat);
-    
+    std::unique_ptr<QBuffer> configBuffer = std::make_unique<QBuffer>();
+    configBuffer->open(QIODevice::ReadWrite);
+    QSettings config(static_cast<QIODevice*>(configBuffer.get()), QSettings::IniFormat);
+
     // [debug]
     config.beginGroup("debug");
     config.setValue("logCutoff", 15);
@@ -48,7 +43,7 @@ QBuffer PZooConfig::defaultConfig() {
     config.setValue("soundmgr", "BFSoundMgr");
     config.setValue("terrainmgr", "ZTAdvTerrainMgr");
     config.endGroup();
-    
+
     // [language]
     config.beginGroup("language");
     config.setValue("lang", 9);
@@ -80,7 +75,7 @@ QBuffer PZooConfig::defaultConfig() {
     // config.m_unlockEntity = QStringList(); // not in ini by default
 
     // [advanced]
-    confnig.beginGroup("advanced");
+    config.beginGroup("advanced");
     config.setValue("drag", 3);
     config.setValue("click", 1);
     config.setValue("normal", 2);
@@ -246,43 +241,43 @@ void PZooConfig::setZooConfigPath(const QString &path) {
 
 // TODO: Add validation for unlockEntity and path=
 void PZooConfig::saveConfig() {
+    if (m_zooConfigPath.isEmpty()) {
+        emit configError("Zoo.ini path is empty.");
+        return;
+    }
+
+    if (m_settings.size() == 0) {
+        emit configError("No settings to save.");
+        return;
+    }
+
     if (m_dirty) {
         int keyCount = 0;
-        
-        // ui handling
-        m_settings->beginGroup("ai");
-        keyCount = m_settings->childKeys().size();
-        if (keyCount == 0) {
-            m_settings->remove("ai");
-        } else {
-            removeEmptyKeys("ai", "0");
-        }
-        m_settings->endGroup();
-        return;
 
-        // scenario handling
-        m_settings->beginGroup("scenario");
-        keyCount = m_settings->childKeys().size();
-        if (keyCount == 0) {
-            m_settings->remove("scenario");
-        } else {
-            removeEmptyKeys("scenario", "0");
+        for (QString section : m_settings->childKeys()) {
+
+            // remove empty keys from these sections
+            if (section == "ai" || section == "scenario") {
+                removeEmptyKeys(section, "0");
+            }
+
+            // get the number of keys in the section
+            keyCount = m_settings->childKeys(section).size();
+
+            // if there are keys in the section, save them to the config
+            if (keyCount) {
+                m_zooini.beginGroup(section);
+                for (QString key : m_settings->childKeys(section)) {
+                    QString value = key.value();
+                    m_zooini->setValue(key, value);
+                }
+                m_zooini.endGroup();
+            }
         }
-        m_settings->endGroup();
 
         // save the settings to the file
         m_settings->sync();
         m_dirty = false;
-
-        m_configBuffer.seek(0);
-        QFile file(m_zooConfigPath);
-        if (!file.open(QIODevice::WriteOnly)) {
-            emit configError("Failed to open config file for writing: " + m_zooConfigPath);
-            return;
-        }
-
-        file.write(m_configBuffer.data());
-        file.close();
 
         emit configSaved(m_zooConfigPath);
         emit dirtyChanged(m_dirty);
