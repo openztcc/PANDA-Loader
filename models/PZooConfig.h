@@ -1,8 +1,6 @@
 #ifndef PZOOCONFIG_H
 #define PZOOCONFIG_H
 
-#include "toml.hpp"
-#include "PZtdMgr.h"
 #include <QSettings>
 #include <QDir>
 #include "../src/PConfigMgr.h"
@@ -20,12 +18,13 @@ public:
     PZooConfig& operator=(const PZooConfig&) = delete;
     PZooConfig(PZooConfig&&) = default;
 
-    Q_INVOKABLE PZooConfig defaultConfig();
+    Q_INVOKABLE QSettings defaultConfig();
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
     Q_INVOKABLE void updateUnlockEntity(const QString &key, const QString &value);
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
     Q_INVOKABLE void revertChanges();
+    void removeEmptyKeys(const QString &section, const QString &key, const QString &test);
 
 signals:
     void configUpdated(const QString &section, const QString &key, const QString &value);

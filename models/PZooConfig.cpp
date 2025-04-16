@@ -1,14 +1,19 @@
 #include "PZooConfig.h"
 
-PZooConfig::PZooConfig(QObject *parent) : QObject(parent), m_zooConfigPath("") {
-    if (m_zooConfigPath.isEmpty()) {
+PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent), m_zooConfigPath("") {
+    if (zooConfigPath.isEmpty()) {
         m_zooConfigPath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.ini";
+    } else {
+        m_zooConfigPath = zooConfigPath;
     }
 
     // Initialize the config table with default values
-    m_configTable = {
-        {"debug", {}}, {"mgr", {}}, {"language", {}}, {"lib", {}}, {"resource", {}}, {"user", {}}, {"advanced", {}}, {"Map", {}}, {"UI", {}}, {"scenario", {}}, {"ai", {}},
-    };
+    m_settings = std::make_unique<QSettings>(m_zooConfigPath, QSettings::IniFormat);
+    m_settings->setIniCodec("UTF-8");
+    // copy the settings to a backup
+    m_settingsBackup = std::make_unique<QSettings>(m_zooConfigPath + ".bak", QSettings::IniFormat);
+    m_settingsBackup->setIniCodec("UTF-8");
+
     m_dirty = false;
 }
 
@@ -213,8 +218,6 @@ void PZooConfig::updateUnlockEntity(const QString &key, const QString &value) {
     emit unlockEntityUpdated(key, value);
 }
 
-// setter definitions
-
 void PZooConfig::setZooConfigPath(const QString &path) {
     if (m_zooConfigPath != path) {
         m_zooConfigPath = path;
@@ -222,4 +225,43 @@ void PZooConfig::setZooConfigPath(const QString &path) {
     }
 }
 
+void PZooConfig::saveConfig() {
+    if (m_dirty) {
+        int keyCount = 0;
+        // debug handling
+        m_settings->beginGroup("debug");
+        for (const auto &key : m_settings->childKeys()) {
+            if (m_configTable["debug"].find(key.toStdString()) != m_configTable["debug"].end()) {
+                m_settings->setValue(key, QString::fromStdString(m_configTable["debug"][key.toStdString()]));
+            }
+        }
 
+        // ui handling
+        m_settings->beginGroup("ai");
+        keyCount = m_settings->childKeys().size();
+        if (keyCount == 0) {
+            m_settings->remove("ai");
+        } else {
+            for (const auto &key : m_settings->childKeys()) {
+                // remove keys if values are false or empty
+                if (m_configTable["ai"].find(key.toStdString()) != m_configTable["ai"].end()) {
+                    if (m_configTable["ai"][key.toStdString()] == "0") {
+                        m_settings->remove(key);
+                    }
+                }
+            }
+        }
+        m_settings->endGroup();
+        return;
+    }
+}
+
+void PZooConfig::removeEmptyKeys(const QString &section, const QString &key, const QString &test) {
+    for (const auto &key : m_settings->childKeys()) {
+        if (m_configTable[section].find(key.toStdString()) != m_configTable[section].end()) {
+            if (m_configTable[section][key.toStdString()] == "0") {
+                m_settings->remove(key);
+            }
+        }
+    }
+}
