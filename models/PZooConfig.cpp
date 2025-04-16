@@ -8,11 +8,8 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
     }
 
     // Initialize the config table with default values
+    loadConfig();
     m_settings = std::make_unique<QSettings>(m_configBuffer, QSettings::IniFormat);
-    m_settings->setIniCodec("UTF-8");
-    // copy the settings to a backup
-    m_settingsBackup = *m_settings;
-    m_settingsBackup->setIniCodec("UTF-8");
 
     m_dirty = false;
 }
@@ -218,6 +215,7 @@ void PZooConfig::updateTable(const QString &section, const QString &key, const Q
     m_settings.setValue(key, value);
     m_settings.endGroup();
     m_dirty = true;
+    emit dirtyChanged(m_dirty);
     emit configUpdated(section, key, value);
 }
 
@@ -263,6 +261,12 @@ void PZooConfig::saveConfig() {
         // save the settings to the file
         m_settings->sync();
         m_dirty = false;
+
+
+        emit configSaved(m_zooConfigPath);
+        emit dirtyChanged(m_dirty);
+    } else {
+        emit configError("No changes to save.");
     }
 }
 
@@ -285,6 +289,7 @@ void PZooConfig::loadConfig() {
     m_settingsBackup->open(QIODevice::ReadOnly);
 }
 
+// helper that removes empty keys from the settings
 void PZooConfig::removeEmptyKeys(const QString &section, const QString &test) {
     for (const auto &key : m_settings->childKeys()) {
         if (m_configTable[section].find(key.toStdString()) != m_configTable[section].end()) {
@@ -300,4 +305,6 @@ void PZooConfig::revertChanges() {
     m_settings->copy(m_settingsBackup);
     m_dirty = false;
     emit configReverted();
+    emit dirtyChanged(m_dirty);
 }
+

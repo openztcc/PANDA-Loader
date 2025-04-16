@@ -9,7 +9,7 @@ class PZooConfig : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QString zooConfigPath READ getZooConfigPath WRITE setZooConfigPath NOTIFY zooConfigPathChanged)
-
+    Q_PROPERTY(bool dirty READ isDirty WRITE setDirty NOTIFY dirtyChanged)
 
 
 public:
@@ -30,6 +30,9 @@ public:
     // validation
     Q_INVOKABLE bool isInteger(const QString &value, bool test = false) const;
     Q_INVOKABLE bool isFloat(const QString &value, bool test = false, int precision = 0) const;
+
+    bool isDirty() const { return m_dirty; }
+    void setDirty(bool dirty) { m_dirty = dirty; }
     
 
 signals:
@@ -38,6 +41,7 @@ signals:
     void configSaved(const QString &configPath);
     void configError(const QString &errorMessage);
     void configReverted();
+    void dirtyChanged(bool dirty);
 
 private:
     QString m_zooConfigPath;
