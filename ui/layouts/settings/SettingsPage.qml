@@ -251,14 +251,14 @@ LayoutFrame {
                                 title: "Resolution Width"
                                 Layout.fillWidth: true
                                 descriptionText: "Width of the screen resolution"
-                                text: zoo.getString("user", "screenWidth")
+                                text: zoo.getString("user", "screenwidth")
                             }
                             PTextField { // screenHeight
                                 id: screenHeightField
                                 title: "Resolution Height"
                                 Layout.fillWidth: true
                                 descriptionText: "Height of the screen resolution"
-                                text: zoo.getString("user", "screenHeight")
+                                text: zoo.getString("user", "screenheight")
                             }
                             PTextField { // UpdateRate
                                 id: updateRateField
@@ -308,16 +308,19 @@ LayoutFrame {
                         PCheckBox { // use8BitSound
                             id: use8BitSoundCheckBox
                             text: "Use 8 Bit Sound"
+                            checked: zoo.getBool("advanced", "use8BitSound")
                         }
                         PTextField { // userAttenuation 
                             id: userAttenuationTextField
                             title: "User Attenuation"
                             Layout.fillWidth: true
+                            text: zoo.getString("UI", "userAttenuation")
                         }
                         PTextField { // completedExhibitAttenuation
                             id: completedExhibitAttenuationTextField
                             title: "Completed Exhibit Attenuation"
                             Layout.fillWidth: true
+                            text: zoo.getString("UI", "completedExhibitAttenuation")
                         }
 
                         ControlPanel { // menu music controls
@@ -330,6 +333,7 @@ LayoutFrame {
                                 id: menuMusicAttenuationField
                                 title: "Menu Music Volume"
                                 Layout.fillWidth: true
+                                text: zoo.getString("UI", "menuMusicAttenuation")
                             }
                             PTextField { // menuMusic 
                                 id: menuMusicField
@@ -337,6 +341,7 @@ LayoutFrame {
                                 Layout.fillWidth: true
                                 isFileBrowser: true
                                 descriptionText: "Path to the menu music file"
+                                text: zoo.getString("UI", "menuMusic")
                             }
                         }
                         ControlPanel { // boot music controls
@@ -348,12 +353,14 @@ LayoutFrame {
                                 title: "Volume for Splash Screen 1"
                                 Layout.fillWidth: true
                                 descriptionText: "Volume for the first splash screen that plays"
+                                text: zoo.getString("UI", "movievolume1")
                             }
                             PTextField { // movevolume2
                                 id: moveVolume2Field
                                 title: "Volume for Splash Screen 2"
                                 Layout.fillWidth: true
                                 descriptionText: "Volume for the second splash screen that plays"
+                                text: zoo.getString("UI", "movievolume2")
                             }
                         }
                     }
@@ -368,14 +375,14 @@ LayoutFrame {
                             title: "Starting Cash"
                             Layout.fillWidth: true
                             descriptionText: "How much cash to start with in freeform mode"
-                            text: zoo.getString("ui", "MSStartingCash")   
+                            text: zoo.getString("UI", "MSStartingCash")   
                         }
                         PTextField { // MSCashIncrement
                             id: cashIncrementField
                             title: "Cash Increment"
                             Layout.fillWidth: true
                             descriptionText: "How much cash to increment by in freeform mode"
-                            text: zoo.getString("ui", "MSCashIncrement")
+                            text: zoo.getString("UI", "MSCashIncrement")
                         }
 
                         PTextField { // MSMinCash
@@ -383,14 +390,14 @@ LayoutFrame {
                             title: "Minimum Cash"
                             Layout.fillWidth: true
                             descriptionText: "Minimum cash in freeform mode"
-                            text: zoo.getString("ui", "MSMinCash")
+                            text: zoo.getString("UI", "MSMinCash")
                         }
                         PTextField { // MSMaxCash
                             id: maxCashField
                             title: "Maximum Cash"
                             Layout.fillWidth: true
                             descriptionText: "Maximum cash in freeform mode"
-                            text: zoo.getString("ui", "MSMaxCash")
+                            text: zoo.getString("UI", "MSMaxCash")
                         }
                         ControlPanel { // mouse controls 
                             id: controlsSettings
@@ -408,7 +415,7 @@ LayoutFrame {
                                 id: clickField
                                 title: "Click"
                                 Layout.fillWidth: true
-                                text: zoo.getString("advanced", "Click")
+                                text: zoo.getString("advanced", "click")
                             }
 
                             PTextField { // normal
@@ -430,7 +437,7 @@ LayoutFrame {
                                 title: "Mouse Scroll Threshold"
                                 Layout.fillWidth: true
                                 descriptionText: "Threshold for mouse scroll"
-                                text: zoo.getString("ui", "mouseScrollThreshold")
+                                text: zoo.getString("UI", "mouseScrollThreshold")
                             }
 
                             PTextField { // mouseScrollDelay
@@ -438,7 +445,7 @@ LayoutFrame {
                                 title: "Mouse Scroll Delay"
                                 Layout.fillWidth: true
                                 descriptionText: "Delay for mouse scroll"
-                                text: zoo.getString("ui", "mouseScrollDelay")
+                                text: zoo.getString("UI", "mouseScrollDelay")
                             }
 
                             PTextField { // mouseScrollX
@@ -446,7 +453,7 @@ LayoutFrame {
                                 title: "Mouse Scroll X"
                                 Layout.fillWidth: true
                                 descriptionText: "X rate of mouse scroll"
-                                text: zoo.getString("ui", "mouseScrollX")
+                                text: zoo.getString("UI", "mouseScrollX")
                             }
 
                             PTextField { // mouseScrollY
@@ -454,7 +461,7 @@ LayoutFrame {
                                 title: "Mouse Scroll Y"
                                 Layout.fillWidth: true
                                 descriptionText: "Y rate of mouse scroll"
-                                text: zoo.getString("ui", "mouseScrollY")
+                                text: zoo.getString("UI", "mouseScrollY")
                             }
                         }
 
@@ -470,7 +477,7 @@ LayoutFrame {
                                 title: "Key Scroll X"
                                 Layout.fillWidth: true
                                 descriptionText: "X rate of x-directional panning"
-                                text: zoo.getString("ui", "keyScrollX")
+                                text: zoo.getString("UI", "keyScrollX")
                             }
 
                             PTextField { // keyScrollY
@@ -478,7 +485,7 @@ LayoutFrame {
                                 title: "Key Scroll Y"
                                 Layout.fillWidth: true
                                 descriptionText: "Y rate of y-directional panning"
-                                text: zoo.getString("ui", "keyScrollY")
+                                text: zoo.getString("UI", "keyScrollY")
                             }
                         }
 
@@ -518,7 +525,7 @@ LayoutFrame {
                             title: "Default Edit Character Limit"
                             Layout.fillWidth: true
                             descriptionText: "Default character limit for edit fields"
-                            text: zoo.getString("ui", "defaultEditCharLimit")
+                            text: zoo.getString("UI", "defaultEditCharLimit")
                         }
 
                         ControlPanel { // Tooltip delay
@@ -526,14 +533,14 @@ LayoutFrame {
                             label: "Tooltip Delay"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: zoo.getBool("ui", "tooltipDelay")
+                            enabled: zoo.getBool("UI", "tooltipDelay")
 
                             PTextField { // tooltipDuration
                                 id: tooltipDurationField
                                 title: "Tooltip Duration"
                                 Layout.fillWidth: true
                                 descriptionText: "Duration of the tooltip"
-                                text: zoo.getString("ui", "tooltipDuration")
+                                text: zoo.getString("UI", "tooltipDuration")
                             }
                         }
 
@@ -547,7 +554,7 @@ LayoutFrame {
                                 title: "Max Short Tooltip Width"
                                 Layout.fillWidth: true
                                 descriptionText: "Maximum width of short tooltips"
-                                text: zoo.getString("ui", "maxShortTooltipWidth")
+                                text: zoo.getString("UI", "maxShortTooltipWidth")
                             }
 
                             PTextField { // maxLongTooltipWidth
@@ -555,7 +562,7 @@ LayoutFrame {
                                 title: "Max Long Tooltip Width"
                                 Layout.fillWidth: true
                                 descriptionText: "Maximum width of long tooltips"
-                                text: zoo.getString("ui", "maxLongTooltipWidth")
+                                text: zoo.getString("UI", "maxLongTooltipWidth")
                             }
                         }
 
@@ -563,7 +570,7 @@ LayoutFrame {
                             id: helpTypeField
                             title: "Help Type"
                             Layout.fillWidth: true
-                            text: zoo.getString("ui", "helpType")
+                            text: zoo.getString("UI", "helpType")
                         }
 
                         ControlPanel { // MessageDisplay
@@ -571,14 +578,14 @@ LayoutFrame {
                             label: "Message Display"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: zoo.getBool("ui", "MessageDisplay")
+                            enabled: zoo.getBool("UI", "MessageDisplay")
 
                             PTextField { // minimumMessageInterval
                                 id: minimumMessageIntervalField
                                 title: "Minimum Message Interval"
                                 Layout.fillWidth: true
                                 descriptionText: "Minimum interval between messages"
-                                text: zoo.getString("ui", "minimumMessageInterval")
+                                text: zoo.getString("UI", "minimumMessageInterval")
                             }
                         }
 
@@ -592,28 +599,28 @@ LayoutFrame {
                                 title: "Left"
                                 Layout.fillWidth: true
                                 descriptionText: "Left position of the progress bar"
-                                text: zoo.getString("ui", "progressLeft")
+                                text: zoo.getString("UI", "progressLeft")
                             }
                             PTextField { // progressTop
                                 id: progressBarTopField
                                 title: "Top"
                                 Layout.fillWidth: true
                                 descriptionText: "Top position of the progress bar"
-                                text: zoo.getString("ui", "progressTop")
+                                text: zoo.getString("UI", "progressTop")
                             }
                             PTextField { // progressBottom
                                 id: progressBarBottomField
                                 title: "Bottom"
                                 Layout.fillWidth: true
                                 descriptionText: "Bottom position of the progress bar"
-                                text: zoo.getString("ui", "progressBottom")
+                                text: zoo.getString("UI", "progressBottom")
                             }
                             PTextField { // progressRight
                                 id: progressBarRightField
                                 title: "Right"
                                 Layout.fillWidth: true
                                 descriptionText: "Right position of the progress bar"
-                                text: zoo.getString("ui", "progressRight")
+                                text: zoo.getString("UI", "progressRight")
                             }
                         }
 
@@ -627,7 +634,7 @@ LayoutFrame {
                                 title: "Red"
                                 Layout.fillWidth: true
                                 descriptionText: "Red color value of the progress bar"
-                                text: zoo.getString("ui", "progressRed")
+                                text: zoo.getString("UI", "progressRed")
                             }
 
                             PTextField { // progressGreen
@@ -635,14 +642,14 @@ LayoutFrame {
                                 title: "Green"
                                 Layout.fillWidth: true
                                 descriptionText: "Green color value of the progress bar"
-                                text: zoo.getString("ui", "progressGreen")
+                                text: zoo.getString("UI", "progressGreen")
                             }
                             PTextField { // progressBlue
                                 id: progressBarBlueField
                                 title: "Blue"
                                 Layout.fillWidth: true
                                 descriptionText: "Blue color value of the progress bar"
-                                text: zoo.getString("ui", "progressBlue")
+                                text: zoo.getString("UI", "progressBlue")
                             }
 
                         }
@@ -657,14 +664,14 @@ LayoutFrame {
                                 title: "X Offset"
                                 Layout.fillWidth: true
                                 descriptionText: "X offset of the progress bar shadow"
-                                text: zoo.getString("ui", "progressShadowXOffset")
+                                text: zoo.getString("UI", "progressShadowXOffset")
                             }
                             PTextField { // progressShadowYOffset
                                 id: progressBarShadowYOffsetTextField
                                 title: "Y Offset"
                                 Layout.fillWidth: true
                                 descriptionText: "Y offset of the progress bar shadow"
-                                text: zoo.getString("ui", "progressShadowYOffset")
+                                text: zoo.getString("UI", "progressShadowYOffset")
                             }
                         }
 
@@ -678,7 +685,7 @@ LayoutFrame {
                                 title: "Red"
                                 Layout.fillWidth: true
                                 descriptionText: "Red color value of the progress bar shadow"
-                                text: zoo.getString("ui", "progressShadowRed")
+                                text: zoo.getString("UI", "progressShadowRed")
                             }
 
                             PTextField { // progressShadowGreen
@@ -686,14 +693,14 @@ LayoutFrame {
                                 title: "Green"
                                 Layout.fillWidth: true
                                 descriptionText: "Green color value of the progress bar shadow"
-                                text: zoo.getString("ui", "progressShadowGreen")
+                                text: zoo.getString("UI", "progressShadowGreen")
                             }
                             PTextField { // progressShadowBlue
                                 id: progressBarShadowBlueField
                                 title: "Blue"
                                 Layout.fillWidth: true
                                 descriptionText: "Blue color value of the progress bar shadow"
-                                text: zoo.getString("ui", "progressShadowBlue")
+                                text: zoo.getString("UI", "progressShadowBlue")
                             }
                         }
 
@@ -707,14 +714,14 @@ LayoutFrame {
                                 title: "Last Window X"
                                 Layout.fillWidth: true
                                 descriptionText: "Relative to the main monitor, X position where the game was last closed"
-                                text: zoo.getString("ui", "lastWindowX")
+                                text: zoo.getString("UI", "lastWindowX")
                             }
                             PTextField { // lastWindowY
                                 id: lastWindowYField
                                 title: "Last Window Y"
                                 Layout.fillWidth: true
                                 descriptionText: "Relative to the main monitor, Y position where the game was last closed"
-                                text: zoo.getString("ui", "lastWindowY")
+                                text: zoo.getString("UI", "lastWindowY")
                             }        
                         }                        
                     
@@ -728,14 +735,17 @@ LayoutFrame {
                         PCheckBox { // startedFirstTutorial
                             id: zooTycoonCheckBox
                             text: "Started Zoo Tycoon Tutorial"
+                            checked: zoo.getBool("UI", "startedFirstTutorial")
                         }
                         PCheckBox { // startedDinoTutorial
                             id: dinoDigsCheckBox
                             text: "Started Dino Digs Tutorial"
+                            checked: zoo.getBool("UI", "startedDinoTutorial")
                         }
                         PCheckBox { // startedAquaTutorial
                             id: marineManiaCheckBox
                             text: "Started Marine Mania Tutorial"
+                            checked: zoo.getBool("UI", "startedAquaTutorial")
                         }
                         ControlPanel {
                             id: scenarioControls
@@ -751,182 +761,227 @@ LayoutFrame {
                             PCheckBox { // aa - Tutorial 1 - Game Controls
                                 id: aaCheckBox
                                 text: "Completed Tutorial 1 - Game Controls"
+                                checked: zoo.getBool("scenario", "aa")
                             }
                             PCheckBox {  // ab - Tutorial 2 - Basic Gameplay
                                 id: abCheckBox
                                 text: "Completed Tutorial 2 - Basic Gameplay"
+                                checked: zoo.getBool("scenario", "ab")
                             }
                             PCheckBox { // ac - Tutorial 3 - Making Animals Happy
                                 id: acCheckBox
                                 text: "Completed Tutorial 3 - Making Animals Happy"
+                                checked: zoo.getBool("scenario", "ac")
                             }
                             PCheckBox { // ad - Dinosaur Digs Tutorial 1
                                 id: adCheckBox
                                 text: "Completed Dinosaur Digs: Tutorial 1"
+                                checked: zoo.getBool("scenario", "ad")
                             }
                             PCheckBox { // ae - Marine Mania: Tutorial 1
                                 id: aeCheckBox
                                 text: "Completed Marine Mania: Tutorial 1"
+                                checked: zoo.getBool("scenario", "ae")
                             }
                             PCheckBox { // af - Marine Mania: Tutorial 2
                                 id: afCheckBox
                                 text: "Completed Marine Mania: Tutorial 2"
+                                checked: zoo.getBool("scenario", "af")
                             }
                             PCheckBox { // ag - Marine Mania: Tutorial 3
                                 id: agCheckBox
                                 text: "Completed Marine Mania: Tutorial 3"
+                                checked: zoo.getBool("scenario", "ag")
                             }
                             PCheckBox { // ba - Small Zoo (Beginner)
                                 id: baCheckBox
                                 text: "Completed Small Zoo (Beginner)"
+                                checked: zoo.getBool("scenario", "ba")
                             }
                             PCheckBox { // bb - Seaside Zoo (Beginner)
                                 id: bbCheckBox
                                 text: "Completed Seaside Zoo (Beginner)"
+                                checked: zoo.getBool("scenario", "bb")
                             }
                             PCheckBox { // bc - Forest Zoo (Beginner)
                                 id: bcCheckBox
                                 text: "Completed Forest Zoo (Beginner)"
+                                checked: zoo.getBool("scenario", "bc")
                             }
                             PCheckBox { // bd - Holiday Tree Farm (Beginner)
                                 id: bdCheckBox
                                 text: "Completed Holiday Tree Farm (Beginner)"
+                                checked: zoo.getBool("scenario", "bd")
                             }
                             PCheckBox { // be - Dinosaur Digs: Ice Age Animal Zoo (Beginner)
                                 id: beCheckBox
                                 text: "Completed Dinosaur Digs: Ice Age Animal Zoo (Beginner)"
+                                checked: zoo.getBool("scenario", "be")
                             }
                             PCheckBox { // bf - Marine Mania: Orca Show (Beginner)
                                 id: bfCheckBox
                                 text: "Completed Marine Mania: Orca Show (Beginner)"
+                                checked: zoo.getBool("scenario", "bf")
                             }
                             PCheckBox { // bg - Marine Mania: Seasideville Dolphin Park (Beginner)
                                 id: bgCheckBox
                                 text: "Completed Marine Mania: Seasideville Dolphin Park (Beginner)"
+                                checked: zoo.getBool("scenario", "bg")
                             }
                             PCheckBox { // bh - Marine Mania: Shark World (Beginner)
                                 id: bhCheckBox
                                 text: "Completed Marine Mania: Shark World (Beginner)"
+                                checked: zoo.getBool("scenario", "bh")
                             }
                             PCheckBox { // bi - Marine Mania: Surf and Turf Zoo (Beginner)
                                 id: biCheckBox
                                 text: "Completed Marine Mania: Surf and Turf Zoo (Beginner)"
+                                checked: zoo.getBool("scenario", "bi")
                             }
                             PCheckBox { // ca - Revitalize Burkitsville Zoo (Intermediate)
                                 id: caCheckBox
                                 text: "Completed Revitalize Burkitsville Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "ca")
                             }
                             PCheckBox { // cb - Inner City Zoo (Intermediate)
                                 id: cbCheckBox
                                 text: "Completed Inner City Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "cb")
                             }
                             PCheckBox { // cc - Saving the Great Cats (Intermediate)
                                 id: ccCheckBox
                                 text: "Completed Saving the Great Cats (Intermediate)"
+                                checked: zoo.getBool("scenario", "cc")
                             }
                             PCheckBox { // cd - Endangered Species Zoo (Intermediate)
                                 id: cdCheckBox
                                 text: "Completed Endangered Species Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "cd")
                             }
                             PCheckBox { // ce - Arctic Zoo (Intermediate)
                                 id: ceCheckBox
                                 text: "Completed Arctic Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "ce")
                             }
                             PCheckBox { // cf - Beach Resort Zoo (Intermediate)
                                 id: cfCheckBox
                                 text: "Completed Beach Resort Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "cf")
                             }
                             PCheckBox { // cg - Dinosaur Digs: Valley of the Dinosaurs (Intermediate)
                                 id: cgCheckBox
                                 text: "Completed Dinosaur Digs: Valley of the Dinosaurs (Intermediate)"
+                                checked: zoo.getBool("scenario", "cg")
                             }
                             PCheckBox { // ch - Dinosaur Digs: Jurassic Zoo (Intermediate)
                                 id: chCheckBox
                                 text: "Completed Dinosaur Digs: Jurassic Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "ch")
                             }
                             PCheckBox { // ci - Marine Mania: Oceans of the Zoo (Intermediate)
                                 id: ciCheckBox
                                 text: "Completed Marine Mania: Oceans of the Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "ci")
                             }
                             PCheckBox { // cj - Marine Mania: Save the Marine Animals (Intermediate)
                                 id: cjCheckBox
                                 text: "Completed Marine Mania: Save the Marine Animals (Intermediate)"
+                                checked: zoo.getBool("scenario", "cj")
                             }
                             PCheckBox { // ck - Marine Mania: Free Admission Zoo (Intermediate)
                                 id: ckCheckBox
                                 text: "Completed Marine Mania: Free Admission Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "ck")
                             }
                             PCheckBox { // cl - Marine Mania: Aquatic Show Park (Intermediate)
                                 id: clCheckBox
                                 text: "Completed Marine Mania: Aquatic Show Park (Intermediate)"
+                                checked: zoo.getBool("scenario", "cl")
                             }
                             PCheckBox { // cm - Dinosaur Digs: Carnivore Zoo (Intermediate)
                                 id: cmCheckBox
                                 text: "Completed Dinosaur Digs: Carnivore Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "cm")
                             }
                             PCheckBox { // cn - Southeast Asian Zoo (Intermediate)
                                 id: cnCheckBox
                                 text: "Completed Southeast Asian Zoo (Intermediate)"
+                                checked: zoo.getBool("scenario", "cn")
                             }
                             PCheckBox { // da - Island Zoo (Advanced)
                                 id: daCheckBox
                                 text: "Completed Island Zoo (Advanced)"
+                                checked: zoo.getBool("scenario", "da")
                             }
                             PCheckBox { // db - African Savannah Zoo (Advanced)
                                 id: dbCheckBox
                                 text: "Completed African Savannah Zoo (Advanced)"
+                                checked: zoo.getBool("scenario", "db")
                             }
                             PCheckBox { // dc - Mountain Zoo (Advanced)
                                 id: dcCheckBox
                                 text: "Completed Mountain Zoo (Advanced)"
+                                checked: zoo.getBool("scenario", "dc")
                             }
                             PCheckBox { // dd - Tropical Rainforest Zoo (Advanced)
                                 id: ddCheckBox
                                 text: "Completed Tropical Rainforest Zoo (Advanced)"
+                                checked: zoo.getBool("scenario", "dd")
                             }
                             PCheckBox { // de - Dinosaur Digs: Dinosaur Island Research Lab (Advanced)
                                 id: deCheckBox
                                 text: "Completed Dinosaur Digs: Dinosaur Island Research Lab (Advanced)"
+                                checked: zoo.getBool("scenario", "de")
                             }
                             PCheckBox { // df - Marine Mania: Marine Conservation (Advanced)
                                 id: dfCheckBox
                                 text: "Completed Marine Mania: Marine Conservation (Advanced)"
+                                checked: zoo.getBool("scenario", "df")
                             }
                             PCheckBox { // dg - Marine Mania: Save the Zoo (Advanced)
                                 id: dgCheckBox
                                 text: "Completed Marine Mania: Save the Zoo (Advanced)"
+                                checked: zoo.getBool("scenario", "dg")
                             }
                             PCheckBox { // dh - Conservation Zoo (Advanced)
                                 id: dhCheckBox
                                 text: "Completed Conservation Zoo (Advanced)"
+                                checked: zoo.getBool("scenario", "dh")
                             }
                             PCheckBox { // ea - Paradise Island (Very Advanced)
                                 id: eaCheckBox
                                 text: "Completed Paradise Island (Very Advanced)"
+                                checked: zoo.getBool("scenario", "ea")
                             }
                             PCheckBox { // fa - Breeding Giant Pandas (Very Advanced)
                                 id: faCheckBox
                                 text: "Completed Breeding Giant Pandas (Very Advanced)"
+                                checked: zoo.getBool("scenario", "fa")
                             }
                             PCheckBox { // fb - Dinosaur Digs: Return to Dinosaur Island Research Lab (Very Advanced)
                                 id: fbCheckBox
                                 text: "Completed Dinosaur Digs: Return to Dinosaur Island Research Lab (Very Advanced)"
+                                checked: zoo.getBool("scenario", "fb")
                             }
                             PCheckBox { // ga - Dinosaur Digs: Breeding the T.rex (Very Advanced)
                                 id: gaCheckBox
                                 text: "Completed Dinosaur Digs: Breeding the T.rex (Very Advanced)"
+                                checked: zoo.getBool("scenario", "ga")
                             }
                             PCheckBox { // gb - Marine Mania: Giant Marine Park (Very Advanced)
                                 id: gbCheckBox
                                 text: "Completed Marine Mania: Giant Marine Park (Very Advanced)"
+                                checked: zoo.getBool("scenario", "gb")
                             }
                             PCheckBox { // gc - Marine Mania: Super Zoo (Very Advanced)
                                 id: gcCheckBox
                                 text: "Completed Marine Mania: Super Zoo (Very Advanced)"
+                                checked: zoo.getBool("scenario", "gc")
                             }
                             PCheckBox { // gd - Marine Mania: Ultimate Zoo (Very Advanced)
                                 id: gdCheckBox
                                 text: "Completed Marine Mania: Ultimate Zoo (Very Advanced)"
+                                checked: zoo.getBool("scenario", "gd")
                             }
                         }
                     }
@@ -937,12 +992,13 @@ LayoutFrame {
                     SettingsPane {
                         id: resourcePathsSettingsPane
                         // custom component for resource paths
-                        PTextField {
+                        PTextField { // lastfile
                             id: lastZooPlayedPath
                             title: "Last Zoo Played"
                             Layout.fillWidth: true
                             isFileBrowser: true
                             descriptionText: "Path to the last zoo played"
+                            text: zoo.getString("user", "lastfile")
                         }
                         // resource paths
                         AppendTable {
@@ -960,46 +1016,55 @@ LayoutFrame {
                                 id: aimgrPath
                                 title: "aimgr"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "aimgr")
                             }
                             PTextField { // worldmgr
                                 id: worldmgrPath
                                 title: "worldmgr"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "worldmgr")
                             }
                             PTextField { // gamemgr
                                 id: gamemgrPath
                                 title: "gamemgr"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "gamemgr")
                             }
                             PTextField { // scenariomgr
                                 id: scenarioMgrPath
                                 title: "scenarioMgr"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "scenariomgr")
                             }
                             PTextField { // scriptmgr
                                 id: scriptMgrPath
                                 title: "scriptMgr"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "scriptmgr")
                             }
                             PTextField { // soundmgr
                                 id: soundMgrPath
                                 title: "soundMgr"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "soundmgr")
                             }
                             PTextField { // terrainmgr
                                 id: terrainMgrPath
                                 title: "terrainMgr"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "terrainmgr")
                             }
                             PTextField { // res
                                 id: resPath
                                 title: "res"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "res")
                             }
                             PTextField { // lang
                                 id: langPath
                                 title: "lang"
                                 Layout.fillWidth: true
+                                text: zoo.getString("mgr", "lang")
                             }
                         }
                     }
@@ -1013,11 +1078,13 @@ LayoutFrame {
                             id: languageField
                             title: "Language"
                             Layout.fillWidth: true
+                            text: zoo.getString("language", "lang")
                         }
                         PTextField { // sublang
                             id: subLanguageField
                             title: "Sub Language"
                             Layout.fillWidth: true
+                            text: zoo.getString("language", "sublang")
                         }
                     }
                 }
@@ -1029,6 +1096,7 @@ LayoutFrame {
                         PCheckBox {
                             id: devModeCheckBox
                             text: "Developer Mode Enabled"
+                            checked: zoo.getBool("debug", "devModeEnabled")
                         }
                         ControlPanel {
                             id: debugControls
@@ -1038,54 +1106,67 @@ LayoutFrame {
                             PCheckBox { // ShowAIInfo
                                 id: showAIInfoCheckBox
                                 text: "Show AI Info"
+                                check: zoo.getBool("debug", "ShowAIInfo")
                             }
                             PCheckBox { // ShowName
                                 id: showNameCheckBox
                                 text: "Show Names"
+                                checked: zoo.getBool("debug", "ShowName")
                             }
                             PCheckBox { // ShowPosition
                                 id: showPositionCheckBox
                                 text: "Show Position"
+                                checked: zoo.getBool("debug", "ShowPosition")
                             }
                             PCheckBox { // ShowAnimalAIInfo
                                 id: showAnimalAIInfoCheckBox
                                 text: "Show Animal AI Info"
+                                checked: zoo.getBool("debug", "ShowAnimalAIInfo")
                             }
                             PCheckBox { // ShowGuesAIInfo
                                 id: showGuestAIInfoCheckBox
                                 text: "Show Guest AI Info"
+                                checked: zoo.getBool("debug", "ShowGuestAIInfo")
                             }
                             PCheckBox { // ShowStaffAIInfo
                                 id: showStaffAIInfoCheckBox
                                 text: "Show Staff AI Info"
+                                checked: zoo.getBool("debug", "ShowStaffAIInfo")
                             }
                             PCheckBox { // ShowStatusVars
                                 id: showStatusVarsCheckBox
                                 text: "Show Status Variables"
+                                checked: zoo.getBool("debug", "ShowStatusVars")
                             }
                             PCheckBox { // ShowFunctionCall
                                 id: showFunctionCallCheckBox
                                 text: "Show Function Calls"
+                                checked: zoo.getBool("debug", "ShowFunctionCall")
                             }
                             PCheckBox { // ShowEvents
                                 id: showEventsCheckBox
                                 text: "Show Events"
+                                checked: zoo.getBool("debug", "ShowEvents")
                             }
                             PCheckBox { // ShowBuildingAIInfo
                                 id: showBuildingAIInfoCheckBox
                                 text: "Show Building AI Info"
+                                checked: zoo.getBool("debug", "ShowBuildingAIInfo")
                             }
                             PCheckBox { // ShowSelected
                                 id: showSelectedCheckBox
                                 text: "Show Selected"
+                                checked: zoo.getBool("debug", "ShowSelected")
                             }
                             PCheckBox { // ShowFrame
                                 id: showFrameCheckBox
                                 text: "Show Frame"
+                                checked: zoo.getBool("debug", "ShowFrame")
                             }
                             PCheckBox { // ShowGoal
                                 id: showGoalCheckBox
                                 text: "Show Goal"
+                                checked: zoo.getBool("debug", "ShowGoal")
                             }
                         }
                         ControlPanel {
@@ -1097,23 +1178,28 @@ LayoutFrame {
                             PCheckBox { // sendLogFile
                                 id: sendLogFileCheckBox
                                 text: "Send Log File"
+                                checked: zoo.getBool("debug", "sendLogFile")
                             }
                             PCheckBox { // sendDebugger
                                 id: sendDebuggerCheckBox
                                 text: "Send Debugger"
+                                checked: zoo.getBool("debug", "sendDebugger")
                             }
                             PTextField { // logCutOff
                                 id: logCutOffField
                                 title: "Log Cut-off"
                                 Layout.fillWidth: true
+                                text: zoo.getString("debug", "logCutOff")
                             }
                             PCheckBox { // deltaLog1
                                 id: deltaLog1CheckBox
                                 text: "Delta Log 1"
+                                checked: zoo.getBool("debug", "deltaLog1")
                             }
                             PCheckBox { // deltaLog0
                                 id: deltaLog0CheckBox
                                 text: "Delta Log 0"
+                                checked: zoo.getBool("debug", "deltaLog0")
                             }
                         }
                     }
