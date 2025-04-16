@@ -210,7 +210,7 @@ LayoutFrame {
                             showSwitch: true
                             Layout.preferredHeight: 120
                             Layout.fillWidth: true
-                            enabled: psettings.useIsoMounting()
+                            checked: psettings.useIsoMounting()
 
                             PTextField {
                                 id: isoPath
@@ -284,7 +284,7 @@ LayoutFrame {
                             label: "Display FPS Counter"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: zoo.getBool("debug", "drawfps")
+                            checked: zoo.getBool("debug", "drawfps")
 
                             PTextField { // drawfpsx
                                 id: drawFPSX
@@ -331,7 +331,7 @@ LayoutFrame {
                             label: "Menu Music Enabled"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: false
+                            checked: false
                             PTextField { // menuMusicAttenuation
                                 id: menuMusicAttenuationField
                                 title: "Menu Music Volume"
@@ -473,7 +473,7 @@ LayoutFrame {
                             label: "Keyboard Settings"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: false
+                            checked: false
 
                             PTextField { // keyScrollX
                                 id: keyScrollXField
@@ -497,7 +497,7 @@ LayoutFrame {
                             label: "Map Size"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: false
+                            checked: false
 
                             PTextField { // mapX
                                 id: mapXField
@@ -536,7 +536,7 @@ LayoutFrame {
                             label: "Tooltip Delay"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: zoo.getBool("UI", "tooltipDelay")
+                            checked: zoo.getBool("UI", "tooltipDelay")
 
                             PTextField { // tooltipDuration
                                 id: tooltipDurationField
@@ -581,7 +581,7 @@ LayoutFrame {
                             label: "Message Display"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: zoo.getBool("UI", "MessageDisplay")
+                            checked: zoo.getBool("UI", "MessageDisplay")
 
                             PTextField { // minimumMessageInterval
                                 id: minimumMessageIntervalField
@@ -755,7 +755,7 @@ LayoutFrame {
                             label: "Completed Scenarios (To unlock other scenarios)"
                             Layout.preferredHeight: implicitHeight
                             Layout.fillWidth: true
-                            enabled: true
+                            checked: true
 
                             // PCheckBox { // tutorial
                             //     id: tutorialZooCheckBox
@@ -1014,7 +1014,7 @@ LayoutFrame {
                             label: "Advanced Resources"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: false
+                            checked: false
                             PTextField { // aimgr
                                 id: aimgrPath
                                 title: "aimgr"
@@ -1177,7 +1177,7 @@ LayoutFrame {
                             label: "Advanced Settings"
                             showSwitch: true
                             Layout.fillWidth: true
-                            enabled: false
+                            checked: false
                             PCheckBox { // sendLogFile
                                 id: sendLogFileCheckBox
                                 text: "Send Log File"

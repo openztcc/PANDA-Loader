@@ -6,6 +6,7 @@ import QtQuick.Controls.Material
 Item {
     id: controlGroup
     property var data: null
+    property bool checked: true
     property bool enabled: true
     property bool hasFrame: true
     property var label: ""

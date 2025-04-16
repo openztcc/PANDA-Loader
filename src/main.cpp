@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
     PController *controller = new PController(&app, p_state);
     PZooConfig *zooConfig = new PZooConfig(&app, p_state->getGamePath() + "/zoo.ini");
     PSettings *settings = new PSettings(&app);
+    settings->loadFromToml();
     engine.rootContext()->setContextProperty("modController", controller);
     engine.rootContext()->setContextProperty("modModel", QVariant::fromValue(controller->model()));
     engine.rootContext()->setContextProperty("zoo", zooConfig);

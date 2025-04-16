@@ -11,9 +11,9 @@
 class PSettings : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString zooGamePath READ zooGamePath WRITE setZooGamePath NOTIFY zooGamePathChanged)
-    Q_PROPERTY(bool useIsoMounting READ useIsoMounting WRITE setUseIsoMounting NOTIFY useIsoMountingChanged)
-    Q_PROPERTY(QString isoPath READ isoPath WRITE setIsoPath NOTIFY isoPathChanged)
+    // Q_PROPERTY(QString zooGamePath READ zooGamePath WRITE setZooGamePath NOTIFY zooGamePathChanged)
+    // Q_PROPERTY(bool useIsoMounting READ useIsoMounting WRITE setUseIsoMounting NOTIFY useIsoMountingChanged)
+    // Q_PROPERTY(QString isoPath READ isoPath WRITE setIsoPath NOTIFY isoPathChanged)
 
 public:
     explicit PSettings(QObject* parent = nullptr);
