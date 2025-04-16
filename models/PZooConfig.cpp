@@ -221,6 +221,16 @@ void PZooConfig::updateTable(const QString &section, const QString &key, const Q
     emit configUpdated(section, key, value);
 }
 
+void PZooConfig::updateTable(const QString &path, const QString &key, bool value) {
+    m_settings.beginGroup(path);
+    QString valueStr = value ? "1" : "0";
+    m_settings.setValue(key, valueStr);
+    m_settings.endGroup();
+    m_dirty = true;
+    emit dirtyChanged(m_dirty);
+    emit configUpdated(path, key, QString::number(value));
+}
+
 void PZooConfig::updateUnlockEntity(const QString &key, const QString &value) {
     m_unlockEntity.append(value);
     m_configTable["user"][key] = value.toStdString();

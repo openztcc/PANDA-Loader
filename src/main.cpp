@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     PController *controller = new PController(&app, p_state);
     engine.rootContext()->setContextProperty("modController", controller);
     engine.rootContext()->setContextProperty("modModel", QVariant::fromValue(controller->model()));
+    engine.rootContext()->setContextProperty("state", p_state);
 
     // models
     qmlRegisterAnonymousType<QAbstractListModel>("PandaLdr", 1);

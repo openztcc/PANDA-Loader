@@ -21,6 +21,7 @@ public:
 
     Q_INVOKABLE QBuffer defaultConfig();
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
+    Q_INVOKABLE void updateTable(const QString &path, const QString &key, bool value);
     Q_INVOKABLE void updateUnlockEntity(const QString &key, const QString &value);
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();

@@ -31,6 +31,7 @@ public:
     void loadConfig();
     QStringList getZtdList();
     PSettings* settings() const { return m_settings; }
+    PZooConfig* zooConfig() const { return m_zooConfig; }
 
 signals:
     void pathChanged();
