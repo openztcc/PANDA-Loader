@@ -16,7 +16,7 @@ class PZooConfig : public QObject {
 public:
     explicit PZooConfig(QObject *parent = nullptr, QString zooConfigPath = "");
 
-    Q_INVOKABLE std::unique_ptr<QBuffer> defaultConfig();
+    // Q_INVOKABLE std::unique_ptr<QBuffer> defaultConfig();
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
     Q_INVOKABLE void updateTable(const QString &path, const QString &key, bool value);
     Q_INVOKABLE void updateUnlockEntity(const QString &key, const QString &value);
@@ -46,6 +46,7 @@ signals:
 private:
     QString m_zooConfigPath;
     QMap<QString, QMap<QString, QString>> m_settings;
+    QMap<QString, QMap<QString, QString>> m_settingsBackup;
     std::unique_ptr<QSettings> m_zooini;
     bool m_dirty;
 
