@@ -329,3 +329,16 @@ void PZooConfig::revertChanges() {
     emit dirtyChanged(m_dirty);
 }
 
+bool PZooConfig::getBool(const QString &section, const QString &key) const {
+    m_settings->beginGroup(section);
+    bool value = m_settings->value(key).toBool();
+    m_settings->endGroup();
+    return value;
+}
+
+QString PZooConfig::getString(const QString &section, const QString &key) const {
+    m_settings->beginGroup(section);
+    QString value = m_settings->value(key).toString();
+    m_settings->endGroup();
+    return value;
+}

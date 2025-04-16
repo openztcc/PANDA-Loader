@@ -23,10 +23,13 @@ public:
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
     Q_INVOKABLE void updateTable(const QString &path, const QString &key, bool value);
     Q_INVOKABLE void updateUnlockEntity(const QString &key, const QString &value);
+    Q
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
     Q_INVOKABLE void revertChanges();
     void removeEmptyKeys(const QString &section, const QString &test);
+    Q_INVOKABLE bool getBool(const QString &section, const QString &key) const;
+    Q_INVOKABLE QString getString(const QString &section, const QString &key) const;
 
     // validation
     Q_INVOKABLE bool isInteger(const QString &value, bool test = false) const;

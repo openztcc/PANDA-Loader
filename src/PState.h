@@ -23,6 +23,7 @@ class PState : public QObject {
     QML_SINGLETON
 
     Q_PROPERTY(QString m_path READ getGamePath WRITE setGamePath NOTIFY pathChanged)
+    Q_PROPERTY(QString m_resource_path READ getResourcePath WRITE setResourcePath NOTIFY pathChanged)
 public:
     explicit PState(QObject *parent = nullptr);
     Q_INVOKABLE int launchZT();
@@ -30,8 +31,8 @@ public:
     void setGamePath(QString);
     void loadConfig();
     QStringList getZtdList();
-    PSettings* settings() const { return m_settings; }
-    PZooConfig* zooConfig() const { return m_zooConfig; }
+    Q_INVOKABLE PSettings* settings() const { return m_settings; }
+    Q_INVOKABLE PZooConfig* zoo() const { return m_zooConfig; }
 
 signals:
     void pathChanged();

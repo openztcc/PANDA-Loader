@@ -232,6 +232,7 @@ LayoutFrame {
                         PCheckBox { // loadHalfAnims
                             id: loadHalfAnimsCheckBox
                             text: "Load Half Animations"
+                            checked: state.
                         }
 
                         ControlPanel {
