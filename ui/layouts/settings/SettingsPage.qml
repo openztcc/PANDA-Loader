@@ -871,7 +871,7 @@ LayoutFrame {
                 Rectangle {
                     id: confirmChangesBar
                     property bool hovered: false
-                    color: Qt.darker("#2c6431", 1.2)
+                    color: Qt.darker("#57704E", 1.2)
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
                     Layout.preferredHeight: 60
@@ -898,14 +898,17 @@ LayoutFrame {
                             id: saveChangesButton
                             text: "Save Changes"
                             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                            Layout.preferredWidth: implicitWidth
+                            Layout.preferredWidth: 150
                             flat: true
                             background: Rectangle {
-                                color: saveChangesButton.hovered ? Qt.darker(mainContent.mainColor, 1.2) : mainContent.mainColor
+                                color: saveChangesButton.hovered ? Qt.darker("#57704E", 1.4) : "#57704E"
                                 radius: 5
+                                border.color: Qt.darker("#FED286", 1.4)
+                                border.width: 2
 
                                 HoverHandler {
                                     id: hoverHandle
+                                    cursorShape: Qt.PointingHandCursor
                                     // onHoveredChanged: {
                                     //     confirmChangesBar.hovered = saveChangesButton.hovered
                                     // }
@@ -924,7 +927,7 @@ LayoutFrame {
                             text: "Discard"
                             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                             flat: true
-                            Layout.preferredWidth: implicitWidth
+                            Layout.preferredWidth: 150
 
                             background: Rectangle {
                                 color: hoverHandle2.hovered ? Qt.darker(mainContent.mainColor, 1.2) : mainContent.mainColor
@@ -932,6 +935,7 @@ LayoutFrame {
 
                                 HoverHandler {
                                     id: hoverHandle2
+                                    cursorShape: Qt.PointingHandCursor
                                 }
                             }
                             onClicked: {
