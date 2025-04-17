@@ -243,11 +243,6 @@ void PZooConfig::saveConfig() {
         return;
     }
 
-    if (m_settings.size() == 0) {
-        emit configError("No settings to save.");
-        return;
-    }
-
     if (m_dirty) {
         int keyCount = 0;
 
@@ -256,13 +251,13 @@ void PZooConfig::saveConfig() {
         m_zooini->GetAllSections(sections);
         for (const auto &section : sections) {
             // remove empty keys from these sections
-            if (section == "ai" || section == "scenario") {
-                removeEmptyKeys(section, "0");
+            if (QString(section.pItem) == "ai" || QString(section.pItem) == "scenario") {
+                removeEmptyKeys(QString(section.pItem), "0");
             }
         }
 
         // save the settings to the file
-        SI_ERROR rc = m_zooini->SaveFile(m_zooConfigPath.c_str());
+        SI_ERROR rc = m_zooini->SaveFile(m_zooConfigPath.toStdString().c_str());
         if (rc < 0) {
             qDebug() << "Failed to save config file: " << m_zooConfigPath;
             emit configError("Failed to save config file.");
@@ -278,13 +273,11 @@ void PZooConfig::saveConfig() {
 }
 
 void PZooConfig::loadConfig() {
-    m_settings.clear();
     QStringList validSections = {"debug", "mgr", "language", "lib", "resource", "user", "advanced", "Map", "UI", "scenario", "ai"};
-    
     // load config to m emory
     m_zooini = std::make_unique<CSimpleIniA>();
     m_zooini->SetUnicode();
-    SI_ERROR rc = m_zooini->LoadFile(m_zooConfigPath.c_str()););
+    SI_ERROR rc = m_zooini->LoadFile(m_zooConfigPath.toStdString().c_str());
     if (rc < 0) {
         qDebug() << "Failed to load config file: " << m_zooConfigPath;
         emit configError("Failed to load config file.");
@@ -302,7 +295,7 @@ void PZooConfig::loadConfig() {
     m_zooBackup = std::make_unique<CSimpleIniA>();
     m_zooBackup->SetUnicode();
     // copy the config file to the backup
-    m_zooBackup->Copy(m_zooini.get(), true);
+    copyIni(m_zooini, m_zooBackup);
 
     emit configLoaded(m_zooConfigPath);
 }
@@ -332,7 +325,7 @@ void PZooConfig::revertChanges() {
 
     // copy the backup to the config file
     m_zooini->Reset();
-    m_zooini->Copy(m_zooBackup.get(), true);
+    copyIni(m_zooBackup, m_zooini);
 
     m_dirty = false;
     emit configReverted();
@@ -355,24 +348,24 @@ QString PZooConfig::getString(const QString &section, const QString &key) const 
     return valueStr;
 }
 
-void PZooConfig::copyIni(const CSimpleIniA &copyFrom, CSimpleIniA &copyTo) const {
+void PZooConfig::copyIni(const std::unique_ptr<CSimpleIniA> &copyFrom, std::unique_ptr<CSimpleIniA> &copyTo) const {
     // clear the copyTo ini
     copyTo = std::make_unique<CSimpleIniA>();
-    copyTo.SetUnicode();
+    copyTo->SetUnicode();
     // copy the ini from the copyFrom ini
 
     // get sections
     CSimpleIniA::TNamesDepend sections;
-    copyFrom.GetAllSections(sections);
+    copyFrom->GetAllSections(sections);
     for (const auto &section : sections) {
         // get keys
         CSimpleIniA::TNamesDepend keys;
-        copyFrom.GetAllKeys(section.pItem, keys);
+        copyFrom->GetAllKeys(section.pItem, keys);
         for (const auto &key : keys) {
             // get value
-            const char* value = copyFrom.GetValue(section.pItem, key.pItem, "");
+            const char* value = copyFrom->GetValue(section.pItem, key.pItem, "");
             if (value != nullptr) {
-                copyTo.SetValue(section.pItem, key.pItem, value);
+                copyTo->SetValue(section.pItem, key.pItem, value);
             }
         }
     }
