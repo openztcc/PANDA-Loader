@@ -869,6 +869,8 @@ LayoutFrame {
                 // top bar with save changes button
 
                 Rectangle {
+                    id: confirmChangesBar
+                    property bool hovered: false
                     color: Qt.darker("#2c6431", 1.2)
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
@@ -876,6 +878,13 @@ LayoutFrame {
                     Layout.fillHeight: false
                     radius: 5
                     z: 20
+                    opacity: hovered ? 1.0 : 0.5
+
+                    HoverHandler {
+                        id: hoverParent
+                        target: null
+                        onHoveredChanged: parent.hovered = hoverParent.hovered
+                    }
 
                     RowLayout {
                         anchors.fill: parent
@@ -892,9 +901,15 @@ LayoutFrame {
                             Layout.preferredWidth: implicitWidth
                             flat: true
                             background: Rectangle {
-                                property var hovered: false
                                 color: saveChangesButton.hovered ? Qt.darker(mainContent.mainColor, 1.2) : mainContent.mainColor
                                 radius: 5
+
+                                HoverHandler {
+                                    id: hoverHandle
+                                    // onHoveredChanged: {
+                                    //     confirmChangesBar.hovered = saveChangesButton.hovered
+                                    // }
+                                }
                             }
                             onClicked: {
                                 if (zoo.dirty) {
@@ -910,10 +925,14 @@ LayoutFrame {
                             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                             flat: true
                             Layout.preferredWidth: implicitWidth
+
                             background: Rectangle {
-                                property var hovered: false
-                                color: discardChangesButton.hovered ? Qt.darker(mainContent.mainColor, 1.2) : mainContent.mainColor
+                                color: hoverHandle2.hovered ? Qt.darker(mainContent.mainColor, 1.2) : mainContent.mainColor
                                 radius: 5
+
+                                HoverHandler {
+                                    id: hoverHandle2
+                                }
                             }
                             onClicked: {
                                 if (zoo.dirty) {
