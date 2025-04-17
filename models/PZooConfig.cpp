@@ -208,7 +208,7 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
 // }
 
 void PZooConfig::updateTable(const QString &section, const QString &key, const QString &value) {
-    m_settings[section][key] = value;
+    m_zooini->SetValue(section.toStdString().c_str(), key.toStdString().c_str(), value.toStdString().c_str());
     m_dirty = true;
     emit dirtyChanged(m_dirty);
     emit configUpdated(section, key, value);
@@ -216,7 +216,7 @@ void PZooConfig::updateTable(const QString &section, const QString &key, const Q
 
 void PZooConfig::updateTable(const QString &path, const QString &key, bool value) {
     QString valueStr = value ? "1" : "0";
-    m_settings[path][key] = valueStr;
+    m_zooini->SetValue(path.toStdString().c_str(), key.toStdString().c_str(), valueStr.toStdString().c_str());
     m_dirty = true;
     emit dirtyChanged(m_dirty);
     emit configUpdated(path, key, QString::number(value));
