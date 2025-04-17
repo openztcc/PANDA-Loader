@@ -518,6 +518,7 @@ LayoutFrame {
                     }
                 }
 
+                // ----------------------------- UI SETTINGS
                 Component {
                     id: uiSettings
                     SettingsPane {
@@ -531,6 +532,7 @@ LayoutFrame {
                             text: zoo.getString("UI", "defaultEditCharLimit")
                         }
 
+                        // ----------------------------- TOOLTIP SETTINGS
                         ControlPanel { // Tooltip delay
                             id: tooltipDelayControl
                             label: "Tooltip Delay"
@@ -547,25 +549,25 @@ LayoutFrame {
                             }
                         }
 
+                        // ----------------------------- TOOLTIP WIDTHS
                         ControlPanel { // Tooltip Widths
                             id: tooltipWidthControl
                             label: "Tooltip Widths"
                             Layout.fillWidth: true
 
-                            PTextField { // maxShortTooltipWidth
-                                id: maxShortTooltipWidthField
-                                title: "Max Short Tooltip Width"
-                                Layout.fillWidth: true
-                                descriptionText: "Maximum width of short tooltips"
-                                text: zoo.getString("UI", "maxShortTooltipWidth")
-                            }
-
-                            PTextField { // maxLongTooltipWidth
-                                id: maxLongTooltipWidthField
-                                title: "Max Long Tooltip Width"
-                                Layout.fillWidth: true
-                                descriptionText: "Maximum width of long tooltips"
-                                text: zoo.getString("UI", "maxLongTooltipWidth")
+                            contents: Repeater {
+                                id: tooltipWidthControlsRepeater
+                                model: [
+                                    {key: "maxShortTooltipWidth", label: "Max Short Tooltip Width"},
+                                    {key: "maxLongTooltipWidth", label: "Max Long Tooltip Width"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: "Maximum width of tooltips"
+                                    text: zoo.getString("UI", modelData.key)
+                                }
                             }
                         }
 
@@ -576,6 +578,7 @@ LayoutFrame {
                             text: zoo.getString("UI", "helpType")
                         }
 
+                        // ----------------------------- MESSAGE DISPLAY SETTINGS
                         ControlPanel { // MessageDisplay
                             id: messageDisplayControl
                             label: "Message Display"
@@ -591,141 +594,117 @@ LayoutFrame {
                                 text: zoo.getString("UI", "minimumMessageInterval")
                             }
                         }
-
+                        // ----------------------------- PROGRESS BAR SETTINGS
                         ControlPanel { // progress bar location
                             id: progressBarControls
                             label: "Progress Bar Settings"
                             Layout.fillWidth: true
 
-                            PTextField { // progressLeft
-                                id: progressBarLeftField
-                                title: "Left"
-                                Layout.fillWidth: true
-                                descriptionText: "Left position of the progress bar"
-                                text: zoo.getString("UI", "progressLeft")
-                            }
-                            PTextField { // progressTop
-                                id: progressBarTopField
-                                title: "Top"
-                                Layout.fillWidth: true
-                                descriptionText: "Top position of the progress bar"
-                                text: zoo.getString("UI", "progressTop")
-                            }
-                            PTextField { // progressBottom
-                                id: progressBarBottomField
-                                title: "Bottom"
-                                Layout.fillWidth: true
-                                descriptionText: "Bottom position of the progress bar"
-                                text: zoo.getString("UI", "progressBottom")
-                            }
-                            PTextField { // progressRight
-                                id: progressBarRightField
-                                title: "Right"
-                                Layout.fillWidth: true
-                                descriptionText: "Right position of the progress bar"
-                                text: zoo.getString("UI", "progressRight")
+                            contents: Repeater {
+                                id: progressBarControlsRepeater
+                                model: [
+                                    {key: "progressLeft", label: "Left"},
+                                    {key: "progressTop", label: "Top"},
+                                    {key: "progressBottom", label: "Bottom"},
+                                    {key: "progressRight", label: "Right"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: "Position of the progress bar"
+                                    text: zoo.getString("UI", modelData.key)
+                                }
                             }
                         }
 
+                        // ----------------------------- PROGRESS BAR COLOR SETTINGS
                         ControlPanel { // progress bar color
                             id: progressBarColorControls
                             label: "Progress Bar Color"
                             Layout.fillWidth: true
 
-                            PTextField { // progressRed
-                                id: progressBarRedField
-                                title: "Red"
-                                Layout.fillWidth: true
-                                descriptionText: "Red color value of the progress bar"
-                                text: zoo.getString("UI", "progressRed")
+                            contents: Repeater {
+                                id: progressBarColorControlsRepeater
+                                model: [
+                                    {key: "progressRed", label: "Red"},
+                                    {key: "progressGreen", label: "Green"},
+                                    {key: "progressBlue", label: "Blue"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: "Color value of the progress bar"
+                                    text: zoo.getString("UI", modelData.key)
+                                }
                             }
-
-                            PTextField { // progressGreen
-                                id: progressBarGreenField
-                                title: "Green"
-                                Layout.fillWidth: true
-                                descriptionText: "Green color value of the progress bar"
-                                text: zoo.getString("UI", "progressGreen")
-                            }
-                            PTextField { // progressBlue
-                                id: progressBarBlueField
-                                title: "Blue"
-                                Layout.fillWidth: true
-                                descriptionText: "Blue color value of the progress bar"
-                                text: zoo.getString("UI", "progressBlue")
-                            }
-
                         }
 
+                        // ----------------------------- PROGRESS BAR SHADOW SETTINGS
                         ControlPanel { // progress bar shadow offset
                             id: progressBarShadowControls
                             label: "Progress Bar Shadow Offset"
                             Layout.fillWidth: true
 
-                            PTextField { //progressShadowXOffset 
-                                id: progressBarShadowXOffsetTextField
-                                title: "X Offset"
-                                Layout.fillWidth: true
-                                descriptionText: "X offset of the progress bar shadow"
-                                text: zoo.getString("UI", "progressShadowXOffset")
-                            }
-                            PTextField { // progressShadowYOffset
-                                id: progressBarShadowYOffsetTextField
-                                title: "Y Offset"
-                                Layout.fillWidth: true
-                                descriptionText: "Y offset of the progress bar shadow"
-                                text: zoo.getString("UI", "progressShadowYOffset")
+                            contents: Repeater {
+                                id: progressBarShadowControlsRepeater
+                                model: [
+                                    {key: "progressShadowXOffset", label: "X Offset"},
+                                    {key: "progressShadowYOffset", label: "Y Offset"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: "Offset of the progress bar shadow"
+                                    text: zoo.getString("UI", modelData.key)
+                                }
                             }
                         }
 
+                        // ----------------------------- PROGRESS BAR SHADOW COLOR
                         ControlPanel { // progress bar shadow color
                             id: progressBarShadowColorControls
                             label: "Progress Bar Shadow Color"
                             Layout.fillWidth: true
 
-                            PTextField { // progressShadowRed
-                                id: progressBarShadowRedField
-                                title: "Red"
-                                Layout.fillWidth: true
-                                descriptionText: "Red color value of the progress bar shadow"
-                                text: zoo.getString("UI", "progressShadowRed")
-                            }
-
-                            PTextField { // progressShadowGreen
-                                id: progressBarShadowGreenField
-                                title: "Green"
-                                Layout.fillWidth: true
-                                descriptionText: "Green color value of the progress bar shadow"
-                                text: zoo.getString("UI", "progressShadowGreen")
-                            }
-                            PTextField { // progressShadowBlue
-                                id: progressBarShadowBlueField
-                                title: "Blue"
-                                Layout.fillWidth: true
-                                descriptionText: "Blue color value of the progress bar shadow"
-                                text: zoo.getString("UI", "progressShadowBlue")
+                            contents: Repeater {
+                                id: progressBarShadowColorControlsRepeater
+                                model: [
+                                    {key: "progressShadowRed", label: "Red"},
+                                    {key: "progressShadowGreen", label: "Green"},
+                                    {key: "progressShadowBlue", label: "Blue"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: "Color value of the progress bar shadow"
+                                    text: zoo.getString("UI", modelData.key)
+                                }
                             }
                         }
-
+                        // ----------------------------- LAST WINDOW POSITION SETTINGS
                         ControlPanel { // last window position
                             id: lastWindowPositionControls
                             label: "Last Window Position"
                             Layout.fillWidth: true
 
-                            PTextField { // lastWindowX
-                                id: lastWindowXField
-                                title: "Last Window X"
-                                Layout.fillWidth: true
-                                descriptionText: "Relative to the main monitor, X position where the game was last closed"
-                                text: zoo.getString("UI", "lastWindowX")
+                            contents: Repeater {
+                                id: lastWindowPositionControlsRepeater
+                                model: [
+                                    {key: "lastWindowX", label: "Last Window X"},
+                                    {key: "lastWindowY", label: "Last Window Y"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: "Relative to the main monitor, position where the game was last closed"
+                                    text: zoo.getString("UI", modelData.key)
+                                }
                             }
-                            PTextField { // lastWindowY
-                                id: lastWindowYField
-                                title: "Last Window Y"
-                                Layout.fillWidth: true
-                                descriptionText: "Relative to the main monitor, Y position where the game was last closed"
-                                text: zoo.getString("UI", "lastWindowY")
-                            }        
                         }                        
                     
                     }
