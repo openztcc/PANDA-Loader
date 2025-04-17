@@ -286,7 +286,17 @@ void PZooConfig::saveConfig() {
 void PZooConfig::loadConfig() {
     m_settings.clear();
     QStringList validSections = {"debug", "mgr", "language", "lib", "resource", "user", "advanced", "Map", "UI", "scenario", "ai"};
-    m_zooini = std::make_unique<QSettings>(m_zooConfigPath, QSettings::IniFormat);
+    
+    // load config to m emory
+    m_zooini = std::make_unique<CSimpleIniA>();
+    m_zooini->SetUnicode();
+    SI_ERROR rc = m_zooini->LoadFile(m_zooConfigPath.c_str()););
+    if (rc < 0) {
+        qDebug() << "Failed to load config file: " << m_zooConfigPath;
+        emit configError("Failed to load config file.");
+        return;
+    }
+
 
     if (!m_zooini) {
         qDebug() << "Failed to load config file: " << m_zooConfigPath;
@@ -294,55 +304,36 @@ void PZooConfig::loadConfig() {
         return;
     }
 
-    qDebug() << "Loaded config file: " << m_zooConfigPath;
-    qDebug() << "Config file format: " << m_zooini->format();
-    m_zooini->beginGroup("debug");
-    qDebug() << "Sample section key value: " << m_zooini->value("sendLogfile").toString();
-    m_zooini->endGroup();
-    m_zooini->beginGroup("mgr");
-    qDebug() << "Sample section key value: " << m_zooini->value("aimgr").toString();
-    m_zooini->endGroup();
-
-    int keyCount = 0;
-    int sectionCount = 0;
-
-    // load the config file into the QMap
-    for (QString section : validSections) {
-        if (m_zooini->childGroups().contains(section)) {
-            m_zooini->beginGroup(section);
-            for (QString key : m_zooini->childKeys()) {
-                QString value = m_zooini->value(key).toString();
-                m_settings[section][key] = value;
-                keyCount++;
-            }
-            m_zooini->endGroup();
-            sectionCount++;
-        }
-    }
-
-    qDebug() << "Loaded config file with " << sectionCount << " sections and " << keyCount << " keys.";
-
-    if (m_settings.size() == 0) {
-        emit configError("Failed to load config file.");
+    // get the number of sections in the config file
+    int sectionCount = m_zooini->GetSectionCount();
+    if (sectionCount == 0) {
+        qDebug() << "No sections found in config file: " << m_zooConfigPath;
+        emit configError("No sections found in config file.");
         return;
+    } else if (sectionCount > 0) {
+        qDebug() << "Found " << sectionCount << " sections in config file: " << m_zooConfigPath;
     }
 
-    // backup the settings
-    m_settingsBackup.clear();
-    for (QString section : m_settings.keys()) {
-        m_settingsBackup[section] = m_settings[section];
-    }
+    // create backup of the config file
+    m_zooBackup = std::make_unique<CSimpleIniA>();
+    m_zooBackup->SetUnicode();
+    // copy the config file to the backup
+    m_zooBackup->Copy(m_zooini.get(), true);
 
     emit configLoaded(m_zooConfigPath);
 }
 
 // helper that removes empty keys from the settings
 void PZooConfig::removeEmptyKeys(const QString &section, const QString &test) {
-    for (QString section : m_settings.keys()) {
-        for (QString key : m_settings[section].keys()) {
-            if (m_settings[section][key] == test) {
-                m_settings[section].remove(key);
-            }
+    // get all the keys in the section
+    CSimpleIniA::TNamesDepend keys;
+    m_zooini->GetAllKeys(section.toStdString().c_str(), keys);
+
+    for (const auto &key : keys) {
+        // check if the key is empty
+        if (key.pItem == test.toStdString().c_str()) {
+            // remove the key from the settings
+            m_zooini->Delete(section.toStdString().c_str(), key.pItem);
         }
     }
 }
