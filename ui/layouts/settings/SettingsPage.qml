@@ -203,16 +203,26 @@ LayoutFrame {
                     id: videoSettings
                     SettingsPane {
                         id: videoSettingsPane
+                        signal dataChanged(var section, var key, var value)
                         // Group of settings for drawfps, drawfpsx, drawfpsy
 
-                        PCheckBox { // loadHalfAnims
-                            id: loadHalfAnimsCheckBox
-                            text: "Load Half Animations"
-                            checked: zoo.getBool("advanced", "loadHalfAnims")
+                        onDataChanged: (section, key, value) => {
+                            zoo.updateTable(section, key, value)
+                        }
 
-                            onCheckedChanged: {
-                                console.log("loadHalfAnimsCheckBox checked: " + loadHalfAnimsCheckBox.checked)
-                                zoo.updateTable("advanced", "loadHalfAnims", loadHalfAnimsCheckBox.checked)
+                        Repeater {
+                            id: graphicsSettingsRepeater
+                            model: [
+                                {key: "loadHalfAnims", section: "advanced", label: "Load Half Animations", description: "Load half animations"},
+                            ]
+                            delegate: PCheckBox {
+                                required property var modelData
+                                text: modelData.label
+                                checked: zoo.getBool(modelData.section, modelData.key)
+
+                                onCheckChanged: (data) => {
+                                        videoSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                                }
                             }
                         }
 
@@ -226,6 +236,10 @@ LayoutFrame {
                                 text: "Fullscreen"
                                 Layout.fillWidth: true
                                 checked: zoo.getBool("user", "fullscreen")
+
+                                onCheckChanged: (data) => {
+                                    videoSettingsPane.dataChanged("user", "fullscreen", data)
+                                }
                             }
 
                             Repeater {
@@ -242,6 +256,10 @@ LayoutFrame {
                                     Layout.fillWidth: true
                                     descriptionText: modelData.description
                                     text: zoo.getString(modelData.section, modelData.key)
+
+                                    onTextChange: (data) => {
+                                        videoSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                                    }
                                 }
                             }
                         }
@@ -252,6 +270,10 @@ LayoutFrame {
                             showSwitch: true
                             Layout.fillWidth: true
                             checked: zoo.getBool("debug", "drawfps")
+
+                            onControlGroupChecked: (data) => {
+                                videoSettingsPane.dataChanged("debug", "drawfps", data)
+                            }
 
                             contents: Repeater {
                                 id: drawFPSControlRepeater
@@ -265,6 +287,10 @@ LayoutFrame {
                                     Layout.fillWidth: true
                                     descriptionText: modelData.description
                                     text: zoo.getString(modelData.section, modelData.key)
+
+                                    onTextChange: (data) => {
+                                        videoSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                                    }
                                 }
                             }
                         }

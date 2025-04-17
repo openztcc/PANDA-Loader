@@ -14,6 +14,7 @@ Item {
 
     signal toggled(bool checked)
     signal checkChanged(bool checked)
+    signal dataChanged(var data)
 
     CheckBox {
         id: pCheckBox

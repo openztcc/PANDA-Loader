@@ -262,12 +262,12 @@ Item {
             onTextChanged: {
                 pTextField.textChange(textField.text)
 
-                // check if text is dirty
-                if (textField.text !== pTextField.originalText) {
-                    pTextField.dirty(true)
-                } else {
-                    pTextField.dirty(false)
-                }
+                // // check if text is dirty
+                // if (textField.text !== pTextField.originalText) {
+                //     pTextField.dirty(true)
+                // } else {
+                //     pTextField.dirty(false)
+                // }
             }
 
             MouseArea {

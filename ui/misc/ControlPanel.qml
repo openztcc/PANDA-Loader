@@ -41,6 +41,8 @@ Item {
                     if (controlGroup.data) {
                         controlGroup.data.enabled = controlSwitch.checked
                     }
+
+                    controlGroup.controlGroupChecked(controlSwitch.checked)
                 }
                 visible: controlGroup.showSwitch
             }
