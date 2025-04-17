@@ -12,7 +12,7 @@ typedef int SI_ERROR;
 class PZooConfig : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(bool dirty READ isDirty WRITE setDirty NOTIFY dirtyChanged)
+    Q_PROPERTY(bool dirty READ dirty WRITE setDirty NOTIFY dirtyChanged)
 
 
 public:
@@ -26,8 +26,8 @@ public:
     Q_INVOKABLE void loadConfig();
     Q_INVOKABLE void revertChanges();
     void removeEmptyKeys(const QString &section, const QString &test);
-    Q_INVOKABLE bool getBool(const QString &section, const QString &key, std::unique_ptr<CSimpleIniA> &ini = nullptr) const;
-    Q_INVOKABLE QString getString(const QString &section, const QString &key, std::unique_ptr<CSimpleIniA> &ini = nullptr) const;
+    Q_INVOKABLE bool getBool(const QString &section, const QString &key, const std::unique_ptr<CSimpleIniA> &ini = nullptr) const;
+    Q_INVOKABLE QString getString(const QString &section, const QString &key, const std::unique_ptr<CSimpleIniA> &ini = nullptr) const;
     CSimpleIniA getIni() const { return CSimpleIniA(); }
     void copyIni(const std::unique_ptr<CSimpleIniA> &copyFrom, std::unique_ptr<CSimpleIniA> &copyTo) const;
 
@@ -35,7 +35,7 @@ public:
     // Q_INVOKABLE bool isInteger(const QString &value, bool test = false) const;
     // Q_INVOKABLE bool isFloat(const QString &value, bool test = false, int precision = 0) const;
 
-    int dirtyCount() const { return m_dirty; }
+    int dirty() const { return m_dirty; }
     void setDirty(int dirty) { m_dirty = dirty; }
     
 

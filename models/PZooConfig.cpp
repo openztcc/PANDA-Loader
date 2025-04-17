@@ -212,7 +212,7 @@ void PZooConfig::updateTable(const QString &section, const QString &key, const Q
     QString original = getString(section, key, m_zooBackup);
 
     if (input == value) {
-        if (dirty > 0) {
+        if (m_dirty > 0) {
             m_dirty--;
         }
         return;
@@ -348,7 +348,7 @@ void PZooConfig::revertChanges() {
     emit dirtyChanged(m_dirty);
 }
 
-bool PZooConfig::getBool(const QString &section, const QString &key, std::unique_ptr<CSimpleIniA> &ini) const {
+bool PZooConfig::getBool(const QString &section, const QString &key, const std::unique_ptr<CSimpleIniA> &ini) const {
     const char* value;
     
     if (ini) {
@@ -373,7 +373,7 @@ bool PZooConfig::getBool(const QString &section, const QString &key, std::unique
     }
 }
 
-QString PZooConfig::getString(const QString &section, const QString &key, std::unique_ptr<CSimpleIniA> &ini) const {
+QString PZooConfig::getString(const QString &section, const QString &key, const std::unique_ptr<CSimpleIniA> &ini) const {
     const char* value;
     
     if (ini) {

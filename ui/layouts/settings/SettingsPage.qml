@@ -121,6 +121,28 @@ LayoutFrame {
                 anchors.topMargin: 10
                 spacing: 4
 
+
+                // top bar with save changes button
+                RowLayout {
+                    id: settingsTopBar
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+                    spacing: 10
+
+                    Button {
+                        id: saveChangesButton
+                        text: "Save Changes"
+                        Layout.fillWidth: true
+                        onClicked: {
+                            if (zoo.dirty) {
+                                zoo.saveConfig()
+                            } else {
+                                console.log("No changes to save")
+                            }
+                        }
+                    }
+                }
+
                 StackView {
                     id: settingsStack
                     Layout.fillHeight: true
@@ -187,6 +209,11 @@ LayoutFrame {
                             id: loadHalfAnimsCheckBox
                             text: "Load Half Animations"
                             checked: zoo.getBool("advanced", "loadHalfAnims")
+
+                            onCheckedChanged: {
+                                console.log("loadHalfAnimsCheckBox checked: " + loadHalfAnimsCheckBox.checked)
+                                zoo.updateTable("advanced", "loadHalfAnims", loadHalfAnimsCheckBox.checked)
+                            }
                         }
 
                         ControlPanel {
