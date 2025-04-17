@@ -5,6 +5,7 @@
 #include <QDir>
 #include "../src/PConfigMgr.h"
 #include <QBuffer>
+#include "SimpleIni.h"
 
 class PZooConfig : public QObject {
     Q_OBJECT
@@ -25,6 +26,7 @@ public:
     void removeEmptyKeys(const QString &section, const QString &test);
     Q_INVOKABLE bool getBool(const QString &section, const QString &key) const;
     Q_INVOKABLE QString getString(const QString &section, const QString &key) const;
+    CSimpleIniA getIni() const { return CSimpleIniA(); }
 
     // validation
     // Q_INVOKABLE bool isInteger(const QString &value, bool test = false) const;
@@ -46,7 +48,7 @@ private:
     QString m_zooConfigPath;
     QMap<QString, QMap<QString, QString>> m_settings;
     QMap<QString, QMap<QString, QString>> m_settingsBackup;
-    std::unique_ptr<QSettings> m_zooini;
+    std::unique_ptr<CSimpleIniA> m_zooini;
     bool m_dirty;
 
 };

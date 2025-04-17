@@ -48,8 +48,10 @@ link_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib
 )
 add_library(tomlplusplus INTERFACE)
+add_library(simpleini INTERFACE)
 
 target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
+target_include_directories(simpleini INTERFACE ${CMAKE_SOURCE_DIR}/libs/simpleini/include)
 
 target_include_directories(
     appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/src
@@ -175,6 +177,7 @@ target_link_libraries(appPandaLdr
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a 
     Qt6::Sql 
     tomlplusplus
+    simpleini
 )
 
 include(GNUInstallDirs)
