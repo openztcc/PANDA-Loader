@@ -34,6 +34,7 @@ Item {
     property alias text: textField.text
     property var pHeight: null
     property string originalText: textField.text
+    property bool focused: false
 
     // signals
     signal searchTextChanged(text: string)
@@ -173,10 +174,11 @@ Item {
                         textField.right
                     }
                 }
-                anchors.rightMargin: 0
-                width: 35
+                anchors.rightMargin: 1
+                width: pTextField.focused ? 35 : 0
                 height: textField.height - 7
                 textField: textField
+                visible: pTextField.focused ? true : false
                 fg: pTextField.placeholderColor 
                 bg: pTextField.bg
                 z: 1
@@ -221,13 +223,11 @@ Item {
             }
 
             onFocusChanged: {
-                // if (focus) {
-                //     textField.placeholderText = ""
-                // } else {
-                //     if (textField.text == "") {
-                //         textField.placeholderText = "Text"
-                //     }
-                // }
+                if (focus) {
+                    pTextField.focused = true
+                } else {
+                    pTextField.focused = false
+                }
             }
 
             // Key handling
