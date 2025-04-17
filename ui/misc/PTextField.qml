@@ -121,22 +121,6 @@ Item {
                 radius: 5
                 border.width: textFieldBorder
                 border.color: pTextField.error ? pTextField.errorColor : Qt.darker(pTextField.bg, 1.3)
-
-                // shadow effect
-                Rectangle {
-                    anchors.top: parent.top
-                    color: Qt.darker(pTextField.bg, 1.18)
-                    height: 4
-                    width: {
-                        if (textField.isFileBrowser) {
-                            parent.width - browseFilesButton.width
-                        } else {
-                            parent.width
-                        }
-                    }
-                    topLeftRadius: 5
-                    topRightRadius: 5
-                }
             }
 
             // change cursor color
