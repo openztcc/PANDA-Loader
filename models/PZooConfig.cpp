@@ -333,8 +333,22 @@ void PZooConfig::revertChanges() {
 }
 
 bool PZooConfig::getBool(const QString &section, const QString &key) const {
-    bool value = m_zooini->GetValue(section.toStdString().c_str(), key.toStdString().c_str(), "0") == "1";
-    return value;
+    const char* value = m_zooini->GetValue(section.toStdString().c_str(), key.toStdString().c_str());
+
+    // encode with utf8 (direct to std::string crashes because of encoding)
+    QString valueStr = QString::fromUtf8(value);
+    if (valueStr.isEmpty()) {
+        return false;
+    }
+
+    // check if the value is 1 or true
+    if (valueStr == "1" || valueStr == "true" || valueStr == "True") {
+        return true;
+    } else if (valueStr == "0" || valueStr == "false" || valueStr == "False") {
+        return false;
+    } else {
+        return false;
+    }
 }
 
 QString PZooConfig::getString(const QString &section, const QString &key) const {
