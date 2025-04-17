@@ -355,11 +355,17 @@ void PZooConfig::revertChanges() {
 }
 
 bool PZooConfig::getBool(const QString &section, const QString &key) const {
-    bool value = m_settings[section][key].toInt();
+    bool value = m_zooini->GetValue(section.toStdString().c_str(), key.toStdString().c_str(), "0") == "1";
     return value;
 }
 
 QString PZooConfig::getString(const QString &section, const QString &key) const {
-    QString value = m_settings[section][key];
-    return value;
+    const char* value = m_zooini->GetValue(section.toStdString().c_str(), key.toStdString().c_str(), "");
+    if (value == nullptr) {
+        return QString();
+    }
+
+    QString valueStr = QString::fromStdString(value);
+
+    return valueStr;
 }
