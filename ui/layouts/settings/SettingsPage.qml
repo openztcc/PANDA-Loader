@@ -188,21 +188,21 @@ LayoutFrame {
                     // Forms and fields
                     SettingsPane {
                         id: pandaSettingsPane
-                        PTextField {
-                            id: homePath
-                            title: "PANDA Home Path"
-                            Layout.fillWidth: true
-                            descriptionText: "Path to the PANDA home directory"
-                            isFileBrowser: true
-                            text: psettings.pandaHomePath()
-                        }
-                        PTextField {
-                            id: zooPath
-                            title: "Zoo Game Path"
-                            Layout.fillWidth: true
-                            descriptionText: "Path to the zoo.exe install directory"
-                            isFileBrowser: true
-                            text: psettings.zooGamePath()
+
+                        Repeater {
+                            id: pandaSettingsRepeater
+                            model: [
+                                {key: "pandaHomePath", label: "PANDA Home Path", description: "Path to the PANDA home directory"},
+                                {key: "zooGamePath", label: "Zoo Game Path", description: "Path to the zoo.exe install directory"},
+                            ]
+                            delegate: PTextField {
+                                required property var modelData
+                                title: modelData.label
+                                Layout.fillWidth: true
+                                descriptionText: modelData.description
+                                isFileBrowser: true
+                                text: psettings[modelData.key]()
+                            }
                         }
                         ControlPanel {
                             id: isoControls
@@ -249,33 +249,22 @@ LayoutFrame {
                                 Layout.fillWidth: true
                                 checked: zoo.getBool("user", "fullscreen")
                             }
-                            PTextField { // screenWidth
-                                id: screenWidthField
-                                title: "Resolution Width"
-                                Layout.fillWidth: true
-                                descriptionText: "Width of the screen resolution"
-                                text: zoo.getString("user", "screenwidth")
-                            }
-                            PTextField { // screenHeight
-                                id: screenHeightField
-                                title: "Resolution Height"
-                                Layout.fillWidth: true
-                                descriptionText: "Height of the screen resolution"
-                                text: zoo.getString("user", "screenheight")
-                            }
-                            PTextField { // UpdateRate
-                                id: updateRateField
-                                title: "Update Rate"
-                                Layout.fillWidth: true
-                                descriptionText: "Update rate of the game"
-                                text: zoo.getString("user", "UpdateRate")
-                            }
-                            PTextField { // DrawRate
-                                id: drawRateField
-                                title: "Draw Rate"
-                                Layout.fillWidth: true
-                                descriptionText: "Draw rate of the game"
-                                text: zoo.getString("user", "DrawRate")
+
+                            Repeater {
+                                id: displaySettingsRepeater
+                                model: [
+                                    {key: "screenwidth", section: "user", label: "Screen Width", description: "Width of the screen resolution"},
+                                    {key: "screenheight", section: "user", label: "Screen Height", description: "Height of the screen resolution"},
+                                    {key: "UpdateRate", section: "user", label: "Update Rate", description: "Update rate of the game"},
+                                    {key: "DrawRate", section: "user", label: "Draw Rate", description: "Draw rate of the game"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: modelData.description
+                                    text: zoo.getString(modelData.section, modelData.key)
+                                }
                             }
                         }
 
@@ -286,19 +275,19 @@ LayoutFrame {
                             Layout.fillWidth: true
                             checked: zoo.getBool("debug", "drawfps")
 
-                            PTextField { // drawfpsx
-                                id: drawFPSX
-                                title: "X Position"
-                                Layout.fillWidth: true
-                                descriptionText: "X position of the FPS counter"
-                                text: zoo.getString("debug", "drawfpsx")
-                            }
-                            PTextField { // drawfpsy
-                                id: drawFPSY
-                                title: "Y Position"
-                                Layout.fillWidth: true
-                                descriptionText: "Y position of the FPS counter"
-                                text: zoo.getString("debug", "drawfpsy")
+                            contents: Repeater {
+                                id: drawFPSControlRepeater
+                                model: [
+                                    {key: "drawfpsx", section: "debug", label: "X Position", description: "X position of the FPS counter"},
+                                    {key: "drawfpsy", section: "debug", label: "Y Position", description: "Y position of the FPS counter"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: modelData.description
+                                    text: zoo.getString(modelData.section, modelData.key)
+                                }
                             }
                         }
                     }
@@ -313,57 +302,61 @@ LayoutFrame {
                             text: "Use 8 Bit Sound"
                             checked: zoo.getBool("advanced", "use8BitSound")
                         }
-                        PTextField { // userAttenuation 
-                            id: userAttenuationTextField
-                            title: "User Attenuation"
-                            Layout.fillWidth: true
-                            text: zoo.getString("UI", "userAttenuation")
-                        }
-                        PTextField { // completedExhibitAttenuation
-                            id: completedExhibitAttenuationTextField
-                            title: "Completed Exhibit Attenuation"
-                            Layout.fillWidth: true
-                            text: zoo.getString("UI", "completedExhibitAttenuation")
-                        }
 
+                        Repeater {
+                            id: soundSettingsRepeater
+                            model: [
+                                {key: "userAttenuation", section: "UI", label: "User Attenuation", description: "Attenuation of the user"},
+                                {key: "completedExhibitAttenuation", section: "UI", label: "Completed Exhibit Attenuation", description: "Attenuation of the completed exhibit"},
+                            ]
+                            delegate: PTextField {
+                                required property var modelData
+                                title: modelData.label
+                                Layout.fillWidth: true
+                                descriptionText: modelData.description
+                                text: zoo.getString(modelData.section, modelData.key)
+                            }
+                        }
                         ControlPanel { // menu music controls
                             id: menuMusicControls
                             label: "Menu Music Enabled"
                             showSwitch: true
                             Layout.fillWidth: true
                             checked: false
-                            PTextField { // menuMusicAttenuation
-                                id: menuMusicAttenuationField
-                                title: "Menu Music Volume"
-                                Layout.fillWidth: true
-                                text: zoo.getString("UI", "menuMusicAttenuation")
-                            }
-                            PTextField { // menuMusic 
-                                id: menuMusicField
-                                title: "Menu Music"
-                                Layout.fillWidth: true
-                                isFileBrowser: true
-                                descriptionText: "Path to the menu music file"
-                                text: zoo.getString("UI", "menuMusic")
+
+                            contents: Repeater {
+                                id: menuMusicControlsRepeater
+                                model: [
+                                    {key: "menuMusicAttenuation", section: "UI", label: "Menu Music Volume", description: "Volume of the menu music"},
+                                    {key: "menuMusic", section: "UI", label: "Menu Music", description: "Path to the menu music file"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: modelData.description
+                                    text: zoo.getString(modelData.section, modelData.key)
+                                }
                             }
                         }
                         ControlPanel { // boot music controls
                             id: bootMusicControls
                             label: "Boot Music Volume"
                             Layout.fillWidth: true
-                            PTextField { // movevolume1
-                                id: moveVolume1Field
-                                title: "Volume for Splash Screen 1"
-                                Layout.fillWidth: true
-                                descriptionText: "Volume for the first splash screen that plays"
-                                text: zoo.getString("UI", "movievolume1")
-                            }
-                            PTextField { // movevolume2
-                                id: moveVolume2Field
-                                title: "Volume for Splash Screen 2"
-                                Layout.fillWidth: true
-                                descriptionText: "Volume for the second splash screen that plays"
-                                text: zoo.getString("UI", "movievolume2")
+
+                            contents: Repeater {
+                                id: bootMusicControlsRepeater
+                                model: [
+                                    {key: "movievolume1", section: "UI", label: "Volume for Splash Screen 1", description: "Volume for the first splash screen that plays"},
+                                    {key: "movievolume2", section: "UI", label: "Volume for Splash Screen 2", description: "Volume for the second splash screen that plays"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: modelData.description
+                                    text: zoo.getString(modelData.section, modelData.key)
+                                }
                             }
                         }
                     }
@@ -373,101 +366,51 @@ LayoutFrame {
                     id: gameplaySettings
                     SettingsPane {
                         id: gameplaySettingsPane
-                        PTextField { // MSStartingCash
-                            id: startingCashField
-                            title: "Starting Cash"
-                            Layout.fillWidth: true
-                            descriptionText: "How much cash to start with in freeform mode"
-                            text: zoo.getString("UI", "MSStartingCash")   
-                        }
-                        PTextField { // MSCashIncrement
-                            id: cashIncrementField
-                            title: "Cash Increment"
-                            Layout.fillWidth: true
-                            descriptionText: "How much cash to increment by in freeform mode"
-                            text: zoo.getString("UI", "MSCashIncrement")
-                        }
 
-                        PTextField { // MSMinCash
-                            id: minCashField
-                            title: "Minimum Cash"
-                            Layout.fillWidth: true
-                            descriptionText: "Minimum cash in freeform mode"
-                            text: zoo.getString("UI", "MSMinCash")
-                        }
-                        PTextField { // MSMaxCash
-                            id: maxCashField
-                            title: "Maximum Cash"
-                            Layout.fillWidth: true
-                            descriptionText: "Maximum cash in freeform mode"
-                            text: zoo.getString("UI", "MSMaxCash")
+                        content: Repeater {
+                            id: gameplaySettingsRepeater
+                            model: [
+                                {key: "MSStartingCash", section: "UI", label: "Starting Cash", description: "Starting cash in freeform mode"},
+                                {key: "MSCashIncrement", section: "UI", label: "Cash Increment", description: "Cash increment in freeform mode"},
+                                {key: "MSMinCash", section: "UI", label: "Minimum Cash", description: "Minimum cash in freeform mode"},
+                                {key: "MSMaxCash", section: "UI", label: "Maximum Cash", description: "Maximum cash in freeform mode"},                                
+                            ]
+                            delegate: PTextField {
+                                required property var modelData
+                                title: modelData.label
+                                Layout.fillWidth: true
+                                descriptionText: modelData.description
+                                text: zoo.getString(modelData.section, modelData.key)
+                            }
                         }
                         ControlPanel { // mouse controls 
                             id: controlsSettings
                             label: "Mouse Settings"
                             Layout.fillWidth: true
 
-                            PTextField { // drag 
-                                id: dragField
-                                title: "Drag"
-                                Layout.fillWidth: true
-                                text: zoo.getString("advanced", "drag")
-                            }
-
-                            PTextField { // Click
-                                id: clickField
-                                title: "Click"
-                                Layout.fillWidth: true
-                                text: zoo.getString("advanced", "click")
-                            }
-
-                            PTextField { // normal
-                                id: normalField
-                                title: "Normal"
-                                Layout.fillWidth: true
-                                text: zoo.getString("advanced", "normal")
-                            }
-
-                            PTextField { // level 
-                                id: levelField
-                                title: "Level"
-                                Layout.fillWidth: true
-                                text: zoo.getString("advanced", "level")
-                            }
-
-                            PTextField { // mouseScrollThreshold
-                                id: mouseScrollThresholdField
-                                title: "Mouse Scroll Threshold"
-                                Layout.fillWidth: true
-                                descriptionText: "Threshold for mouse scroll"
-                                text: zoo.getString("UI", "mouseScrollThreshold")
-                            }
-
-                            PTextField { // mouseScrollDelay
-                                id: mouseScrollDelayField
-                                title: "Mouse Scroll Delay"
-                                Layout.fillWidth: true
-                                descriptionText: "Delay for mouse scroll"
-                                text: zoo.getString("UI", "mouseScrollDelay")
-                            }
-
-                            PTextField { // mouseScrollX
-                                id: mouseScrollXField
-                                title: "Mouse Scroll X"
-                                Layout.fillWidth: true
-                                descriptionText: "X rate of mouse scroll"
-                                text: zoo.getString("UI", "mouseScrollX")
-                            }
-
-                            PTextField { // mouseScrollY
-                                id: mouseScrollYField
-                                title: "Mouse Scroll Y"
-                                Layout.fillWidth: true
-                                descriptionText: "Y rate of mouse scroll"
-                                text: zoo.getString("UI", "mouseScrollY")
+                            contents: Repeater {
+                                id: controlsSettingsRepeater
+                                model: [
+                                    {key: "drag", section: "advanced", label: "Drag", description: "Drag speed"},
+                                    {key: "click", section: "advanced", label: "Click", description: "Click speed"},
+                                    {key: "normal", section: "advanced", label: "Normal", description: "Normal speed"},
+                                    {key: "level", section: "advanced", label: "Level", description: "Level speed"},
+                                    {key: "mouseScrollThreshold", section: "UI", label: "Mouse Scroll Threshold", description: "Threshold for mouse scroll"},
+                                    {key: "mouseScrollDelay", section: "UI", label: "Mouse Scroll Delay", description: "Delay for mouse scroll"},
+                                    {key: "mouseScrollX", section: "UI", label: "Mouse Scroll X", description: "X rate of mouse scroll"},
+                                    {key: "mouseScrollY", section: "UI", label: "Mouse Scroll Y", description: "Y rate of mouse scroll"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: modelData.description
+                                    text: zoo.getString(modelData.section, modelData.key)
+                                }
                             }
                         }
 
+                        // ----------------------------- KEYBOARD SETTINGS
                         ControlPanel { // key controls 
                             id: keyControlsSettings
                             label: "Keyboard Settings"
@@ -475,23 +418,23 @@ LayoutFrame {
                             Layout.fillWidth: true
                             checked: false
 
-                            PTextField { // keyScrollX
-                                id: keyScrollXField
-                                title: "Key Scroll X"
-                                Layout.fillWidth: true
-                                descriptionText: "X rate of x-directional panning"
-                                text: zoo.getString("UI", "keyScrollX")
-                            }
-
-                            PTextField { // keyScrollY
-                                id: keyScrollYField
-                                title: "Key Scroll Y"
-                                Layout.fillWidth: true
-                                descriptionText: "Y rate of y-directional panning"
-                                text: zoo.getString("UI", "keyScrollY")
+                            contents: Repeater {
+                                id: keyControlsSettingsRepeater
+                                model: [
+                                    {key: "keyScrollX", label: "Key Scroll X"},
+                                    {key: "keyScrollY", label: "Key Scroll Y"},
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: "Rate of panning in the x or y direction"
+                                    text: zoo.getString("UI", modelData.key)
+                                }
                             }
                         }
 
+                        // ----------------------------- MAP SIZE SETTINGS
                         ControlPanel { // map size
                             id: mapSizeControls
                             label: "Map Size"
@@ -499,20 +442,19 @@ LayoutFrame {
                             Layout.fillWidth: true
                             checked: false
 
-                            PTextField { // mapX
-                                id: mapXField
-                                title: "Map X"
-                                Layout.fillWidth: true
-                                descriptionText: "X size of the map (note: this does not change the map size)"
-                                text: zoo.getString("Map", "mapX")
-                            }
-
-                            PTextField { // mapY
-                                id: mapYField
-                                title: "Map Y"
-                                Layout.fillWidth: true
-                                descriptionText: "Y size of the map (note: this does not change the map size)"
-                                text: zoo.getString("Map", "mapY")
+                            contents: Repeater {
+                                id: mapSizeControlsRepeater
+                                model: [
+                                    {key: "mapX", label: "Map X"},
+                                    {key: "mapY", label: "Map Y"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    descriptionText: "Size of the map"
+                                    text: zoo.getString("Map", modelData.key)
+                                }
                             }
                         }
                     }
@@ -650,15 +592,15 @@ LayoutFrame {
                             contents: Repeater {
                                 id: progressBarShadowControlsRepeater
                                 model: [
-                                    {key: "progressShadowXOffset", label: "X Offset"},
-                                    {key: "progressShadowYOffset", label: "Y Offset"}
+                                    {key: "progressShadowXOffset", section: "UI", label: "X Offset"},
+                                    {key: "progressShadowYOffset", section: "UI", label: "Y Offset"}
                                 ]
                                 delegate: PTextField {
                                     required property var modelData
                                     title: modelData.label
                                     Layout.fillWidth: true
                                     descriptionText: "Offset of the progress bar shadow"
-                                    text: zoo.getString("UI", modelData.key)
+                                    text: zoo.getString(modelData.section, modelData.key)
                                 }
                             }
                         }
@@ -672,16 +614,16 @@ LayoutFrame {
                             contents: Repeater {
                                 id: progressBarShadowColorControlsRepeater
                                 model: [
-                                    {key: "progressShadowRed", label: "Red"},
-                                    {key: "progressShadowGreen", label: "Green"},
-                                    {key: "progressShadowBlue", label: "Blue"}
+                                    {key: "progressShadowRed", section: "UI", label: "Red"},
+                                    {key: "progressShadowGreen", section: "UI", label: "Green"},
+                                    {key: "progressShadowBlue", section: "UI", label: "Blue"}
                                 ]
                                 delegate: PTextField {
                                     required property var modelData
                                     title: modelData.label
                                     Layout.fillWidth: true
                                     descriptionText: "Color value of the progress bar shadow"
-                                    text: zoo.getString("UI", modelData.key)
+                                    text: zoo.getString(modelData.section, modelData.key)
                                 }
                             }
                         }
@@ -694,15 +636,15 @@ LayoutFrame {
                             contents: Repeater {
                                 id: lastWindowPositionControlsRepeater
                                 model: [
-                                    {key: "lastWindowX", label: "Last Window X"},
-                                    {key: "lastWindowY", label: "Last Window Y"}
+                                    {key: "lastWindowX", section: "UI", label: "Last Window X"},
+                                    {key: "lastWindowY", section: "UI", label: "Last Window Y"}
                                 ]
                                 delegate: PTextField {
                                     required property var modelData
                                     title: modelData.label
                                     Layout.fillWidth: true
                                     descriptionText: "Relative to the main monitor, position where the game was last closed"
-                                    text: zoo.getString("UI", modelData.key)
+                                    text: zoo.getString(modelData.section, modelData.key)
                                 }
                             }
                         }                        
@@ -715,12 +657,12 @@ LayoutFrame {
                     id: scenariosSettings
                     SettingsPane {
                         id: scenariosSettingsPane
-                        content: Repeater {
+                        Repeater {
                             id: scenariosSettingsRepeater
                             model: [
-                                {key: "zooTycoonCheckBox", label: "Started Zoo Tycoon Tutorial"},
-                                {key: "dinoDigsCheckBox", label: "Started Dino Digs Tutorial"},
-                                {key: "marineManiaCheckBox", label: "Started Marine Mania Tutorial"}
+                                {key: "zooTycoonCheckBox", section: "UI", label: "Started Zoo Tycoon Tutorial"},
+                                {key: "dinoDigsCheckBox", section: "UI", label: "Started Dino Digs Tutorial"},
+                                {key: "marineManiaCheckBox", section: "UI", label: "Started Marine Mania Tutorial"}
                             ]
                             delegate: PCheckBox {
                                 required property var modelData
@@ -860,14 +802,14 @@ LayoutFrame {
                         content: Repeater  {
                             id: languageSettingsRepeater
                             model: [
-                                {key: "lang", label: "Language"},
-                                {key: "sublang", label: "Sub Language"}
+                                {key: "lang", section: "language", label: "Language"},
+                                {key: "sublang", section: "language", label: "Sub Language"}
                             ]
                             delegate: PTextField {
                                 required property var modelData
                                 title: modelData.label
                                 Layout.fillWidth: true
-                                text: zoo.getString("language", modelData.key)
+                                text: zoo.getString(modelData.section, modelData.key)
                             }
                         }
                     }
