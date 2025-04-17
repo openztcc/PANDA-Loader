@@ -77,8 +77,24 @@ LayoutFrame {
 
                         onClicked: {
                             var identifier = settingsButtonsRepeater.itemAt(index)
-                            replaceSettingsPane(modelData.pane, settingsStack, identifier)
-                        }
+                            if (!zoo.dirty) {
+                                replaceSettingsPane(modelData.pane, settingsStack, identifier)
+                            } else {
+                                var result = Qt.confirm("Unsaved Changes", "You have unsaved changes. Do you want to discard them?")
+                                if (result === Qt.Yes) {
+                                    zoo.dirty = false
+                                    replaceSettingsPane(modelData.pane, settingsStack, identifier)
+                                } else if (result === Qt.No) {
+                                    return
+                                } else if (result === Qt.Cancel) {
+                                    return
+                                } else {
+                                    zoo.dirty = false
+                                    replaceSettingsPane(modelData.pane, settingsStack, identifier)
+                                }
+                            }
+                        } 
+                        
                     }
                 }
             }
