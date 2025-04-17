@@ -54,105 +54,31 @@ LayoutFrame {
                 anchors.fill: parent
                 spacing: 0
 
-                SettingsButton {
-                    id: settingsButton
-                    text: "PANDA Settings"
-                    source: "qrc:/icons/paw.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
+                Repeater {
+                    id: settingsButtonsRepeater
+                    model: [
+                        {text: "PANDA Settings", icon: "qrc:/icons/paw.svg", pane: pandaSettings},
+                        {text: "Video", icon: "qrc:/icons/tv.svg", pane: videoSettings},
+                        {text: "Sound", icon: "qrc:/icons/sound.svg", pane: soundSettings},
+                        {text: "Gameplay", icon: "qrc:/icons/keyboard.svg", pane: gameplaySettings},
+                        {text: "UI", icon: "qrc:/icons/ui.svg", pane: uiSettings},
+                        {text: "Scenarios", icon: "qrc:/icons/article.svg", pane: scenariosSettings},
+                        {text: "Resource Paths", icon: "qrc:/icons/folder.svg", pane: resourcePathsSettings},
+                        {text: "Language", icon: "qrc:/icons/language.svg", pane: languageSettings},
+                        {text: "Debug Settings", icon: "qrc:/icons/plumbing.svg", pane: debugSettings}
+                    ]
+                    delegate: SettingsButton {
+                        required property var modelData
+                        required property int index
+                        text: modelData.text
+                        source: modelData.icon
+                        color: mainContent.mainColor
+                        fg: mainContent.mainTextColor
 
-                    onClicked: {
-                        replaceSettingsPane(pandaSettings, settingsStack, settingsButton)
-                    }
-                }
-
-                SettingsButton {
-                    id: videoSettingsButton
-                    text: "Video"
-                    source: "qrc:/icons/tv.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-
-                    onClicked: {
-                        replaceSettingsPane(videoSettings, settingsStack, videoSettingsButton)
-                    }
-                }
-
-                SettingsButton {
-                    id: soundSettingsButton
-                    text: "Sound"
-                    source: "qrc:/icons/sound.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-
-                    onClicked: {
-                        replaceSettingsPane(soundSettings, settingsStack, soundSettingsButton)
-                    }
-                }
-
-                SettingsButton {
-                    id: gameplaySettingsButton
-                    text: "Gameplay"
-                    source: "qrc:/icons/keyboard.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-                    onClicked: {
-                        replaceSettingsPane(gameplaySettings, settingsStack, gameplaySettingsButton)
-                    }
-                }
-
-                SettingsButton  {
-                    id: uiSettingsButton
-                    text: "UI"
-                    source: "qrc:/icons/ui.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-                    onClicked: {
-                        replaceSettingsPane(uiSettings, settingsStack, uiSettingsButton)
-                    }
-                }
-
-                SettingsButton {
-                    id: scenariosSettingsButton
-                    text: "Scenarios"
-                    source: "qrc:/icons/article.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-                    onClicked: {
-                        replaceSettingsPane(scenariosSettings, settingsStack, scenariosSettingsButton)
-                    }
-                }
-
-                SettingsButton {
-                    id: resourcePathsButton
-                    text: "Resource Paths"
-                    source: "qrc:/icons/folder.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-                    onClicked: {
-                        replaceSettingsPane(resourcePathsSettings, settingsStack, resourcePathsButton)
-                    }
-                }
-
-                SettingsButton {
-                    id: languageSettingsButton
-                    text: "Language"
-                    source: "qrc:/icons/language.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-                    onClicked: {
-                        replaceSettingsPane(languageSettings, settingsStack, languageSettingsButton)
-                    }
-                }
-
-                SettingsButton {
-                    id: debugSettingsButton
-                    text: "Debug Settings"
-                    source: "qrc:/icons/plumbing.svg"
-                    color: mainContent.mainColor
-                    fg: mainContent.mainTextColor
-                    onClicked: {
-                        replaceSettingsPane(debugSettings, settingsStack, debugSettingsButton)
+                        onClicked: {
+                            var identifier = settingsButtonsRepeater.itemAt(index)
+                            replaceSettingsPane(modelData.pane, settingsStack, identifier)
+                        }
                     }
                 }
             }
@@ -179,10 +105,11 @@ LayoutFrame {
                     initialItem: pandaSettings
 
                     Component.onCompleted: {
-                        replaceSettingsPane(pandaSettings, settingsStack, settingsButton)
+                        mainContent.replaceSettingsPane(pandaSettings, settingsStack, settingsButtonsRepeater.itemAt(1))
                     }
                 }
 
+                // settingsPane
                 Component {
                     id: pandaSettings
                     // Forms and fields
@@ -226,6 +153,7 @@ LayoutFrame {
 
                 }
 
+                // videoSettings
                 Component {
                     id: videoSettings
                     SettingsPane {
@@ -293,6 +221,7 @@ LayoutFrame {
                     }
                 }
 
+                // soundSettings
                 Component {
                     id: soundSettings
                     SettingsPane {
@@ -362,6 +291,7 @@ LayoutFrame {
                     }
                 }
 
+                // gameplaySettings
                 Component {
                     id: gameplaySettings
                     SettingsPane {
@@ -460,7 +390,7 @@ LayoutFrame {
                     }
                 }
 
-                // ----------------------------- UI SETTINGS
+                // uiSettings
                 Component {
                     id: uiSettings
                     SettingsPane {
@@ -652,7 +582,7 @@ LayoutFrame {
                     }
                 }
 
-                // ----------------------------- SCENARIO SETTINGS
+                // scenariosSettings
                 Component {
                     id: scenariosSettings
                     SettingsPane {
@@ -742,7 +672,7 @@ LayoutFrame {
                     }
                 }
 
-                // ----------------------------- RESOURCE PATHS SETTINGS
+                // resourcePathsSettings
                 Component {
                     id: resourcePathsSettings
                     SettingsPane {
@@ -794,7 +724,7 @@ LayoutFrame {
                     }
                 }
 
-                // ----------------------------- LANGUAGE SETTINGS
+                // languageSettings
                 Component {
                     id: languageSettings
                     SettingsPane {
@@ -815,7 +745,7 @@ LayoutFrame {
                     }
                 }
 
-                // ----------------------------- DEBUG SETTINGS
+                // debugSettings
                 Component {
                     id: debugSettings
                     SettingsPane {
