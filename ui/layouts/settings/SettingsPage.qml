@@ -113,7 +113,7 @@ LayoutFrame {
             Layout.alignment: Qt.AlignRight
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Material.background: mainContent.rightPaneColor            
+            Material.background: mainContent.rightPaneColor
 
             ColumnLayout {
                 id: settingsContent
@@ -121,31 +121,10 @@ LayoutFrame {
                 anchors.topMargin: 10
                 spacing: 4
 
-
-                // top bar with save changes button
-                RowLayout {
-                    id: settingsTopBar
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-                    spacing: 10
-
-                    Button {
-                        id: saveChangesButton
-                        text: "Save Changes"
-                        Layout.fillWidth: true
-                        onClicked: {
-                            if (zoo.dirty) {
-                                zoo.saveConfig()
-                            } else {
-                                console.log("No changes to save")
-                            }
-                        }
-                    }
-                }
-
                 StackView {
                     id: settingsStack
                     Layout.fillHeight: true
+                    Layout.alignment: Qt.AlignTop
                     Layout.fillWidth: true
                     initialItem: pandaSettings
 
@@ -887,7 +866,69 @@ LayoutFrame {
                         }
                     }
                 }
+                // top bar with save changes button
 
+                Rectangle {
+                    color: Qt.darker("#2c6431", 1.2)
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop
+                    Layout.preferredHeight: 60
+                    Layout.fillHeight: false
+                    radius: 5
+                    z: 20
+
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: 5
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        Button {
+                            id: saveChangesButton
+                            text: "Save Changes"
+                            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                            Layout.preferredWidth: implicitWidth
+                            flat: true
+                            background: Rectangle {
+                                property var hovered: false
+                                color: saveChangesButton.hovered ? Qt.darker(mainContent.mainColor, 1.2) : mainContent.mainColor
+                                radius: 5
+                            }
+                            onClicked: {
+                                if (zoo.dirty) {
+                                    zoo.saveConfig()
+                                } else {
+                                    console.log("No changes to save")
+                                }
+                            }
+                        }
+                        Button {
+                            id: discardChangesButton
+                            text: "Discard"
+                            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                            flat: true
+                            Layout.preferredWidth: implicitWidth
+                            background: Rectangle {
+                                property var hovered: false
+                                color: discardChangesButton.hovered ? Qt.darker(mainContent.mainColor, 1.2) : mainContent.mainColor
+                                radius: 5
+                            }
+                            onClicked: {
+                                if (zoo.dirty) {
+                                    zoo.saveConfig()
+                                } else {
+                                    console.log("No changes to save")
+                                }
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+                    }
+                }
 
             }
 
