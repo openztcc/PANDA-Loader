@@ -339,10 +339,16 @@ void PZooConfig::removeEmptyKeys(const QString &section, const QString &test) {
 }
 
 void PZooConfig::revertChanges() {
-    m_settings.clear();
-    for (QString section : m_settingsBackup.keys()) {
-        m_settings[section] = m_settingsBackup[section];
+    // revert the changes to the config file
+    if (!m_zooBackup) {
+        emit configError("No backup found to revert to.");
+        return;
     }
+
+    // copy the backup to the config file
+    m_zooini->Reset();
+    m_zooini->Copy(m_zooBackup.get(), true);
+
     m_dirty = false;
     emit configReverted();
     emit dirtyChanged(m_dirty);
