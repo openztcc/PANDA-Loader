@@ -7,6 +7,8 @@
 #include <QBuffer>
 #include "SimpleIni.h"
 
+#typedef int SI_ERROR;
+
 class PZooConfig : public QObject {
     Q_OBJECT
 
@@ -27,6 +29,7 @@ public:
     Q_INVOKABLE bool getBool(const QString &section, const QString &key) const;
     Q_INVOKABLE QString getString(const QString &section, const QString &key) const;
     CSimpleIniA getIni() const { return CSimpleIniA(); }
+    void copyIni(const CSimpleIniA &ini, CSimpleIniA &copy) const;
 
     // validation
     // Q_INVOKABLE bool isInteger(const QString &value, bool test = false) const;

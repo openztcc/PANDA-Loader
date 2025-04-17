@@ -251,7 +251,10 @@ void PZooConfig::saveConfig() {
     if (m_dirty) {
         int keyCount = 0;
 
-        for (QString section : m_settings.keys()) {
+        // get all sections
+        CSimpleIniA::TNamesDepend sections;
+        m_zooini->GetAllSections(sections);
+        for (const auto &section : sections) {
             // remove empty keys from these sections
             if (section == "ai" || section == "scenario") {
                 removeEmptyKeys(section, "0");
@@ -293,16 +296,6 @@ void PZooConfig::loadConfig() {
         qDebug() << "Failed to load config file: " << m_zooConfigPath;
         emit configError("Failed to load config file.");
         return;
-    }
-
-    // get the number of sections in the config file
-    int sectionCount = m_zooini->GetSectionCount();
-    if (sectionCount == 0) {
-        qDebug() << "No sections found in config file: " << m_zooConfigPath;
-        emit configError("No sections found in config file.");
-        return;
-    } else if (sectionCount > 0) {
-        qDebug() << "Found " << sectionCount << " sections in config file: " << m_zooConfigPath;
     }
 
     // create backup of the config file
@@ -360,4 +353,27 @@ QString PZooConfig::getString(const QString &section, const QString &key) const 
     QString valueStr = QString::fromStdString(value);
 
     return valueStr;
+}
+
+void PZooConfig::copyIni(const CSimpleIniA &copyFrom, CSimpleIniA &copyTo) const {
+    // clear the copyTo ini
+    copyTo = std::make_unique<CSimpleIniA>();
+    copyTo.SetUnicode();
+    // copy the ini from the copyFrom ini
+
+    // get sections
+    CSimpleIniA::TNamesDepend sections;
+    copyFrom.GetAllSections(sections);
+    for (const auto &section : sections) {
+        // get keys
+        CSimpleIniA::TNamesDepend keys;
+        copyFrom.GetAllKeys(section.pItem, keys);
+        for (const auto &key : keys) {
+            // get value
+            const char* value = copyFrom.GetValue(section.pItem, key.pItem, "");
+            if (value != nullptr) {
+                copyTo.SetValue(section.pItem, key.pItem, value);
+            }
+        }
+    }
 }
