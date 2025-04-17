@@ -313,7 +313,7 @@ LayoutFrame {
                     SettingsPane {
                         id: gameplaySettingsPane
 
-                        content: Repeater {
+                        Repeater {
                             id: gameplaySettingsRepeater
                             model: [
                                 {key: "MSStartingCash", section: "UI", label: "Starting Cash", description: "Starting cash in freeform mode"},
