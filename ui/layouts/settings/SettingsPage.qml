@@ -38,7 +38,7 @@ LayoutFrame {
 
             color: mainContent.mainColor
 
-            property var currentButton: settingsButton
+            property var currentButton: settingsButtonsRepeater.itemAt(0)
 
             Rectangle {
                 z: 1
@@ -53,6 +53,11 @@ LayoutFrame {
             Column {
                 anchors.fill: parent
                 spacing: 0
+
+                // start button highlighted at panda settings
+                Component.onCompleted: {
+                    replaceSettingsPane(pandaSettings, settingsStack, settingsButtonsRepeater.itemAt(0))
+                }
 
                 Repeater {
                     id: settingsButtonsRepeater
