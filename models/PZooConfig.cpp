@@ -208,16 +208,34 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
 // }
 
 void PZooConfig::updateTable(const QString &section, const QString &key, const QString &value) {
+    QString input = getString(section, key);
+    QString original = getString(section, key, m_zooBackup);
+
+    if (input == value) {
+        if (dirty > 0) {
+            m_dirty--;
+        }
+        return;
+    }
+
     m_zooini->SetValue(section.toStdString().c_str(), key.toStdString().c_str(), value.toStdString().c_str());
-    m_dirty = true;
+    m_dirty++;
     emit dirtyChanged(m_dirty);
     emit configUpdated(section, key, value);
 }
 
 void PZooConfig::updateTable(const QString &path, const QString &key, bool value) {
-    QString valueStr = value ? "1" : "0";
-    m_zooini->SetValue(path.toStdString().c_str(), key.toStdString().c_str(), valueStr.toStdString().c_str());
-    m_dirty = true;
+    QString input = value ? "1" : "0";
+    QString original = getString(path, key, m_zooBackup);
+
+    if (input == original) {
+        if (m_dirty > 0) {
+            m_dirty--;
+        }
+        return;
+    }
+    m_zooini->SetValue(path.toStdString().c_str(), key.toStdString().c_str(), input.toStdString().c_str());
+    m_dirty++;
     emit dirtyChanged(m_dirty);
     emit configUpdated(path, key, QString::number(value));
 }
@@ -244,8 +262,6 @@ void PZooConfig::saveConfig() {
     }
 
     if (m_dirty) {
-        int keyCount = 0;
-
         // get all sections
         CSimpleIniA::TNamesDepend sections;
         m_zooini->GetAllSections(sections);
@@ -263,7 +279,7 @@ void PZooConfig::saveConfig() {
             emit configError("Failed to save config file.");
             return;
         }
-        m_dirty = false;
+        m_dirty = 0;
 
         emit configSaved(m_zooConfigPath);
         emit dirtyChanged(m_dirty);
@@ -332,8 +348,14 @@ void PZooConfig::revertChanges() {
     emit dirtyChanged(m_dirty);
 }
 
-bool PZooConfig::getBool(const QString &section, const QString &key) const {
-    const char* value = m_zooini->GetValue(section.toStdString().c_str(), key.toStdString().c_str());
+bool PZooConfig::getBool(const QString &section, const QString &key, std::unique_ptr<CSimpleIniA> &ini) const {
+    const char* value;
+    
+    if (ini) {
+        value = ini->GetValue(section.toStdString().c_str(), key.toStdString().c_str());
+    } else {
+        value = m_zooini->GetValue(section.toStdString().c_str(), key.toStdString().c_str());
+    }
 
     // encode with utf8 (direct to std::string crashes because of encoding)
     QString valueStr = QString::fromUtf8(value);
@@ -351,8 +373,14 @@ bool PZooConfig::getBool(const QString &section, const QString &key) const {
     }
 }
 
-QString PZooConfig::getString(const QString &section, const QString &key) const {
-    const char* value = m_zooini->GetValue(section.toStdString().c_str(), key.toStdString().c_str(), "");
+QString PZooConfig::getString(const QString &section, const QString &key, std::unique_ptr<CSimpleIniA> &ini) const {
+    const char* value;
+    
+    if (ini) {
+        value = ini->GetValue(section.toStdString().c_str(), key.toStdString().c_str(), "");
+    } else {
+        value = m_zooini->GetValue(section.toStdString().c_str(), key.toStdString().c_str(), "");
+    }
     if (value == nullptr) {
         return QString();
     }

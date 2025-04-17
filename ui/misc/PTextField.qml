@@ -33,12 +33,14 @@ Item {
     property alias border: textFieldBg.textFieldBorder
     property alias text: textField.text
     property var pHeight: null
+    property string originalText: textField.text
 
     // signals
     signal searchTextChanged(text: string)
     signal textChange(text: string)
     signal pressed(event: var)
     signal cleared()
+    signal dirty(bool isDirty)
 
     Component {
         id: fileDialogComponent
@@ -259,6 +261,13 @@ Item {
 
             onTextChanged: {
                 pTextField.textChange(textField.text)
+
+                // check if text is dirty
+                if (textField.text !== pTextField.originalText) {
+                    pTextField.dirty(true)
+                } else {
+                    pTextField.dirty(false)
+                }
             }
 
             MouseArea {

@@ -15,6 +15,8 @@ LayoutFrame {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
+    property int dirtyTracker: 0
+
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
         if (settingsPane.currentButton && settingsPane.currentButton !== currentButton) {
@@ -58,7 +60,7 @@ LayoutFrame {
                 Component.onCompleted: {
                     replaceSettingsPane(pandaSettings, settingsStack, settingsButtonsRepeater.itemAt(0))
                 }
-
+                // Settings Buttons
                 Repeater {
                     id: settingsButtonsRepeater
                     model: [

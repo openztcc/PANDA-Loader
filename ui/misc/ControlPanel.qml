@@ -15,6 +15,10 @@ Item {
     implicitHeight: controlColumn.implicitHeight
     width: parent.width
 
+    signal controlGroupClicked(bool checked)
+    signal controlGroupChecked(bool checked)
+    signal inputChanged(var data)
+
     ColumnLayout {
         id: controlColumn
         anchors.fill: parent

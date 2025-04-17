@@ -26,8 +26,8 @@ public:
     Q_INVOKABLE void loadConfig();
     Q_INVOKABLE void revertChanges();
     void removeEmptyKeys(const QString &section, const QString &test);
-    Q_INVOKABLE bool getBool(const QString &section, const QString &key) const;
-    Q_INVOKABLE QString getString(const QString &section, const QString &key) const;
+    Q_INVOKABLE bool getBool(const QString &section, const QString &key, std::unique_ptr<CSimpleIniA> &ini = nullptr) const;
+    Q_INVOKABLE QString getString(const QString &section, const QString &key, std::unique_ptr<CSimpleIniA> &ini = nullptr) const;
     CSimpleIniA getIni() const { return CSimpleIniA(); }
     void copyIni(const std::unique_ptr<CSimpleIniA> &copyFrom, std::unique_ptr<CSimpleIniA> &copyTo) const;
 
@@ -35,8 +35,8 @@ public:
     // Q_INVOKABLE bool isInteger(const QString &value, bool test = false) const;
     // Q_INVOKABLE bool isFloat(const QString &value, bool test = false, int precision = 0) const;
 
-    bool isDirty() const { return m_dirty; }
-    void setDirty(bool dirty) { m_dirty = dirty; }
+    int dirtyCount() const { return m_dirty; }
+    void setDirty(int dirty) { m_dirty = dirty; }
     
 
 signals:
@@ -51,7 +51,7 @@ private:
     QString m_zooConfigPath;
     std::unique_ptr<CSimpleIniA> m_zooBackup;
     std::unique_ptr<CSimpleIniA> m_zooini;
-    bool m_dirty;
+    int m_dirty;
 
 };
 
