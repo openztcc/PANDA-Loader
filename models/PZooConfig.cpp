@@ -252,28 +252,19 @@ void PZooConfig::saveConfig() {
         int keyCount = 0;
 
         for (QString section : m_settings.keys()) {
-
             // remove empty keys from these sections
             if (section == "ai" || section == "scenario") {
                 removeEmptyKeys(section, "0");
             }
-
-            // get the number of keys in the section
-            keyCount = m_settings[section].size();
-
-            // if there are keys in the section, save them to the config
-            if (keyCount) {
-                m_zooini->beginGroup(section);
-                for (QString key : m_settings[section].keys()) {
-                    QString value = m_settings[section][key];
-                    m_zooini->setValue(key, value);
-                }
-                m_zooini->endGroup();
-            }
         }
 
         // save the settings to the file
-        m_zooini->sync();
+        SI_ERROR rc = m_zooini->SaveFile(m_zooConfigPath.c_str());
+        if (rc < 0) {
+            qDebug() << "Failed to save config file: " << m_zooConfigPath;
+            emit configError("Failed to save config file.");
+            return;
+        }
         m_dirty = false;
 
         emit configSaved(m_zooConfigPath);
@@ -333,7 +324,8 @@ void PZooConfig::removeEmptyKeys(const QString &section, const QString &test) {
         // check if the key is empty
         if (key.pItem == test.toStdString().c_str()) {
             // remove the key from the settings
-            m_zooini->Delete(section.toStdString().c_str(), key.pItem);
+            bool deleteSectionIfEmpty = true;
+            m_zooini->Delete(section.toStdString().c_str(), key.pItem, deleteSectionIfEmpty);
         }
     }
 }
