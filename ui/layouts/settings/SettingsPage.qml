@@ -731,25 +731,25 @@ LayoutFrame {
                     }
                 }
 
+                // ----------------------------- SCENARIO SETTINGS
                 Component {
                     id: scenariosSettings
                     SettingsPane {
                         id: scenariosSettingsPane
-                        PCheckBox { // startedFirstTutorial
-                            id: zooTycoonCheckBox
-                            text: "Started Zoo Tycoon Tutorial"
-                            checked: zoo.getBool("UI", "startedFirstTutorial")
+                        content: Repeater {
+                            id: scenariosSettingsRepeater
+                            model: [
+                                {key: "zooTycoonCheckBox", label: "Started Zoo Tycoon Tutorial"},
+                                {key: "dinoDigsCheckBox", label: "Started Dino Digs Tutorial"},
+                                {key: "marineManiaCheckBox", label: "Started Marine Mania Tutorial"}
+                            ]
+                            delegate: PCheckBox {
+                                required property var modelData
+                                text: modelData.label
+                                checked: zoo.getBool("UI", modelData.key)
+                            }
                         }
-                        PCheckBox { // startedDinoTutorial
-                            id: dinoDigsCheckBox
-                            text: "Started Dino Digs Tutorial"
-                            checked: zoo.getBool("UI", "startedDinoTutorial")
-                        }
-                        PCheckBox { // startedAquaTutorial
-                            id: marineManiaCheckBox
-                            text: "Started Marine Mania Tutorial"
-                            checked: zoo.getBool("UI", "startedAquaTutorial")
-                        }
+                        // ----------------------------- SCENARIO CHECKBOXES
                         ControlPanel {
                             id: scenarioControls
                             label: "Completed Scenarios (To unlock other scenarios)"
@@ -757,239 +757,71 @@ LayoutFrame {
                             Layout.fillWidth: true
                             checked: true
 
+                            contents: Repeater {
+                                id: scenarioCheckBoxes
+                                model: [
+                                    {key: "aa", section: "scenario", label: "Completed Tutorial 1 - Game Controls"},
+                                    {key: "ab", section: "scenario", label: "Completed Tutorial 2 - Basic Gameplay"},
+                                    {key: "ac", section: "scenario", label: "Completed Tutorial 3 - Making Animals Happy"},
+                                    {key: "ad", section: "scenario", label: "Completed Dinosaur Digs: Tutorial 1"},
+                                    {key: "ae", section: "scenario", label: "Completed Marine Mania: Tutorial 1"},
+                                    {key: "af", section: "scenario", label: "Completed Marine Mania: Tutorial 2"},
+                                    {key: "ag", section: "scenario", label: "Completed Marine Mania: Tutorial 3"},
+                                    {key: "ba", section: "scenario", label: "Completed Small Zoo (Beginner)"},
+                                    {key: "bb", section: "scenario", label: "Completed Seaside Zoo (Beginner)"},
+                                    {key: "bc", section: "scenario", label: "Completed Forest Zoo (Beginner)"},
+                                    {key: "bd", section: "scenario", label: "Completed Holiday Tree Farm (Beginner)"},
+                                    {key: "be", section: "scenario", label: "Completed Dinosaur Digs: Ice Age Animal Zoo (Beginner)"},
+                                    {key: "bf", section: "scenario", label: "Completed Marine Mania: Orca Show (Beginner)"},
+                                    {key: "bg", section: "scenario", label: "Completed Marine Mania: Seasideville Dolphin Park (Beginner)"},
+                                    {key: "bh", section: "scenario", label: "Completed Marine Mania: Shark World (Beginner)"},
+                                    {key: "bi", section: "scenario", label: "Completed Marine Mania: Surf and Turf Zoo (Beginner)"},
+                                    {key: "ca", section: "scenario", label: "Completed Revitalize Burkitsville Zoo (Intermediate)"},
+                                    {key: "cb", section: "scenario", label: "Completed Inner City Zoo (Intermediate)"},
+                                    {key: "cc", section: "scenario", label: "Completed Saving the Great Cats (Intermediate)"},
+                                    {key: "cd", section: "scenario", label: "Completed Endangered Species Zoo (Intermediate)"},
+                                    {key: "ce", section: "scenario", label: "Completed Arctic Zoo (Intermediate)"},
+                                    {key: "cf", section: "scenario", label: "Completed Beach Resort Zoo (Intermediate)"},
+                                    {key: "cg", section: "scenario", label: "Completed Dinosaur Digs: Valley of the Dinosaurs (Intermediate)"},
+                                    {key: "ch", section: "scenario", label: "Completed Dinosaur Digs: Jurassic Zoo (Intermediate)"},
+                                    {key: "ci", section: "scenario", label: "Completed Marine Mania: Oceans of the Zoo (Intermediate)"},
+                                    {key: "cj", section: "scenario", label: "Completed Marine Mania: Save the Marine Animals (Intermediate)"},
+                                    {key: "ck", section: "scenario", label: "Completed Marine Mania: Free Admission Zoo (Intermediate)"},
+                                    {key: "cl", section: "scenario", label: "Completed Marine Mania: Aquatic Show Park (Intermediate)"},
+                                    {key: "cm", section: "scenario", label: "Completed Dinosaur Digs: Carnivore Zoo (Intermediate)"},
+                                    {key: "cn", section: "scenario", label: "Completed Southeast Asian Zoo (Intermediate)"},
+                                    {key: "da", section: "scenario", label: "Completed Island Zoo (Advanced)"},
+                                    {key: "db", section: "scenario", label: "Completed African Savannah Zoo (Advanced)"},
+                                    {key: "dc", section: "scenario", label: "Completed Mountain Zoo (Advanced)"},
+                                    {key: "dd", section: "scenario", label: "Completed Tropical Rainforest Zoo (Advanced)"},
+                                    {key: "de", section: "scenario", label: "Completed Dinosaur Digs: Dinosaur Island Research Lab (Advanced)"},
+                                    {key: "df", section: "scenario", label: "Completed Marine Mania: Marine Conservation (Advanced)"},
+                                    {key: "dg", section: "scenario", label: "Completed Marine Mania: Save the Zoo (Advanced)"},
+                                    {key: "dh", section: "scenario", label: "Completed Conservation Zoo (Advanced)"},
+                                    {key: "ea", section: "scenario", label: "Completed Paradise Island (Very Advanced)"},
+                                    {key: "fa", section: "scenario", label: "Completed Breeding Giant Pandas (Very Advanced)"},
+                                    {key: "fb", section: "scenario", label: "Completed Dinosaur Digs: Return to Dinosaur Island Research Lab (Very Advanced)"},
+                                    {key: "ga", section: "scenario", label: "Completed Dinosaur Digs: Breeding the T.rex (Very Advanced)"},
+                                    {key: "gb", section: "scenario", label: "Completed Marine Mania: Giant Marine Park (Very Advanced)"},
+                                    {key: "gc", section: "scenario", label: "Completed Marine Mania: Super Zoo (Very Advanced)"},
+                                    {key: "gd", section: "scenario", label: "Completed Marine Mania: Ultimate Zoo (Very Advanced)"}                                    
+                                ]
+                                delegate: PCheckBox {
+                                    required property var modelData
+                                    text: modelData.label
+                                    checked: zoo.getBool(modelData.section, modelData.key)
+                                }
+                            }
+
                             // PCheckBox { // tutorial
                             //     id: tutorialZooCheckBox
-                            //     text: "Completed Tutorial Zoo"
+                            //     label: "Completed Tutorial Zoo"
                             // }
-                            PCheckBox { // aa - Tutorial 1 - Game Controls
-                                id: aaCheckBox
-                                text: "Completed Tutorial 1 - Game Controls"
-                                checked: zoo.getBool("scenario", "aa")
-                            }
-                            PCheckBox {  // ab - Tutorial 2 - Basic Gameplay
-                                id: abCheckBox
-                                text: "Completed Tutorial 2 - Basic Gameplay"
-                                checked: zoo.getBool("scenario", "ab")
-                            }
-                            PCheckBox { // ac - Tutorial 3 - Making Animals Happy
-                                id: acCheckBox
-                                text: "Completed Tutorial 3 - Making Animals Happy"
-                                checked: zoo.getBool("scenario", "ac")
-                            }
-                            PCheckBox { // ad - Dinosaur Digs Tutorial 1
-                                id: adCheckBox
-                                text: "Completed Dinosaur Digs: Tutorial 1"
-                                checked: zoo.getBool("scenario", "ad")
-                            }
-                            PCheckBox { // ae - Marine Mania: Tutorial 1
-                                id: aeCheckBox
-                                text: "Completed Marine Mania: Tutorial 1"
-                                checked: zoo.getBool("scenario", "ae")
-                            }
-                            PCheckBox { // af - Marine Mania: Tutorial 2
-                                id: afCheckBox
-                                text: "Completed Marine Mania: Tutorial 2"
-                                checked: zoo.getBool("scenario", "af")
-                            }
-                            PCheckBox { // ag - Marine Mania: Tutorial 3
-                                id: agCheckBox
-                                text: "Completed Marine Mania: Tutorial 3"
-                                checked: zoo.getBool("scenario", "ag")
-                            }
-                            PCheckBox { // ba - Small Zoo (Beginner)
-                                id: baCheckBox
-                                text: "Completed Small Zoo (Beginner)"
-                                checked: zoo.getBool("scenario", "ba")
-                            }
-                            PCheckBox { // bb - Seaside Zoo (Beginner)
-                                id: bbCheckBox
-                                text: "Completed Seaside Zoo (Beginner)"
-                                checked: zoo.getBool("scenario", "bb")
-                            }
-                            PCheckBox { // bc - Forest Zoo (Beginner)
-                                id: bcCheckBox
-                                text: "Completed Forest Zoo (Beginner)"
-                                checked: zoo.getBool("scenario", "bc")
-                            }
-                            PCheckBox { // bd - Holiday Tree Farm (Beginner)
-                                id: bdCheckBox
-                                text: "Completed Holiday Tree Farm (Beginner)"
-                                checked: zoo.getBool("scenario", "bd")
-                            }
-                            PCheckBox { // be - Dinosaur Digs: Ice Age Animal Zoo (Beginner)
-                                id: beCheckBox
-                                text: "Completed Dinosaur Digs: Ice Age Animal Zoo (Beginner)"
-                                checked: zoo.getBool("scenario", "be")
-                            }
-                            PCheckBox { // bf - Marine Mania: Orca Show (Beginner)
-                                id: bfCheckBox
-                                text: "Completed Marine Mania: Orca Show (Beginner)"
-                                checked: zoo.getBool("scenario", "bf")
-                            }
-                            PCheckBox { // bg - Marine Mania: Seasideville Dolphin Park (Beginner)
-                                id: bgCheckBox
-                                text: "Completed Marine Mania: Seasideville Dolphin Park (Beginner)"
-                                checked: zoo.getBool("scenario", "bg")
-                            }
-                            PCheckBox { // bh - Marine Mania: Shark World (Beginner)
-                                id: bhCheckBox
-                                text: "Completed Marine Mania: Shark World (Beginner)"
-                                checked: zoo.getBool("scenario", "bh")
-                            }
-                            PCheckBox { // bi - Marine Mania: Surf and Turf Zoo (Beginner)
-                                id: biCheckBox
-                                text: "Completed Marine Mania: Surf and Turf Zoo (Beginner)"
-                                checked: zoo.getBool("scenario", "bi")
-                            }
-                            PCheckBox { // ca - Revitalize Burkitsville Zoo (Intermediate)
-                                id: caCheckBox
-                                text: "Completed Revitalize Burkitsville Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "ca")
-                            }
-                            PCheckBox { // cb - Inner City Zoo (Intermediate)
-                                id: cbCheckBox
-                                text: "Completed Inner City Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "cb")
-                            }
-                            PCheckBox { // cc - Saving the Great Cats (Intermediate)
-                                id: ccCheckBox
-                                text: "Completed Saving the Great Cats (Intermediate)"
-                                checked: zoo.getBool("scenario", "cc")
-                            }
-                            PCheckBox { // cd - Endangered Species Zoo (Intermediate)
-                                id: cdCheckBox
-                                text: "Completed Endangered Species Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "cd")
-                            }
-                            PCheckBox { // ce - Arctic Zoo (Intermediate)
-                                id: ceCheckBox
-                                text: "Completed Arctic Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "ce")
-                            }
-                            PCheckBox { // cf - Beach Resort Zoo (Intermediate)
-                                id: cfCheckBox
-                                text: "Completed Beach Resort Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "cf")
-                            }
-                            PCheckBox { // cg - Dinosaur Digs: Valley of the Dinosaurs (Intermediate)
-                                id: cgCheckBox
-                                text: "Completed Dinosaur Digs: Valley of the Dinosaurs (Intermediate)"
-                                checked: zoo.getBool("scenario", "cg")
-                            }
-                            PCheckBox { // ch - Dinosaur Digs: Jurassic Zoo (Intermediate)
-                                id: chCheckBox
-                                text: "Completed Dinosaur Digs: Jurassic Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "ch")
-                            }
-                            PCheckBox { // ci - Marine Mania: Oceans of the Zoo (Intermediate)
-                                id: ciCheckBox
-                                text: "Completed Marine Mania: Oceans of the Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "ci")
-                            }
-                            PCheckBox { // cj - Marine Mania: Save the Marine Animals (Intermediate)
-                                id: cjCheckBox
-                                text: "Completed Marine Mania: Save the Marine Animals (Intermediate)"
-                                checked: zoo.getBool("scenario", "cj")
-                            }
-                            PCheckBox { // ck - Marine Mania: Free Admission Zoo (Intermediate)
-                                id: ckCheckBox
-                                text: "Completed Marine Mania: Free Admission Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "ck")
-                            }
-                            PCheckBox { // cl - Marine Mania: Aquatic Show Park (Intermediate)
-                                id: clCheckBox
-                                text: "Completed Marine Mania: Aquatic Show Park (Intermediate)"
-                                checked: zoo.getBool("scenario", "cl")
-                            }
-                            PCheckBox { // cm - Dinosaur Digs: Carnivore Zoo (Intermediate)
-                                id: cmCheckBox
-                                text: "Completed Dinosaur Digs: Carnivore Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "cm")
-                            }
-                            PCheckBox { // cn - Southeast Asian Zoo (Intermediate)
-                                id: cnCheckBox
-                                text: "Completed Southeast Asian Zoo (Intermediate)"
-                                checked: zoo.getBool("scenario", "cn")
-                            }
-                            PCheckBox { // da - Island Zoo (Advanced)
-                                id: daCheckBox
-                                text: "Completed Island Zoo (Advanced)"
-                                checked: zoo.getBool("scenario", "da")
-                            }
-                            PCheckBox { // db - African Savannah Zoo (Advanced)
-                                id: dbCheckBox
-                                text: "Completed African Savannah Zoo (Advanced)"
-                                checked: zoo.getBool("scenario", "db")
-                            }
-                            PCheckBox { // dc - Mountain Zoo (Advanced)
-                                id: dcCheckBox
-                                text: "Completed Mountain Zoo (Advanced)"
-                                checked: zoo.getBool("scenario", "dc")
-                            }
-                            PCheckBox { // dd - Tropical Rainforest Zoo (Advanced)
-                                id: ddCheckBox
-                                text: "Completed Tropical Rainforest Zoo (Advanced)"
-                                checked: zoo.getBool("scenario", "dd")
-                            }
-                            PCheckBox { // de - Dinosaur Digs: Dinosaur Island Research Lab (Advanced)
-                                id: deCheckBox
-                                text: "Completed Dinosaur Digs: Dinosaur Island Research Lab (Advanced)"
-                                checked: zoo.getBool("scenario", "de")
-                            }
-                            PCheckBox { // df - Marine Mania: Marine Conservation (Advanced)
-                                id: dfCheckBox
-                                text: "Completed Marine Mania: Marine Conservation (Advanced)"
-                                checked: zoo.getBool("scenario", "df")
-                            }
-                            PCheckBox { // dg - Marine Mania: Save the Zoo (Advanced)
-                                id: dgCheckBox
-                                text: "Completed Marine Mania: Save the Zoo (Advanced)"
-                                checked: zoo.getBool("scenario", "dg")
-                            }
-                            PCheckBox { // dh - Conservation Zoo (Advanced)
-                                id: dhCheckBox
-                                text: "Completed Conservation Zoo (Advanced)"
-                                checked: zoo.getBool("scenario", "dh")
-                            }
-                            PCheckBox { // ea - Paradise Island (Very Advanced)
-                                id: eaCheckBox
-                                text: "Completed Paradise Island (Very Advanced)"
-                                checked: zoo.getBool("scenario", "ea")
-                            }
-                            PCheckBox { // fa - Breeding Giant Pandas (Very Advanced)
-                                id: faCheckBox
-                                text: "Completed Breeding Giant Pandas (Very Advanced)"
-                                checked: zoo.getBool("scenario", "fa")
-                            }
-                            PCheckBox { // fb - Dinosaur Digs: Return to Dinosaur Island Research Lab (Very Advanced)
-                                id: fbCheckBox
-                                text: "Completed Dinosaur Digs: Return to Dinosaur Island Research Lab (Very Advanced)"
-                                checked: zoo.getBool("scenario", "fb")
-                            }
-                            PCheckBox { // ga - Dinosaur Digs: Breeding the T.rex (Very Advanced)
-                                id: gaCheckBox
-                                text: "Completed Dinosaur Digs: Breeding the T.rex (Very Advanced)"
-                                checked: zoo.getBool("scenario", "ga")
-                            }
-                            PCheckBox { // gb - Marine Mania: Giant Marine Park (Very Advanced)
-                                id: gbCheckBox
-                                text: "Completed Marine Mania: Giant Marine Park (Very Advanced)"
-                                checked: zoo.getBool("scenario", "gb")
-                            }
-                            PCheckBox { // gc - Marine Mania: Super Zoo (Very Advanced)
-                                id: gcCheckBox
-                                text: "Completed Marine Mania: Super Zoo (Very Advanced)"
-                                checked: zoo.getBool("scenario", "gc")
-                            }
-                            PCheckBox { // gd - Marine Mania: Ultimate Zoo (Very Advanced)
-                                id: gdCheckBox
-                                text: "Completed Marine Mania: Ultimate Zoo (Very Advanced)"
-                                checked: zoo.getBool("scenario", "gd")
-                            }
                         }
                     }
                 }
 
+                // ----------------------------- RESOURCE PATHS SETTINGS
                 Component {
                     id: resourcePathsSettings
                     SettingsPane {
@@ -1009,89 +841,60 @@ LayoutFrame {
                             model: pathModel
                             Layout.fillWidth: true
                         }
+                        // ------------------------------- ADVANCED RESOURCES SETTINGS
                         ControlPanel {
                             id: advancedResControls
                             label: "Advanced Resources"
                             showSwitch: true
                             Layout.fillWidth: true
                             checked: false
-                            PTextField { // aimgr
-                                id: aimgrPath
-                                title: "aimgr"
-                                Layout.fillWidth: true
-                                text: zoo.getString("mgr", "aimgr")
-                            }
-                            PTextField { // worldmgr
-                                id: worldmgrPath
-                                title: "worldmgr"
-                                Layout.fillWidth: true
-                                text: zoo.getString("mgr", "worldmgr")
-                            }
-                            PTextField { // gamemgr
-                                id: gamemgrPath
-                                title: "gamemgr"
-                                Layout.fillWidth: true
-                                text: zoo.getString("mgr", "gamemgr")
-                            }
-                            PTextField { // scenariomgr
-                                id: scenarioMgrPath
-                                title: "scenarioMgr"
-                                Layout.fillWidth: true
-                                text: zoo.getString("mgr", "scenariomgr")
-                            }
-                            PTextField { // scriptmgr
-                                id: scriptMgrPath
-                                title: "scriptMgr"
-                                Layout.fillWidth: true
-                                text: zoo.getString("mgr", "scriptmgr")
-                            }
-                            PTextField { // soundmgr
-                                id: soundMgrPath
-                                title: "soundMgr"
-                                Layout.fillWidth: true
-                                text: zoo.getString("mgr", "soundmgr")
-                            }
-                            PTextField { // terrainmgr
-                                id: terrainMgrPath
-                                title: "terrainMgr"
-                                Layout.fillWidth: true
-                                text: zoo.getString("mgr", "terrainmgr")
-                            }
-                            PTextField { // res
-                                id: resPath
-                                title: "res"
-                                Layout.fillWidth: true
-                                text: zoo.getString("lib", "res")
-                            }
-                            PTextField { // lang
-                                id: langPath
-                                title: "lang"
-                                Layout.fillWidth: true
-                                text: zoo.getString("lib", "lang")
+
+                            contents: Repeater {
+                                id: advancedResControlsRepeater
+                                model: [
+                                    {key: "aimgr", section: "mgr", label: "ZTAIMgr"},
+                                    {key: "worldmgr", section: "mgr", label: "ZTWorldMgr"},
+                                    {key: "gamemgr", section: "mgr", label: "BFGameMgr"},
+                                    {key: "scenariomgr", section: "mgr", label: "ZTScenarioMgr"},
+                                    {key: "scriptmgr", section: "mgr", label: "BFScriptMgr"},
+                                    {key: "soundmgr", section: "mgr", label: "BFSoundMgr"},
+                                    {key: "terrainmgr", section: "mgr", label: "ZTAdvTerrainMgr"},
+                                    {key: "res", section: "lib", label: "ZTRes"},
+                                    {key: "lang", section: "lib", label: "ZTLang"}
+                                ]
+                                delegate: PTextField {
+                                    required property var modelData
+                                    title: modelData.label
+                                    Layout.fillWidth: true
+                                    text: zoo.getString(modelData.section, modelData.key)
+                                }
                             }
                         }
                     }
                 }
 
+                // ----------------------------- LANGUAGE SETTINGS
                 Component {
                     id: languageSettings
                     SettingsPane {
                         id: languageSettingsPane
-                        PTextField { // lang
-                            id: languageField
-                            title: "Language"
-                            Layout.fillWidth: true
-                            text: zoo.getString("language", "lang")
-                        }
-                        PTextField { // sublang
-                            id: subLanguageField
-                            title: "Sub Language"
-                            Layout.fillWidth: true
-                            text: zoo.getString("language", "sublang")
+                        content: Repeater  {
+                            id: languageSettingsRepeater
+                            model: [
+                                {key: "lang", label: "Language"},
+                                {key: "sublang", label: "Sub Language"}
+                            ]
+                            delegate: PTextField {
+                                required property var modelData
+                                title: modelData.label
+                                Layout.fillWidth: true
+                                text: zoo.getString("language", modelData.key)
+                            }
                         }
                     }
                 }
 
+                // ----------------------------- DEBUG SETTINGS
                 Component {
                     id: debugSettings
                     SettingsPane {
@@ -1101,108 +904,58 @@ LayoutFrame {
                             text: "Developer Mode Enabled"
                             checked: zoo.getBool("debug", "devModeEnabled")
                         }
+                        // ------------------------- DEBUG CONTROLS
                         ControlPanel {
                             id: debugControls
                             label: "Debug Settings (Applies to placed entities)"
                             Layout.fillWidth: true
 
-                            PCheckBox { // ShowAIInfo
-                                id: showAIInfoCheckBox
-                                text: "Show AI Info"
-                                checked: zoo.getBool("debug", "ShowAIInfo")
-                            }
-                            PCheckBox { // ShowName
-                                id: showNameCheckBox
-                                text: "Show Names"
-                                checked: zoo.getBool("debug", "ShowName")
-                            }
-                            PCheckBox { // ShowPosition
-                                id: showPositionCheckBox
-                                text: "Show Position"
-                                checked: zoo.getBool("debug", "ShowPosition")
-                            }
-                            PCheckBox { // ShowAnimalAIInfo
-                                id: showAnimalAIInfoCheckBox
-                                text: "Show Animal AI Info"
-                                checked: zoo.getBool("debug", "ShowAnimalAIInfo")
-                            }
-                            PCheckBox { // ShowGuesAIInfo
-                                id: showGuestAIInfoCheckBox
-                                text: "Show Guest AI Info"
-                                checked: zoo.getBool("debug", "ShowGuestAIInfo")
-                            }
-                            PCheckBox { // ShowStaffAIInfo
-                                id: showStaffAIInfoCheckBox
-                                text: "Show Staff AI Info"
-                                checked: zoo.getBool("debug", "ShowStaffAIInfo")
-                            }
-                            PCheckBox { // ShowStatusVars
-                                id: showStatusVarsCheckBox
-                                text: "Show Status Variables"
-                                checked: zoo.getBool("debug", "ShowStatusVars")
-                            }
-                            PCheckBox { // ShowFunctionCall
-                                id: showFunctionCallCheckBox
-                                text: "Show Function Calls"
-                                checked: zoo.getBool("debug", "ShowFunctionCall")
-                            }
-                            PCheckBox { // ShowEvents
-                                id: showEventsCheckBox
-                                text: "Show Events"
-                                checked: zoo.getBool("debug", "ShowEvents")
-                            }
-                            PCheckBox { // ShowBuildingAIInfo
-                                id: showBuildingAIInfoCheckBox
-                                text: "Show Building AI Info"
-                                checked: zoo.getBool("debug", "ShowBuildingAIInfo")
-                            }
-                            PCheckBox { // ShowSelected
-                                id: showSelectedCheckBox
-                                text: "Show Selected"
-                                checked: zoo.getBool("debug", "ShowSelected")
-                            }
-                            PCheckBox { // ShowFrame
-                                id: showFrameCheckBox
-                                text: "Show Frame"
-                                checked: zoo.getBool("debug", "ShowFrame")
-                            }
-                            PCheckBox { // ShowGoal
-                                id: showGoalCheckBox
-                                text: "Show Goal"
-                                checked: zoo.getBool("debug", "ShowGoal")
+                            contents: Repeater {
+                                id: debugControlsRepeater
+                                model: [
+                                    {key: "ShowAIInfo", section: "debug", label: "Show AI Info"},
+                                    {key: "ShowName", section: "debug", label: "Show Name"},
+                                    {key: "ShowPosition", section: "debug", label: "Show Position"},
+                                    {key: "ShowAnimalAIInfo", section: "debug", label: "Show Animal AI Info"},
+                                    {key: "ShowGuestAIInfo", section: "debug", label: "Show Guest AI Info"},
+                                    {key: "ShowStaffAIInfo", section: "debug", label: "Show Staff AI Info"},
+                                    {key: "ShowStatusVars", section: "debug", label: "Show Status Variables"},
+                                    {key: "ShowFunctionCall", section: "debug", label: "Show Function Call"},
+                                    {key: "ShowEvents", section: "debug", label: "Show Events"},
+                                    {key: "ShowBuildingAIInfo", section: "debug", label: "Show Building AI Info"},
+                                    {key: "ShowSelected", section: "debug", label: "Show Selected"},
+                                    {key: "ShowFrame", section: "debug", label: "Show Frame"},
+                                    {key: "ShowGoal", section: "debug", label: "Show Goal"},
+                                ]
+                                delegate: PCheckBox {
+                                    required property var modelData
+                                    text: modelData.label
+                                    checked: zoo.getBool(modelData.section, modelData.key)
+                                }       
                             }
                         }
+                        // ---------------------------- ADVANCED DEBUG SETTINGS
                         ControlPanel {
                             id: advancedDebugControls
                             label: "Advanced Settings"
                             showSwitch: true
                             Layout.fillWidth: true
                             checked: false
-                            PCheckBox { // sendLogFile
-                                id: sendLogFileCheckBox
-                                text: "Send Log File"
-                                checked: zoo.getBool("debug", "sendLogFile")
-                            }
-                            PCheckBox { // sendDebugger
-                                id: sendDebuggerCheckBox
-                                text: "Send Debugger"
-                                checked: zoo.getBool("debug", "sendDebugger")
-                            }
-                            PTextField { // logCutOff
-                                id: logCutOffField
-                                title: "Log Cut-off"
-                                Layout.fillWidth: true
-                                text: zoo.getString("debug", "logCutoff")
-                            }
-                            PCheckBox { // deltaLog1
-                                id: deltaLog1CheckBox
-                                text: "Delta Log 1"
-                                checked: zoo.getBool("debug", "deltaLog1")
-                            }
-                            PCheckBox { // deltaLog0
-                                id: deltaLog0CheckBox
-                                text: "Delta Log 0"
-                                checked: zoo.getBool("debug", "deltaLog0")
+                            
+                            contents: Repeater {
+                                id: advancedDebugControlsRepeater
+                                model: [
+                                    {key: "sendLogFile", section: "debug", label: "Send Log File"},
+                                    {key: "sendDebugger", section: "debug", label: "Send Debugger"},
+                                    {key: "logCutoff", section: "debug", label: "Log Cut-off"},
+                                    {key: "deltaLog1", section: "debug", label: "Delta Log 1"},
+                                    {key: "deltaLog0", section: "debug", label: "Delta Log 0"}
+                                ]
+                                delegate: PCheckBox {
+                                    required property var modelData
+                                    text: modelData.label
+                                    checked: zoo.getBool(modelData.section, modelData.key)
+                                }
                             }
                         }
                     }
