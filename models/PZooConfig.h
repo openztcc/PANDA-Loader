@@ -12,7 +12,7 @@ typedef int SI_ERROR;
 class PZooConfig : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(bool dirty READ dirty WRITE setDirty NOTIFY dirtyChanged)
+    Q_PROPERTY(int dirty READ dirty WRITE setDirty NOTIFY dirtyChanged)
 
 
 public:

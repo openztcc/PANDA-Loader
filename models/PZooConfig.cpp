@@ -11,6 +11,7 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
     loadConfig();
 
     m_dirty = false;
+    emit dirtyChanged(m_dirty);
 }
 
 // TODO: Re-implement with QMap
@@ -214,6 +215,7 @@ void PZooConfig::updateTable(const QString &section, const QString &key, const Q
     if (input == value) {
         if (m_dirty > 0) {
             m_dirty--;
+            emit dirtyChanged(m_dirty);
         }
         return;
     }
@@ -231,6 +233,7 @@ void PZooConfig::updateTable(const QString &path, const QString &key, bool value
     if (input == original) {
         if (m_dirty > 0) {
             m_dirty--;
+            emit dirtyChanged(m_dirty);
         }
         return;
     }
@@ -280,6 +283,9 @@ void PZooConfig::saveConfig() {
             return;
         }
         m_dirty = 0;
+
+        // update the backup file
+        copyIni(m_zooini, m_zooBackup);
 
         emit configSaved(m_zooConfigPath);
         emit dirtyChanged(m_dirty);

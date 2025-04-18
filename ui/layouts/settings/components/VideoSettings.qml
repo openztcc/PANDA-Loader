@@ -9,8 +9,9 @@ SettingsPane {
 
     onDataChanged: (section, key, value) => {
         console.log("Data changed:", section, key, value)
-        console.log("Data changed:", section, key, value)
         zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
+
     }
 
     Repeater {

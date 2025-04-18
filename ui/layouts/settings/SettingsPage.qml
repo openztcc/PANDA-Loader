@@ -190,6 +190,17 @@ LayoutFrame {
                 }
             }
 
+            Connections {
+                target: zoo
+                onDirtyChanged: (dirty) => {
+                    if (dirty) {
+                        settingsConfirmationBar.visible = true
+                    } else {
+                        settingsConfirmationBar.visible = false
+                    }
+                }
+            }
+
         }
 
     }
