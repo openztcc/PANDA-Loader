@@ -97,6 +97,16 @@ qt_add_qml_module(appPandaLdr
         ui/layouts/mods/components/ModsList.qml
         ui/layouts/settings/SettingsPage.qml
         ui/layouts/settings/SettingsPane.qml
+        # settings
+        ui/layouts/settings/components/PandaSettings.qml
+        ui/layouts/settings/components/VideoSettings.qml
+        ui/layouts/settings/components/SoundSettings.qml
+        ui/layouts/settings/components/GameplaySettings.qml
+        ui/layouts/settings/components/UISettings.qml
+        ui/layouts/settings/components/ScenarioSettings.qml
+        ui/layouts/settings/components/ResourcePathsSettings.qml
+        ui/layouts/settings/components/LanguageSettings.qml
+        ui/layouts/settings/components/DebugSettings.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         # sources
