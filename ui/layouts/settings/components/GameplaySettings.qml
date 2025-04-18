@@ -6,6 +6,15 @@ import PandaUI 1.0
 SettingsPane {
     id: gameplaySettingsPane
 
+    signal dataChanged(var section, var key, var value)
+
+    onDataChanged: (section, key, value) => {
+        console.log("Data changed:", section, key, value)
+        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
+
+    }
+
     Repeater {
         id: gameplaySettingsRepeater
         model: [
@@ -20,6 +29,10 @@ SettingsPane {
             Layout.fillWidth: true
             descriptionText: modelData.description
             text: zoo.getString(modelData.section, modelData.key)
+
+            onTextChange: (data) => {
+                gameplaySettingsPane.dataChanged(modelData.section, modelData.key, data)
+            }
         }
     }
     ControlPanel { // mouse controls 
@@ -45,6 +58,10 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: modelData.description
                 text: zoo.getString(modelData.section, modelData.key)
+
+                onTextChange: (data) => {
+                    gameplaySettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
             }
         }
     }
@@ -69,6 +86,10 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: "Rate of panning in the x or y direction"
                 text: zoo.getString("UI", modelData.key)
+
+                onTextChange: (data) => {
+                    gameplaySettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
             }
         }
     }
@@ -93,6 +114,10 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: "Size of the map"
                 text: zoo.getString("Map", modelData.key)
+
+                onTextChange: (data) => {
+                    gameplaySettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
             }
         }
     }

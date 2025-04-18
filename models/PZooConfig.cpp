@@ -212,7 +212,7 @@ void PZooConfig::updateTable(const QString &section, const QString &key, const Q
     QString input = getString(section, key);
     QString original = getString(section, key, m_zooBackup);
 
-    if (input == value) {
+    if (input == original) {
         if (m_dirty > 0) {
             m_dirty--;
             emit dirtyChanged(m_dirty);
