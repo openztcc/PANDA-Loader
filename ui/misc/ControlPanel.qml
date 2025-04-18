@@ -7,7 +7,7 @@ Item {
     id: controlGroup
     property var data: null
     property bool checked: true
-    property bool enabled: true
+    property bool enabled: checked
     property bool hasFrame: true
     property var label: ""
     property bool showSwitch: false
@@ -29,8 +29,8 @@ Item {
             id: switchRow
             Layout.fillWidth: true
             visible: controlGroup.showSwitch || controlGroup.label !== ""
-            spacing: 1
-            Layout.bottomMargin: 0
+            spacing: 2
+            Layout.bottomMargin: -10
             height: Math.max(controlSwitch.implicitHeight, titleLabel.implicitHeight) + 3
 
             PCheckBox {
@@ -45,7 +45,7 @@ Item {
                     controlGroup.controlGroupChecked(controlSwitch.checked)
                 }
                 visible: controlGroup.showSwitch
-                label: controlGroup.label ? controlGroup.label : ""
+                checked: controlGroup.checked
             }
 
 
@@ -55,6 +55,7 @@ Item {
                 font.pixelSize: 12
                 color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
                 Layout.alignment: Qt.AlignVCenter
+                bottomPadding: 2
                 visible: {
                     if (controlGroup.label !== "") {
                         return true

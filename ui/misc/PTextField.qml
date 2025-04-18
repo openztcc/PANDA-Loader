@@ -83,8 +83,7 @@ Item {
             id: titleLabel
             color: pTextField.placeholderColor
             font.pixelSize: 12
-            anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.left: textField.left
             visible: if (pTextField.title) {
                 return true
             } else {

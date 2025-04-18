@@ -143,16 +143,16 @@ LayoutFrame {
                         Repeater {
                             id: pandaSettingsRepeater
                             model: [
-                                {key: "pandaHomePath", label: "PANDA Home Path", description: "Path to the PANDA home directory", enabled: false},
-                                {key: "zooGamePath", label: "Zoo Game Path", description: "Path to the zoo.exe install directory", enabled: true},
+                                {key: "pandaHomePath", label: "PANDA Home Path", description: "Path to the PANDA home directory", enabled: false, isFileBrowser: false},
+                                {key: "zooGamePath", label: "Zoo Game Path", description: "Path to the zoo.exe install directory", enabled: true, isFileBrowser: true},
                             ]
                             delegate: PTextField {
                                 required property var modelData
                                 title: modelData.label
                                 Layout.fillWidth: true
                                 descriptionText: modelData.description
-                                isFileBrowser: modelData.enabled
-                                enabled: false
+                                isFileBrowser: modelData.isFileBrowser
+                                enabled: modelData.enabled
                                 text: psettings[modelData.key]()
                             }
                         }
@@ -879,7 +879,7 @@ LayoutFrame {
                     Layout.fillHeight: false
                     radius: 5
                     z: 20
-                    opacity: hovered ? 1.0 : 0.5
+                    opacity: hovered ? 1.0 : 0.8
 
                     HoverHandler {
                         id: hoverParent
