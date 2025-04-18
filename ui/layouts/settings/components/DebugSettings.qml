@@ -21,7 +21,7 @@ SettingsPane {
         checked: zoo.getBool("debug", "devModeEnabled")
 
         onCheckChanged: (data) => {
-                debugSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
         }    
     }
     // ------------------------- DEBUG CONTROLS
@@ -53,7 +53,7 @@ SettingsPane {
                 checked: zoo.getBool(modelData.section, modelData.key)
 
                 onCheckChanged: (data) => {
-                        debugSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                        debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
                 }    
             }       
         }
@@ -81,7 +81,7 @@ SettingsPane {
                 checked: zoo.getBool(modelData.section, modelData.key)
 
                 onCheckChanged: (data) => {
-                        debugSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                        debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
                 }    
             }
         }

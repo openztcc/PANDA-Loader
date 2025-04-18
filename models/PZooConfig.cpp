@@ -210,7 +210,7 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
 
 void PZooConfig::updateTable(const QString &section, const QString &key, const QString &value) {
     if (value == "true" || value == "false") {
-        updateBoolTable(section, key, value.toInt());
+        updateBoolTable(section, key, strToBool(value));
     } else {
         updateStrTable(section, key, value);
     }
