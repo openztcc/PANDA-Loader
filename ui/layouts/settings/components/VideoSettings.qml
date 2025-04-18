@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import PandaUI 1.0
 
 SettingsPane {
     id: videoSettingsPane
@@ -25,7 +26,7 @@ SettingsPane {
             checked: zoo.getBool(modelData.section, modelData.key)
 
             onCheckChanged: (data) => {
-                    videoSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                    videoSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
             }
         }
     }
@@ -42,7 +43,7 @@ SettingsPane {
             checked: zoo.getBool("user", "fullscreen")
 
             onCheckChanged: (data) => {
-                videoSettingsPane.dataChanged("user", "fullscreen", data)
+                videoSettingsPane.dataChanged("user", "fullscreen", data.toString())
             }
         }
 
@@ -76,7 +77,7 @@ SettingsPane {
         checked: zoo.getBool("debug", "drawfps")
 
         onControlGroupChecked: (data) => {
-            videoSettingsPane.dataChanged("debug", "drawfps", data)
+            videoSettingsPane.dataChanged("debug", "drawfps", data.toString())
         }
 
         contents: Repeater {

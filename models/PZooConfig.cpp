@@ -227,20 +227,26 @@ bool PZooConfig::strToBool(const QString &test) {
 }
 
 void PZooConfig::updateStrTable(const QString &section, const QString &key, const QString &value) {
-    QString input = getString(section, key);
+    // QString input = getString(section, key);
     QString original = getString(section, key, m_zooBackup);
 
-    if (input == original) {
+    if (value == original) {
         if (m_dirty > 0) {
-            m_dirty--;
-            emit dirtyChanged(m_dirty);
+            if (dirtyList.contains(original)) {
+                dirtyList.removeOne(original);
+                m_dirty--;
+                emit dirtyChanged(m_dirty);
+            }
         }
         return;
     }
 
     m_zooini->SetValue(section.toStdString().c_str(), key.toStdString().c_str(), value.toStdString().c_str());
-    m_dirty++;
-    emit dirtyChanged(m_dirty);
+    if (!dirtyList.contains(original)) {
+        dirtyList.append(original);
+        m_dirty++;
+        emit dirtyChanged(m_dirty);
+    }
     emit configUpdated(section, key, value);
 }
 

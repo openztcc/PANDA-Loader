@@ -54,6 +54,7 @@ private:
     QString m_zooConfigPath;
     std::unique_ptr<CSimpleIniA> m_zooBackup;
     std::unique_ptr<CSimpleIniA> m_zooini;
+    QStringList dirtyList;
     int m_dirty;
 
 };
