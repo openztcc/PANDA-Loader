@@ -227,8 +227,8 @@ void PZooConfig::updateTable(const QString &section, const QString &key, const Q
 }
 
 void PZooConfig::updateTable(const QString &path, const QString &key, bool value) {
-    QString input = value ? "1" : "0";
-    QString original = getString(path, key, m_zooBackup);
+    bool input = value;
+    bool original = getBool(path, key, m_zooBackup);
 
     if (input == original) {
         if (m_dirty > 0) {
@@ -237,7 +237,8 @@ void PZooConfig::updateTable(const QString &path, const QString &key, bool value
         }
         return;
     }
-    m_zooini->SetValue(path.toStdString().c_str(), key.toStdString().c_str(), input.toStdString().c_str());
+
+    m_zooini->SetValue(path.toStdString().c_str(), key.toStdString().c_str(),  QString::number(input).toStdString().c_str());
     m_dirty++;
     emit dirtyChanged(m_dirty);
     emit configUpdated(path, key, QString::number(value));

@@ -5,10 +5,24 @@ import PandaUI 1.0
 
 SettingsPane {
     id: debugSettingsPane
+
+    signal dataChanged(var section, var key, var value)
+
+    onDataChanged: (section, key, value) => {
+        console.log("Data changed:", section, key, value)
+        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
+
+    }
+    
     PCheckBox {
         id: devModeCheckBox
         text: "Developer Mode Enabled"
         checked: zoo.getBool("debug", "devModeEnabled")
+
+        onCheckChanged: (data) => {
+                debugSettingsPane.dataChanged(modelData.section, modelData.key, data)
+        }    
     }
     // ------------------------- DEBUG CONTROLS
     ControlPanel {
@@ -37,6 +51,10 @@ SettingsPane {
                 required property var modelData
                 text: modelData.label
                 checked: zoo.getBool(modelData.section, modelData.key)
+
+                onCheckChanged: (data) => {
+                        debugSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }    
             }       
         }
     }
@@ -61,6 +79,10 @@ SettingsPane {
                 required property var modelData
                 text: modelData.label
                 checked: zoo.getBool(modelData.section, modelData.key)
+
+                onCheckChanged: (data) => {
+                        debugSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }    
             }
         }
     }
