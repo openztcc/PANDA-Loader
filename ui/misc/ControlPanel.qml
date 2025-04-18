@@ -47,6 +47,23 @@ Item {
                 visible: controlGroup.showSwitch
                 label: controlGroup.label ? controlGroup.label : ""
             }
+
+
+            Text {
+                id: titleLabel
+                text: controlGroup.label
+                font.pixelSize: 12
+                color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
+                Layout.alignment: Qt.AlignVCenter
+                visible: {
+                    if (controlGroup.label !== "") {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+
+            }
         }
 
         Pane {
@@ -59,7 +76,7 @@ Item {
             background: Rectangle {
                 id: bg
                 anchors.fill: parent
-                color: Qt.darker("#627D58", 1.3)
+                color: "#627D58"
                 radius: 5
                 border.width: 1
                 border.color: Qt.darker(color, 1.2)
