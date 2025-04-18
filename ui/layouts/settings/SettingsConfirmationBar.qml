@@ -2,7 +2,7 @@
     import QtQuick.Controls
     import QtQuick.Layouts
     import PandaUI 1.0
-    
+
     Rectangle {
         id: confirmChangesBar
         property bool hovered: false
@@ -32,7 +32,6 @@
 
             Button {
                 id: saveChangesButton
-                text: "Save Changes"
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                 Layout.preferredWidth: 150
                 flat: true
@@ -50,6 +49,15 @@
                         // }
                     }
                 }
+                contentItem: Text {
+                    id: saveChangesText
+                    text: "Save Changes"
+                    color: "#FED286"
+                    font.pixelSize: 12
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
                 onClicked: {
                     if (zoo.dirty) {
                         zoo.saveConfig()
@@ -60,19 +68,30 @@
             }
             Button {
                 id: discardChangesButton
-                text: "Discard"
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                 flat: true
                 Layout.preferredWidth: 150
 
                 background: Rectangle {
-                    color: hoverHandle2.hovered ? Qt.darker(mainContent.mainColor, 1.2) : mainContent.mainColor
+                    color: hoverHandle2.hovered ? Qt.darker(mainContent.mainColor, 1.2) : Qt.darker(mainContent.mainColor, 1.3)
                     radius: 5
+                    border.color: Qt.darker(mainContent.mainColor, 1.7)
+                    border.width: 2
 
                     HoverHandler {
                         id: hoverHandle2
                         cursorShape: Qt.PointingHandCursor
                     }
+                }
+
+                contentItem: Text {
+                    id: discardChangesText
+                    text: "Discard Changes"
+                    color: "#ffffff"
+                    font.pixelSize: 12
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
                     if (zoo.dirty) {
