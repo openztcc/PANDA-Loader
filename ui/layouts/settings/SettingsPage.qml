@@ -39,14 +39,14 @@ LayoutFrame {
             console.log("zoo.ini changes saved")
             zoo.saveConfig()
             mainContent.cancelledNavigation = false
-            replaceSettingsPane(mainContent.modelData.pane, settingsStack, mainContent.currentPage)
+            replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
             close()
         }
         onDiscarded: {
             zoo.revertChanges()
             console.log("zoo.ini changes reverted")
             mainContent.cancelledNavigation = false
-            replaceSettingsPane(mainContent.modelData.pane, settingsStack, mainContent.currentPage)
+            replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
             close()
         }
 
