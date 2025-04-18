@@ -6,12 +6,27 @@ import PandaUI 1.0
 SettingsPane {
     id: uiSettingsPane
 
+    signal dataChanged(var section, var key, var value)
+
+    onDataChanged: (section, key, value) => {
+        console.log("Data changed:", section, key, value)
+        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
+
+    }
+
+
     PTextField { // defaultEditCharLimit
         id: defaultEditCharLimitField
         title: "Default Edit Character Limit"
         Layout.fillWidth: true
         descriptionText: "Default character limit for edit fields"
         text: zoo.getString("UI", "defaultEditCharLimit")
+
+        onTextChange: (data) => {
+            uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+        }
+
     }
 
     // ----------------------------- TOOLTIP SETTINGS
@@ -28,6 +43,11 @@ SettingsPane {
             Layout.fillWidth: true
             descriptionText: "Duration of the tooltip"
             text: zoo.getString("UI", "tooltipDuration")
+
+            onTextChange: (data) => {
+                uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+            }
+
         }
     }
 
@@ -49,6 +69,11 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: "Maximum width of tooltips"
                 text: zoo.getString("UI", modelData.key)
+
+                onTextChange: (data) => {
+                    uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
+
             }
         }
     }
@@ -58,6 +83,11 @@ SettingsPane {
         title: "Help Type"
         Layout.fillWidth: true
         text: zoo.getString("UI", "helpType")
+
+        onTextChange: (data) => {
+            uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+        }
+
     }
 
     // ----------------------------- MESSAGE DISPLAY SETTINGS
@@ -68,12 +98,19 @@ SettingsPane {
         Layout.fillWidth: true
         checked: zoo.getBool("UI", "MessageDisplay")
 
+        // TODO: update message display
+
         PTextField { // minimumMessageInterval
             id: minimumMessageIntervalField
             title: "Minimum Message Interval"
             Layout.fillWidth: true
             descriptionText: "Minimum interval between messages"
             text: zoo.getString("UI", "minimumMessageInterval")
+
+            onTextChange: (data) => {
+                uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+            }
+
         }
     }
     // ----------------------------- PROGRESS BAR SETTINGS
@@ -96,6 +133,11 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: "Position of the progress bar"
                 text: zoo.getString("UI", modelData.key)
+
+                onTextChange: (data) => {
+                    uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
+
             }
         }
     }
@@ -119,6 +161,10 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: "Color value of the progress bar"
                 text: zoo.getString("UI", modelData.key)
+                onTextChange: (data) => {
+                    uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
+
             }
         }
     }
@@ -141,6 +187,11 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: "Offset of the progress bar shadow"
                 text: zoo.getString(modelData.section, modelData.key)
+
+                onTextChange: (data) => {
+                    uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
+
             }
         }
     }
@@ -164,6 +215,11 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: "Color value of the progress bar shadow"
                 text: zoo.getString(modelData.section, modelData.key)
+
+                onTextChange: (data) => {
+                    uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
+
             }
         }
     }
@@ -185,6 +241,11 @@ SettingsPane {
                 Layout.fillWidth: true
                 descriptionText: "Relative to the main monitor, position where the game was last closed"
                 text: zoo.getString(modelData.section, modelData.key)
+
+                onTextChange: (data) => {
+                    uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
+
             }
         }
     }                        

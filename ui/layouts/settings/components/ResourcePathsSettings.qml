@@ -5,6 +5,16 @@ import PandaUI 1.0
 
 SettingsPane {
     id: resourcePathsSettingsPane
+
+    signal dataChanged(var section, var key, var value)
+
+    onDataChanged: (section, key, value) => {
+        console.log("Data changed:", section, key, value)
+        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
+
+    }
+
     // custom component for resource paths
     PTextField { // lastfile
         id: lastZooPlayedPath
@@ -13,6 +23,10 @@ SettingsPane {
         isFileBrowser: true
         descriptionText: "Path to the last zoo played"
         text: zoo.getString("user", "lastfile")
+
+        onTextChange: (data) => {
+            resourcePathsSettingsPane.dataChanged(modelData.section, modelData.key, data)
+        }
     }
     // resource paths
     AppendTable {
@@ -46,6 +60,11 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 text: zoo.getString(modelData.section, modelData.key)
+
+                onTextChange: (data) => {
+                    resourcePathsSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                }
+
             }
         }
     }

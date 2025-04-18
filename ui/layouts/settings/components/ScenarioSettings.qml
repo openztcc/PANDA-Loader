@@ -5,6 +5,15 @@ import PandaUI 1.0
 
 SettingsPane {
     id: scenariosSettingsPane
+
+    signal dataChanged(var section, var key, var value)
+
+    onDataChanged: (section, key, value) => {
+        console.log("Data changed:", section, key, value)
+        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
+    }
+
     Repeater {
         id: scenariosSettingsRepeater
         model: [
@@ -16,6 +25,11 @@ SettingsPane {
             required property var modelData
             text: modelData.label
             checked: zoo.getBool("UI", modelData.key)
+
+            onCheckChanged: (data) => {
+                    scenariosSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+            }
+
         }
     }
     // ----------------------------- SCENARIO CHECKBOXES
@@ -79,6 +93,11 @@ SettingsPane {
                 required property var modelData
                 text: modelData.label
                 checked: zoo.getBool(modelData.section, modelData.key)
+
+                onCheckChanged: (data) => {
+                        scenariosSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+                }
+
             }
         }
 

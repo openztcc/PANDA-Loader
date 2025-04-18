@@ -10,7 +10,7 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
     // Initialize the config table with default values
     loadConfig();
 
-    m_dirty = false;
+    m_dirty = 0;
     emit dirtyChanged(m_dirty);
 }
 
@@ -373,7 +373,7 @@ void PZooConfig::revertChanges() {
     // copy the backup to the config file
     copyIni(m_zooBackup, m_zooini);
 
-    m_dirty = false;
+    m_dirty = 0;
     emit configReverted();
     emit dirtyChanged(m_dirty);
 }
