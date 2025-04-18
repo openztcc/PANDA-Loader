@@ -19,6 +19,7 @@ LayoutFrame {
     property bool cancelledNavigation: false
     property var currentPage: null
     property var modelData: null
+    property var currentPane: null
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
@@ -116,6 +117,7 @@ LayoutFrame {
 
                         onClicked: {
                             mainContent.currentPage = settingsButtonsRepeater.itemAt(index)
+                            mainContent.currentPane = modelData.pane
                             if (zoo.dirty) {
                                 confirmChangesModal.open()
                             } else {
@@ -215,6 +217,10 @@ LayoutFrame {
                 // top bar with save changes button
                 SettingsConfirmationBar{
                     id: settingsConfirmationBar
+
+                    onDiscarded: () => {
+                        replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
+                    }
                 }
             }
 

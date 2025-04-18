@@ -16,6 +16,8 @@
         opacity: hovered ? 1.0 : 0.8
         visible: zoo.dirty ? true : false
 
+        signal discarded()
+
         HoverHandler {
             id: hoverParent
             target: null
@@ -97,6 +99,7 @@
                 onClicked: {
                     if (zoo.dirty) {
                         zoo.revertChanges()
+                        confirmChangesBar.discarded()
                         console.log("Reverted changes to zoo.ini")
                     } else {
                         console.log("No changes to save")
