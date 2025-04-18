@@ -16,6 +16,7 @@ LayoutFrame {
     Layout.fillHeight: true
 
     property var dirtyLaundry: []
+    property bool cancelledNavigation: false
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
@@ -29,14 +30,25 @@ LayoutFrame {
     SimpleModal {
         id: confirmChangesModal
         title: "Unsaved Changes"
+        showCancel: true
         message: "You have unsaved changes. Do you want to discard them?"
-        acceptAction: function() {
-            zoo.saveConfig()
+        onSaved: {
             console.log("zoo.ini changes saved")
+            zoo.saveConfig()
+            mainContent.cancelledNavigation = true
+            close()
         }
-        rejectAction: function() {
+        onDiscarded: {
             zoo.revertChanges()
             console.log("zoo.ini changes reverted")
+            mainContent.cancelledNavigation = true
+            close()
+        }
+
+        onCancelled: {
+            console.log("Cancelled navigation from current settings pane")
+            mainContent.cancelledNavigation = true
+            close()
         }
     }
 
@@ -98,11 +110,16 @@ LayoutFrame {
                             var identifier = settingsButtonsRepeater.itemAt(index)
                             if (zoo.dirty) {
                                 confirmChangesModal.open()
-                                confirmChangesModal.close()
+                            } else {
+                                mainContent.cancelledNavigation = false
                             }
-                            replaceSettingsPane(modelData.pane, settingsStack, identifier)
-                        } 
-                        
+
+                            if (!mainContent.cancelledNavigation) {
+                                replaceSettingsPane(modelData.pane, settingsStack, identifier)
+                            }
+                            
+                            mainContent.cancelledNavigation = true
+                        }                         
                     }
                 }
             }

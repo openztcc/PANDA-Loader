@@ -61,6 +61,7 @@
                 onClicked: {
                     if (zoo.dirty) {
                         zoo.saveConfig()
+                        console.log("zoo.ini changes saved")
                     } else {
                         console.log("No changes to save")
                     }

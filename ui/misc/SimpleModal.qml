@@ -1,21 +1,23 @@
-import QtQuick 2.15
-import QtQuick.Controls 6.5
+import QtQuick
+import QtQuick.Controls
 
 Item {
     id: simpleModal
-    property var acceptAction: null
-    property var rejectAction: null
     property alias title: confirmationDialog.title
     property alias message: confirmMsg.text
     property alias centerTo: simpleModal.parent
     property bool showCancel: true
+
+    signal cancelled()
+    signal saved()
+    signal discarded()
+
 
     Dialog {
         id: confirmationDialog
 
         title: ""
         modal: true
-        standardButtons: Dialog.Yes | Dialog.No | Dialog.Cancel
         x: (simpleModal.centerTo.width - width) / 2
         y: (simpleModal.centerTo.height - height) / 2
         contentItem: Column {
@@ -25,20 +27,35 @@ Item {
                 text: "Placeholder text"
                 wrapMode: Text.Wrap
             }
-        }
-        onAccepted: {
-            if (simpleModal.action) {
-                simpleModal.action()
-            } else {
-                console.log("No action defined")
-            }
-        }
-        onRejected: {
-            console.log(confirmationDialog.title + " cancelled")
-            if (simpleModal.rejectAction) {
-                simpleModal.rejectAction()
-            } else {
-                console.log("No reject action defined")
+            DialogButtonBox {
+                id: buttons
+                alignment: Qt.AlignRight
+                spacing: 10
+
+                Button {
+                    text: "Save"
+                    onClicked: {
+                        simpleModal.saved()
+                        confirmationDialog.close()
+                    }
+                }
+
+                Button {
+                    text: "Discard"
+                    onClicked: {
+                        simpleModal.discarded()
+                        confirmationDialog.close()
+                    }
+                }
+
+                Button {
+                    visible: showCancel
+                    text: "Cancel"
+                    onClicked: {
+                        simpleModal.cancelled()
+                        confirmationDialog.close()
+                    }
+                }
             }
         }
     }
