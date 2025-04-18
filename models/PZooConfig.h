@@ -20,7 +20,8 @@ public:
 
     // Q_INVOKABLE std::unique_ptr<QBuffer> defaultConfig();
     Q_INVOKABLE void updateTable(const QString &section, const QString &key, const QString &value);
-    Q_INVOKABLE void updateTable(const QString &path, const QString &key, bool value);
+    Q_INVOKABLE void updateStrTable(const QString &section, const QString &key, const QString &value);
+    Q_INVOKABLE void updateBoolTable(const QString &path, const QString &key, bool value);
     Q_INVOKABLE void updateUnlockEntity(const QString &key, const QString &value);
     Q_INVOKABLE void saveConfig();
     Q_INVOKABLE void loadConfig();
@@ -30,6 +31,8 @@ public:
     Q_INVOKABLE QString getString(const QString &section, const QString &key, const std::unique_ptr<CSimpleIniA> &ini = nullptr) const;
     CSimpleIniA getIni() const { return CSimpleIniA(); }
     void copyIni(const std::unique_ptr<CSimpleIniA> &copyFrom, std::unique_ptr<CSimpleIniA> &copyTo) const;
+    bool strToBool(const QString &test);
+
 
     // validation
     // Q_INVOKABLE bool isInteger(const QString &value, bool test = false) const;

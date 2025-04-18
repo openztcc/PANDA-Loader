@@ -209,6 +209,24 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
 // }
 
 void PZooConfig::updateTable(const QString &section, const QString &key, const QString &value) {
+    if (value == "true" || value == "false") {
+        updateBoolTable(section, key, value.toInt());
+    } else {
+        updateStrTable(section, key, value);
+    }
+}
+
+bool PZooConfig::strToBool(const QString &test) {
+    if (test == "1" || test == "true" || test == "True") {
+        return true;
+    } else if (test == "0" || test == "false" || test == "True") {
+        return false;
+    } else {
+        return false;
+    }
+}
+
+void PZooConfig::updateStrTable(const QString &section, const QString &key, const QString &value) {
     QString input = getString(section, key);
     QString original = getString(section, key, m_zooBackup);
 
@@ -226,7 +244,7 @@ void PZooConfig::updateTable(const QString &section, const QString &key, const Q
     emit configUpdated(section, key, value);
 }
 
-void PZooConfig::updateTable(const QString &path, const QString &key, bool value) {
+void PZooConfig::updateBoolTable(const QString &path, const QString &key, bool value) {
     bool input = value;
     bool original = getBool(path, key, m_zooBackup);
 
