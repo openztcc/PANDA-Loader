@@ -17,6 +17,8 @@ LayoutFrame {
 
     property var dirtyLaundry: []
     property bool cancelledNavigation: false
+    property var currentPage: null
+    property var modelData: null
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
@@ -35,13 +37,15 @@ LayoutFrame {
         onSaved: {
             console.log("zoo.ini changes saved")
             zoo.saveConfig()
-            mainContent.cancelledNavigation = true
+            mainContent.cancelledNavigation = false
+            replaceSettingsPane(mainContent.modelData.pane, settingsStack, mainContent.currentPage)
             close()
         }
         onDiscarded: {
             zoo.revertChanges()
             console.log("zoo.ini changes reverted")
-            mainContent.cancelledNavigation = true
+            mainContent.cancelledNavigation = false
+            replaceSettingsPane(mainContent.modelData.pane, settingsStack, mainContent.currentPage)
             close()
         }
 
@@ -106,8 +110,12 @@ LayoutFrame {
                         color: mainContent.mainColor
                         fg: mainContent.mainTextColor
 
+                        Component.onCompleted: {
+                            mainContent.modelData = modelData
+                        }
+
                         onClicked: {
-                            var identifier = settingsButtonsRepeater.itemAt(index)
+                            mainContent.currentPage = settingsButtonsRepeater.itemAt(index)
                             if (zoo.dirty) {
                                 confirmChangesModal.open()
                             } else {
@@ -115,7 +123,7 @@ LayoutFrame {
                             }
 
                             if (!mainContent.cancelledNavigation) {
-                                replaceSettingsPane(modelData.pane, settingsStack, identifier)
+                                replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
                             }
                             
                             mainContent.cancelledNavigation = true
