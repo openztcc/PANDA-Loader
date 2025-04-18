@@ -45,23 +45,7 @@ Item {
                     controlGroup.controlGroupChecked(controlSwitch.checked)
                 }
                 visible: controlGroup.showSwitch
-            }
-
-
-            Text {
-                id: titleLabel
-                text: controlGroup.label
-                font.pixelSize: 12
-                color: controlGroup.enabled ? "#E8E8CF" : "#A0A0A0"
-                Layout.alignment: Qt.AlignVCenter
-                visible: {
-                    if (controlGroup.label !== "") {
-                        return true
-                    } else {
-                        return false
-                    }
-                }
-
+                label: controlGroup.label ? controlGroup.label : ""
             }
         }
 
@@ -75,7 +59,7 @@ Item {
             background: Rectangle {
                 id: bg
                 anchors.fill: parent
-                color: "#627D58"
+                color: Qt.darker("#627D58", 1.3)
                 radius: 5
                 border.width: 1
                 border.color: Qt.darker(color, 1.2)

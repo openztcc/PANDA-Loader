@@ -11,6 +11,7 @@ Item {
     height: implicitHeight
     property alias checked: pCheckBox.checked
     property alias text: labelText.text
+    property alias label: labelText.text
     property var bg: "#627D58"
 
     signal toggled(bool checked)
@@ -100,6 +101,7 @@ Item {
                     color: pCheckBox.checked ? "#E8E8CF" : "#A0A0A0"
                     font.pixelSize: 12
                     anchors.verticalCenter: parent.verticalCenter
+                    visible: text !== ""
                 }
 
                 // MouseArea {

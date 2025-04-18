@@ -143,15 +143,16 @@ LayoutFrame {
                         Repeater {
                             id: pandaSettingsRepeater
                             model: [
-                                {key: "pandaHomePath", label: "PANDA Home Path", description: "Path to the PANDA home directory"},
-                                {key: "zooGamePath", label: "Zoo Game Path", description: "Path to the zoo.exe install directory"},
+                                {key: "pandaHomePath", label: "PANDA Home Path", description: "Path to the PANDA home directory", enabled: false},
+                                {key: "zooGamePath", label: "Zoo Game Path", description: "Path to the zoo.exe install directory", enabled: true},
                             ]
                             delegate: PTextField {
                                 required property var modelData
                                 title: modelData.label
                                 Layout.fillWidth: true
                                 descriptionText: modelData.description
-                                isFileBrowser: true
+                                isFileBrowser: modelData.enabled
+                                enabled: false
                                 text: psettings[modelData.key]()
                             }
                         }
