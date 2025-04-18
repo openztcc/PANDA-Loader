@@ -96,7 +96,8 @@
                 }
                 onClicked: {
                     if (zoo.dirty) {
-                        zoo.saveConfig()
+                        zoo.revertChanges()
+                        console.log("Reverted changes to zoo.ini")
                     } else {
                         console.log("No changes to save")
                     }
