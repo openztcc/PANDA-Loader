@@ -346,7 +346,6 @@ void PZooConfig::revertChanges() {
     }
 
     // copy the backup to the config file
-    m_zooini->Reset();
     copyIni(m_zooBackup, m_zooini);
 
     m_dirty = false;

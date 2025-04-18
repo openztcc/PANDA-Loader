@@ -26,6 +26,20 @@ LayoutFrame {
         settingsPane.currentButton = currentButton
     }
 
+    SimpleModal {
+        id: confirmChangesModal
+        title: "Unsaved Changes"
+        message: "You have unsaved changes. Do you want to discard them?"
+        acceptAction: function() {
+            zoo.saveConfig()
+            console.log("zoo.ini changes saved")
+        }
+        rejectAction: function() {
+            zoo.revertChanges()
+            console.log("zoo.ini changes reverted")
+        }
+    }
+
     RowLayout {
         id: mainLayout
         Layout.fillWidth: true
@@ -82,22 +96,11 @@ LayoutFrame {
 
                         onClicked: {
                             var identifier = settingsButtonsRepeater.itemAt(index)
-                            if (!zoo.dirty) {
-                                replaceSettingsPane(modelData.pane, settingsStack, identifier)
-                            } else {
-                                var result = Qt.confirm("Unsaved Changes", "You have unsaved changes. Do you want to discard them?")
-                                if (result === Qt.Yes) {
-                                    zoo.dirty = false
-                                    replaceSettingsPane(modelData.pane, settingsStack, identifier)
-                                } else if (result === Qt.No) {
-                                    return
-                                } else if (result === Qt.Cancel) {
-                                    return
-                                } else {
-                                    zoo.dirty = false
-                                    replaceSettingsPane(modelData.pane, settingsStack, identifier)
-                                }
+                            if (zoo.dirty) {
+                                confirmChangesModal.open()
+                                confirmChangesModal.close()
                             }
+                            replaceSettingsPane(modelData.pane, settingsStack, identifier)
                         } 
                         
                     }
