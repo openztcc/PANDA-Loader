@@ -13,6 +13,7 @@
 #include <QtQml/qqmlregistration.h>
 #include "../models/PSettings.h"
 #include "PSystemMgr.h"
+#include "../models/PZooConfig.h"
 
 // static functions
 
@@ -27,13 +28,16 @@ public:
     Q_INVOKABLE int launchZT();
     QString getGamePath();
     void setGamePath(QString);
+    void loadConfig();
     QStringList getZtdList();
-    PSettings* settings() const { return m_settings; }
+    Q_INVOKABLE PSettings* settings() const { return m_settings; }
+    Q_INVOKABLE PZooConfig* zooConfig() const { return m_zooConfig; }
 
 signals:
     void pathChanged();
 private:
     PSettings *m_settings;
+    PZooConfig *m_zooConfig;
     QString m_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
     QString m_resource_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     QVector<PModItem> m_mods;

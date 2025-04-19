@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import Qt5Compat.GraphicalEffects
 
 Item {
     id: check
@@ -14,6 +15,7 @@ Item {
 
     signal toggled(bool checked)
     signal checkChanged(bool checked)
+    signal dataChanged(var data)
 
     CheckBox {
         id: pCheckBox
@@ -45,34 +47,49 @@ Item {
 
                 Rectangle {
                     id: checkBox
-                    width: 15
-                    height: 15
+                    width: 16
+                    height: 18
                     radius: 3
-                    color: {
-                        if (pCheckBox.checked) {
-                            if (pCheckBox.hovered) {
-                                return Qt.darker(check.bg, 1.25)
-                            } 
-                            else {
-                                return Qt.darker(check.bg, 1.2)
-                            }
-                        } else {
-                            if (pCheckBox.hovered) {
-                                return Qt.darker(check.bg, 1.05)
+                    color: "#627D5800"
+                    border.width: 1
+                    border.color: Qt.darker(check.bg, 1.2)
+
+                    DropShadow  {
+                        anchors.fill: checkBox
+                        radius: 2.0
+                        color: "#80000000"
+                        verticalOffset: 1.5
+                        horizontalOffset: 0
+                    }
+
+                    Rectangle {
+                        id: innerBox
+                        width: 16
+                        height: 16
+                        anchors.top: parent.top
+                        border.width: 1
+                        border.color: Qt.lighter(color, 1.2)
+                        radius: 3
+                        color: {
+                            if (pCheckBox.checked) {
+                                return Qt.darker("#FED286", 1.1)
                             } else {
-                                return check.bg
+                                if (pCheckBox.hovered) {
+                                    return Qt.lighter(check.bg, 1.15)
+                                } else {
+                                    return check.bg
+                                }
                             }
                         }
                     }
-                    border.width: 1
-                    border.color: Qt.darker(color, 1.2)
+
 
                     SvgIcon {
                         anchors.centerIn: parent
                         icon: "qrc:/icons/check.svg"
                         iconWidth: 12
                         iconHeight: 12
-                        color: pCheckBox.checked ? "#E8E8CF" : "#A0A0A0"
+                        color: check.bg
                         visible: pCheckBox.checked
                     }
                 }

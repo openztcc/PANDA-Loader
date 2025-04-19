@@ -33,12 +33,15 @@ Item {
     property alias border: textFieldBg.textFieldBorder
     property alias text: textField.text
     property var pHeight: null
+    property string originalText: textField.text
+    property bool focused: false
 
     // signals
     signal searchTextChanged(text: string)
     signal textChange(text: string)
     signal pressed(event: var)
     signal cleared()
+    signal dirty(bool isDirty)
 
     Component {
         id: fileDialogComponent
@@ -80,8 +83,7 @@ Item {
             id: titleLabel
             color: pTextField.placeholderColor
             font.pixelSize: 12
-            anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.left: textField.left
             visible: if (pTextField.title) {
                 return true
             } else {
@@ -119,22 +121,6 @@ Item {
                 radius: 5
                 border.width: textFieldBorder
                 border.color: pTextField.error ? pTextField.errorColor : Qt.darker(pTextField.bg, 1.3)
-
-                // shadow effect
-                Rectangle {
-                    anchors.top: parent.top
-                    color: Qt.darker(pTextField.bg, 1.18)
-                    height: 4
-                    width: {
-                        if (textField.isFileBrowser) {
-                            parent.width - browseFilesButton.width
-                        } else {
-                            parent.width
-                        }
-                    }
-                    topLeftRadius: 5
-                    topRightRadius: 5
-                }
             }
 
             // change cursor color
@@ -187,11 +173,12 @@ Item {
                         textField.right
                     }
                 }
-                anchors.rightMargin: 0
-                width: 35
+                anchors.rightMargin: 1
+                width: pTextField.focused ? 35 : 0
                 height: textField.height - 7
                 textField: textField
-                fg: pTextField.placeholderColor 
+                visible: pTextField.focused ? true : false
+                fg: pTextField.placeholderColor
                 bg: pTextField.bg
                 z: 1
 
@@ -199,7 +186,7 @@ Item {
                     pTextField.cleared()
                 }
             }
-            
+
             SvgIcon {
                 z: 5
                 id: textFieldIcon
@@ -222,7 +209,7 @@ Item {
                 anchors.rightMargin: 0
                 height: textField.height - 7
                 textField: textField
-                fg: pTextField.placeholderColor 
+                fg: pTextField.placeholderColor
                 bg: pTextField.bg
                 fileDialog: fileDialogComponent
                 component: pTextField
@@ -235,13 +222,11 @@ Item {
             }
 
             onFocusChanged: {
-                // if (focus) {
-                //     textField.placeholderText = ""
-                // } else {
-                //     if (textField.text == "") {
-                //         textField.placeholderText = "Text"
-                //     }
-                // }
+                if (focus) {
+                    pTextField.focused = true
+                } else {
+                    pTextField.focused = false
+                }
             }
 
             // Key handling
@@ -259,12 +244,19 @@ Item {
 
             onTextChanged: {
                 pTextField.textChange(textField.text)
+
+                // // check if text is dirty
+                // if (textField.text !== pTextField.originalText) {
+                //     pTextField.dirty(true)
+                // } else {
+                //     pTextField.dirty(false)
+                // }
             }
 
             MouseArea {
                 id: textFieldMouseArea
                 anchors.fill: parent
-                hoverEnabled: true 
+                hoverEnabled: true
                 acceptedButtons: Qt.NoButton
                 onEntered: {
                     textField.textFieldHovered = true

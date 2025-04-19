@@ -14,6 +14,15 @@ PState::PState(QObject *parent) : QObject(parent) {
         m_resource_path = m_settings->zooGamePath() + "\\dlupdate\\";
         qDebug() << "Loaded settings from config.toml.";
     }
+
+    // Load the Zoo Tycoon config file
+    m_zooConfig = new PZooConfig(this, m_path + "\\zoo.ini");
+    if (!m_zooConfig) {
+        qDebug() << "Failed to load Zoo Tycoon config file.";
+    } else {
+        m_zooConfig->loadConfig();
+        qDebug() << "Loaded Zoo Tycoon config file.";
+    }
 }
 
 int PState::launchZT() {

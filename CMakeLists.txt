@@ -36,6 +36,7 @@ qt_add_executable(appPandaLdr
     models/PEntityType.cpp models/PEntityType.h
     models/PIconData.h
     models/PModModel.cpp models/PModModel.h
+    models/PZooConfig.h models/PZooConfig.cpp
 )
 
 add_subdirectory(libs/apecore)
@@ -47,8 +48,10 @@ link_directories(
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib
 )
 add_library(tomlplusplus INTERFACE)
+add_library(simpleini INTERFACE)
 
 target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
+target_include_directories(simpleini INTERFACE ${CMAKE_SOURCE_DIR}/libs/simpleini/include)
 
 target_include_directories(
     appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/src
@@ -94,6 +97,17 @@ qt_add_qml_module(appPandaLdr
         ui/layouts/mods/components/ModsList.qml
         ui/layouts/settings/SettingsPage.qml
         ui/layouts/settings/SettingsPane.qml
+        # settings
+        ui/layouts/settings/components/PandaSettings.qml
+        ui/layouts/settings/components/VideoSettings.qml
+        ui/layouts/settings/components/SoundSettings.qml
+        ui/layouts/settings/components/GameplaySettings.qml
+        ui/layouts/settings/components/UISettings.qml
+        ui/layouts/settings/components/ScenarioSettings.qml
+        ui/layouts/settings/components/ResourcePathsSettings.qml
+        ui/layouts/settings/components/LanguageSettings.qml
+        ui/layouts/settings/components/DebugSettings.qml
+        ui/layouts/settings/SettingsConfirmationBar.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
         # sources
@@ -110,6 +124,7 @@ qt_add_qml_module(appPandaLdr
         models/PEntityType.h
         models/PSettings.h
         models/PModModel.h
+        models/PZooConfig.h
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -173,6 +188,7 @@ target_link_libraries(appPandaLdr
     ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a 
     Qt6::Sql 
     tomlplusplus
+    simpleini
 )
 
 include(GNUInstallDirs)

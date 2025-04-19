@@ -1,47 +1,84 @@
-import QtQuick 2.15
-import QtQuick.Controls 6.5
+import QtQuick
+import QtQuick.Controls
 
 Item {
-    id: simpleModal
-    property var action
+    id: confirmDialogWrapper
     property alias title: confirmationDialog.title
     property alias message: confirmMsg.text
-    property alias centerTo: simpleModal.parent
+    property alias parentItem: confirmDialogWrapper.parent
+    property bool showCancel: true
+
+    signal confirmed(string result)
 
     Dialog {
         id: confirmationDialog
-
-        title: ""
         modal: true
-        standardButtons: Dialog.Yes | Dialog.No
-        x: (simpleModal.centerTo.width - width) / 2
-        y: (simpleModal.centerTo.height - height) / 2
+        width: 300
+        x: (parentItem.width - width) / 2
+        y: (parentItem.height - height) / 2
+
         contentItem: Column {
             spacing: 10
+            padding: 20
+
             Label {
                 id: confirmMsg
-                text: "Placeholder text"
+                text: "Are you sure?"
                 wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
             }
-        }
-        onAccepted: {
-            if (simpleModal.action) {
-                simpleModal.action()
-            } else {
-                console.log("No action defined")
+
+            DialogButtonBox {
+                alignment: Qt.AlignRight
+                spacing: 10
+
+                Button {
+                    text: "Save"
+                    onClicked: {
+                        confirmationDialog.close()
+                        confirmDialogWrapper.confirmed("save")
+                    }
+                }
+
+                Button {
+                    text: "Discard"
+                    onClicked: {
+                        confirmationDialog.close()
+                        confirmDialogWrapper.confirmed("discard")
+                    }
+                }
+
+                Button {
+                    visible: showCancel
+                    text: "Cancel"
+                    onClicked: {
+                        confirmationDialog.close()
+                        confirmDialogWrapper.confirmed("cancel")
+                    }
+                }
             }
-        }
-        onRejected: {
-            console.log(confirmationDialog.title + " cancelled")
         }
     }
 
     function open() {
         confirmationDialog.open()
     }
+
     function close() {
         confirmationDialog.close()
     }
 
+    // asynchronous modal handler for Promises
+    function ask() {
+        return new Promise(function(resolve) {
+            open()
 
+            function handler(result) {
+                confirmDialogWrapper.confirmed.disconnect(handler)
+                resolve(result)
+            }
+
+            confirmDialogWrapper.confirmed.connect(handler)
+        })
+    }
 }

@@ -32,15 +32,8 @@ Item {
             anchors.fill: parent
             topRightRadius: 5
             bottomRightRadius: 5
-
-            Rectangle {
-                id: browseFilesBorder
-                height: 2
-                anchors.bottom: parent.bottom
-                width: parent.width
-                color: Qt.darker(browseFilesBg.bg, 1.2)
-                anchors.rightMargin: 3
-            }
+            border.width: 1
+            border.color: Qt.darker(browseFilesBg.bg, 1.6)
         }
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: browse.textField.right
