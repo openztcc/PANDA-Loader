@@ -41,8 +41,6 @@ signals:
 
 private:
     QString m_zooGamePath;
-    bool m_useIsoMounting = false;
-    QString m_isoPath;
     QString m_configPath = QDir::homePath() + "/.panda";
     int m_dirty = 0;
     toml::table m_pandaConfig;

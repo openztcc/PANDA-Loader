@@ -1,5 +1,15 @@
 #include "PSettings.h"
 
+PSettings::PSettings(QObject* parent) : QObject(parent) {
+    m_zooGamePath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon";
+    // Load settings from the TOML file
+    if (!loadFromToml()) {
+        qDebug() << "Failed to load settings from config.toml";
+    }
+
+    m_dirty = 0;
+}
+
 void PSettings::updateTable(const QString& key, const QString& value) {
     m_pandaConfig.insert_or_assign(key.toStdString(), value.toStdString());
     m_dirty = 1;
@@ -11,14 +21,13 @@ bool PSettings::loadFromToml() {
     toml::table config = PConfigMgr::getConfig(configPath);
     if (config.empty()) {
         // generate default settings
-        m_zooGamePath = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon";
         m_useIsoMounting = false;
         m_isoPath = "";
         // Save default settings to the TOML file
         toml::table defaultConfig;
         defaultConfig.insert_or_assign("zooGamePath", m_zooGamePath.toStdString());
-        defaultConfig.insert_or_assign("isoPath", m_isoPath.toStdString());
-        defaultConfig.insert_or_assign("useIsoMounting", m_useIsoMounting);
+        defaultConfig.insert_or_assign("isoPath", "");
+        defaultConfig.insert_or_assign("useIsoMounting", false);
 
         // Save the default config to the file
         if (!PConfigMgr::saveConfig(configPath, defaultConfig)) {
