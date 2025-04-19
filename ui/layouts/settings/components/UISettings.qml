@@ -24,7 +24,7 @@ SettingsPane {
         text: zoo.getString("UI", "defaultEditCharLimit")
 
         onTextChange: (data) => {
-            uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+            uiSettingsPane.dataChanged("UI", modelData.key, data)
         }
 
     }
@@ -45,7 +45,7 @@ SettingsPane {
             text: zoo.getString("UI", "tooltipDuration")
 
             onTextChange: (data) => {
-                uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                uiSettingsPane.dataChanged("UI", modelData.key, data)
             }
 
         }
@@ -60,8 +60,8 @@ SettingsPane {
         contents: Repeater {
             id: tooltipWidthControlsRepeater
             model: [
-                {key: "maxShortTooltipWidth", label: "Max Short Tooltip Width"},
-                {key: "maxLongTooltipWidth", label: "Max Long Tooltip Width"}
+                {section: "UI", key: "maxShortTooltipWidth", label: "Max Short Tooltip Width"},
+                {section: "UI", key: "maxLongTooltipWidth", label: "Max Long Tooltip Width"}
             ]
             delegate: PTextField {
                 required property var modelData
@@ -85,7 +85,7 @@ SettingsPane {
         text: zoo.getString("UI", "helpType")
 
         onTextChange: (data) => {
-            uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+            uiSettingsPane.dataChanged("UI", modelData.key, data)
         }
 
     }
@@ -108,7 +108,7 @@ SettingsPane {
             text: zoo.getString("UI", "minimumMessageInterval")
 
             onTextChange: (data) => {
-                uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
+                uiSettingsPane.dataChanged("UI", modelData.key, data)
             }
 
         }

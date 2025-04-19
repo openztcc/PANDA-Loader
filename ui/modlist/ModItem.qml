@@ -241,6 +241,7 @@ Item {
                     Layout.fillWidth: true
                     // name of mod
                     Text {
+                        Layout.alignment: Qt.AlignTop
                         id: modName
                         leftPadding: 10
                         text: modItem.title
@@ -249,7 +250,7 @@ Item {
                     }
 
                     DropShadow {
-                        anchors.fill: modName
+                        Layout.alignment: Qt.AlignTop
                         source: modName
                         horizontalOffset: 2
                         verticalOffset: 2

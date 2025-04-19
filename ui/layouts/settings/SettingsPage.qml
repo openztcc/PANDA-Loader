@@ -16,7 +16,6 @@ LayoutFrame {
     Layout.fillHeight: true
 
     property var dirtyLaundry: []
-    property bool cancelledNavigation: false
     property var currentPage: null
     property var modelData: null
     property var currentPane: null
@@ -33,28 +32,28 @@ LayoutFrame {
     SimpleModal {
         id: confirmChangesModal
         title: "Unsaved Changes"
-        showCancel: true
+        // showCancel: true
         message: "You have unsaved changes. Do you want to discard them?"
-        onSaved: {
-            console.log("zoo.ini changes saved")
-            zoo.saveConfig()
-            mainContent.cancelledNavigation = false
-            replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
-            close()
-        }
-        onDiscarded: {
-            zoo.revertChanges()
-            console.log("zoo.ini changes reverted")
-            mainContent.cancelledNavigation = false
-            replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
-            close()
-        }
+        // onSaved: {
+        //     console.log("zoo.ini changes saved")
+        //     zoo.saveConfig()
+        //     mainContent.cancelledNavigation = false
+        //     replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
+        //     close()
+        // }
+        // onDiscarded: {
+        //     zoo.revertChanges()
+        //     console.log("zoo.ini changes reverted")
+        //     mainContent.cancelledNavigation = false
+        //     replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
+        //     close()
+        // }
 
-        onCancelled: {
-            console.log("Cancelled navigation from current settings pane")
-            mainContent.cancelledNavigation = true
-            close()
-        }
+        // onCancelled: {
+        //     console.log("Cancelled navigation from current settings pane")
+        //     mainContent.cancelledNavigation = true
+        //     close()
+        // }
     }
 
     RowLayout {
@@ -116,19 +115,41 @@ LayoutFrame {
                         }
 
                         onClicked: {
+                            let currentPageBackup = mainContent.currentPage
+                            let currentPaneBackup = modelData.pane
                             mainContent.currentPage = settingsButtonsRepeater.itemAt(index)
                             mainContent.currentPane = modelData.pane
-                            if (zoo.dirty) {
-                                confirmChangesModal.open()
-                            } else {
-                                mainContent.cancelledNavigation = false
-                            }
 
-                            if (!mainContent.cancelledNavigation) {
+                            // if (zoo.dirty) {
+                            //     confirmChangesModal.open()
+                            // } else {
+                            //     mainContent.cancelledNavigation = false
+                            // }
+
+                            // if (!mainContent.cancelledNavigation) {
+                            //     replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
+                            // }
+                            
+                            // mainContent.cancelledNavigation = true
+                            if (zoo.dirty) {
+                                confirmChangesModal.ask().then(function(result) {
+                                    if (result === "save") {
+                                        console.log("User chose Save")
+                                        zoo.saveConfig()
+                                        replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
+                                    } else if (result === "discard") {
+                                        console.log("User chose Discard")
+                                        zoo.revertChanges()
+                                        replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
+                                    } else {
+                                        console.log("User cancelled")
+                                        mainContent.currentPage = currentPageBackup
+                                        mainContent.currentPane = currentPaneBackup
+                                    }
+                                })
+                            } else {
                                 replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
                             }
-                            
-                            mainContent.cancelledNavigation = true
                         }                         
                     }
                 }

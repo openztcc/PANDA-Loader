@@ -76,8 +76,8 @@ SettingsPane {
         contents: Repeater {
             id: keyControlsSettingsRepeater
             model: [
-                {key: "keyScrollX", label: "Key Scroll X"},
-                {key: "keyScrollY", label: "Key Scroll Y"},
+                {section: "UI", key: "keyScrollX", label: "Key Scroll X"},
+                {section: "UI", key: "keyScrollY", label: "Key Scroll Y"},
             ]
             delegate: PTextField {
                 required property var modelData
@@ -104,8 +104,8 @@ SettingsPane {
         contents: Repeater {
             id: mapSizeControlsRepeater
             model: [
-                {key: "mapX", label: "Map X"},
-                {key: "mapY", label: "Map Y"}
+                {section: "Map", key: "mapX", label: "Map X"},
+                {section: "Map", key: "mapY", label: "Map Y"}
             ]
             delegate: PTextField {
                 required property var modelData

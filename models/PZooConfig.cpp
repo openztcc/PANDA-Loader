@@ -11,6 +11,7 @@ PZooConfig::PZooConfig(QObject *parent, QString zooConfigPath) : QObject(parent)
     loadConfig();
 
     m_dirty = 0;
+    dirtyList.clear();
     emit dirtyChanged(m_dirty);
 }
 
@@ -230,6 +231,10 @@ void PZooConfig::updateStrTable(const QString &section, const QString &key, cons
     // QString input = getString(section, key);
     QString original = getString(section, key, m_zooBackup);
 
+    qDebug() << "Original value is: " << original;
+    qDebug() << "Current input to compare: " << value;
+    qDebug() << "Current value of m_dirty: " << m_dirty;
+
     if (value == original) {
         if (m_dirty > 0) {
             if (dirtyList.contains(original)) {
@@ -254,6 +259,9 @@ void PZooConfig::updateBoolTable(const QString &path, const QString &key, bool v
     bool input = value;
     bool original = getBool(path, key, m_zooBackup);
 
+    qDebug() << "Original value is: " << original;
+    qDebug() << "Current input to compare: " << value;
+    qDebug() << "Current value of m_dirty: " << m_dirty;
     if (input == original) {
         if (m_dirty > 0) {
             m_dirty--;
@@ -374,6 +382,7 @@ void PZooConfig::revertChanges() {
     copyIni(m_zooBackup, m_zooini);
 
     m_dirty = 0;
+    dirtyList.clear();
     emit configReverted();
     emit dirtyChanged(m_dirty);
 }

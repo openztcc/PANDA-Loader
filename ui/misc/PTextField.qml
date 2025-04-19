@@ -178,7 +178,7 @@ Item {
                 height: textField.height - 7
                 textField: textField
                 visible: pTextField.focused ? true : false
-                fg: pTextField.placeholderColor 
+                fg: pTextField.placeholderColor
                 bg: pTextField.bg
                 z: 1
 
@@ -186,7 +186,7 @@ Item {
                     pTextField.cleared()
                 }
             }
-            
+
             SvgIcon {
                 z: 5
                 id: textFieldIcon
@@ -209,7 +209,7 @@ Item {
                 anchors.rightMargin: 0
                 height: textField.height - 7
                 textField: textField
-                fg: pTextField.placeholderColor 
+                fg: pTextField.placeholderColor
                 bg: pTextField.bg
                 fileDialog: fileDialogComponent
                 component: pTextField
@@ -256,7 +256,7 @@ Item {
             MouseArea {
                 id: textFieldMouseArea
                 anchors.fill: parent
-                hoverEnabled: true 
+                hoverEnabled: true
                 acceptedButtons: Qt.NoButton
                 onEntered: {
                     textField.textFieldHovered = true
