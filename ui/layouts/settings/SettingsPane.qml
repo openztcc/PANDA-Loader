@@ -22,15 +22,6 @@ import QtQuick.Controls
             width: flick.width
             spacing: flick.spacing
 
-            Label {
-                text: flick.title
-                visible: flick.title !== ""
-                color: flick.textColor
-                font.bold: true
-                font.pixelSize: 14
-                
-                Layout.topMargin: 6
-            }
         }
     }
 
