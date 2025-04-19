@@ -25,7 +25,7 @@ SettingsPane {
         text: zoo.getString("user", "lastfile")
 
         onTextChange: (data) => {
-            resourcePathsSettingsPane.dataChanged(modelData.section, modelData.key, data)
+            resourcePathsSettingsPane.dataChanged("user", "lastfile", data)
         }
     }
     // resource paths

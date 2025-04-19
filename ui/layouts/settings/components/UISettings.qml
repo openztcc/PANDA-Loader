@@ -24,7 +24,7 @@ SettingsPane {
         text: zoo.getString("UI", "defaultEditCharLimit")
 
         onTextChange: (data) => {
-            uiSettingsPane.dataChanged("UI", modelData.key, data)
+            uiSettingsPane.dataChanged("UI", "defaultEditCharLimit", data)
         }
 
     }
@@ -45,7 +45,7 @@ SettingsPane {
             text: zoo.getString("UI", "tooltipDuration")
 
             onTextChange: (data) => {
-                uiSettingsPane.dataChanged("UI", modelData.key, data)
+                uiSettingsPane.dataChanged("UI", "tooltipDuration", data)
             }
 
         }
@@ -85,7 +85,7 @@ SettingsPane {
         text: zoo.getString("UI", "helpType")
 
         onTextChange: (data) => {
-            uiSettingsPane.dataChanged("UI", modelData.key, data)
+            uiSettingsPane.dataChanged("UI", "helpType", data)
         }
 
     }
@@ -108,7 +108,7 @@ SettingsPane {
             text: zoo.getString("UI", "minimumMessageInterval")
 
             onTextChange: (data) => {
-                uiSettingsPane.dataChanged("UI", modelData.key, data)
+                uiSettingsPane.dataChanged("UI", "minimumMessageInterval", data)
             }
 
         }
@@ -122,17 +122,17 @@ SettingsPane {
         contents: Repeater {
             id: progressBarControlsRepeater
             model: [
-                {key: "progressLeft", label: "Left"},
-                {key: "progressTop", label: "Top"},
-                {key: "progressBottom", label: "Bottom"},
-                {key: "progressRight", label: "Right"}
+                {section: "UI", key: "progressLeft", label: "Left"},
+                {section: "UI", key: "progressTop", label: "Top"},
+                {section: "UI", key: "progressBottom", label: "Bottom"},
+                {section: "UI", key: "progressRight", label: "Right"}
             ]
             delegate: PTextField {
                 required property var modelData
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: "Position of the progress bar"
-                text: zoo.getString("UI", modelData.key)
+                text: zoo.getString(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
@@ -151,16 +151,16 @@ SettingsPane {
         contents: Repeater {
             id: progressBarColorControlsRepeater
             model: [
-                {key: "progressRed", label: "Red"},
-                {key: "progressGreen", label: "Green"},
-                {key: "progressBlue", label: "Blue"}
+                {section: "UI", key: "progressRed", label: "Red"},
+                {section: "UI", key: "progressGreen", label: "Green"},
+                {section: "UI", key: "progressBlue", label: "Blue"}
             ]
             delegate: PTextField {
                 required property var modelData
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: "Color value of the progress bar"
-                text: zoo.getString("UI", modelData.key)
+                text: zoo.getString(modelData.section, modelData.key)
                 onTextChange: (data) => {
                     uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
                 }
