@@ -61,10 +61,18 @@ void IToml::setValue(const QString &key, const QVariant &value, const QString &s
     std::string s = section.toStdString();
 
     if (section == "") {
-        m_toml.insert_or_assign(k, value);
+        IToml::interpretVariant(m_toml, k, value);
         // key = value
     } else {
-        m_toml.insert_or_assign(s, toml::table{{k, value}});
+        // check to make sure section exists
+        if (!m_toml.contains(s) || !m_toml[s].is_table()) {
+            m_toml.insert_or_assign(s, toml::table{});
+        }
+
+        // get ref
+        auto& fresh_section = *m_toml[s].as_table();
+
+        IToml::interpretVariant(fresh_section, k, value);
         // [section]
         // key = value
     }
@@ -95,5 +103,72 @@ bool IToml::removeSection(const QString &section) {
         return true;
     } else {
         return false;
+    }
+}
+
+// ------------------- HELPERS (to deal with unpredictable types in toml files)
+
+// Interpret a QVariant to std::any so input in UI can be used directly
+void IToml::interpretVariant(toml::table& config, const std::string& key, const QVariant& value) {
+    switch (value.typeId()) {
+    case QMetaType::Bool:
+        config.insert_or_assign(key, value.toBool());
+        break;
+    case QMetaType::Int:
+    case QMetaType::Long:
+    case QMetaType::LongLong:
+    case QMetaType::UInt:
+    case QMetaType::ULong:
+    case QMetaType::ULongLong:
+        config.insert_or_assign(key, static_cast<int64_t>(value.toLongLong()));
+        break;
+    case QMetaType::Double:
+        config.insert_or_assign(key, value.toDouble());
+        break;
+    case QMetaType::QString:
+        config.insert_or_assign(key, value.toString().toStdString());
+        break;
+    case QMetaType::QVariantList: {
+        toml::array arr;
+        for (const auto& v : value.toList()) {
+            appendVariantToArray(arr, v);
+        }
+        config.insert_or_assign(key, arr);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void IToml::appendVariantToArray(toml::array& arr, const QVariant& value) {
+    switch (value.typeId()) {
+    case QMetaType::Bool:
+        arr.push_back(value.toBool());
+        break;
+    case QMetaType::Int:
+    case QMetaType::Long:
+    case QMetaType::LongLong:
+    case QMetaType::UInt:
+    case QMetaType::ULong:
+    case QMetaType::ULongLong:
+        arr.push_back(static_cast<int64_t>(value.toLongLong()));
+        break;
+    case QMetaType::Double:
+        arr.push_back(value.toDouble());
+        break;
+    case QMetaType::QString:
+        arr.push_back(value.toString().toStdString());
+        break;
+    case QMetaType::QVariantList: {
+        toml::array nestedArr;
+        for (const auto& v : value.toList()) {
+            appendVariantToArray(nestedArr, v);
+        }
+        arr.push_back(nestedArr);
+        break;
+    }
+    default:
+        break;
     }
 }

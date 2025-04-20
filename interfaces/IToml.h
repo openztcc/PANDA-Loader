@@ -13,4 +13,8 @@ public:
 
 private: 
     toml::table m_toml;
+
+protected:
+    void interpretVariant(toml::table& config, const std::string& key, const QVariant& value);
+    void appendVariantToArray(toml::array& arr, const QVariant& value);
 };
