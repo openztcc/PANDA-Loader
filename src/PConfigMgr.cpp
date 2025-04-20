@@ -9,46 +9,25 @@ PConfigMgr::PConfigMgr() {}
 
 PConfigMgr::~PConfigMgr() {}
 
-// Get the meta configuration from a ztd file
-toml::table PConfigMgr::getMetaConfig(const QString &ztdFilePath)
-{
-    // Get toml file from ztd
-    toml::table config;
-    QByteArray fileData;
-
-    // does file exist
-    if (PZtdMgr::openFileInZtd(ztdFilePath, m_metaConfigName, fileData)) {
-        config = toml::parse(fileData.constData());
-    }
-
-    if (config.empty()) {
-        return toml::table();
-    }
-
-    return config;
-}
-
 // Generic config parser for toml files in filesystem
-toml::table PConfigMgr::getConfig(const QString &filePath)
+bool PConfigMgr::loadConfig(const QString &filePath)
 {
-    // Check if the config file exists
-    if (!QFile::exists(filePath)) {
-        return toml::table();
+    // Get extension of the file
+    QString ext = QFileInfo(filePath).suffix().toLower();
+    m_config = createParser(ext);
+
+    if (!m_config) {
+        qDebug() << "Unsupported file extension: " << ext;
+        return false;
     }
 
-    // Read config file
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        return toml::table();
+    // Load the config file
+    if (!m_config->loadConfig(filePath)) {
+        qDebug() << "Failed to load config file: " << filePath;
+        return false;
     }
 
-    QByteArray fileData = file.readAll();
-    file.close();
-
-    // Parse the toml data
-    toml::table config = toml::parse(fileData.constData());
-
-    return config;
+    return true;
 }
 
 // Save the config to a toml file in filesystem

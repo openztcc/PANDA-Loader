@@ -9,9 +9,14 @@
 #include <QIODevice>
 #include "../models/PEntityType.h"
 #include <QtCore>
+#include <SimpleIni.h>
+#include "../interfaces/IConfigLoader.h"
+#include "../interfaces/IToml.h"
+#include "../interfaces/IIni.h"
 
-class PConfigMgr
-{
+class PConfigMgr : QObject {
+    Q_OBJECT 
+    Q_PROPERTY (bool dirty READ isDirty WRITE setDirty NOTIFY dirtyChanged)
 public:
     // ----------- Local Models ------------------
     // ini config data
@@ -35,8 +40,7 @@ public:
     ~PConfigMgr();
 
     // meta configuration operations
-    static toml::table getMetaConfig(const QString &ztdFilePath);
-    static toml::table getConfig(const QString &filePath);
+    static bool loadConfig(const QString &filePath);
     static bool saveConfig(const QString &filePath, const toml::table &config);
     static QString getKeyValue(const QString &key, const toml::table &config);
     static bool getBoolValue(const QString &key, const toml::table &config);
@@ -62,7 +66,8 @@ public:
     static QStringList getIconPaths(const QString &ztdFilePath);
 private:
     QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
-
+    std::unique_ptr<IConfigLoader> m_config;
+    std::unique_ptr<IConfigLoader> createParser(const QString &ext) const;
     // helper functions
     static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);
     static QStringList extractDuplicateKeys(const QByteArray& rawData, const QString& group, const QString& key);
