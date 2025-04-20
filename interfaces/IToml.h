@@ -1,3 +1,6 @@
+#ifndef ITOML_H
+#define ITOML_H
+
 #include "IConfigLoader.h"
 #include "toml.hpp"
 
@@ -18,3 +21,5 @@ protected:
     void interpretVariant(toml::table& config, const std::string& key, const QVariant& value);
     void appendVariantToArray(toml::array& arr, const QVariant& value);
 };
+
+#endif // IToml.h

@@ -1,3 +1,6 @@
+#ifndef IINI_H
+#define IINI_H
+
 #include "IConfigLoader.h"
 #include "SimpleIni.h"
 
@@ -13,3 +16,5 @@ public:
 private:
     CSimpleIniA m_ini;
 };
+
+#endif // IIni.h

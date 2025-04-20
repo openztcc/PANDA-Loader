@@ -1,5 +1,7 @@
+#ifndef ICONFIGLOADER_H
+#define ICONFIGLOADER_H
+
 #include <QtCore>
-#include <any>
 
 class IConfigLoader {
     public:
@@ -13,3 +15,5 @@ class IConfigLoader {
         virtual bool removeSection(const QString &section) = 0;
         virtual bool getAllSections() = 0;
 };
+
+#endif // IConfigLoader.h
