@@ -12,6 +12,8 @@ public:
     QVariant getValue(const QString &section, const QString &key) const override;
     void setValue(const QString &key, const QVariant &value, const QString &section) override;
     bool removeKey(const QString &section, const QString &key) override;
+    bool removeSection(const QString &section) override;
+    void removeKeysByValue(const QString &section, const QString &value)
 
 private:
     CSimpleIniA m_ini;

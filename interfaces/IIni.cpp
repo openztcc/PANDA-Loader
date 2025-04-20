@@ -31,6 +31,27 @@ void IIni::setValue(const QString &key, const QVariant &value, const QString &se
 }
 
 bool IIni::removeKey(const QString &section, const QString &key) {
-    m_ini.DeleteValue(section.toStdString().c_str(), key.toStdString().c_str());
+    bool deleteSectionIfEmpty = true;
+    m_ini->Delete(section.toStdString().c_str(), key.pItem, deleteSectionIfEmpty);
     return true;
+}
+
+bool IIni::removeSection(const QString &section) {
+    return false;
+}
+
+// Removes all keys given a section and a value
+void IIni::removeKeysByValue(const QString &section, const QString &value) {
+    // get all the keys in the section
+    CSimpleIniA::TNamesDepend keys;
+    m_zooini->GetAllKeys(section.toStdString().c_str(), keys);
+
+    for (const auto &key : keys) {
+        // check if the key is empty
+        if (key.pItem == value.toStdString().c_str()) {
+            // remove the key from the settings
+            bool deleteSectionIfEmpty = true;
+            m_zooini->Delete(section.toStdString().c_str(), key.pItem, deleteSectionIfEmpty);
+        }
+    }
 }
