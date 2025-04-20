@@ -9,6 +9,18 @@ PConfigMgr::PConfigMgr() {}
 
 PConfigMgr::~PConfigMgr() {}
 
+// Create a parser based on the file extension
+std::unique_ptr<IConfigLoader> PConfigMgr::createParser(const QString &ext) const
+{
+    if (ext == "ini") {
+        return std::make_unique<IIni>();
+    } else if (ext == "toml") {
+        return std::make_unique<IToml>();
+    } else {
+        return nullptr; // Unsupported file extension
+    }
+}
+
 // Generic config parser for toml files in filesystem
 bool PConfigMgr::loadConfig(const QString &filePath)
 {
@@ -30,54 +42,40 @@ bool PConfigMgr::loadConfig(const QString &filePath)
     return true;
 }
 
-// Save the config to a toml file in filesystem
-bool PConfigMgr::saveConfig(const QString &filePath, const toml::table &config)
+// Save the config to disk
+bool PConfigMgr::saveConfig(const QString &filePath)
 {
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return false;
+    }
+
     // Create the directory if it does not exist
-    QDir dir(QFileInfo(filePath).absolutePath());
-    if (!dir.exists()) {
-        dir.mkpath(dir.absolutePath());
-    }
 
-    // Write the new configuration to the toml file
-    QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        return false; 
-    }
-
-    std::stringstream ss;
-    ss << config;
-    QString tomlStr = QString::fromStdString(ss.str());
-    file.write(tomlStr.toUtf8());
-    file.close();
 
     return true;
 }
 
-// Get a key value from a toml table
-QString PConfigMgr::getKeyValue(const QString &key, const toml::table &config)
+// Get a key value from config file
+QVariant PConfigMgr::getValue(const QString &section, const QString &key)
 {
-    // Find value in table
-    if (auto it = config.find(key.toStdString()); it != config.end()) {
-        if (auto strVal = it->second.as_string()) {
-            return QString::fromStdString(strVal->get());
-        }
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return QVariant();
     }
 
-    return QString("");
+    return m_config->getValue(section, key);
 }
 
-// Get a key value from a toml table as a boolean
-bool PConfigMgr::getBoolValue(const QString &key, const toml::table &config)
+// Set a key value in config file
+void PConfigMgr::setValue(const QString &section, const QString &key, const QVariant &value)
 {
-    // Find value in table
-    if (auto it = config.find(key.toStdString()); it != config.end()) {
-        if (auto boolVal = it->second.as_boolean()) {
-            return boolVal->get();
-        }
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return;
     }
 
-    return false;
+    m_config->setValue(section, key, value);
 }
 
 // Get a key value from a toml table as a list (ie tags and authors)
@@ -204,82 +202,6 @@ bool PConfigMgr::removeMetaConfig(const QString &ztdFilePath)
     //     QFile::remove(tempZtdPath); // Clean up temporary file
     //     return false; // Failed to replace the original ztd
     // }
-
-    return true;
-}
-
-// Get the zoo.ini configuration from Zoo Tycoon installation
-toml::table PConfigMgr::getZooIniConfig(const QString &iniPath)
-{
-    // Check if the ini file exists
-    if (!QFile::exists(iniPath)) {
-        return toml::table(); // Return empty table if the ini file does not exist
-    }
-
-    // Read the ini file
-    QSettings settings(iniPath, QSettings::IniFormat);
-    toml::table config;
-
-    // Iterate through all keys in the ini file and add them to the toml table
-    for (const QString &key : settings.allKeys()) {
-        config.insert_or_assign(key.toStdString(), toml::value(settings.value(key).toString().toStdString()));
-    }
-
-    return config;
-}
-
-// Updates the zoo.ini configuration
-bool PConfigMgr::updateZooIniConfig(const QString &iniPath, const toml::table &config)
-{
-    // Check if the ini file exists
-    if (!QFile::exists(iniPath)) {
-        return false;
-    }
-
-    // Write the new configuration to the ini file
-    QSettings settings(iniPath, QSettings::IniFormat);
-
-    for (const auto &[key, value] : config) {
-        const auto* str_value = value.as_string();
-        std::string str = str_value ? str_value->get() : "";
-
-        settings.setValue(QString::fromStdString(std::string(key)), QString::fromStdString(str));
-    }
-
-    return true;
-}
-
-// Removes the zoo.ini configuration
-bool PConfigMgr::removeZooIniConfig(const QString &iniPath)
-{
-    // Check if the ini file exists
-    if (!QFile::exists(iniPath)) {
-        return false; // Return false if the ini file does not exist
-    }
-
-    // Remove the ini file
-    return QFile::remove(iniPath);
-}
-
-// Reads a Panda config file and returns a toml table
-bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
-{
-    // Check if config file exists
-    if (!QFile::exists(filePath)) {
-        return false;
-    }
-
-    // Read config file
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        return false;
-    }
-
-    QByteArray fileData = file.readAll();
-    file.close();
-
-    // Parse the toml data
-    config = toml::parse(fileData.constData());
 
     return true;
 }
