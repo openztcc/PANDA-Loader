@@ -27,6 +27,11 @@ QVariant IIni::getValue(const QString &section, const QString &key) const {
 }
 
 void IIni::setValue(const QString &key, const QVariant &value, const QString &section) {
+    if (section == "") {
+        qDebug() << "Error: No section provided for ini file with key = " << key << " and value " << value;
+        return;
+    }
+
     m_ini.SetValue(section.toStdString().c_str(), key.toStdString().c_str(), value.toString().toStdString().c_str());
 }
 
