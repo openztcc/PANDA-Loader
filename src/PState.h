@@ -28,19 +28,22 @@ public:
     Q_INVOKABLE int launchZT();
     QString getGamePath();
     void setGamePath(QString);
-    void loadConfig();
+    bool loadPandaCfg();
+    bool loadZooIni();
     QStringList getZtdList();
-    Q_INVOKABLE PSettings* settings() const { return m_settings; }
-    Q_INVOKABLE PZooConfig* zooConfig() const { return m_zooConfig; }
+    Q_INVOKABLE PConfigMgr* settings() const { return m_pandacfg; }
+    Q_INVOKABLE PConfigMgr* zooConfig() const { return m_zooini; }
 
 signals:
     void pathChanged();
 private:
-    PSettings *m_settings;
-    PZooConfig *m_zooConfig;
+    PConfigMgr *m_pandacfg;
+    PConfigMgr *m_zooini;
     QString m_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
     QString m_resource_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     QVector<PModItem> m_mods;
+    QString m_configPath = QDir::homePath() + "/.panda";
+
 };
 
 #endif // PSTATE_H

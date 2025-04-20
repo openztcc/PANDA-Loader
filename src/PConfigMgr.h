@@ -77,7 +77,7 @@ private:
     QString m_configPath;
     std::unique_ptr<IConfigLoader> m_config;
     int m_dirty = 0;
-    std::unique_ptr<IConfigLoader> createParser(const QString &ext) const;
+    std::unique_ptr<IConfigLoader> createParser(const QString &path) const;
     // helper functions
     static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);
     static QStringList extractDuplicateKeys(const QByteArray& rawData, const QString& group, const QString& key);

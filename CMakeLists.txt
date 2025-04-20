@@ -32,7 +32,6 @@ qt_add_executable(appPandaLdr
     src/PDatabaseMgr.cpp src/PDatabaseMgr.h
     src/PSystemMgr.h src/PSystemMgr.cpp
     models/PModItem.cpp models/PModItem.h
-    models/PSettings.cpp models/PSettings.h
     models/PEntityType.cpp models/PEntityType.h
     models/PIconData.h
     models/PModModel.cpp models/PModModel.h
@@ -123,7 +122,6 @@ qt_add_qml_module(appPandaLdr
         src/PSystemMgr.cpp
         # models
         models/PModItem.h
-        models/PSettings.h
         models/PEntityType.h
         models/PSettings.h
         models/PModModel.h

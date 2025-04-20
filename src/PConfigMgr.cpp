@@ -8,8 +8,10 @@ const QString m_metaConfigDirPath = m_configDirPath + "meta_configs/"; // tempor
 PConfigMgr::~PConfigMgr() {}
 
 // Create a parser based on the file extension
-std::unique_ptr<IConfigLoader> PConfigMgr::createParser(const QString &ext) const
+std::unique_ptr<IConfigLoader> PConfigMgr::createParser(const QString &path) const
 {
+    // Get the file extension
+    QString ext = QFileInfo(path).suffix().toLower();
     if (ext == "ini") {
         return std::make_unique<IniConfig>();
     } else if (ext == "toml") {
