@@ -7,16 +7,19 @@
 #include <QDir>
 #include <QBuffer>
 #include <QIODevice>
-#include "../models/PEntityType.h"
 #include <QtCore>
 #include <SimpleIni.h>
 #include "../interfaces/IConfigLoader.h"
-#include "../interfaces/IToml.h"
 #include "../interfaces/IIni.h"
+#include "../interfaces/IToml.h"
+
+// Concrete class declarations for abstract interfaces
+class IniConfig : public IIni {};
+class TomlConfig : public IToml {};
 
 class PConfigMgr : QObject {
     Q_OBJECT 
-    Q_PROPERTY (bool dirty READ isDirty WRITE setDirty NOTIFY dirtyChanged)
+    Q_PROPERTY (int dirty READ isDirty WRITE setDirty NOTIFY dirtyChanged)
 public:
     // ----------- Local Models ------------------
     // ini config data
@@ -36,9 +39,11 @@ public:
         IniData& operator=(IniData&&) = default;
     };
 
-    PConfigMgr(QObject *parent = nullptr) : QObject(parent), m_configPath(m_configDirPath) {
-        m_config = std::make_unique<IConfigLoader>();
+    PConfigMgr(QObject *parent = nullptr, const QString &filepath = "") : QObject(parent) {
+        m_configPath = filepath;
+        m_config = createParser(m_configPath);
     }
+
     ~PConfigMgr();
 
     // meta configuration operations
@@ -60,9 +65,18 @@ public:
     static QStringList getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
     static QStringList getIconPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &aniFiles);
     static QStringList getIconPaths(const QString &ztdFilePath);
+
+    // setters and getters for QProperties
+    int isDirty() const { return m_dirty; }
+    void setDirty(bool dirty) { m_dirty = dirty; }
+
+signals:
+    void dirtyChanged(int dirty);
+
 private:
     QString m_configPath;
     std::unique_ptr<IConfigLoader> m_config;
+    int m_dirty = 0;
     std::unique_ptr<IConfigLoader> createParser(const QString &ext) const;
     // helper functions
     static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);

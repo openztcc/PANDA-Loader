@@ -40,6 +40,10 @@ bool IIni::removeSection(const QString &section) {
     return false;
 }
 
+bool IIni::getAllSections() {
+    return false;
+}
+
 // Removes all keys given a section and a value
 void IIni::removeKeysByValue(const QString &section, const QString &value) {
     // get all the keys in the section

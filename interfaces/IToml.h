@@ -13,6 +13,7 @@ public:
     void setValue(const QString &key, const QVariant &value, const QString &section = "") override;
     bool removeKey(const QString &key, const QString &section = "") override;
     bool removeSection(const QString &section) override;
+    bool getAllSections() override;
 
 private: 
     toml::table m_toml;

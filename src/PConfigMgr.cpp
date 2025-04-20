@@ -11,9 +11,9 @@ PConfigMgr::~PConfigMgr() {}
 std::unique_ptr<IConfigLoader> PConfigMgr::createParser(const QString &ext) const
 {
     if (ext == "ini") {
-        return std::make_unique<IIni>();
+        return std::make_unique<IniConfig>();
     } else if (ext == "toml") {
-        return std::make_unique<IToml>();
+        return std::make_unique<TomlConfig>();
     } else {
         return nullptr; // Unsupported file extension
     }

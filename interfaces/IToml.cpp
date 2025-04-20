@@ -106,6 +106,11 @@ bool IToml::removeSection(const QString &section) {
     }
 }
 
+bool IToml::getAllSections() {
+    return false;
+}
+
+
 // ------------------- HELPERS (to deal with unpredictable types in toml files)
 
 // Interpret a QVariant to std::any so input in UI can be used directly
