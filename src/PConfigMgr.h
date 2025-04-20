@@ -36,7 +36,9 @@ public:
         IniData& operator=(IniData&&) = default;
     };
 
-    PConfigMgr();
+    PConfigMgr(QObject *parent = nullptr) : QObject(parent), m_configPath(m_configDirPath) {
+        m_config = std::make_unique<IConfigLoader>();
+    }
     ~PConfigMgr();
 
     // meta configuration operations

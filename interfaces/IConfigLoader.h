@@ -1,5 +1,5 @@
 #include "toml.hpp"
-#include "PZtdMgr.h"
+#include "../src/PZtdMgr.h"
 #include <QSettings>
 #include <QDir>
 #include <QBuffer>
@@ -17,4 +17,4 @@ class IConfigLoader {
         virtual QVariant getValue(const QString &section, const QString &key) const = 0;
         virtual void setValue(const QString &section, const QString &key, const QVariant &value) = 0;
         virtual bool removeValue(const QString &section, const QString &key) = 0;
-}
+};

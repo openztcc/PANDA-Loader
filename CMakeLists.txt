@@ -37,7 +37,10 @@ qt_add_executable(appPandaLdr
     models/PIconData.h
     models/PModModel.cpp models/PModModel.h
     models/PZooConfig.h models/PZooConfig.cpp
-)
+    interfaces/IConfigLoader.h interfaces/IConfigLoader.cpp
+    interfaces/IIni.h interfaces/IIni.cpp
+    interfaces/IToml.h interfaces/IToml.cpp
+    )
 
 add_subdirectory(libs/apecore)
 
@@ -125,6 +128,10 @@ qt_add_qml_module(appPandaLdr
         models/PSettings.h
         models/PModModel.h
         models/PZooConfig.h
+        # interfaces
+        interfaces/IConfigLoader.h
+        interfaces/IIni.h
+        interfaces/IToml.h
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -232,29 +239,34 @@ install(TARGETS appPandaLdr
 #     ${CMAKE_BINARY_DIR}/test_data
 # )
 
-# # ------------- PTestConfigMgr -------------
-# qt_add_executable(testConfigMgr
-#     tests/PTestConfigMgr.cpp
-#     src/PConfigMgr.h src/PConfigMgr.cpp
-#     src/PZtdMgr.h src/PZtdMgr.cpp
-# )
+# ------------- PTestConfigMgr -------------
+qt_add_executable(testConfigMgr
+    tests/PTestConfigMgr.cpp
+    src/PConfigMgr.h src/PConfigMgr.cpp
+    src/PZtdMgr.h src/PZtdMgr.cpp
+    interfaces/IConfigLoader.h interfaces/IConfigLoader.cpp
+    interfaces/IIni.h interfaces/IIni.cpp
+    interfaces/IToml.h interfaces/IToml.cpp
 
-# # link the required libraries
-# target_link_libraries(testConfigMgr
-#     PRIVATE
-#         Qt6::Test
-#         Qt6::Core
-#         Qt6::Sql
-#         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
-#         tomlplusplus
-# )
+)
 
-# # add test data as resource
-# add_custom_command(TARGET testConfigMgr POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy_directory
-#     ${CMAKE_SOURCE_DIR}/tests/test_data
-#     ${CMAKE_BINARY_DIR}/test_data
-# )
+# link the required libraries
+target_link_libraries(testConfigMgr
+    PRIVATE
+        Qt6::Test
+        Qt6::Core
+        Qt6::Sql
+        ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+        tomlplusplus
+        simpleini
+)
+
+# add test data as resource
+add_custom_command(TARGET testConfigMgr POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/test_data
+    ${CMAKE_BINARY_DIR}/test_data
+)
 
 # # ------------- PTestDatabaseMgr -------------
 # qt_add_executable(testDatabaseMgr
@@ -308,6 +320,6 @@ install(TARGETS appPandaLdr
 # )
 
 # add_test(NAME testZtdMgr COMMAND testZtdMgr)
-# add_test(NAME testConfigMgr COMMAND testConfigMgr)
+add_test(NAME testConfigMgr COMMAND testConfigMgr)
 # # add_test(NAME testDatabaseMgr COMMAND testDatabaseMgr)
 # add_test(NAME testGraphicsMgr COMMAND testGraphicsMgr)
