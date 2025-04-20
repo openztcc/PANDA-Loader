@@ -1,10 +1,6 @@
 #include  "IIni.h"
 
-IIni::IIni(QObject *parent) : IConfigLoader(parent) {
-    m_ini.SetUnicode(true);
-}
-
-IIni::loadConfig(const QString &filePath) {
+bool IIni::loadConfig(const QString &filePath) {
     SI_Error rc = m_ini.LoadFile(filePath.toStdString().c_str());
     if (rc < 0) {
         qDebug() << "Failed to load INI file: " << filePath;

@@ -1,9 +1,5 @@
 #include "IToml.h"
 
-IToml::IToml(QObject *parent) : IConfigLoader(parent) {
-    m_toml = toml::table();
-}
-
 bool IToml::loadConfig(const QString &filePath) {
     // make sure it exists
     if (!QFile::exists(filePath)) {
