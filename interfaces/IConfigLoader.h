@@ -11,4 +11,7 @@ class IConfigLoader {
         virtual bool removeKey(const QString &section, const QString &key) = 0;
         virtual bool removeSection(const QString &section) = 0;
         virtual bool getAllSections() = 0;
+
+    protected:
+        static std::optional<std::any> interpretVariant(const QVariant &value);
 };

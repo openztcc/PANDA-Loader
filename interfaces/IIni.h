@@ -1,4 +1,5 @@
 #include "IConfigLoader.h"
+#include "SimpleIni.h"
 
 class IIni : public IConfigLoader {
 public:
