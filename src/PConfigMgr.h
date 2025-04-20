@@ -50,7 +50,7 @@ public:
     bool loadConfig(const QString &filePath);
     bool saveConfig(const QString &filePath);
     QVariant getValue(const QString &section, const QString &key);
-    void setValue(const QString &section, const QString &key, const QVariant &value);
+    void setValue(const QString &key, const QVariant &value, const QString &section);
     static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);

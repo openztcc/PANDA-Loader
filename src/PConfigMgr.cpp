@@ -66,14 +66,14 @@ QVariant PConfigMgr::getValue(const QString &section, const QString &key)
 }
 
 // Set a key value in config file
-void PConfigMgr::setValue(const QString &section, const QString &key, const QVariant &value)
+void PConfigMgr::setValue(const QString &key, const QVariant &value, const QString &section)
 {
     if (!m_config) {
         qDebug() << "Config parser not initialized";
         return;
     }
 
-    m_config->setValue(section, key, value);
+    m_config->setValue(key, value, section);
 }
 
 // Get a key value from a toml table as a list (ie tags and authors)
