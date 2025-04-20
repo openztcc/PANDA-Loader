@@ -26,7 +26,7 @@ QVariant IIni::getValue(const QString &section, const QString &key) const {
     return QVariant();
 }
 
-void IIni::setValue(const QString &section, const QString &key, const QVariant &value) {
+void IIni::setValue(const QString &key, const QVariant &value, const QString &section) {
     m_ini.SetValue(section.toStdString().c_str(), key.toStdString().c_str(), value.toString().toStdString().c_str());
 }
 

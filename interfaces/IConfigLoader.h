@@ -1,12 +1,4 @@
-#include "toml.hpp"
-#include "../src/PZtdMgr.h"
-#include <QSettings>
-#include <QDir>
-#include <QBuffer>
-#include <QIODevice>
-#include "../models/PEntityType.h"
 #include <QtCore>
-#include <SimpleIni.h>
 
 class IConfigLoader {
     public:
@@ -15,7 +7,7 @@ class IConfigLoader {
         virtual bool saveConfig(const QString &filePath) = 0;
 
         virtual QVariant getValue(const QString &section, const QString &key) const = 0;
-        virtual void setValue(const QString &section, const QString &key, const QVariant &value) = 0;
+        virtual void setValue(const QString &key, const QVariant &value, const QString &section) = 0;
         virtual bool removeValue(const QString &section, const QString &key) = 0;
         virtual bool removeKey(const QString &section, const QString &key) = 0;
         virtual bool removeSection(const QString &section) = 0;
