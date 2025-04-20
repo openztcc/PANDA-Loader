@@ -9,8 +9,8 @@ private slots:
     void testLoadConfig();
     // void testSaveConfig_data();
     // void testSaveConfig();
-    // void testGetValue_data();
-    // void testGetValue();
+    void testGetValue_data();
+    void testGetValue();
     // void testSetValue_data();
     // void testSetValue();
 };
@@ -43,13 +43,35 @@ void PTestConfigMgr::testLoadConfig()
     }
 }
 
-// void PTestConfigMgr::testGetValue_data()
-// {
-//     QTest::addColumn<QString>("section");
-//     QTest::addColumn<QString>("key");
-//     QTest::addColumn<QString>("expected");
+void PTestConfigMgr::testGetValue_data()
+{
+    QTest::addColumn<QString>("section");
+    QTest::addColumn<QString>("key");
+    QTest::addColumn<QString>("expected");
 
-//     QTest::newRow
+    QTest::newRow("key: fullscreen") << "user" << "fullscreen" << "0";
+    QTest::newRow("invalid key") << "user" << "invalid_key" << "";
+    QTest::newRow("key: path") << "resource" << "path" << "./dlupdate;./updates;./xpack2/loc;./xpack2;./dupdate;./zupdate1;./xpack1/loc;./xpack1;./zupdate;./loc;"; 
+    QTest::newRow("key: maxLongTooltipWidth") << "UI" << "maxLongTooltipWidth" << "400";
+}
+void PTestConfigMgr::testGetValue()
+{
+    QFETCH(QString, section);
+    QFETCH(QString, key);
+    QFETCH(QString, expected);
+
+    PConfigMgr configMgr;
+    configMgr.loadConfig(testDataDir + "config.ini");
+    QString result = configMgr.getValue(section, key).toString();
+    qDebug() << "Result: " << result;
+    qDebug() << "Expected: " << expected;
+
+    if (expected.isEmpty()) {
+        QVERIFY(result.isEmpty());
+    } else {
+        QCOMPARE(result, expected);
+    }
+}
 
 
 QTEST_MAIN(PTestConfigMgr)
