@@ -7,8 +7,8 @@ class PTestConfigMgr : public QObject
 private slots:
     void testLoadConfig_data();
     void testLoadConfig();
-    // void testSaveConfig_data();
-    // void testSaveConfig();
+    void testSaveConfig_data();
+    void testSaveConfig();
     void testGetValue_INI_data();
     void testGetValue_INI();
     void testGetValue_TOML_data();
@@ -163,6 +163,44 @@ void PTestConfigMgr::testSetValue_TOML()
     QCOMPARE(result, value);
 }
 
+void PTestConfigMgr::testSaveConfig_data()
+{
+    QTest::addColumn<QString>("filePath");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("ini config") << testDataDir + "config.ini" << true;
+    QTest::newRow("toml config") << testDataDir + "config.toml" << true;
+    QTest::newRow("invalid config") << testDataDir + "config_invalid.ini" << false;
+    QTest::newRow("empty config") << testDataDir + "config_empty.ini" << false;
+}
+void PTestConfigMgr::testSaveConfig()
+{
+    QFETCH(QString, filePath);
+    QFETCH(bool, expected);
+
+    PConfigMgr configMgr;
+    
+    configMgr.loadConfig(filePath);
+    configMgr.setValue("fullscreen", "1", "user");
+    configMgr.setValue("path", "./dlupdate;.", "resource"); 
+    configMgr.setValue("isoPath", "F:\\Backup_041723\\Zoo Tycoon Complete Collection Disk 3.iso", "");
+    qDebug() << "Saving config to: " << filePath + ".test";
+    bool result = configMgr.saveConfig(filePath + ".test");
+
+    // check if the file was saved successfully
+    QFile savedFile(filePath + ".test");
+    if (savedFile.exists()) {
+        qDebug() << "Saved file exists: " << savedFile.exists();
+    } else {
+        qDebug() << "Saved file does not exist: " << savedFile.exists();
+    }
+
+    if (expected) {
+        QVERIFY(result);
+    } else {
+        QVERIFY(!result);
+    }
+}
 
 QTEST_MAIN(PTestConfigMgr)
 #include "PTestConfigMgr.moc"

@@ -48,8 +48,7 @@ bool PConfigMgr::saveConfig(const QString &filePath)
         return false;
     }
 
-    // Create the directory if it does not exist
-
+    m_config->saveConfig(filePath);
 
     return true;
 }
