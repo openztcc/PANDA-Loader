@@ -8,7 +8,6 @@ class IConfigLoader {
 
         virtual QVariant getValue(const QString &section, const QString &key) const = 0;
         virtual void setValue(const QString &key, const QVariant &value, const QString &section) = 0;
-        virtual bool removeValue(const QString &section, const QString &key) = 0;
         virtual bool removeKey(const QString &section, const QString &key) = 0;
         virtual bool removeSection(const QString &section) = 0;
         virtual bool getAllSections() = 0;

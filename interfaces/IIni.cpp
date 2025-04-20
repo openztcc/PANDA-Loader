@@ -30,7 +30,7 @@ void IIni::setValue(const QString &key, const QVariant &value, const QString &se
     m_ini.SetValue(section.toStdString().c_str(), key.toStdString().c_str(), value.toString().toStdString().c_str());
 }
 
-bool IIni::removeValue(const QString &section, const QString &key) {
+bool IIni::removeKey(const QString &section, const QString &key) {
     m_ini.DeleteValue(section.toStdString().c_str(), key.toStdString().c_str());
     return true;
 }

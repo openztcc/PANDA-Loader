@@ -44,8 +44,10 @@ bool IToml::saveConfig(const QString &filePath) {
 }
 
 QVariant IToml::getValue(const QString &section, const QString &key) const {
+    std::string k = key.toStdString();
+
     // Find value in table
-    if (auto it = m_toml.find(key.toStdString()); it != m_toml.end()) {
+    if (auto it = m_toml.find(k); it != m_toml.end()) {
         if (auto strVal = it->second.as_string()) {
             return QString::fromStdString(strVal->get());
         }
@@ -55,21 +57,43 @@ QVariant IToml::getValue(const QString &section, const QString &key) const {
 }
 
 void IToml::setValue(const QString &key, const QVariant &value, const QString &section) {
+    std::string k = key.toStdString();
+    std::string s = section.toStdString();
+
     if (section == "") {
-        m_toml.insert_or_assign(key.toStdString(), value);
+        m_toml.insert_or_assign(k, value);
         // key = value
     } else {
-        m_toml.insert_or_assign(section.toStdString(), toml::table{{key.toStdString(), value}});
+        m_toml.insert_or_assign(s, toml::table{{k, value}});
         // [section]
         // key = value
     }
 }
 
-bool IToml::removeValue(const QString &section, const QString &key) {
-    auto it = m_toml.find(section.toStdString());
-    if (it != m_toml.end()) {
-        it->second.erase(key.toStdString());
+bool IToml::removeKey(const QString &key, const QString &section) {
+    std::string k = key.toStdString();
+    std::string s = section.toStdString();
+
+    if (s == "") {
+        m_toml.erase(k);
         return true;
+    } else {
+        if (auto* settings = m_toml[s].as_table()) {
+            settings->erase(k);
+            return true;
+        }
     }
+
     return false;
+}
+
+bool IToml::removeSection(const QString &section) {
+    std::string s = section.toStdString();
+
+    if (m_toml.contains(s)) {
+        m_toml.erase(s);
+        return true;
+    } else {
+        return false;
+    }
 }

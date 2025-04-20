@@ -7,7 +7,7 @@ public:
     bool saveConfig(const QString &filePath) override;
     QVariant getValue(const QString &section, const QString &key) const override;
     void setValue(const QString &key, const QVariant &value, const QString &section) override;
-    bool removeValue(const QString &section, const QString &key) override;
+    bool removeKey(const QString &section, const QString &key) override;
 
 private:
     CSimpleIniA m_ini;
