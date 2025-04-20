@@ -45,16 +45,28 @@ bool IToml::saveConfig(const QString &filePath) {
 
 QVariant IToml::getValue(const QString &section, const QString &key) const {
     std::string k = key.toStdString();
+    std::string s = section.toStdString();
 
-    // Find value in table
-    if (auto it = m_toml.find(k); it != m_toml.end()) {
-        if (auto strVal = it->second.as_string()) {
-            return QString::fromStdString(strVal->get());
-        }
+    const toml::table* table = &m_toml;
+
+    // find section if it's not empty and make it a table object
+    if (!section.isEmpty()) {
+        auto found = m_toml.find(s);
+        if (found == m_toml.end() || !found->second.is_table())
+            return QVariant();
+
+        table = found->second.as_table();
     }
 
-    return QString("");
+    // otherwise just look through table
+    auto it = table->find(k);
+    if (it == table->end())
+        return QVariant();
+
+    // return an extracted QVariant (finds correct type)
+    return extractVariant(it->second);
 }
+
 
 void IToml::setValue(const QString &key, const QVariant &value, const QString &section) {
     std::string k = key.toStdString();
@@ -146,6 +158,7 @@ void IToml::interpretVariant(toml::table& config, const std::string& key, const 
     }
 }
 
+// same as above but tries to return list
 void IToml::appendVariantToArray(toml::array& arr, const QVariant& value) {
     switch (value.typeId()) {
     case QMetaType::Bool:
@@ -177,3 +190,25 @@ void IToml::appendVariantToArray(toml::array& arr, const QVariant& value) {
         break;
     }
 }
+
+// returns as QVariant for flexibility
+QVariant IToml::extractVariant(const toml::node& node) const {
+    if (auto val = node.as_string())
+        return QString::fromStdString(val->get());
+    if (auto val = node.as_boolean())
+        return val->get();
+    if (auto val = node.as_integer())
+        return static_cast<qint64>(val->get());
+    if (auto val = node.as_floating_point())
+        return val->get();
+    if (auto val = node.as_array()) {
+        QVariantList list;
+        for (const auto& item : *val) {
+            list.append(extractVariant(item));
+        }
+        return list;
+    }
+
+    return QVariant();
+}
+

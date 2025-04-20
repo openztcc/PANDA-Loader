@@ -9,8 +9,10 @@ private slots:
     void testLoadConfig();
     // void testSaveConfig_data();
     // void testSaveConfig();
-    void testGetValue_data();
-    void testGetValue();
+    void testGetValue_INI_data();
+    void testGetValue_INI();
+    void testGetValue_TOML_data();
+    void testGetValue_TOML();
     // void testSetValue_data();
     // void testSetValue();
 };
@@ -43,7 +45,8 @@ void PTestConfigMgr::testLoadConfig()
     }
 }
 
-void PTestConfigMgr::testGetValue_data()
+// INI config test data
+void PTestConfigMgr::testGetValue_INI_data()
 {
     QTest::addColumn<QString>("section");
     QTest::addColumn<QString>("key");
@@ -54,7 +57,7 @@ void PTestConfigMgr::testGetValue_data()
     QTest::newRow("key: path") << "resource" << "path" << "./dlupdate;./updates;./xpack2/loc;./xpack2;./dupdate;./zupdate1;./xpack1/loc;./xpack1;./zupdate;./loc;"; 
     QTest::newRow("key: maxLongTooltipWidth") << "UI" << "maxLongTooltipWidth" << "400";
 }
-void PTestConfigMgr::testGetValue()
+void PTestConfigMgr::testGetValue_INI()
 {
     QFETCH(QString, section);
     QFETCH(QString, key);
@@ -72,6 +75,36 @@ void PTestConfigMgr::testGetValue()
         QCOMPARE(result, expected);
     }
 }
+
+// TOML config test data
+void PTestConfigMgr::testGetValue_TOML_data()
+{
+    QTest::addColumn<QString>("section");
+    QTest::addColumn<QString>("key");
+    QTest::addColumn<QVariant>("expected");
+
+    QTest::newRow("key: isoPath") << "" << "isoPath" << QVariant("F:\\Backup_041723\\Zoo Tycoon Complete Collection Disk 2.iso");
+    QTest::newRow("invalid key") << "user" << "invalid_key" << QVariant();
+    QTest::newRow("key: useIsoMounting") << "" << "useIsoMounting" << QVariant(true);
+    QTest::newRow("key: zooGamePath") << "" << "zooGamePath" << QVariant("C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon");
+}
+
+void PTestConfigMgr::testGetValue_TOML()
+{
+    QFETCH(QString, section);
+    QFETCH(QString, key);
+    QFETCH(QVariant, expected);
+
+    PConfigMgr configMgr;
+    configMgr.loadConfig(testDataDir + "config.toml");
+
+    QVariant result = configMgr.getValue(section, key);
+    qDebug() << "Result: " << result;
+    qDebug() << "Expected: " << expected;
+
+    QCOMPARE(result, expected);
+}
+
 
 
 QTEST_MAIN(PTestConfigMgr)

@@ -21,6 +21,7 @@ private:
 protected:
     void interpretVariant(toml::table& config, const std::string& key, const QVariant& value);
     void appendVariantToArray(toml::array& arr, const QVariant& value);
+    QVariant extractVariant(const toml::node& node) const;
 };
 
 #endif // IToml.h
