@@ -28,6 +28,10 @@ public:
         return std::make_unique<PIniConfig>(*this);
     }
 
+    PIniConfig(const PIniConfig& other) {
+        *this = other;
+    }
+
 private:
     CSimpleIniA m_ini;
 };

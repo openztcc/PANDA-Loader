@@ -13,9 +13,9 @@ std::unique_ptr<IConfigLoader> PConfigMgr::createParser(const QString &path) con
     // Get the file extension
     QString ext = QFileInfo(path).suffix().toLower();
     if (ext == "ini") {
-        return std::make_unique<IniConfig>();
+        return std::make_unique<PIniConfig>();
     } else if (ext == "toml") {
-        return std::make_unique<TomlConfig>();
+        return std::make_unique<PTomlConfig>();
     } else {
         return nullptr; // Unsupported file extension
     }

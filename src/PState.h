@@ -29,10 +29,9 @@ public:
     Q_INVOKABLE int launchZT();
     QString getGamePath();
     void setGamePath(QString);
-    bool loadPandaCfg();
     bool loadZooIni();
     QStringList getZtdList();
-    Q_INVOKABLE PConfigMgr* settings() const { return m_config; }
+    Q_INVOKABLE PConfigMgr* settings() const { return m_pandacfg; }
     Q_INVOKABLE void updateState();
     bool loadPandaCfg();
 

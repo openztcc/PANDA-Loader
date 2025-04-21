@@ -98,9 +98,6 @@ bool PState::loadZooIni() {
     if (!m_zooini) {
         qDebug() << "Failed to load Zoo Tycoon config file.";
         return false;
-    } else {
-        m_zooini->loadConfig();
-        qDebug() << "Loaded Zoo Tycoon config file.";
     }
     return true;
 }
