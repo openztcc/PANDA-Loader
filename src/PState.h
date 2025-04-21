@@ -34,12 +34,14 @@ public:
     QStringList getZtdList();
     Q_INVOKABLE PConfigMgr* settings() const { return m_config; }
     Q_INVOKABLE void updateState();
+    bool loadPandaCfg();
 
 
 signals:
     void pathChanged();
 private:
-    PConfigMgr *m_config;
+    PConfigMgr *m_zooini;
+    PConfigMgr *m_pandacfg;
     QString m_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
     QString m_resource_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     QVector<PModItem> m_mods;

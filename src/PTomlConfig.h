@@ -26,6 +26,10 @@ public:
         return *this;
     }
 
+    virtual std::unique_ptr<IConfigLoader> clone() const override {
+        return std::make_unique<PTomlConfig>(*this);
+    }
+
 private: 
     toml::table m_toml;
 

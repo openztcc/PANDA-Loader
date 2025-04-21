@@ -78,7 +78,7 @@ PIniConfig& PIniConfig::operator=(const PIniConfig& other) {
     m_ini.SetUnicode(other.m_ini.IsUnicode());
 
     // copy all sections and keys
-    CSImpleIniA::TNamesDepend sections;
+    CSimpleIniA::TNamesDepend sections;
     other.m_ini.GetAllSections(sections);
     for (const auto& section : sections) {
         CSimpleIniA::TNamesDepend keys;

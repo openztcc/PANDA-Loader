@@ -24,6 +24,10 @@ public:
     // Operator overloads
     PIniConfig& operator=(const PIniConfig& other); // copy assignment operator
 
+    virtual std::unique_ptr<IConfigLoader> clone() const override { // clone
+        return std::make_unique<PIniConfig>(*this);
+    }
+
 private:
     CSimpleIniA m_ini;
 };

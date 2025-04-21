@@ -14,6 +14,8 @@ class IConfigLoader {
         virtual bool removeKey(const QString &section, const QString &key) = 0;
         virtual bool removeSection(const QString &section) = 0;
         virtual bool getAllSections() = 0;
+
+        virtual std::unique_ptr<IConfigLoader> clone() const = 0; // clone so we can use polymorphism
 };
 
 #endif // IConfigLoader.h

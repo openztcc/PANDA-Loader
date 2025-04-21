@@ -66,6 +66,17 @@ public:
     int isDirty() const { return m_dirty; }
     void setDirty(bool dirty) { m_dirty = dirty; }
 
+    // operator overloads
+    // copy overload
+    PConfigMgr& operator=(const PConfigMgr& other) {
+        if (this != &other) {
+            m_configPath = other.m_configPath;
+            m_config = other.m_config ? other.m_config->clone() : nullptr;
+            m_dirty = other.m_dirty;
+        }
+        return *this;
+    }
+
 signals:
     void dirtyChanged(int dirty);
 
