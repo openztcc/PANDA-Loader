@@ -17,7 +17,7 @@ SettingsPane {
     PCheckBox { // use8BitSound
         id: use8BitSoundCheckBox
         text: "Use 8 Bit Sound"
-        checked: zoo.getBool("advanced", "use8BitSound")
+        checked: zoo.getValue("advanced", "use8BitSound")
 
         onCheckChanged: (data) => {
                 soundSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
@@ -35,7 +35,7 @@ SettingsPane {
             title: modelData.label
             Layout.fillWidth: true
             descriptionText: modelData.description
-            text: zoo.getString(modelData.section, modelData.key)
+            text: zoo.getValue(modelData.section, modelData.key)
 
             onTextChange: (data) => {
                 soundSettingsPane.dataChanged(modelData.section, modelData.key, data)
@@ -61,7 +61,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: modelData.description
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     soundSettingsPane.dataChanged(modelData.section, modelData.key, data)
@@ -86,7 +86,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: modelData.description
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     soundSettingsPane.dataChanged(modelData.section, modelData.key, data)

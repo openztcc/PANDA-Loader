@@ -24,7 +24,7 @@ SettingsPane {
         delegate: PCheckBox {
             required property var modelData
             text: modelData.label
-            checked: zoo.getBool("UI", modelData.key)
+            checked: zoo.getValue("UI", modelData.key)
 
             onCheckChanged: (data) => {
                     scenariosSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
@@ -92,7 +92,7 @@ SettingsPane {
             delegate: PCheckBox {
                 required property var modelData
                 text: modelData.label
-                checked: zoo.getBool(modelData.section, modelData.key)
+                checked: zoo.getValue(modelData.section, modelData.key)
 
                 onCheckChanged: (data) => {
                         scenariosSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())

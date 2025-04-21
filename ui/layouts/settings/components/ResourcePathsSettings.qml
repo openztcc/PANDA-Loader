@@ -22,7 +22,7 @@ SettingsPane {
         Layout.fillWidth: true
         isFileBrowser: true
         descriptionText: "Path to the last zoo played"
-        text: zoo.getString("user", "lastfile")
+        text: zoo.getValue("user", "lastfile")
 
         onTextChange: (data) => {
             resourcePathsSettingsPane.dataChanged("user", "lastfile", data)
@@ -59,7 +59,7 @@ SettingsPane {
                 required property var modelData
                 title: modelData.label
                 Layout.fillWidth: true
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     resourcePathsSettingsPane.dataChanged(modelData.section, modelData.key, data)

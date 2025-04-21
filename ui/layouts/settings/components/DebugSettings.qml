@@ -18,7 +18,7 @@ SettingsPane {
     PCheckBox {
         id: devModeCheckBox
         text: "Developer Mode Enabled"
-        checked: zoo.getBool("debug", "devModeEnabled")
+        checked: zoo.getValue("debug", "devModeEnabled")
 
         onCheckChanged: (data) => {
                 debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
@@ -50,7 +50,7 @@ SettingsPane {
             delegate: PCheckBox {
                 required property var modelData
                 text: modelData.label
-                checked: zoo.getBool(modelData.section, modelData.key)
+                checked: zoo.getValue(modelData.section, modelData.key)
 
                 onCheckChanged: (data) => {
                         debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
@@ -78,10 +78,10 @@ SettingsPane {
             delegate: PCheckBox {
                 required property var modelData
                 text: modelData.label
-                checked: zoo.getBool(modelData.section, modelData.key)
+                checked: zoo.getValue(modelData.section, modelData.key)
 
                 onCheckChanged: (data) => {
-                        debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+                        debugSettingsPane.getValue(modelData.section, modelData.key, data.toString())
                 }    
             }
         }
