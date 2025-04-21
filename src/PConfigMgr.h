@@ -13,10 +13,6 @@
 #include "PIniConfig.h"
 #include "PTomlConfig.h"
 
-// Concrete class declarations for abstract interfaces
-class IniConfig : public IIni {};
-class TomlConfig : public IToml {};
-
 class PConfigMgr : QObject {
     Q_OBJECT 
     Q_PROPERTY (int dirty READ isDirty WRITE setDirty NOTIFY dirtyChanged)

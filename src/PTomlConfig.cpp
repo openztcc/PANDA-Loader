@@ -1,6 +1,6 @@
 #include "PTomlConfig.h"
 
-bool IToml::loadConfig(const QString &filePath) {
+bool PTomlConfig::loadConfig(const QString &filePath) {
     // make sure it exists
     if (!QFile::exists(filePath)) {
         return false;
@@ -21,7 +21,7 @@ bool IToml::loadConfig(const QString &filePath) {
     return true;
 }
 
-bool IToml::saveConfig(const QString &filePath) {
+bool PTomlConfig::saveConfig(const QString &filePath) {
     // create dir if it does not exist
     QDir dir(QFileInfo(filePath).absolutePath());
     if (!dir.exists()) {
@@ -43,7 +43,7 @@ bool IToml::saveConfig(const QString &filePath) {
     return true;
 }
 
-QVariant IToml::getValue(const QString &section, const QString &key) const {
+QVariant PTomlConfig::getValue(const QString &section, const QString &key) const {
     std::string k = key.toStdString();
     std::string s = section.toStdString();
 
@@ -68,12 +68,12 @@ QVariant IToml::getValue(const QString &section, const QString &key) const {
 }
 
 
-void IToml::setValue(const QString &key, const QVariant &value, const QString &section) {
+void PTomlConfig::setValue(const QString &key, const QVariant &value, const QString &section) {
     std::string k = key.toStdString();
     std::string s = section.toStdString();
 
     if (section == "") {
-        IToml::interpretVariant(m_toml, k, value);
+        PTomlConfig::interpretVariant(m_toml, k, value);
         // key = value
     } else {
         // check to make sure section exists
@@ -84,13 +84,13 @@ void IToml::setValue(const QString &key, const QVariant &value, const QString &s
         // get ref
         auto& fresh_section = *m_toml[s].as_table();
 
-        IToml::interpretVariant(fresh_section, k, value);
+        PTomlConfig::interpretVariant(fresh_section, k, value);
         // [section]
         // key = value
     }
 }
 
-bool IToml::removeKey(const QString &key, const QString &section) {
+bool PTomlConfig::removeKey(const QString &key, const QString &section) {
     std::string k = key.toStdString();
     std::string s = section.toStdString();
 
@@ -107,7 +107,7 @@ bool IToml::removeKey(const QString &key, const QString &section) {
     return false;
 }
 
-bool IToml::removeSection(const QString &section) {
+bool PTomlConfig::removeSection(const QString &section) {
     std::string s = section.toStdString();
 
     if (m_toml.contains(s)) {
@@ -118,7 +118,7 @@ bool IToml::removeSection(const QString &section) {
     }
 }
 
-bool IToml::getAllSections() {
+bool PTomlConfig::getAllSections() {
     return false;
 }
 
@@ -126,7 +126,7 @@ bool IToml::getAllSections() {
 // ------------------- HELPERS (to deal with unpredictable types in toml files)
 
 // Interpret a QVariant to std::any so input in UI can be used directly
-void IToml::interpretVariant(toml::table& config, const std::string& key, const QVariant& value) {
+void PTomlConfig::interpretVariant(toml::table& config, const std::string& key, const QVariant& value) {
     switch (value.typeId()) {
     case QMetaType::Bool:
         config.insert_or_assign(key, value.toBool());
@@ -159,7 +159,7 @@ void IToml::interpretVariant(toml::table& config, const std::string& key, const 
 }
 
 // same as above but tries to return list
-void IToml::appendVariantToArray(toml::array& arr, const QVariant& value) {
+void PTomlConfig::appendVariantToArray(toml::array& arr, const QVariant& value) {
     switch (value.typeId()) {
     case QMetaType::Bool:
         arr.push_back(value.toBool());
@@ -192,7 +192,7 @@ void IToml::appendVariantToArray(toml::array& arr, const QVariant& value) {
 }
 
 // returns as QVariant for flexibility
-QVariant IToml::extractVariant(const toml::node& node) const {
+QVariant PTomlConfig::extractVariant(const toml::node& node) const {
     if (auto val = node.as_string())
         return QString::fromStdString(val->get());
     if (auto val = node.as_boolean())

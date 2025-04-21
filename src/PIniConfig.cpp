@@ -1,6 +1,6 @@
 #include  "PIniConfig.h"
 
-bool IIni::loadConfig(const QString &filePath) {
+bool PIniConfig::loadConfig(const QString &filePath) {
     SI_Error rc = m_ini.LoadFile(filePath.toStdString().c_str());
     if (rc < 0) {
         qDebug() << "Failed to load INI file: " << filePath;
@@ -9,7 +9,7 @@ bool IIni::loadConfig(const QString &filePath) {
     return true;
 }
 
-bool IIni::saveConfig(const QString &filePath) {
+bool PIniConfig::saveConfig(const QString &filePath) {
     SI_Error rc = m_ini.SaveFile(filePath.toStdString().c_str());
     if (rc < 0) {
         qDebug() << "Failed to save INI file: " << filePath;
@@ -18,7 +18,7 @@ bool IIni::saveConfig(const QString &filePath) {
     return true;
 }
 
-QVariant IIni::getValue(const QString &section, const QString &key) const {
+QVariant PIniConfig::getValue(const QString &section, const QString &key) const {
     const char *value = m_ini.GetValue(section.toStdString().c_str(), key.toStdString().c_str(), nullptr);
     if (value) {
         return QString::fromStdString(value);
@@ -26,7 +26,7 @@ QVariant IIni::getValue(const QString &section, const QString &key) const {
     return QVariant();
 }
 
-void IIni::setValue(const QString &key, const QVariant &value, const QString &section) {
+void PIniConfig::setValue(const QString &key, const QVariant &value, const QString &section) {
     if (section == "") {
         qDebug() << "Error: No section provided for ini file with key = " << key << " and value " << value;
         return;
@@ -35,22 +35,22 @@ void IIni::setValue(const QString &key, const QVariant &value, const QString &se
     m_ini.SetValue(section.toStdString().c_str(), key.toStdString().c_str(), value.toString().toStdString().c_str());
 }
 
-bool IIni::removeKey(const QString &section, const QString &key) {
+bool PIniConfig::removeKey(const QString &section, const QString &key) {
     bool deleteSectionIfEmpty = true;
     m_ini.Delete(section.toStdString().c_str(), key.toStdString().c_str(), deleteSectionIfEmpty);
     return true;
 }
 
-bool IIni::removeSection(const QString &section) {
+bool PIniConfig::removeSection(const QString &section) {
     return false;
 }
 
-bool IIni::getAllSections() {
+bool PIniConfig::getAllSections() {
     return false;
 }
 
 // Removes all keys given a section and a value
-void IIni::removeKeysByValue(const QString &section, const QString &value) {
+void PIniConfig::removeKeysByValue(const QString &section, const QString &value) {
     // get all the keys in the section
     CSimpleIniA::TNamesDepend keys;
     m_ini.GetAllKeys(section.toStdString().c_str(), keys);
@@ -63,4 +63,32 @@ void IIni::removeKeysByValue(const QString &section, const QString &value) {
             m_ini.Delete(section.toStdString().c_str(), key.pItem, deleteSectionIfEmpty);
         }
     }
+}
+
+
+// --------------- Operator overloads
+
+PIniConfig& PIniConfig::operator=(const PIniConfig& other) {
+    if (this == &other) {
+        return *this; // self-assignment check
+    }
+
+    // // copy the ini from the other ini
+    m_ini.Reset();
+    m_ini.SetUnicode(other.m_ini.IsUnicode());
+
+    // copy all sections and keys
+    CSImpleIniA::TNamesDepend sections;
+    other.m_ini.GetAllSections(sections);
+    for (const auto& section : sections) {
+        CSimpleIniA::TNamesDepend keys;
+        other.m_ini.GetAllKeys(section.pItem, keys);
+        for (const auto& key : keys) {
+            const char* value = other.m_ini.GetValue(section.pItem, key.pItem, nullptr);
+            if (value) {
+                m_ini.SetValue(section.pItem, key.pItem, value);
+            }
+        }
+    }
+    return *this;
 }

@@ -1,23 +1,31 @@
-#ifndef IINI_H
-#define IINI_H
+#ifndef PINICONFIG_H
+#define PINICONFIG_H
 
-#include "IConfigLoader.h"
+#include "../interfaces/IConfigLoader.h"
 #include "SimpleIni.h"
 
-class IIni : public IConfigLoader {
+class PIniConfig : public IConfigLoader {
 public:
-    IIni() = default;
+    // loading and saving
+    PIniConfig() = default;
     bool loadConfig(const QString &filePath) override;
     bool saveConfig(const QString &filePath) override;
+
+    // get and set values
     QVariant getValue(const QString &section, const QString &key) const override;
     void setValue(const QString &key, const QVariant &value, const QString &section) override;
     bool removeKey(const QString &section, const QString &key) override;
     bool removeSection(const QString &section) override;
     bool getAllSections() override;
+
+    // unique to ini config
     void removeKeysByValue(const QString &section, const QString &value);
+
+    // Operator overloads
+    PIniConfig& operator=(const PIniConfig& other); // copy assignment operator
 
 private:
     CSimpleIniA m_ini;
 };
 
-#endif // IIni.h
+#endif // PIniConfig.h

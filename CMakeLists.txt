@@ -242,8 +242,8 @@ qt_add_executable(testConfigMgr
     src/PConfigMgr.h src/PConfigMgr.cpp
     src/PZtdMgr.h src/PZtdMgr.cpp
     interfaces/IConfigLoader.h interfaces/IConfigLoader.cpp
-    interfaces/IIni.h interfaces/IIni.cpp
-    interfaces/IToml.h interfaces/IToml.cpp
+    src/PIniConfig.h src/PIniConfig.cpp
+    src/PTomlConfig.h src/PTomlConfig.cpp
 
 )
 
