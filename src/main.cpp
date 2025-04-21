@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("modModel", QVariant::fromValue(controller->model()));
     engine.rootContext()->setContextProperty("state", state);
     engine.rootContext()->setContextProperty("psettings", settings);
+    engine.rootContext()->setContextProperty("zoo", zoo);
 
     // models
     qmlRegisterAnonymousType<QAbstractListModel>("PandaLdr", 1);
