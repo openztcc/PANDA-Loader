@@ -127,4 +127,5 @@ bool PState::loadPandaCfg() {
             return false;
         }
     }
+    return true;
 }

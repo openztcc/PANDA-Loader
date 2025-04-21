@@ -13,7 +13,7 @@
 #include "PIniConfig.h"
 #include "PTomlConfig.h"
 
-class PConfigMgr : QObject {
+class PConfigMgr : public QObject {
     Q_OBJECT 
     Q_PROPERTY (int dirty READ isDirty WRITE setDirty NOTIFY dirtyChanged)
 public:
