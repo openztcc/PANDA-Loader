@@ -26,7 +26,7 @@ bool PConfigMgr::loadConfig(const QString &filePath)
 {
     // Get extension of the file
     QString ext = QFileInfo(filePath).suffix().toLower();
-    m_config = createParser(ext);
+    m_config = createParser(filePath);
 
     if (!m_config) {
         qDebug() << "Unsupported file extension: " << ext;

@@ -247,7 +247,7 @@ LayoutFrame {
 
             Connections {
                 target: zoo
-                onDirtyChanged: (dirty) => {
+                function onDirtyChanged (dirty) {
                     if (dirty) {
                         settingsConfirmationBar.visible = true
                     } else {

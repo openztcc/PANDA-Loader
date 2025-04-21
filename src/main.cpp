@@ -23,8 +23,8 @@ int main(int argc, char *argv[])
     // Register the PController singleton
     PController *controller = new PController(&app, p_state);
     PState *state = new PState(&app);
-    PConfigMgr *zoo = state->m_zooini;
-    PConfigMgr *settings = state->m_pandacfg;
+    PConfigMgr *zoo = state->m_zooini.get();
+    PConfigMgr *settings = state->m_pandacfg.get();
     engine.rootContext()->setContextProperty("modController", controller);
     engine.rootContext()->setContextProperty("modModel", QVariant::fromValue(controller->model()));
     engine.rootContext()->setContextProperty("state", state);

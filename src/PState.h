@@ -31,13 +31,13 @@ public:
     void setGamePath(QString);
     bool loadZooIni();
     QStringList getZtdList();
-    Q_INVOKABLE PConfigMgr* settings() const { return m_pandacfg; }
+    Q_INVOKABLE PConfigMgr* settings() const { return m_pandacfg.get(); }
     // Q_INVOKABLE void updateState();
     bool loadPandaCfg();
-    QString pandaHomePath() { return m_configPath; }
+    Q_INVOKABLE QString pandaHomePath() { return m_configPath; }
 
-    PConfigMgr *m_zooini;
-    PConfigMgr *m_pandacfg;
+    std::unique_ptr<PConfigMgr> m_zooini;
+    std::unique_ptr<PConfigMgr> m_pandacfg;
 
 signals:
     void pathChanged();

@@ -94,7 +94,7 @@ QStringList PState::getZtdList() {
 
 bool PState::loadZooIni() {
     // Load the Zoo Tycoon config file
-    m_zooini = new PConfigMgr(this, m_path + "\\zoo.ini");
+    m_zooini = std::make_unique<PConfigMgr>(this, m_path + "\\zoo.ini");
     if (!m_zooini) {
         qDebug() << "Failed to load Zoo Tycoon config file.";
         return false;
@@ -105,27 +105,33 @@ bool PState::loadZooIni() {
 bool PState::loadPandaCfg() {
     // panda config file path
     QString configPath = m_configPath + "/panda.toml";
+    qDebug() << "Panda config file path: " << configPath;
     // check if the config file exists
     if (!QFile::exists(configPath)) {
         qDebug() << "Panda config file not found: " << configPath;
         // time to create a new one
-        PConfigMgr config(this, configPath);
+         m_pandacfg = std::make_unique<PConfigMgr>(this, configPath);
 
         // add default settings to the config
-        config.setValue("zooGamePath", m_path, "");
-        config.setValue("useIsoMounting", false, "");
-        config.setValue("isoPath", "", "");
+        m_pandacfg->setValue("zooGamePath", m_path, "");
+        m_pandacfg->setValue("useIsoMounting", false, "");
+        m_pandacfg->setValue("isoPath", "", "");
 
-        // replace the config with the default one
-        m_pandacfg = &config;
         m_pandacfg->saveConfig(configPath);
     } else {
         // load the config file
-        m_pandacfg = new PConfigMgr(this, configPath);
-        if (!m_pandacfg->loadConfig(configPath)) {
-            qDebug() << "Failed to load panda config file: " << configPath;
+        m_pandacfg = std::make_unique<PConfigMgr>(this, configPath);
+        if (!m_pandacfg) {
+            qDebug() << "Failed to load Panda config file: " << configPath;
             return false;
         }
+
+        // test if the config is loaded correctly
+        qDebug() << "Panda config file loaded successfully: " << configPath;
+        qDebug() << "Zoo Tycoon path: " << m_pandacfg->getValue("", "zooGamePath").toString();
+        qDebug() << "Use ISO mounting: " << m_pandacfg->getValue("", "useIsoMounting").toBool();
+        qDebug() << "ISO path: " << m_pandacfg->getValue("", "isoPath").toString();
+
     }
     return true;
 }

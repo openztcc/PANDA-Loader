@@ -36,8 +36,11 @@ public:
     };
 
     PConfigMgr(QObject *parent = nullptr, const QString &filepath = "") : QObject(parent) {
-        m_configPath = filepath;
-        m_config = createParser(m_configPath);
+        if (!filepath.isEmpty()) {
+            loadConfig(filepath);
+        } else {
+            qDebug() << "No file path provided for PConfigMgr: " << filepath;
+        }
     }
 
     ~PConfigMgr();
@@ -45,8 +48,8 @@ public:
     // meta configuration operations
     bool loadConfig(const QString &filePath);
     bool saveConfig(const QString &filePath);
-    QVariant getValue(const QString &section, const QString &key);
-    void setValue(const QString &key, const QVariant &value, const QString &section);
+    Q_INVOKABLE QVariant getValue(const QString &section, const QString &key);
+    Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
     static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);
