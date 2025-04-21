@@ -1,4 +1,4 @@
-#include "IToml.h"
+#include "PTomlConfig.h"
 
 bool IToml::loadConfig(const QString &filePath) {
     // make sure it exists

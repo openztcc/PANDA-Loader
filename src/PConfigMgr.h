@@ -10,8 +10,8 @@
 #include <QtCore>
 #include <SimpleIni.h>
 #include "../interfaces/IConfigLoader.h"
-#include "../interfaces/IIni.h"
-#include "../interfaces/IToml.h"
+#include "PIniConfig.h"
+#include "PTomlConfig.h"
 
 // Concrete class declarations for abstract interfaces
 class IniConfig : public IIni {};

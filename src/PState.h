@@ -11,9 +11,8 @@
 #include "../models/PModItem.h"
 #include <QDir>
 #include <QtQml/qqmlregistration.h>
-#include "../models/PSettings.h"
 #include "PSystemMgr.h"
-#include "../models/PZooConfig.h"
+#include "PConfigMgr.h"
 
 // static functions
 
@@ -23,6 +22,8 @@ class PState : public QObject {
     QML_SINGLETON
 
     Q_PROPERTY(QString m_path READ getGamePath WRITE setGamePath NOTIFY pathChanged)
+    Q_PROPERTY(PConfigMgr* m_settings READ settings)
+
 public:
     explicit PState(QObject *parent = nullptr);
     Q_INVOKABLE int launchZT();
@@ -31,14 +32,14 @@ public:
     bool loadPandaCfg();
     bool loadZooIni();
     QStringList getZtdList();
-    Q_INVOKABLE PConfigMgr* settings() const { return m_pandacfg; }
-    Q_INVOKABLE PConfigMgr* zooConfig() const { return m_zooini; }
+    Q_INVOKABLE PConfigMgr* settings() const { return m_config; }
+    Q_INVOKABLE void updateState();
+
 
 signals:
     void pathChanged();
 private:
-    PConfigMgr *m_pandacfg;
-    PConfigMgr *m_zooini;
+    PConfigMgr *m_config;
     QString m_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
     QString m_resource_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     QVector<PModItem> m_mods;

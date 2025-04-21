@@ -31,14 +31,14 @@ qt_add_executable(appPandaLdr
     src/PGraphicsMgr.h src/PGraphicsMgr.cpp
     src/PDatabaseMgr.cpp src/PDatabaseMgr.h
     src/PSystemMgr.h src/PSystemMgr.cpp
+    src/PIniConfig.h src/PIniConfig.cpp
+    src/PTomlConfig.h src/PTomlConfig.cpp
     models/PModItem.cpp models/PModItem.h
     models/PEntityType.cpp models/PEntityType.h
     models/PIconData.h
     models/PModModel.cpp models/PModModel.h
     models/PZooConfig.h models/PZooConfig.cpp
     interfaces/IConfigLoader.h interfaces/IConfigLoader.cpp
-    interfaces/IIni.h interfaces/IIni.cpp
-    interfaces/IToml.h interfaces/IToml.cpp
     )
 
 add_subdirectory(libs/apecore)
@@ -120,16 +120,15 @@ qt_add_qml_module(appPandaLdr
         src/PGraphicsMgr.h
         src/PDatabaseMgr.h
         src/PSystemMgr.cpp
+        src/PIniConfig.h
+        src/PTomlConfig.h
         # models
         models/PModItem.h
         models/PEntityType.h
-        models/PSettings.h
         models/PModModel.h
         models/PZooConfig.h
         # interfaces
         interfaces/IConfigLoader.h
-        interfaces/IIni.h
-        interfaces/IToml.h
 )
 
 qt_add_resources(appPandaLdr "resources"

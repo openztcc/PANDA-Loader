@@ -1,4 +1,4 @@
-#include  "IIni.h"
+#include  "PIniConfig.h"
 
 bool IIni::loadConfig(const QString &filePath) {
     SI_Error rc = m_ini.LoadFile(filePath.toStdString().c_str());

@@ -147,7 +147,7 @@ void PState::loadZooIni() {
 
 bool PState::loadPandaCfg() {
     // Load settings from the TOML file
-    if (!m_pandacfg->loadFromToml()) {
+    if (!m_settings->loadFromToml()) {
         qDebug() << "Failed to load settings from config.toml";
         return false;
     } else {

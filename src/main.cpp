@@ -9,8 +9,7 @@
 #include "../models/PModItem.h"
 #include "PController.h"
 #include "../models/PModModel.h"
-#include "../models/PZooConfig.h"
-#include "../models/PSettings.h"
+#include "PConfigMgr.h"
 
 int main(int argc, char *argv[])
 {
