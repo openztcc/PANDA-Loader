@@ -128,33 +128,33 @@ bool PTomlConfig::getAllSections() {
 // Interpret a QVariant to std::any so input in UI can be used directly
 void PTomlConfig::interpretVariant(toml::table& config, const std::string& key, const QVariant& value) {
     switch (value.typeId()) {
-    case QMetaType::Bool:
-        config.insert_or_assign(key, value.toBool());
-        break;
-    case QMetaType::Int:
-    case QMetaType::Long:
-    case QMetaType::LongLong:
-    case QMetaType::UInt:
-    case QMetaType::ULong:
-    case QMetaType::ULongLong:
-        config.insert_or_assign(key, static_cast<int64_t>(value.toLongLong()));
-        break;
-    case QMetaType::Double:
-        config.insert_or_assign(key, value.toDouble());
-        break;
-    case QMetaType::QString:
-        config.insert_or_assign(key, value.toString().toStdString());
-        break;
-    case QMetaType::QVariantList: {
-        toml::array arr;
-        for (const auto& v : value.toList()) {
-            appendVariantToArray(arr, v);
+        case QMetaType::Bool:
+            config.insert_or_assign(key, value.toBool());
+            break;
+        case QMetaType::Int:
+        case QMetaType::Long:
+        case QMetaType::LongLong:
+        case QMetaType::UInt:
+        case QMetaType::ULong:
+        case QMetaType::ULongLong:
+            config.insert_or_assign(key, static_cast<int64_t>(value.toLongLong()));
+            break;
+        case QMetaType::Double:
+            config.insert_or_assign(key, value.toDouble());
+            break;
+        case QMetaType::QString:
+            config.insert_or_assign(key, value.toString().toStdString());
+            break;
+        case QMetaType::QVariantList: {
+            toml::array arr;
+            for (const auto& v : value.toList()) {
+                appendVariantToArray(arr, v);
+            }
+            config.insert_or_assign(key, arr);
+            break;
         }
-        config.insert_or_assign(key, arr);
-        break;
-    }
-    default:
-        break;
+        default:
+            break;
     }
 }
 

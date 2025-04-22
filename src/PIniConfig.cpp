@@ -32,7 +32,7 @@ void PIniConfig::setValue(const QString &key, const QVariant &value, const QStri
         return;
     }
 
-    m_ini.SetValue(section.toStdString().c_str(), key.toStdString().c_str(), value.toString().toStdString().c_str());
+    interpretVariant(m_ini, key.toStdString(), value);
 }
 
 bool PIniConfig::removeKey(const QString &section, const QString &key) {
@@ -91,4 +91,49 @@ PIniConfig& PIniConfig::operator=(const PIniConfig& other) {
         }
     }
     return *this;
+}
+
+
+// --------------- Private functions
+
+// ini files in ZT only have bools, ints, floats, and strings
+void PIniConfig::interpretVariant(SimpleIniA& config, const std::string& key, const QVariant& value) {
+    // validate
+    if (key.empty()) {
+        qDebug() << "Error: No key provided for ini file with value " << value;
+        return;
+    }
+
+    if (value.isNull()) {
+        qDebug() << "Error: No value provided for ini file with key = " << key;
+        return;
+    }
+
+    if (value.isValid() == false) {
+        qDebug() << "Error: Invalid value provided for ini file with key = " << key;
+        return;
+    }
+    
+    switch (value.typeId()) {
+        case QMetaType::Bool:
+            config.SetValue(key, value.toBool() ? "1" : "0");
+            break;
+        case QMetaType::Int:
+        case QMetaType::Long:
+        case QMetaType::LongLong:
+        case QMetaType::UInt:
+        case QMetaType::ULong:
+        case QMetaType::ULongLong:
+            config.SetValue(key, value.toLongLong());
+            break;
+        case QMetaType::Float:
+            config.SetValue(key, value.toFloat());
+            break;
+        case QMetaType::QString:
+            config.SetValue(key, value.toString().toStdString().toUtf8().constData());
+            break;
+        default:
+            qDebug() << "Error: Unsupported type for ini file with key = " << key << " and value " << value;
+            break;
+    }
 }
