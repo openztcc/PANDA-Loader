@@ -127,6 +127,56 @@ bool PTomlConfig::getAllSections() {
     return false;
 }
 
+// ---------------------------- EXIST TESTS
+
+bool PTomlConfig::sectionExists(const QString &section) const {
+    // to avoid problem of detecting keys or values bya ccident, test for table first
+    auto* isTable = m_toml[section.toStdString()].as_table();
+    if (isTable) {
+        return true;
+    }
+    return false;
+}
+
+bool PTomlConfig::keyExists(const QString &key, const QString &section) const {
+    std::string k = key.toStdString();
+    std::string s = section.toStdString();
+
+    if (s == "") {
+        return m_toml.contains(k);
+    } else {
+        if (auto* settings = m_toml[s].as_table()) {
+            return settings->contains(k);
+        }
+    }
+
+    return false;
+}
+
+bool PTomlConfig::valueExists(const QString &value, const QString &key, const QString &section) const {
+    std::string k = key.toStdString();
+    std::string s = section.toStdString();
+    // make sure value is not empty or not valid
+    if (value.isNull() || value.isValid() == false) {
+        return false;
+    }
+    
+    // if there is no section, just check the root level
+    if (s == "") {
+        if (auto it = m_toml.find(k); it != m_toml.end()) {
+            return it->second.as_string() == value.toStdString();
+        }
+    } else { // otherwise check the section
+        if (auto* settings = m_toml[s].as_table()) {
+            if (auto it = settings->find(k); it != settings->end()) {
+                return it->second.as_string() == value.toStdString();
+            }
+        }
+    }
+
+    return false;
+}
+
 
 // ------------------- HELPERS (to deal with unpredictable types in toml files)
 

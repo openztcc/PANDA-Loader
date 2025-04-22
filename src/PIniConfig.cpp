@@ -54,6 +54,50 @@ bool PIniConfig::getAllSections() {
     return false;
 }
 
+// ---------------------------- Exist tests
+
+bool PIniConfig::sectionExists(const QString &section) const {
+    CSimpleIniA::TNamesDepend sections;
+    m_ini.GetAllSections(sections);
+    for (const auto &sec : sections) {
+        if (section.compare(sec.pItem, Qt::CaseInsensitive) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PIniConfig::keyExists(const QString &key, const QString &section) const {
+    CSimpleIniA::TNamesDepend keys;
+
+    // if section is empty, just check keys at the root level
+    m_ini.GetAllKeys(section.isEmpty() ? nullptr : section.toStdString().c_str(), keys);
+
+    // check if the key is empty
+    for (const auto &k : keys) {
+        if (key.compare(k.pItem, Qt::CaseInsensitive) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+bool PIniConfig::valueExists(const QString &value, const QString &key, const QString &section) const {
+    // check if the key is empty
+    const char* val = m_ini.GetValue(
+        // ugly workaround for empty section but works
+        section.isEmpty() ? nullptr : section.toStdString().c_str(),
+        key.toStdString().c_str(),
+        nullptr
+    );
+
+    // compare existance of the value
+    return val && value.compare(val, Qt::CaseInsensitive) == 0;
+}
+
+
 // Removes all keys given a section and a value
 void PIniConfig::removeKeysByValue(const QString &section, const QString &value) {
     // get all the keys in the section

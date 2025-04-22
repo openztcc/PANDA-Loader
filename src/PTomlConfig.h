@@ -19,6 +19,11 @@ public:
     bool removeSection(const QString &section) override;
     bool getAllSections() override;
 
+    // Exist tests
+    bool sectionExists(const QString &section) const override;
+    bool keyExists(const QString &key, const QString &section) const override;
+    bool valueExists(const QString &value, const QString &key, const QString &section) const override;
+
     // Operator overloads
     PTomlConfig& operator=(const PTomlConfig& other) { // Copy assignment operator
         if (this != &other) {

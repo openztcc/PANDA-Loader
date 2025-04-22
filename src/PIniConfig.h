@@ -19,6 +19,11 @@ public:
     bool removeSection(const QString &section) override;
     bool getAllSections() override;
 
+    // exist tests
+    bool sectionExists(const QString &section) override;
+    bool keyExists(const QString &key, const QString &section) override;
+    bool valueExists(const QString &value, const QString &key, const QString &section) override;
+
     // unique to ini config
     void removeKeysByValue(const QString &section, const QString &value);
 
