@@ -68,6 +68,9 @@ public:
     // setters and getters for QProperties
     int isDirty() const { return m_dirty; }
     void setDirty(bool dirty) { m_dirty = dirty; }
+    bool inLaundry(const QString &section, const QString &key) const {
+        return m_dirty_laundry[section].find(key) != m_dirty_laundry[section].end();
+    }
 
     // operator overloads
     // copy overload
@@ -86,6 +89,8 @@ signals:
 private:
     QString m_configPath;
     std::unique_ptr<IConfigLoader> m_config;
+    std::unique_ptr<PZtdMgr> m_configBackup;
+    std::map<QString, std::map<QString, QString>> m_dirty_laundry;
     int m_dirty = 0;
     std::unique_ptr<IConfigLoader> createParser(const QString &path) const;
     // helper functions

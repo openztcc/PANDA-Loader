@@ -39,6 +39,16 @@ bool PConfigMgr::loadConfig(const QString &filePath)
         return false;
     }
 
+    m_dirty = 0; // Reset dirty flag
+    m_configPath = filePath; // Store the config path
+
+    QString filename = QFileInfo(filePath).fileName();
+    
+    // emit dirtyChanged signal
+    emit dirtyChanged(m_dirty);
+    qDebug() << filename << " loaded successfully.";
+    qDebug() << "Config path: " << m_configPath;
+
     return true;
 }
 
@@ -51,6 +61,9 @@ bool PConfigMgr::saveConfig(const QString &filePath)
     }
 
     m_config->saveConfig(filePath);
+
+    m_dirty = 0; // Reset dirty flag
+    emit dirtyChanged(m_dirty);
 
     return true;
 }
@@ -69,11 +82,32 @@ QVariant PConfigMgr::getValue(const QString &section, const QString &key)
 // Set a key value in config file
 void PConfigMgr::setValue(const QString &key, const QVariant &value, const QString &section)
 {
+    QVariant originalValue = getValue(section, key);
+    if (originalValue == value) {
+        qDebug() << "No changes to save for key: " << key;
+        dirty--;
+        emit dirtyChanged(m_dirty);
+        if (m_dirty == 0) {
+            // Clear the laundry if no dirty items left
+            m_dirty_laundry.clear(); 
+        }
+        // Remove the key from the laundry if it exists
+        if (inLaundry(section, key)) {
+            m_dirty_laundry[section].erase(key);
+        }
+        return;
+    }
+
     if (!m_config) {
         qDebug() << "Config parser not initialized";
         return;
     }
 
+    if (!inLaundry(section, key)) {
+        m_dirty++;
+        m_dirty_laundry[section][key] = value.toString();
+    }
+    emit dirtyChanged(m_dirty);
     m_config->setValue(key, value, section);
 }
 
