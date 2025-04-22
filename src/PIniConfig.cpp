@@ -21,7 +21,7 @@ bool PIniConfig::saveConfig(const QString &filePath) {
 QVariant PIniConfig::getValue(const QString &section, const QString &key) const {
     const char *value = m_ini.GetValue(section.toStdString().c_str(), key.toStdString().c_str(), nullptr);
     if (value) {
-        return extractVariant(value);
+        return extractVariant(QString(value));
     }
     return QVariant();
 }
@@ -32,7 +32,7 @@ void PIniConfig::setValue(const QString &key, const QVariant &value, const QStri
         return;
     }
 
-    interpretVariant(m_ini, key.toStdString(), value);
+    interpretVariant(m_ini, section.toStdString(), key.toStdString(), value);
 }
 
 bool PIniConfig::removeKey(const QString &section, const QString &key) {
@@ -125,26 +125,17 @@ void PIniConfig::interpretVariant(CSimpleIniA& config, const std::string& sectio
 }
 
 // Extracts the value from the ini file and returns it as a QVariant
-QVariant PIniConfig::extractVariant(const CSimpleIniA::TNamesDepend& node) const {
-    QString str = QString::fromUtf8(value);
-
-    // try reading as bool first
-    if (str == "1" || str == "0") {
-        return QVariant(str == "1"); // interpret as bool
-    }
-
-    bool ok = false;
-
-    // try reading as int or double
-    int intVal = str.toInt(&ok);
+QVariant PIniConfig::extractVariant(const QString& query) const {
+// try reading as int or double
+    int intVal = query.toInt(&ok);
     if (ok) {
         return intVal;
     }
 
-    double dblVal = str.toFloat(&ok);
+    double dblVal = query.toFloat(&ok);
     if (ok) {
         return dblVal;
     }
 
-    return str;
+    return QVariant(query); // interpret as string
 }
