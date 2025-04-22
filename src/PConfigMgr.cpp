@@ -41,6 +41,8 @@ bool PConfigMgr::loadConfig(const QString &filePath)
 
     m_dirty = 0; // Reset dirty flag
     m_configPath = filePath; // Store the config path
+    m_configBackup = m_config->clone(); // Create a backup of the config
+    m_dirty_laundry = createParser(filePath); // Create a laundry list for the config
 
     QString filename = QFileInfo(filePath).fileName();
     
@@ -87,13 +89,11 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
         qDebug() << "No changes to save for key: " << key;
         m_dirty--;
         emit dirtyChanged(m_dirty);
-        if (m_dirty == 0) {
-            // Clear the laundry if no dirty items left
-            m_dirty_laundry.clear(); 
-        }
+
         // Remove the key from the laundry if it exists
         if (inLaundry(section, key)) {
-            m_dirty_laundry[section].erase(key);
+            m_dirty_laundry->removeKey(section, key);
+            m_dirty--;
         }
         return;
     }
@@ -105,7 +105,7 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
 
     if (!inLaundry(section, key)) {
         m_dirty++;
-        m_dirty_laundry[section][key] = value.toString();
+        m_dirty_laundry->setValue(key, originalValue, section); // add to laundry list
     }
     emit dirtyChanged(m_dirty);
     m_config->setValue(key, value, section);

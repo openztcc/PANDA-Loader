@@ -16,6 +16,9 @@ PState::PState(QObject *parent) : QObject(parent) {
     }
 
     loadZooIni();
+
+    // this connects the worker PConfigMgr objects to this manager PState object so that there
+    // is one "source of truth" for the dirty flag
     connect(m_zooini.get(), &PConfigMgr::dirtyChanged, this, &PState::onConfigDirtyChanged);
     connect(m_pandacfg.get(), &PConfigMgr::dirtyChanged, this, &PState::onConfigDirtyChanged);
 }

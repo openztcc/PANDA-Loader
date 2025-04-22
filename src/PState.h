@@ -21,8 +21,7 @@ class PState : public QObject {
     QML_ELEMENT
     QML_SINGLETON
 
-    Q_PROPERTY(QString m_path READ getGamePath WRITE setGamePath NOTIFY pathChanged)
-    Q_PROPERTY(PConfigMgr* m_settings READ settings)
+    Q_PROPERTY(QString path READ getGamePath WRITE setGamePath NOTIFY pathChanged)
     Q_PROPERTY(int dirty READ dirty NOTIFY dirtyChanged)
 
 public:
@@ -39,6 +38,9 @@ public:
 
     std::unique_ptr<PConfigMgr> m_zooini;
     std::unique_ptr<PConfigMgr> m_pandacfg;
+
+    int dirty() const { return m_dirty; }
+    void setDirty(int dirty) { m_dirty = dirty; }
 
 signals:
     void pathChanged();

@@ -69,7 +69,7 @@ public:
     int isDirty() const { return m_dirty; }
     void setDirty(bool dirty) { m_dirty = dirty; }
     bool inLaundry(const QString &section, const QString &key) const {
-        return m_dirty_laundry[section].find(key) != m_dirty_laundry[section].end();
+        return !m_dirty_laundry->getValue(section, key).isNull();
     }
 
     // operator overloads
@@ -79,6 +79,7 @@ public:
             m_configPath = other.m_configPath;
             m_config = other.m_config ? other.m_config->clone() : nullptr;
             m_dirty = other.m_dirty;
+            m_dirty_laundry = other.m_dirty_laundry ? other.m_dirty_laundry->clone() : nullptr;
         }
         return *this;
     }
@@ -89,8 +90,8 @@ signals:
 private:
     QString m_configPath;
     std::unique_ptr<IConfigLoader> m_config;
-    std::unique_ptr<PZtdMgr> m_configBackup;
-    std::map<QString, std::map<QString, QString>> m_dirty_laundry;
+    std::unique_ptr<IConfigLoader> m_configBackup;
+    std::unique_ptr<IConfigLoader> m_dirty_laundry;
     int m_dirty = 0;
     std::unique_ptr<IConfigLoader> createParser(const QString &path) const;
     // helper functions

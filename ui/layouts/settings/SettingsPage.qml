@@ -15,7 +15,6 @@ LayoutFrame {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    property var dirtyLaundry: []
     property var currentPage: null
     property var modelData: null
     property var currentPane: null
@@ -131,7 +130,7 @@ LayoutFrame {
                             // }
                             
                             // mainContent.cancelledNavigation = true
-                            if (zoo.dirty) {
+                            if (state.dirty) {
                                 confirmChangesModal.ask().then(function(result) {
                                     if (result === "save") {
                                         console.log("User chose Save")
@@ -246,7 +245,7 @@ LayoutFrame {
             }
 
             Connections {
-                target: zoo
+                target: state
                 function onDirtyChanged (dirty) {
                     if (dirty) {
                         settingsConfirmationBar.visible = true
