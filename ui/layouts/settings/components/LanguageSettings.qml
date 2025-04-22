@@ -10,6 +10,7 @@ SettingsPane {
 
     onDataChanged: (section, key, value) => {
         console.log("Data changed:", section, key, value)
+        zoo.setValue(key, value, section)
         console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
 
     }
