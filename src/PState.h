@@ -44,12 +44,12 @@ public:
 
 signals:
     void pathChanged();
-    void dirtyChanged();
+    void dirtyChanged(int dirty);
 private slots:
     void onConfigDirtyChanged(int dirty) {
         if (m_dirty != dirty) {
             m_dirty = dirty;
-            emit dirtyChanged();
+            emit dirtyChanged(dirty);
         }
     }
 private:

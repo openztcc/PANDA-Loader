@@ -43,6 +43,11 @@ bool PTomlConfig::saveConfig(const QString &filePath) {
     return true;
 }
 
+bool PTomlConfig::clear() {
+    m_toml.clear();
+    return true;
+}
+
 QVariant PTomlConfig::getValue(const QString &section, const QString &key) const {
     std::string k = key.toStdString();
     std::string s = section.toStdString();

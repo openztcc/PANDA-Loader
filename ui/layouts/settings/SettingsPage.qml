@@ -247,6 +247,7 @@ LayoutFrame {
             Connections {
                 target: state
                 function onDirtyChanged (dirty) {
+                    qDebug() << "Dirty state changed to: " << dirty
                     if (dirty) {
                         settingsConfirmationBar.visible = true
                     } else {

@@ -10,6 +10,7 @@ public:
     PIniConfig() = default;
     bool loadConfig(const QString &filePath) override;
     bool saveConfig(const QString &filePath) override;
+    bool clear() override;
 
     // get and set values
     QVariant getValue(const QString &section, const QString &key) const override;

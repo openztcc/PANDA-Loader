@@ -48,6 +48,7 @@ public:
     // meta configuration operations
     bool loadConfig(const QString &filePath);
     bool saveConfig(const QString &filePath);
+    bool clear();
     Q_INVOKABLE QVariant getValue(const QString &section, const QString &key);
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
     static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
@@ -68,9 +69,6 @@ public:
     // setters and getters for QProperties
     int isDirty() const { return m_dirty; }
     void setDirty(bool dirty) { m_dirty = dirty; }
-    bool inLaundry(const QString &section, const QString &key) const {
-        return !m_dirty_laundry->getValue(section, key).isNull();
-    }
 
     // operator overloads
     // copy overload
@@ -79,7 +77,7 @@ public:
             m_configPath = other.m_configPath;
             m_config = other.m_config ? other.m_config->clone() : nullptr;
             m_dirty = other.m_dirty;
-            m_dirty_laundry = other.m_dirty_laundry ? other.m_dirty_laundry->clone() : nullptr;
+            m_dirty_laundry = other.m_dirty_laundry;
         }
         return *this;
     }

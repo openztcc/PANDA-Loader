@@ -18,6 +18,11 @@ bool PIniConfig::saveConfig(const QString &filePath) {
     return true;
 }
 
+bool PIniConfig::clear() {
+    m_ini.Reset();
+    return true;
+}
+
 QVariant PIniConfig::getValue(const QString &section, const QString &key) const {
     const char *value = m_ini.GetValue(section.toStdString().c_str(), key.toStdString().c_str(), nullptr);
     if (value) {
@@ -113,7 +118,7 @@ void PIniConfig::interpretVariant(CSimpleIniA& config, const std::string& sectio
         qDebug() << "Error: Invalid value provided for ini file with key = " << key;
         return;
     }
-    
+
     switch (value.typeId()) {
         case QMetaType::QString:
             config.SetValue(section.c_str(), key.c_str(), value.toString().toStdString().c_str());
@@ -127,6 +132,7 @@ void PIniConfig::interpretVariant(CSimpleIniA& config, const std::string& sectio
 // Extracts the value from the ini file and returns it as a QVariant
 QVariant PIniConfig::extractVariant(const QString& query) const {
 // try reading as int or double
+    bool ok = false;
     int intVal = query.toInt(&ok);
     if (ok) {
         return intVal;
