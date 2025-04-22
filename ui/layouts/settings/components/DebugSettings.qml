@@ -21,7 +21,7 @@ SettingsPane {
         checked: zoo.getValue("debug", "devModeEnabled")
 
         onCheckChanged: (data) => {
-                debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+                debugSettingsPane.dataChanged("debug", "devModeEnabled", data.toString())
         }    
     }
     // ------------------------- DEBUG CONTROLS

@@ -112,9 +112,26 @@ QVariant PConfigMgr::getValue(const QString &section, const QString &key)
 // Set a key value in config file
 void PConfigMgr::setValue(const QString &key, const QVariant &value, const QString &section)
 {
+    // get path extension
+    QString ext = QFileInfo(m_configPath).suffix().toLower();
+    QVariant input = value;
+
+    if (ext == "ini") {
+        // interpret the value to the correct type
+        if (input.toString() == "true") {
+            input = 1;
+        } else if (input.toString() == "false") {
+            input = 0;
+        }
+    }
     QVariant originalValue = m_configBackup->getValue(section, key);
-    qDebug() << "Original value: " << originalValue << " vs " << value;
-    if (originalValue.toString() == value.toString()) {
+    // interpret original as well  because we now know the type
+    if (input.typeId() == QMetaType::Int && originalValue == "") {
+        originalValue = 0;
+    }
+
+    qDebug() << "Original value: " << originalValue << " vs " << input;
+    if (originalValue.toString() == input.toString()) {
         qDebug() << "No changes to save for key: " << key;
         if (m_dirty > 0) {
             if (m_dirty_laundry->valueExists(originalValue.toString(), key, section)) {
@@ -138,7 +155,7 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
         emit dirtyChanged(m_dirty);
         qDebug() << "Dirty laundry updated. Current count: " << m_dirty;
     }
-    m_config->setValue(key, value, section);
+    m_config->setValue(key, input, section);
 }
 
 // Get a key value from a toml table as a list (ie tags and authors)

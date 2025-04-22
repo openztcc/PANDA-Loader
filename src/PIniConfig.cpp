@@ -28,7 +28,7 @@ QVariant PIniConfig::getValue(const QString &section, const QString &key) const 
     if (value) {
         return extractVariant(QString(value));
     }
-    return QVariant();
+    return QVariant("");
 }
 
 void PIniConfig::setValue(const QString &key, const QVariant &value, const QString &section) {
@@ -155,6 +155,7 @@ void PIniConfig::interpretVariant(CSimpleIniA& config, const std::string& sectio
 
     if (value.isNull()) {
         qDebug() << "Error: No value provided for ini file with key = " << key;
+        config.SetValue(section.c_str(), key.c_str(), "");
         return;
     }
 
@@ -163,14 +164,7 @@ void PIniConfig::interpretVariant(CSimpleIniA& config, const std::string& sectio
         return;
     }
 
-    switch (value.typeId()) {
-        case QMetaType::QString:
-            config.SetValue(section.c_str(), key.c_str(), value.toString().toStdString().c_str());
-            break;
-        default:
-            qDebug() << "Error: Unsupported type for ini file with key = " << key << " and value " << value;
-            break;
-    }
+    config.SetValue(section.c_str(), key.c_str(), value.toString().toStdString().c_str());
 }
 
 // Extracts the value from the ini file and returns it as a QVariant
