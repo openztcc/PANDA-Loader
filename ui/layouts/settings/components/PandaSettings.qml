@@ -36,6 +36,10 @@ SettingsPane {
             isFileBrowser: modelData.isFileBrowser
             enabled: modelData.enabled
             text: psettings.getValue("", modelData.key)
+
+            onTextChange: (data) => {
+                pandaSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+            }
         }
     }
     ControlPanel {
@@ -53,6 +57,10 @@ SettingsPane {
             descriptionText: "Path to the ISO in local drive"
             isFileBrowser: true
             text: psettings.getValue("", "isoPath")
+
+            onTextChange: (data) => {
+                pandaSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+            }
         }
 
     }
