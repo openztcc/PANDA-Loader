@@ -85,7 +85,7 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
     QVariant originalValue = getValue(section, key);
     if (originalValue == value) {
         qDebug() << "No changes to save for key: " << key;
-        dirty--;
+        m_dirty--;
         emit dirtyChanged(m_dirty);
         if (m_dirty == 0) {
             // Clear the laundry if no dirty items left

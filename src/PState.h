@@ -23,6 +23,7 @@ class PState : public QObject {
 
     Q_PROPERTY(QString m_path READ getGamePath WRITE setGamePath NOTIFY pathChanged)
     Q_PROPERTY(PConfigMgr* m_settings READ settings)
+    Q_PROPERTY(int dirty READ dirty NOTIFY dirtyChanged)
 
 public:
     explicit PState(QObject *parent = nullptr);
@@ -41,12 +42,21 @@ public:
 
 signals:
     void pathChanged();
+    void dirtyChanged();
+private slots:
+    void onConfigDirtyChanged(int dirty) {
+        if (m_dirty != dirty) {
+            m_dirty = dirty;
+            emit dirtyChanged();
+        }
+    }
 private:
     QString m_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";
     QString m_resource_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     QString m_pandacfg_path;
     QVector<PModItem> m_mods;
     QString m_configPath = QDir::homePath() + "/.panda";
+    int m_dirty;
 
 };
 

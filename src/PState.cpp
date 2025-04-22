@@ -16,6 +16,8 @@ PState::PState(QObject *parent) : QObject(parent) {
     }
 
     loadZooIni();
+    connect(m_zooini.get(), &PConfigMgr::dirtyChanged, this, &PState::onConfigDirtyChanged);
+    connect(m_pandacfg.get(), &PConfigMgr::dirtyChanged, this, &PState::onConfigDirtyChanged);
 }
 
 int PState::launchZT() {
