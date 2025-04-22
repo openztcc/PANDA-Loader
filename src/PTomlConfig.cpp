@@ -161,33 +161,33 @@ void PTomlConfig::interpretVariant(toml::table& config, const std::string& key, 
 // same as above but tries to return list
 void PTomlConfig::appendVariantToArray(toml::array& arr, const QVariant& value) {
     switch (value.typeId()) {
-    case QMetaType::Bool:
-        arr.push_back(value.toBool());
-        break;
-    case QMetaType::Int:
-    case QMetaType::Long:
-    case QMetaType::LongLong:
-    case QMetaType::UInt:
-    case QMetaType::ULong:
-    case QMetaType::ULongLong:
-        arr.push_back(static_cast<int64_t>(value.toLongLong()));
-        break;
-    case QMetaType::Double:
-        arr.push_back(value.toDouble());
-        break;
-    case QMetaType::QString:
-        arr.push_back(value.toString().toStdString());
-        break;
-    case QMetaType::QVariantList: {
-        toml::array nestedArr;
-        for (const auto& v : value.toList()) {
-            appendVariantToArray(nestedArr, v);
+        case QMetaType::Bool:
+            arr.push_back(value.toBool());
+            break;
+        case QMetaType::Int:
+        case QMetaType::Long:
+        case QMetaType::LongLong:
+        case QMetaType::UInt:
+        case QMetaType::ULong:
+        case QMetaType::ULongLong:
+            arr.push_back(static_cast<int64_t>(value.toLongLong()));
+            break;
+        case QMetaType::Double:
+            arr.push_back(value.toDouble());
+            break;
+        case QMetaType::QString:
+            arr.push_back(value.toString().toStdString());
+            break;
+        case QMetaType::QVariantList: {
+            toml::array nestedArr;
+            for (const auto& v : value.toList()) {
+                appendVariantToArray(nestedArr, v);
+            }
+            arr.push_back(nestedArr);
+            break;
         }
-        arr.push_back(nestedArr);
-        break;
-    }
-    default:
-        break;
+        default:
+            break;
     }
 }
 

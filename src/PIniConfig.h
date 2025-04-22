@@ -35,7 +35,8 @@ public:
 private:
     CSimpleIniA m_ini;
 
-    void PIniConfig::interpretVariant(CSimpleIniA& m_ini, const std::string& key, const QVariant& value);
+    void interpretVariant(CSimpleIniA& m_ini, const std::string& section, const std::string& key, const QVariant& value);
+    QVariant extractVariant(const CSimpleIniA::TNamesDepend& node) const;
 };
 
 #endif // PIniConfig.h

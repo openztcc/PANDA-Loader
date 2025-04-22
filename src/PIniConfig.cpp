@@ -21,7 +21,7 @@ bool PIniConfig::saveConfig(const QString &filePath) {
 QVariant PIniConfig::getValue(const QString &section, const QString &key) const {
     const char *value = m_ini.GetValue(section.toStdString().c_str(), key.toStdString().c_str(), nullptr);
     if (value) {
-        return QString::fromStdString(value);
+        return extractVariant(value);
     }
     return QVariant();
 }
@@ -97,7 +97,7 @@ PIniConfig& PIniConfig::operator=(const PIniConfig& other) {
 // --------------- Private functions
 
 // ini files in ZT only have bools, ints, floats, and strings
-void PIniConfig::interpretVariant(SimpleIniA& config, const std::string& key, const QVariant& value) {
+void PIniConfig::interpretVariant(CSimpleIniA& config, const std::string& section, const std::string& key, const QVariant& value) {
     // validate
     if (key.empty()) {
         qDebug() << "Error: No key provided for ini file with value " << value;
@@ -115,25 +115,36 @@ void PIniConfig::interpretVariant(SimpleIniA& config, const std::string& key, co
     }
     
     switch (value.typeId()) {
-        case QMetaType::Bool:
-            config.SetValue(key, value.toBool() ? "1" : "0");
-            break;
-        case QMetaType::Int:
-        case QMetaType::Long:
-        case QMetaType::LongLong:
-        case QMetaType::UInt:
-        case QMetaType::ULong:
-        case QMetaType::ULongLong:
-            config.SetValue(key, value.toLongLong());
-            break;
-        case QMetaType::Float:
-            config.SetValue(key, value.toFloat());
-            break;
         case QMetaType::QString:
-            config.SetValue(key, value.toString().toStdString().toUtf8().constData());
+            config.SetValue(section.c_str(), key.c_str(), value.toString().toStdString().c_str());
             break;
         default:
             qDebug() << "Error: Unsupported type for ini file with key = " << key << " and value " << value;
             break;
     }
+}
+
+// Extracts the value from the ini file and returns it as a QVariant
+QVariant PIniConfig::extractVariant(const CSimpleIniA::TNamesDepend& node) const {
+    QString str = QString::fromUtf8(value);
+
+    // try reading as bool first
+    if (str == "1" || str == "0") {
+        return QVariant(str == "1"); // interpret as bool
+    }
+
+    bool ok = false;
+
+    // try reading as int or double
+    int intVal = str.toInt(&ok);
+    if (ok) {
+        return intVal;
+    }
+
+    double dblVal = str.toFloat(&ok);
+    if (ok) {
+        return dblVal;
+    }
+
+    return str;
 }
