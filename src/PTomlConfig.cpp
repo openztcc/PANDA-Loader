@@ -157,19 +157,19 @@ bool PTomlConfig::valueExists(const QString &value, const QString &key, const QS
     std::string k = key.toStdString();
     std::string s = section.toStdString();
     // make sure value is not empty or not valid
-    if (value.isNull() || value.isValid() == false) {
+    if (value.isNull()) {
         return false;
     }
     
     // if there is no section, just check the root level
     if (s == "") {
         if (auto it = m_toml.find(k); it != m_toml.end()) {
-            return it->second.as_string() == value.toStdString();
+            return it->second.as_string()->get() == value.toStdString();
         }
     } else { // otherwise check the section
         if (auto* settings = m_toml[s].as_table()) {
             if (auto it = settings->find(k); it != settings->end()) {
-                return it->second.as_string() == value.toStdString();
+                return it->second.as_string()->get() == value.toStdString();
             }
         }
     }

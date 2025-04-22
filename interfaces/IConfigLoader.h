@@ -16,9 +16,9 @@ class IConfigLoader {
         virtual bool removeSection(const QString &section) = 0;
         virtual bool getAllSections() = 0;
 
-        virtual void sectionExists(const QString &section) const = 0;
-        virtual void keyExists(const QString &key, const QString &section) const = 0;
-        virtual void valueExists(const QString &value, const QString &key, const QString &section) const = 0;
+        virtual bool sectionExists(const QString &section) const = 0;
+        virtual bool keyExists(const QString &key, const QString &section) const = 0;
+        virtual bool valueExists(const QString &value, const QString &key, const QString &section) const = 0;
 
         virtual std::unique_ptr<IConfigLoader> clone() const = 0; // clone so we can use polymorphism
 };

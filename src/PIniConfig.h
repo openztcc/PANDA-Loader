@@ -20,9 +20,9 @@ public:
     bool getAllSections() override;
 
     // exist tests
-    bool sectionExists(const QString &section) override;
-    bool keyExists(const QString &key, const QString &section) override;
-    bool valueExists(const QString &value, const QString &key, const QString &section) override;
+    bool sectionExists(const QString &section) const override;
+    bool keyExists(const QString &key, const QString &section) const override;
+    bool valueExists(const QString &value, const QString &key, const QString &section) const override;
 
     // unique to ini config
     void removeKeysByValue(const QString &section, const QString &value);
@@ -35,8 +35,23 @@ public:
     }
 
     PIniConfig(const PIniConfig& other) {
-        *this = other;
+        m_ini.Reset();
+        m_ini.SetUnicode(other.m_ini.IsUnicode());
+    
+        CSimpleIniA::TNamesDepend sections;
+        other.m_ini.GetAllSections(sections);
+        for (const auto& section : sections) {
+            CSimpleIniA::TNamesDepend keys;
+            other.m_ini.GetAllKeys(section.pItem, keys);
+            for (const auto& key : keys) {
+                const char* value = other.m_ini.GetValue(section.pItem, key.pItem, nullptr);
+                if (value) {
+                    m_ini.SetValue(section.pItem, key.pItem, value);
+                }
+            }
+        }
     }
+    
 
 private:
     CSimpleIniA m_ini;

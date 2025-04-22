@@ -77,7 +77,7 @@ public:
             m_configPath = other.m_configPath;
             m_config = other.m_config ? other.m_config->clone() : nullptr;
             m_dirty = other.m_dirty;
-            m_dirty_laundry = other.m_dirty_laundry;
+            m_dirty_laundry = other.m_dirty_laundry ? other.m_dirty_laundry->clone() : nullptr;
         }
         return *this;
     }
