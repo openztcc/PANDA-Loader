@@ -189,6 +189,8 @@ LayoutFrame {
                     initialItem: pandaSettings
 
                     Component.onCompleted: {
+                        mainContent.currentPage = settingsButtonsRepeater.itemAt(0)
+                        mainContent.currentPane = pandaSettings
                         mainContent.replaceSettingsPane(pandaSettings, settingsStack, settingsButtonsRepeater.itemAt(1))
                     }
                 }
