@@ -22,6 +22,7 @@ Rectangle {
             Layout.preferredHeight: implicitHeight - statusBar.height
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
+            spacing: 0
 
         }
         // status bar
