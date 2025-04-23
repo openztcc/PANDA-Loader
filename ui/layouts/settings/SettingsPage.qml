@@ -140,15 +140,16 @@ LayoutFrame {
                             // }
                             
                             // mainContent.cancelledNavigation = true
-                            if (state.dirty) {
+                            if (mainContent.dirty) {
+                                let config = determineConfig()
                                 confirmChangesModal.ask().then(function(result) {
                                     if (result === "save") {
                                         console.log("User chose Save")
-                                        zoo.saveConfig()
+                                        config.saveConfig()
                                         replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
                                     } else if (result === "discard") {
                                         console.log("User chose Discard")
-                                        zoo.revertChanges()
+                                        config.revertChanges()
                                         replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
                                     } else {
                                         console.log("User cancelled")
