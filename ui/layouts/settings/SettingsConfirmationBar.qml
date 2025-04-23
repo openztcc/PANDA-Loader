@@ -15,7 +15,9 @@
         radius: 5
         z: 20
         opacity: hovered ? 1.0 : 0.8
-        visible: config.dirty ? true : false
+        Behavior on opacity { NumberAnimation { duration: 150 } }
+        visible: true
+        Behavior on visible { NumberAnimation { duration: 150 } }
 
         signal discarded()
 
@@ -62,7 +64,7 @@
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
-                    if (config.dirty) {
+                    if (state.dirty) {
                         config.saveConfig()
                         console.log("config.ini changes saved")
                     } else {
@@ -98,7 +100,7 @@
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
-                    if (config.dirty) {
+                    if (state.dirty) {
                         config.revertChanges()
                         confirmChangesBar.discarded()
                         console.log("Reverted changes to config.ini")

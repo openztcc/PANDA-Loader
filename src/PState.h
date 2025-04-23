@@ -44,11 +44,14 @@ public:
 
 signals:
     void pathChanged();
-    void dirtyChanged(int dirty);
+    void dirtyChanged();
 private slots:
+    // TODO: slot receives correct signals inside but does not emit to QML
+    // not currently functional, but needs to be fixed for future INI editor
     void onConfigDirtyChanged(int dirty) {
         // track which config is dirty
         QObject* senderObj = sender();
+        qDebug() << "Update dirty state from: " << senderObj << " with dirty state: " << dirty;
 
         // grab dirty data from the sender
         if (senderObj == m_zooini.get()) {
@@ -56,13 +59,9 @@ private slots:
         } else if (senderObj == m_pandacfg.get()) {
             m_pandacfgDirty = dirty;
         }
-    
-        // aggregate dirty data from all configs
-        int totalDirty = m_zooiniDirty + m_pandacfgDirty;
-        if (m_dirty != totalDirty) {
-            m_dirty = totalDirty;
-            emit dirtyChanged(m_dirty);
-        }
+
+        m_dirty = m_zooiniDirty + m_pandacfgDirty;
+        emit dirtyChanged();
     }
 private:
     QString m_path;// = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\zoo.exe";

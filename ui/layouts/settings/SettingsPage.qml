@@ -18,6 +18,7 @@ LayoutFrame {
     property var currentPage: null
     property var modelData: null
     property var currentPane: null
+    property int dirty: 0
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
@@ -247,6 +248,7 @@ LayoutFrame {
                 SettingsConfirmationBar{
                     id: settingsConfirmationBar
                     config: determineConfig()
+                    visible: mainContent.dirty ? true : false
 
                     onDiscarded: () => {
                         replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
@@ -255,18 +257,21 @@ LayoutFrame {
             }
 
             Connections {
-                target: state
-                function onDirtyChanged (dirty) {
-                    qDebug() << "Dirty state changed to: " << dirty
-                    if (dirty) {
-                        settingsConfirmationBar.visible = true
-                    } else {
-                        settingsConfirmationBar.visible = false
-                    }
+                target: zoo
+                function onDirtyChanged(dirty) {
+                    mainContent.dirty = dirty
+                    console.log("Is data dirty?: " + (dirty ? "true" : "false"))
                 }
             }
 
+            Connections {
+                target: psettings
+                function onDirtyChanged(dirty) {
+                    mainContent.dirty = dirty
+                    console.log("Is data dirty?: " + (dirty ? "true" : "false"))
+                }
+            }
         }
-
     }
+    
 }
