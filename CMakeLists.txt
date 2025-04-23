@@ -37,7 +37,6 @@ qt_add_executable(appPandaLdr
     models/PEntityType.cpp models/PEntityType.h
     models/PIconData.h
     models/PModModel.cpp models/PModModel.h
-    models/PZooConfig.h models/PZooConfig.cpp
     interfaces/IConfigLoader.h interfaces/IConfigLoader.cpp
     )
 
@@ -126,7 +125,6 @@ qt_add_qml_module(appPandaLdr
         models/PModItem.h
         models/PEntityType.h
         models/PModModel.h
-        models/PZooConfig.h
         # interfaces
         interfaces/IConfigLoader.h
 )
