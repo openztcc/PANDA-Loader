@@ -15,10 +15,11 @@ LayoutFrame {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    property var dirtyLaundry: []
     property var currentPage: null
     property var modelData: null
     property var currentPane: null
+    property int dirty: 0
+    property var currentConfig: null
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
@@ -27,6 +28,14 @@ LayoutFrame {
         }
         currentButton.current = true
         settingsPane.currentButton = currentButton
+    }
+
+    function determineConfig() {
+        if (mainContent.currentPage.pane === pandaSettings) {
+            return psettings
+        } else {
+            return zoo
+        }
     }
 
     SimpleModal {
@@ -58,9 +67,9 @@ LayoutFrame {
 
     RowLayout {
         id: mainLayout
-        Layout.fillWidth: true
-        Layout.fillHeight: true
+        anchors.fill: parent
         spacing: 0
+        anchors.margins: 0
 
         Rectangle {
             id: settingsPane
@@ -119,6 +128,7 @@ LayoutFrame {
                             let currentPaneBackup = modelData.pane
                             mainContent.currentPage = settingsButtonsRepeater.itemAt(index)
                             mainContent.currentPane = modelData.pane
+                            console.log("Clicked on: " + mainContent.currentPage.text)
 
                             // if (zoo.dirty) {
                             //     confirmChangesModal.open()
@@ -131,15 +141,16 @@ LayoutFrame {
                             // }
                             
                             // mainContent.cancelledNavigation = true
-                            if (zoo.dirty) {
+                            if (mainContent.dirty) {
+                                let config = mainContent.currentConfig
                                 confirmChangesModal.ask().then(function(result) {
                                     if (result === "save") {
                                         console.log("User chose Save")
-                                        zoo.saveConfig()
+                                        config.saveConfig()
                                         replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
                                     } else if (result === "discard") {
                                         console.log("User chose Discard")
-                                        zoo.revertChanges()
+                                        config.revertChanges()
                                         replaceSettingsPane(modelData.pane, settingsStack, mainContent.currentPage)
                                     } else {
                                         console.log("User cancelled")
@@ -167,8 +178,8 @@ LayoutFrame {
             ColumnLayout {
                 id: settingsContent
                 anchors.fill: parent
-                anchors.topMargin: 10
-                spacing: 4
+                anchors.topMargin: 0
+                spacing: 0
 
                 StackView {
                     id: settingsStack
@@ -178,6 +189,8 @@ LayoutFrame {
                     initialItem: pandaSettings
 
                     Component.onCompleted: {
+                        mainContent.currentPage = settingsButtonsRepeater.itemAt(0)
+                        mainContent.currentPane = pandaSettings
                         mainContent.replaceSettingsPane(pandaSettings, settingsStack, settingsButtonsRepeater.itemAt(1))
                     }
                 }
@@ -238,6 +251,10 @@ LayoutFrame {
                 // top bar with save changes button
                 SettingsConfirmationBar{
                     id: settingsConfirmationBar
+                    config: mainContent.currentConfig
+                    visible: mainContent.dirty ? true : false
+                    dirty: mainContent.dirty
+                    Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
                     onDiscarded: () => {
                         replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
@@ -247,16 +264,22 @@ LayoutFrame {
 
             Connections {
                 target: zoo
-                onDirtyChanged: (dirty) => {
-                    if (dirty) {
-                        settingsConfirmationBar.visible = true
-                    } else {
-                        settingsConfirmationBar.visible = false
-                    }
+                function onDirtyChanged(dirty) {
+                    mainContent.dirty = dirty
+                    mainContent.currentConfig = zoo
+                    console.log("Is data dirty?: " + (dirty ? "true" : "false"))
                 }
             }
 
+            Connections {
+                target: psettings
+                function onDirtyChanged(dirty) {
+                    mainContent.dirty = dirty
+                    mainContent.currentConfig = psettings
+                    console.log("Is data dirty?: " + (dirty ? "true" : "false"))
+                }
+            }
         }
-
     }
+    
 }

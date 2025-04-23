@@ -10,7 +10,7 @@ SettingsPane {
 
     onDataChanged: (section, key, value) => {
         console.log("Data changed:", section, key, value)
-        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        zoo.setValue(key, value, section)
         console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
 
     }
@@ -23,7 +23,7 @@ SettingsPane {
         delegate: PTextField {
             required property var modelData
             title: modelData.label
-            text: zoo.getString(modelData.section, modelData.key)
+            text: zoo.getValue(modelData.section, modelData.key)
 
             onTextChange: (data) => {
                 languageSettingsPane.dataChanged(modelData.section, modelData.key, data)

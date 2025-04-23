@@ -5,100 +5,166 @@ const QString m_metaConfigName = "meta.toml";
 const QString m_configDirPath = QDir::homePath() + "/.config/PandaLdr/"; // temporary
 const QString m_metaConfigDirPath = m_configDirPath + "meta_configs/"; // temporary
 
-PConfigMgr::PConfigMgr() {}
-
 PConfigMgr::~PConfigMgr() {}
 
-// Get the meta configuration from a ztd file
-toml::table PConfigMgr::getMetaConfig(const QString &ztdFilePath)
+// Create a parser based on the file extension
+std::unique_ptr<IConfigLoader> PConfigMgr::createParser(const QString &path) const
 {
-    // Get toml file from ztd
-    toml::table config;
-    QByteArray fileData;
-
-    // does file exist
-    if (PZtdMgr::openFileInZtd(ztdFilePath, m_metaConfigName, fileData)) {
-        config = toml::parse(fileData.constData());
+    // Get the file extension
+    QString ext = QFileInfo(path).suffix().toLower();
+    if (ext == "ini") {
+        return std::make_unique<PIniConfig>();
+    } else if (ext == "toml") {
+        return std::make_unique<PTomlConfig>();
+    } else {
+        return nullptr; // Unsupported file extension
     }
-
-    if (config.empty()) {
-        return toml::table();
-    }
-
-    return config;
 }
 
 // Generic config parser for toml files in filesystem
-toml::table PConfigMgr::getConfig(const QString &filePath)
+bool PConfigMgr::loadConfig(const QString &filePath)
 {
-    // Check if the config file exists
-    if (!QFile::exists(filePath)) {
-        return toml::table();
+    // Get extension of the file
+    QString ext = QFileInfo(filePath).suffix().toLower();
+    m_config = createParser(filePath);
+
+    if (!m_config) {
+        qDebug() << "Unsupported file extension: " << ext;
+        return false;
     }
 
-    // Read config file
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        return toml::table();
+    // Load the config file
+    if (!m_config->loadConfig(filePath)) {
+        qDebug() << "Failed to load config file: " << filePath;
+        return false;
     }
 
-    QByteArray fileData = file.readAll();
-    file.close();
-
-    // Parse the toml data
-    toml::table config = toml::parse(fileData.constData());
-
-    return config;
-}
-
-// Save the config to a toml file in filesystem
-bool PConfigMgr::saveConfig(const QString &filePath, const toml::table &config)
-{
-    // Create the directory if it does not exist
-    QDir dir(QFileInfo(filePath).absolutePath());
-    if (!dir.exists()) {
-        dir.mkpath(dir.absolutePath());
+    m_dirty = 0; // Reset dirty flag
+    if (!m_dirty_laundry) {
+        m_dirty_laundry = createParser(filePath); // Create a new dirty laundry list
+    } else {
+        m_dirty_laundry->clear(); // Clear the dirty laundry list
     }
+    m_configPath = filePath; // Store the config path
+    m_configBackup = m_config->clone(); // Create a backup of the config
 
-    // Write the new configuration to the toml file
-    QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        return false; 
-    }
-
-    std::stringstream ss;
-    ss << config;
-    QString tomlStr = QString::fromStdString(ss.str());
-    file.write(tomlStr.toUtf8());
-    file.close();
+    QString filename = QFileInfo(filePath).fileName();
+    
+    // emit dirtyChanged signal
+    emit dirtyChanged(m_dirty);
+    qDebug() << filename << " loaded successfully.";
+    qDebug() << "Config path: " << m_configPath;
 
     return true;
 }
 
-// Get a key value from a toml table
-QString PConfigMgr::getKeyValue(const QString &key, const toml::table &config)
+// Save the config to disk
+bool PConfigMgr::saveConfig(const QString &filePath)
 {
-    // Find value in table
-    if (auto it = config.find(key.toStdString()); it != config.end()) {
-        if (auto strVal = it->second.as_string()) {
-            return QString::fromStdString(strVal->get());
-        }
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return false;
     }
 
-    return QString("");
+    m_config->saveConfig(filePath);
+
+    m_dirty = 0; // Reset dirty flag
+    m_configBackup = m_config->clone(); // Create a backup of the config
+    m_dirty_laundry->clear(); // Clear the dirty laundry list
+    emit dirtyChanged(m_dirty);
+
+    return true;
 }
 
-// Get a key value from a toml table as a boolean
-bool PConfigMgr::getBoolValue(const QString &key, const toml::table &config)
+// Save the config to the default path
+bool PConfigMgr::saveConfig()
 {
-    // Find value in table
-    if (auto it = config.find(key.toStdString()); it != config.end()) {
-        if (auto boolVal = it->second.as_boolean()) {
-            return boolVal->get();
-        }
+    return saveConfig(m_configPath);
+}
+
+// Revert changes to the config file
+bool PConfigMgr::revertChanges()
+{
+    if (!m_config) {
+        qDebug() << "Unable to revert changes: config parser not initialized";
+        return false;
     }
 
-    return false;
+    // Revert the changes to the config file
+    m_config = m_configBackup->clone(); // Restore the backup
+    m_dirty = 0; // Reset dirty flag
+    m_dirty_laundry->clear(); // Clear the dirty laundry list
+    emit dirtyChanged(m_dirty);
+
+    return true;
+}
+
+// Clear the config
+bool PConfigMgr::clear()
+{
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return false;
+    }
+
+    m_config->clear();
+    m_configBackup->clear();
+    m_dirty = 0; // Reset dirty flag
+    m_dirty_laundry->clear(); // Clear the dirty laundry list
+    emit dirtyChanged(m_dirty);
+
+    return true;
+}
+
+// Get a key value from config file
+QVariant PConfigMgr::getValue(const QString &section, const QString &key)
+{
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return QVariant();
+    }
+
+    return m_config->getValue(section, key);
+}
+
+// Set a key value in config file
+void PConfigMgr::setValue(const QString &key, const QVariant &value, const QString &section)
+{
+    // get path extension
+    // QString ext = QFileInfo(m_configPath).suffix().toLower();
+    QVariant input = m_config->extractVariant(value.toString());
+
+    QVariant originalValue = m_configBackup->getValue(section, key);
+    // interpret original as well  because we now know the type
+    if (input.typeId() == QMetaType::Int && originalValue == "") {
+        originalValue = 0;
+    }
+
+    qDebug() << "Original value: " << originalValue << " vs " << input;
+    if (originalValue.toString() == input.toString()) {
+        if (m_dirty > 0) {
+            if (m_dirty_laundry->valueExists(originalValue.toString(), key, section)) {
+                m_dirty_laundry->removeKey(key, section);
+                m_dirty--;
+                emit dirtyChanged(m_dirty);
+                qDebug() << "Dirty laundry removed one item. Current count: " << m_dirty;
+            }
+        }
+        return;
+    }
+
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return;
+    }
+
+    if (!m_dirty_laundry->valueExists(originalValue.toString(), key, section)) {
+        m_dirty++;
+        m_dirty_laundry->setValue(key, originalValue, section);
+        emit dirtyChanged(m_dirty);
+        qDebug() << "Dirty laundry updated. Current count: " << m_dirty;
+    }
+    m_config->setValue(key, input, section);
 }
 
 // Get a key value from a toml table as a list (ie tags and authors)
@@ -225,82 +291,6 @@ bool PConfigMgr::removeMetaConfig(const QString &ztdFilePath)
     //     QFile::remove(tempZtdPath); // Clean up temporary file
     //     return false; // Failed to replace the original ztd
     // }
-
-    return true;
-}
-
-// Get the zoo.ini configuration from Zoo Tycoon installation
-toml::table PConfigMgr::getZooIniConfig(const QString &iniPath)
-{
-    // Check if the ini file exists
-    if (!QFile::exists(iniPath)) {
-        return toml::table(); // Return empty table if the ini file does not exist
-    }
-
-    // Read the ini file
-    QSettings settings(iniPath, QSettings::IniFormat);
-    toml::table config;
-
-    // Iterate through all keys in the ini file and add them to the toml table
-    for (const QString &key : settings.allKeys()) {
-        config.insert_or_assign(key.toStdString(), toml::value(settings.value(key).toString().toStdString()));
-    }
-
-    return config;
-}
-
-// Updates the zoo.ini configuration
-bool PConfigMgr::updateZooIniConfig(const QString &iniPath, const toml::table &config)
-{
-    // Check if the ini file exists
-    if (!QFile::exists(iniPath)) {
-        return false;
-    }
-
-    // Write the new configuration to the ini file
-    QSettings settings(iniPath, QSettings::IniFormat);
-
-    for (const auto &[key, value] : config) {
-        const auto* str_value = value.as_string();
-        std::string str = str_value ? str_value->get() : "";
-
-        settings.setValue(QString::fromStdString(std::string(key)), QString::fromStdString(str));
-    }
-
-    return true;
-}
-
-// Removes the zoo.ini configuration
-bool PConfigMgr::removeZooIniConfig(const QString &iniPath)
-{
-    // Check if the ini file exists
-    if (!QFile::exists(iniPath)) {
-        return false; // Return false if the ini file does not exist
-    }
-
-    // Remove the ini file
-    return QFile::remove(iniPath);
-}
-
-// Reads a Panda config file and returns a toml table
-bool PConfigMgr::readPandaConfig(const QString &filePath, toml::table &config)
-{
-    // Check if config file exists
-    if (!QFile::exists(filePath)) {
-        return false;
-    }
-
-    // Read config file
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        return false;
-    }
-
-    QByteArray fileData = file.readAll();
-    file.close();
-
-    // Parse the toml data
-    config = toml::parse(fileData.constData());
 
     return true;
 }

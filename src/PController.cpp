@@ -101,7 +101,7 @@ bool PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
     qDebug() << "Current location:" << currentLocation;
     QString targetLocation;
 
-    QString pandaHomePath = QDir::cleanPath(m_state->settings()->pandaHomePath());
+    QString pandaHomePath = QDir::cleanPath(m_state->pandaHomePath());
     QString disabledDir = QDir::cleanPath(pandaHomePath + "/resources/mods/.disabled") + "/";
     QString originalLocation = mod->oglocation();
     qDebug() << "Original location:" << originalLocation;

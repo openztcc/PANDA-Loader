@@ -10,7 +10,7 @@ SettingsPane {
 
     onDataChanged: (section, key, value) => {
         console.log("Data changed:", section, key, value)
-        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        zoo.setValue(key, value, section) // update table sets data dirty, do not block
         console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
 
     }
@@ -21,7 +21,7 @@ SettingsPane {
         title: "Default Edit Character Limit"
         Layout.fillWidth: true
         descriptionText: "Default character limit for edit fields"
-        text: zoo.getString("UI", "defaultEditCharLimit")
+        text: zoo.getValue("UI", "defaultEditCharLimit")
 
         onTextChange: (data) => {
             uiSettingsPane.dataChanged("UI", "defaultEditCharLimit", data)
@@ -35,14 +35,14 @@ SettingsPane {
         label: "Tooltip Delay"
         showSwitch: true
         Layout.fillWidth: true
-        checked: zoo.getBool("UI", "tooltipDelay")
+        checked: zoo.getValue("UI", "tooltipDelay")
 
         PTextField { // tooltipDuration
             id: tooltipDurationField
             title: "Tooltip Duration"
             Layout.fillWidth: true
             descriptionText: "Duration of the tooltip"
-            text: zoo.getString("UI", "tooltipDuration")
+            text: zoo.getValue("UI", "tooltipDuration")
 
             onTextChange: (data) => {
                 uiSettingsPane.dataChanged("UI", "tooltipDuration", data)
@@ -68,7 +68,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: "Maximum width of tooltips"
-                text: zoo.getString("UI", modelData.key)
+                text: zoo.getValue("UI", modelData.key)
 
                 onTextChange: (data) => {
                     uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
@@ -82,7 +82,7 @@ SettingsPane {
         id: helpTypeField
         title: "Help Type"
         Layout.fillWidth: true
-        text: zoo.getString("UI", "helpType")
+        text: zoo.getValue("UI", "helpType")
 
         onTextChange: (data) => {
             uiSettingsPane.dataChanged("UI", "helpType", data)
@@ -96,7 +96,7 @@ SettingsPane {
         label: "Message Display"
         showSwitch: true
         Layout.fillWidth: true
-        checked: zoo.getBool("UI", "MessageDisplay")
+        checked: zoo.getValue("UI", "MessageDisplay")
 
         // TODO: update message display
 
@@ -105,7 +105,7 @@ SettingsPane {
             title: "Minimum Message Interval"
             Layout.fillWidth: true
             descriptionText: "Minimum interval between messages"
-            text: zoo.getString("UI", "minimumMessageInterval")
+            text: zoo.getValue("UI", "minimumMessageInterval")
 
             onTextChange: (data) => {
                 uiSettingsPane.dataChanged("UI", "minimumMessageInterval", data)
@@ -132,7 +132,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: "Position of the progress bar"
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
@@ -160,7 +160,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: "Color value of the progress bar"
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
                 onTextChange: (data) => {
                     uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
                 }
@@ -186,7 +186,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: "Offset of the progress bar shadow"
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
@@ -214,7 +214,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: "Color value of the progress bar shadow"
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     uiSettingsPane.dataChanged(modelData.section, modelData.key, data)
@@ -240,7 +240,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: "Relative to the main monitor, position where the game was last closed"
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     uiSettingsPane.dataChanged(modelData.section, modelData.key, data)

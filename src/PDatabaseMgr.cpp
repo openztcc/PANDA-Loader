@@ -486,6 +486,7 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
         locationPath.removeLast();
         QString location = locationPath.join("/");
         QStringList iconPaths;
+        PConfigMgr meta(nullptr, ztd);
 
 
         // Check if ztd already exists in database
@@ -523,10 +524,12 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
         else {
 
             // Get meta config from ztd
-            toml::table config = PConfigMgr::getMetaConfig(ztd);
+            QByteArray fileData = PZtdMgr::getFileFromRelPath(ztd, "meta.toml");
+            std::istringstream tomlStream(fileData.toStdString());
+            toml::table config = toml::parse(tomlStream);
 
             // Grab mod_id from config
-            mod.setId(PConfigMgr::getKeyValue("mod_id", config));
+            mod.setId(meta.getValue("", "mod_id").toString());
             if (mod.id().isEmpty()) {
                 mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
             }
@@ -539,24 +542,24 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
             }
 
             // Get other values from config
-            mod.setTitle(PConfigMgr::getKeyValue("name", config));
+            mod.setTitle(meta.getValue("", "name").toString());
             if (mod.title().isEmpty()) {
                 mod.setTitle("Unknown");
             }
 
-            mod.setAuthors(PConfigMgr::getKeyValueAsList("authors", config));
+            mod.setAuthors(meta.getValue("", "authors").toStringList());
             if (mod.authors().isEmpty()) {
                 mod.setAuthors({"Unknown"});
             }
 
-            mod.setDescription(PConfigMgr::getKeyValue("description", config));
+            mod.setDescription(meta.getValue("", "description").toString());
             if (mod.description().isEmpty()) {
                 mod.setDescription("No description found");
             }
 
             mod.setEnabled(true);
 
-            mod.setTags(PConfigMgr::getKeyValueAsList("tags", config));
+            mod.setTags(meta.getValue("", "tags").toStringList());
             // remove "All" from tags if it exists
             QStringList tags = mod.tags();
             tags.removeAll("All");
@@ -571,7 +574,7 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
                 mod.setCategory("Unknown");
             }
 
-            mod.setVersion(PConfigMgr::getKeyValue("version", config));
+            mod.setVersion(meta.getValue("", "version").toString());
             if (mod.version().isEmpty()) {
                 mod.setVersion("1.0.0");
             }

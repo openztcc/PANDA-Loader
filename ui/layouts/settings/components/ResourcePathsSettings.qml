@@ -10,7 +10,7 @@ SettingsPane {
 
     onDataChanged: (section, key, value) => {
         console.log("Data changed:", section, key, value)
-        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        zoo.setValue(key, value, section) // update table sets data dirty, do not block
         console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
 
     }
@@ -22,7 +22,7 @@ SettingsPane {
         Layout.fillWidth: true
         isFileBrowser: true
         descriptionText: "Path to the last zoo played"
-        text: zoo.getString("user", "lastfile")
+        text: zoo.getValue("user", "lastfile")
 
         onTextChange: (data) => {
             resourcePathsSettingsPane.dataChanged("user", "lastfile", data)
@@ -59,7 +59,7 @@ SettingsPane {
                 required property var modelData
                 title: modelData.label
                 Layout.fillWidth: true
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     resourcePathsSettingsPane.dataChanged(modelData.section, modelData.key, data)

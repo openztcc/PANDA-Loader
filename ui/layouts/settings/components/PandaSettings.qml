@@ -11,9 +11,14 @@ SettingsPane {
 
     onDataChanged: (section, key, value) => {
         console.log("Data changed:", section, key, value)
-        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
-        console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
+        psettings.setValue(key, value, section) // update table sets data dirty, do not block
+        console.log("Is data dirty?: " + (psettings.dirty ? "true" : "false"))
 
+    }
+
+    Component.onCompleted: {
+        console.log("Use ISO mounting?: " + psettings.getValue("", "useIsoMounting"))
+        console.log("ISO Path: " + psettings.getValue("", "isoPath"))
     }
 
 
@@ -30,7 +35,13 @@ SettingsPane {
             descriptionText: modelData.description
             isFileBrowser: modelData.isFileBrowser
             enabled: modelData.enabled
-            text: psettings[modelData.key]()
+            text: psettings.getValue("", modelData.key)
+
+            onTextChange: (data) => {
+                if (modelData.enabled) {
+                    pandaSettingsPane.dataChanged("", modelData.key, data)
+                }
+            }
         }
     }
     ControlPanel {
@@ -39,7 +50,11 @@ SettingsPane {
         showSwitch: true
         Layout.preferredHeight: 120
         Layout.fillWidth: true
-        checked: psettings.useIsoMounting()
+        checked: psettings.getValue("", "useIsoMounting")
+
+        onControlGroupChecked : (data) => {
+            pandaSettingsPane.dataChanged("", "useIsoMounting", data)
+        }
 
         PTextField {
             id: isoPath
@@ -47,7 +62,11 @@ SettingsPane {
             Layout.fillWidth: true
             descriptionText: "Path to the ISO in local drive"
             isFileBrowser: true
-            text: psettings.isoPath()
+            text: psettings.getValue("", "isoPath")
+
+            onTextChange: (data) => {
+                pandaSettingsPane.dataChanged("", "isoPath", data)
+            }
         }
 
     }

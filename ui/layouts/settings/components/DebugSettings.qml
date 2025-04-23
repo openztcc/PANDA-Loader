@@ -10,7 +10,7 @@ SettingsPane {
 
     onDataChanged: (section, key, value) => {
         console.log("Data changed:", section, key, value)
-        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        zoo.setValue(key, value, section) // update table sets data dirty, do not block
         console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
 
     }
@@ -18,10 +18,10 @@ SettingsPane {
     PCheckBox {
         id: devModeCheckBox
         text: "Developer Mode Enabled"
-        checked: zoo.getBool("debug", "devModeEnabled")
+        checked: zoo.getValue("debug", "devModeEnabled")
 
         onCheckChanged: (data) => {
-                debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+                debugSettingsPane.dataChanged("debug", "devModeEnabled", data.toString())
         }    
     }
     // ------------------------- DEBUG CONTROLS
@@ -50,7 +50,7 @@ SettingsPane {
             delegate: PCheckBox {
                 required property var modelData
                 text: modelData.label
-                checked: zoo.getBool(modelData.section, modelData.key)
+                checked: zoo.getValue(modelData.section, modelData.key)
 
                 onCheckChanged: (data) => {
                         debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
@@ -78,10 +78,10 @@ SettingsPane {
             delegate: PCheckBox {
                 required property var modelData
                 text: modelData.label
-                checked: zoo.getBool(modelData.section, modelData.key)
+                checked: zoo.getValue(modelData.section, modelData.key)
 
                 onCheckChanged: (data) => {
-                        debugSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+                        debugSettingsPane.getValue(modelData.section, modelData.key, data.toString())
                 }    
             }
         }

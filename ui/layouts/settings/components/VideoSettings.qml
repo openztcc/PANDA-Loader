@@ -10,7 +10,7 @@ SettingsPane {
 
     onDataChanged: (section, key, value) => {
         console.log("Data changed:", section, key, value)
-        zoo.updateTable(section, key, value) // update table sets data dirty, do not block
+        zoo.setValue(key, value, section) // update table sets data dirty, do not block
         console.log("Is data dirty?: " + (zoo.dirty ? "true" : "false"))
 
     }
@@ -23,7 +23,7 @@ SettingsPane {
         delegate: PCheckBox {
             required property var modelData
             text: modelData.label
-            checked: zoo.getBool(modelData.section, modelData.key)
+            checked: zoo.getValue(modelData.section, modelData.key)
 
             onCheckChanged: (data) => {
                     videoSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
@@ -40,7 +40,7 @@ SettingsPane {
             id: fullscreenCheckBox
             text: "Fullscreen"
             Layout.fillWidth: true
-            checked: zoo.getBool("user", "fullscreen")
+            checked: zoo.getValue("user", "fullscreen")
 
             onCheckChanged: (data) => {
                 videoSettingsPane.dataChanged("user", "fullscreen", data.toString())
@@ -60,7 +60,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: modelData.description
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     videoSettingsPane.dataChanged(modelData.section, modelData.key, data)
@@ -74,7 +74,7 @@ SettingsPane {
         label: "Display FPS Counter"
         showSwitch: true
         Layout.fillWidth: true
-        checked: zoo.getBool("debug", "drawfps")
+        checked: zoo.getValue("debug", "drawfps")
 
         onControlGroupChecked: (data) => {
             videoSettingsPane.dataChanged("debug", "drawfps", data.toString())
@@ -91,7 +91,7 @@ SettingsPane {
                 title: modelData.label
                 Layout.fillWidth: true
                 descriptionText: modelData.description
-                text: zoo.getString(modelData.section, modelData.key)
+                text: zoo.getValue(modelData.section, modelData.key)
 
                 onTextChange: (data) => {
                     videoSettingsPane.dataChanged(modelData.section, modelData.key, data)

@@ -4,13 +4,14 @@ import QtQuick.Controls
 
 // generic content area for the main application
 
-Item {
+Rectangle {
     id: mainContent
     property var offset: null
     default property alias content: contentContainer.children
     anchors.fill: parent
     width: parent.width - 70
-    height: parent.height - 40
+    height: parent.height
+    color: "#34472D"
 
     ColumnLayout {
         anchors.fill: parent
@@ -21,6 +22,7 @@ Item {
             Layout.preferredHeight: implicitHeight - statusBar.height
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
+            spacing: 0
 
         }
         // status bar
@@ -31,6 +33,7 @@ Item {
             Layout.fillWidth: true
             color: "#4F6846"
             Layout.alignment: Qt.AlignBottom
+            Layout.margins: 0
 
             Rectangle {
                 anchors.top: parent.top

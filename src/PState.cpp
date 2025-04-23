@@ -5,24 +5,26 @@ PState::PState(QObject *parent) : QObject(parent) {
     m_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\";
     m_resource_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     m_mods = QVector<PModItem>();
-    m_settings = new PSettings(this);
+    m_dirty = 0;
+    m_zooiniDirty = 0;
+    m_pandacfgDirty = 0;
+    loadPandaCfg();
     // Load settings from the TOML file
-    if (!m_settings->loadFromToml()) {
+    if (!m_pandacfg) {
         qDebug() << "Failed to load settings from config.toml";
     } else {
-        m_path = m_settings->zooGamePath();
-        m_resource_path = m_settings->zooGamePath() + "\\dlupdate\\";
+        m_path =  m_pandacfg->getValue("", "zooGamePath").toString();
+        m_resource_path = m_path + "\\dlupdate\\";
         qDebug() << "Loaded settings from config.toml.";
     }
 
-    // Load the Zoo Tycoon config file
-    m_zooConfig = new PZooConfig(this, m_path + "\\zoo.ini");
-    if (!m_zooConfig) {
-        qDebug() << "Failed to load Zoo Tycoon config file.";
-    } else {
-        m_zooConfig->loadConfig();
-        qDebug() << "Loaded Zoo Tycoon config file.";
-    }
+    loadZooIni();
+
+    // this connects the worker PConfigMgr objects to this manager PState object so that there
+    // is one "source of truth" for the dirty flag
+    // TODO: these connections work but PState slot needs fixed
+    connect(m_zooini.get(), &PConfigMgr::dirtyChanged, this, &PState::onConfigDirtyChanged);
+    connect(m_pandacfg.get(), &PConfigMgr::dirtyChanged, this, &PState::onConfigDirtyChanged);
 }
 
 int PState::launchZT() {
@@ -39,8 +41,9 @@ int PState::launchZT() {
     }
     
     // if iso mounting enabled, mount the iso first
-    if (m_settings->useIsoMounting()) {
-        QString isoPath = m_settings->isoPath();
+    bool useISOMountng = m_pandacfg->getValue("", "useIsoMounting").toBool();
+    if (useISOMountng) {
+        QString isoPath = m_pandacfg->getValue("", "isoPath").toString();
         if (!QFile::exists(isoPath)) {
             qWarning() << "ISO file not found: " << isoPath;
             return 0;
@@ -98,3 +101,39 @@ QStringList PState::getZtdList() {
     return ztdList;
 }
 
+bool PState::loadZooIni() {
+    // Load the Zoo Tycoon config file
+    m_zooini = std::make_unique<PConfigMgr>(this, m_path + "\\zoo.ini");
+    if (!m_zooini) {
+        qDebug() << "Failed to load Zoo Tycoon config file.";
+        return false;
+    }
+    return true;
+}
+
+bool PState::loadPandaCfg() {
+    // panda config file path
+    QString configPath = m_configPath + "/panda.toml";
+    // check if the config file exists
+    if (!QFile::exists(configPath)) {
+        qDebug() << "Panda config file not found: " << configPath;
+        // time to create a new one
+         m_pandacfg = std::make_unique<PConfigMgr>(this, configPath);
+
+        // add default settings to the config
+        m_pandacfg->setValue("zooGamePath", m_path, "");
+        m_pandacfg->setValue("useIsoMounting", false, "");
+        m_pandacfg->setValue("isoPath", "", "");
+
+        m_pandacfg->saveConfig(configPath);
+    } else {
+        // load the config file
+        m_pandacfg = std::make_unique<PConfigMgr>(this, configPath);
+        if (!m_pandacfg) {
+            qDebug() << "Failed to load Panda config file: " << configPath;
+            return false;
+        }
+
+    }
+    return true;
+}

@@ -7,11 +7,15 @@
 #include <QDir>
 #include <QBuffer>
 #include <QIODevice>
-#include "../models/PEntityType.h"
 #include <QtCore>
+#include <SimpleIni.h>
+#include "../interfaces/IConfigLoader.h"
+#include "PIniConfig.h"
+#include "PTomlConfig.h"
 
-class PConfigMgr
-{
+class PConfigMgr : public QObject {
+    Q_OBJECT
+    Q_PROPERTY (int dirty READ isDirty WRITE setDirty NOTIFY dirtyChanged)
 public:
     // ----------- Local Models ------------------
     // ini config data
@@ -31,24 +35,29 @@ public:
         IniData& operator=(IniData&&) = default;
     };
 
-    PConfigMgr();
+    PConfigMgr(QObject *parent = nullptr, const QString &filepath = "") : QObject(parent) {
+        m_dirty = 0;
+        
+        if (!filepath.isEmpty()) {
+            loadConfig(filepath);
+        } else {
+            qDebug() << "No file path provided for PConfigMgr: " << filepath;
+        }
+    }
+
     ~PConfigMgr();
 
     // meta configuration operations
-    static toml::table getMetaConfig(const QString &ztdFilePath);
-    static toml::table getConfig(const QString &filePath);
-    static bool saveConfig(const QString &filePath, const toml::table &config);
-    static QString getKeyValue(const QString &key, const toml::table &config);
-    static bool getBoolValue(const QString &key, const toml::table &config);
+    bool loadConfig(const QString &filePath);
+    bool saveConfig(const QString &filePath);
+    Q_INVOKABLE bool saveConfig();
+    Q_INVOKABLE bool revertChanges();
+    bool clear();
+    Q_INVOKABLE QVariant getValue(const QString &section, const QString &key);
+    Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
     static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);
-    toml::table getZooIniConfig(const QString &iniPath);
-
-    // zoo.ini configuration operations
-    bool updateZooIniConfig(const QString &iniPath, const toml::table &config);
-    bool removeZooIniConfig(const QString &iniPath);
-    bool readPandaConfig(const QString &filePath, toml::table &config);
 
     // asset configuration operations
     static std::vector<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath);
@@ -60,9 +69,33 @@ public:
     static QStringList getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
     static QStringList getIconPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &aniFiles);
     static QStringList getIconPaths(const QString &ztdFilePath);
-private:
-    QString m_configPath = QDir::homePath() + "/.config/PandaLoader/config.toml";
 
+    // setters and getters for QProperties
+    int isDirty() const { return m_dirty; }
+    void setDirty(bool dirty) { m_dirty = dirty; }
+
+    // operator overloads
+    // copy overload
+    PConfigMgr& operator=(const PConfigMgr& other) {
+        if (this != &other) {
+            m_configPath = other.m_configPath;
+            m_config = other.m_config ? other.m_config->clone() : nullptr;
+            m_dirty = other.m_dirty;
+            m_dirty_laundry = other.m_dirty_laundry ? other.m_dirty_laundry->clone() : nullptr;
+        }
+        return *this;
+    }
+
+signals:
+    void dirtyChanged(int dirty);
+
+private:
+    QString m_configPath;
+    std::unique_ptr<IConfigLoader> m_config;
+    std::unique_ptr<IConfigLoader> m_configBackup;
+    std::unique_ptr<IConfigLoader> m_dirty_laundry;
+    int m_dirty;
+    std::unique_ptr<IConfigLoader> createParser(const QString &path) const;
     // helper functions
     static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);
     static QStringList extractDuplicateKeys(const QByteArray& rawData, const QString& group, const QString& key);

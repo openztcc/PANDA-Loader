@@ -86,7 +86,7 @@ ApplicationWindow {
 
             Column {
                 anchors.fill: parent
-                anchors.topMargin: 39
+                anchors.topMargin: 0
 
                 RailButton {
                     id: modButton

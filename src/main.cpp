@@ -9,8 +9,7 @@
 #include "../models/PModItem.h"
 #include "PController.h"
 #include "../models/PModModel.h"
-#include "../models/PZooConfig.h"
-#include "../models/PSettings.h"
+#include "PConfigMgr.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,13 +22,14 @@ int main(int argc, char *argv[])
 
     // Register the PController singleton
     PController *controller = new PController(&app, p_state);
-    PZooConfig *zooConfig = new PZooConfig(&app, p_state->getGamePath() + "/zoo.ini");
-    PSettings *settings = new PSettings(&app);
-    settings->loadFromToml();
+    PState *state = new PState(&app);
+    PConfigMgr *zoo = state->m_zooini.get();
+    PConfigMgr *settings = state->m_pandacfg.get();
     engine.rootContext()->setContextProperty("modController", controller);
     engine.rootContext()->setContextProperty("modModel", QVariant::fromValue(controller->model()));
-    engine.rootContext()->setContextProperty("zoo", zooConfig);
+    engine.rootContext()->setContextProperty("state", state);
     engine.rootContext()->setContextProperty("psettings", settings);
+    engine.rootContext()->setContextProperty("zoo", zoo);
 
     // models
     qmlRegisterAnonymousType<QAbstractListModel>("PandaLdr", 1);
