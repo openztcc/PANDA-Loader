@@ -76,6 +76,12 @@ bool PConfigMgr::saveConfig(const QString &filePath)
     return true;
 }
 
+// Save the config to the default path
+bool PConfigMgr::saveConfig()
+{
+    return saveConfig(m_configPath);
+}
+
 // Revert changes to the config file
 bool PConfigMgr::revertChanges()
 {
