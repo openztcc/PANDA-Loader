@@ -5,6 +5,9 @@ PState::PState(QObject *parent) : QObject(parent) {
     m_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\";
     m_resource_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     m_mods = QVector<PModItem>();
+    m_dirty = 0;
+    m_zooiniDirty = 0;
+    m_pandacfgDirty = 0;
     loadPandaCfg();
     // Load settings from the TOML file
     if (!m_pandacfg) {
@@ -110,7 +113,6 @@ bool PState::loadZooIni() {
 bool PState::loadPandaCfg() {
     // panda config file path
     QString configPath = m_configPath + "/panda.toml";
-    qDebug() << "Panda config file path: " << configPath;
     // check if the config file exists
     if (!QFile::exists(configPath)) {
         qDebug() << "Panda config file not found: " << configPath;
@@ -130,12 +132,6 @@ bool PState::loadPandaCfg() {
             qDebug() << "Failed to load Panda config file: " << configPath;
             return false;
         }
-
-        // test if the config is loaded correctly
-        qDebug() << "Panda config file loaded successfully: " << configPath;
-        qDebug() << "Zoo Tycoon path: " << m_pandacfg->getValue("", "zooGamePath").toString();
-        qDebug() << "Use ISO mounting: " << m_pandacfg->getValue("", "useIsoMounting").toBool();
-        qDebug() << "ISO path: " << m_pandacfg->getValue("", "isoPath").toString();
 
     }
     return true;

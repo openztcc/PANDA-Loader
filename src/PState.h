@@ -47,9 +47,21 @@ signals:
     void dirtyChanged(int dirty);
 private slots:
     void onConfigDirtyChanged(int dirty) {
-        if (m_dirty != dirty) {
-            m_dirty = dirty;
-            emit dirtyChanged(dirty);
+        // track which config is dirty
+        QObject* senderObj = sender();
+
+        // grab dirty data from the sender
+        if (senderObj == m_zooini.get()) {
+            m_zooiniDirty = dirty;
+        } else if (senderObj == m_pandacfg.get()) {
+            m_pandacfgDirty = dirty;
+        }
+    
+        // aggregate dirty data from all configs
+        int totalDirty = m_zooiniDirty + m_pandacfgDirty;
+        if (m_dirty != totalDirty) {
+            m_dirty = totalDirty;
+            emit dirtyChanged(m_dirty);
         }
     }
 private:
@@ -59,6 +71,8 @@ private:
     QVector<PModItem> m_mods;
     QString m_configPath = QDir::homePath() + "/.panda";
     int m_dirty;
+    int m_zooiniDirty;
+    int m_pandacfgDirty;
 
 };
 

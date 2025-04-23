@@ -48,14 +48,6 @@ bool PConfigMgr::loadConfig(const QString &filePath)
     m_configPath = filePath; // Store the config path
     m_configBackup = m_config->clone(); // Create a backup of the config
 
-    if (ext == "ini") {
-        qDebug() << "Clone value:" << m_configBackup->getValue("UI", "movievolume2");
-        qDebug() << "Original value:" << m_config->getValue("UI", "movievolume2");
-    } else if (ext == "toml") {
-        qDebug() << "Clone value:" << m_configBackup->getValue("", "isoPath");
-        qDebug() << "Original value:" << m_config->getValue("", "isoPath");
-    }
-
     QString filename = QFileInfo(filePath).fileName();
     
     // emit dirtyChanged signal
@@ -127,7 +119,6 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
 
     qDebug() << "Original value: " << originalValue << " vs " << input;
     if (originalValue.toString() == input.toString()) {
-        qDebug() << "No changes to save for key: " << key;
         if (m_dirty > 0) {
             if (m_dirty_laundry->valueExists(originalValue.toString(), key, section)) {
                 m_dirty_laundry->removeKey(key, section);

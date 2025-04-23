@@ -36,6 +36,8 @@ public:
     };
 
     PConfigMgr(QObject *parent = nullptr, const QString &filepath = "") : QObject(parent) {
+        m_dirty = 0;
+        
         if (!filepath.isEmpty()) {
             loadConfig(filepath);
         } else {
@@ -90,7 +92,7 @@ private:
     std::unique_ptr<IConfigLoader> m_config;
     std::unique_ptr<IConfigLoader> m_configBackup;
     std::unique_ptr<IConfigLoader> m_dirty_laundry;
-    int m_dirty = 0;
+    int m_dirty;
     std::unique_ptr<IConfigLoader> createParser(const QString &path) const;
     // helper functions
     static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);

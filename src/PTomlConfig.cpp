@@ -18,9 +18,6 @@ bool PTomlConfig::loadConfig(const QString &filePath) {
 
     m_toml = toml::parse(fileData.constData());
 
-    //test 
-    qDebug() << "Load key value: " << m_toml["isoPath"].as_string()->get();
-
     return true;
 }
 
@@ -56,8 +53,6 @@ QVariant PTomlConfig::getValue(const QString &section, const QString &key) const
     std::string k = key.toStdString();
     std::string s = section.toStdString();
 
-    qDebug() << "getValue called with section:" << section << ", key:" << key;
-
     const toml::table* table = &m_toml;
 
     // if section is not empty, check if it exists and get the table 
@@ -88,7 +83,6 @@ void PTomlConfig::setValue(const QString &key, const QVariant &value, const QStr
     std::string s = section.toStdString();
 
     if (section == "") {
-        qDebug() << "setValue in PTomlConfig called with no section:" << key << value;
         PTomlConfig::interpretVariant(m_toml, k, value);
         // key = value
     } else {
