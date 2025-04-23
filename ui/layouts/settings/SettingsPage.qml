@@ -67,9 +67,9 @@ LayoutFrame {
 
     RowLayout {
         id: mainLayout
-        Layout.fillWidth: true
-        Layout.fillHeight: true
+        anchors.fill: parent
         spacing: 0
+        anchors.margins: 0
 
         Rectangle {
             id: settingsPane
@@ -178,8 +178,8 @@ LayoutFrame {
             ColumnLayout {
                 id: settingsContent
                 anchors.fill: parent
-                anchors.topMargin: 10
-                spacing: 4
+                anchors.topMargin: 0
+                spacing: 0
 
                 StackView {
                     id: settingsStack
@@ -254,6 +254,7 @@ LayoutFrame {
                     config: mainContent.currentConfig
                     visible: mainContent.dirty ? true : false
                     dirty: mainContent.dirty
+                    Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
                     onDiscarded: () => {
                         replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
