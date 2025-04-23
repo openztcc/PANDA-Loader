@@ -6,6 +6,7 @@
     Rectangle {
         id: confirmChangesBar
         property bool hovered: false
+        property var config: null
         color: Qt.darker("#57704E", 1.2)
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignTop
@@ -14,7 +15,7 @@
         radius: 5
         z: 20
         opacity: hovered ? 1.0 : 0.8
-        visible: zoo.dirty ? true : false
+        visible: config.dirty ? true : false
 
         signal discarded()
 
@@ -61,9 +62,9 @@
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
-                    if (zoo.dirty) {
-                        zoo.saveConfig()
-                        console.log("zoo.ini changes saved")
+                    if (config.dirty) {
+                        config.saveConfig()
+                        console.log("config.ini changes saved")
                     } else {
                         console.log("No changes to save")
                     }
@@ -97,10 +98,10 @@
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
-                    if (zoo.dirty) {
-                        zoo.revertChanges()
+                    if (config.dirty) {
+                        config.revertChanges()
                         confirmChangesBar.discarded()
-                        console.log("Reverted changes to zoo.ini")
+                        console.log("Reverted changes to config.ini")
                     } else {
                         console.log("No changes to save")
                     }

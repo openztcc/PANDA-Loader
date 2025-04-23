@@ -27,7 +27,10 @@ public:
     // Operator overloads
     PTomlConfig& operator=(const PTomlConfig& other) { // Copy assignment operator
         if (this != &other) {
-            m_toml = other.m_toml;
+            m_toml.clear();
+            std::stringstream ss;
+            ss << other.m_toml;
+            m_toml = toml::parse(ss.str());
         }
         return *this;
     }
@@ -36,13 +39,21 @@ public:
         return std::make_unique<PTomlConfig>(*this);
     }
 
-private: 
+    PTomlConfig(const PTomlConfig& other) {
+        m_toml.clear();
+        std::stringstream ss;
+        ss << other.m_toml;
+        m_toml = toml::parse(ss.str());
+    }
+    QVariant extractVariant(const QString& node) const override;
+    QVariant extractVariant(const toml::node& node) const;
+
+private:
     toml::table m_toml;
 
 protected:
     void interpretVariant(toml::table& config, const std::string& key, const QVariant& value);
     void appendVariantToArray(toml::array& arr, const QVariant& value);
-    QVariant extractVariant(const toml::node& node) const;
 };
 
 #endif // PTomlConfig.h

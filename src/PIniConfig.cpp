@@ -40,7 +40,11 @@ void PIniConfig::setValue(const QString &key, const QVariant &value, const QStri
     interpretVariant(m_ini, section.toStdString(), key.toStdString(), value);
 }
 
-bool PIniConfig::removeKey(const QString &section, const QString &key) {
+bool PIniConfig::removeKey(const QString &key, const QString &section) {
+    if (section.isEmpty()) {
+        qDebug() << "Error: No section provided for ini file with key = " << key;
+        return false;
+    }
     bool deleteSectionIfEmpty = true;
     m_ini.Delete(section.toStdString().c_str(), key.toStdString().c_str(), deleteSectionIfEmpty);
     return true;
@@ -179,6 +183,14 @@ QVariant PIniConfig::extractVariant(const QString& query) const {
     double dblVal = query.toFloat(&ok);
     if (ok) {
         return dblVal;
+    }
+
+    // at this point assume it is a string,
+    // but check if it is a boolean string
+    if (query == "true") {
+        return 1;
+    } else if (query == "false") {
+        return 0;
     }
 
     return QVariant(query); // interpret as string

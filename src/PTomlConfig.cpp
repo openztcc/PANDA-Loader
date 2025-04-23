@@ -18,6 +18,9 @@ bool PTomlConfig::loadConfig(const QString &filePath) {
 
     m_toml = toml::parse(fileData.constData());
 
+    //test 
+    qDebug() << "Load key value: " << m_toml["isoPath"].as_string()->get();
+
     return true;
 }
 
@@ -48,29 +51,36 @@ bool PTomlConfig::clear() {
     return true;
 }
 
+//TODO: add support for nested tables and arrays
 QVariant PTomlConfig::getValue(const QString &section, const QString &key) const {
     std::string k = key.toStdString();
     std::string s = section.toStdString();
 
+    qDebug() << "getValue called with section:" << section << ", key:" << key;
+
     const toml::table* table = &m_toml;
 
-    // find section if it's not empty and make it a table object
+    // if section is not empty, check if it exists and get the table 
     if (!section.isEmpty()) {
         auto found = m_toml.find(s);
-        if (found == m_toml.end() || !found->second.is_table())
+        if (found == m_toml.end() || !found->second.is_table()) {
+            qDebug() << "Section not found or not a table:" << section;
             return QVariant();
-
+        }
         table = found->second.as_table();
     }
 
-    // otherwise just look through table
+    // check if key exists in the table
     auto it = table->find(k);
-    if (it == table->end())
+    if (it == table->end()) {
+        qDebug() << "Key not found:" << key;
         return QVariant();
+    }
 
-    // return an extracted QVariant (finds correct type)
+    // return correct type
     return extractVariant(it->second);
 }
+
 
 
 void PTomlConfig::setValue(const QString &key, const QVariant &value, const QString &section) {
@@ -78,6 +88,7 @@ void PTomlConfig::setValue(const QString &key, const QVariant &value, const QStr
     std::string s = section.toStdString();
 
     if (section == "") {
+        qDebug() << "setValue in PTomlConfig called with no section:" << key << value;
         PTomlConfig::interpretVariant(m_toml, k, value);
         // key = value
     } else {
@@ -154,28 +165,48 @@ bool PTomlConfig::keyExists(const QString &key, const QString &section) const {
 }
 
 bool PTomlConfig::valueExists(const QString &value, const QString &key, const QString &section) const {
-    std::string k = key.toStdString();
-    std::string s = section.toStdString();
-    // make sure value is not empty or not valid
     if (value.isNull()) {
         return false;
     }
-    
-    // if there is no section, just check the root level
-    if (s == "") {
-        if (auto it = m_toml.find(k); it != m_toml.end()) {
-            return it->second.as_string()->get() == value.toStdString();
+
+    std::string k = key.toStdString();
+    std::string s = section.toStdString();
+    const std::string expected = value.toStdString();
+
+    const toml::table* table = &m_toml;
+
+    // look through nested tables ("sections") first
+    if (!section.isEmpty()) {
+        auto found = m_toml.find(s);
+        if (found == m_toml.end() || !found->second.is_table()) {
+            return false;
         }
-    } else { // otherwise check the section
-        if (auto* settings = m_toml[s].as_table()) {
-            if (auto it = settings->find(k); it != settings->end()) {
-                return it->second.as_string()->get() == value.toStdString();
-            }
-        }
+        // found a nested table, so get the table ref
+        table = found->second.as_table(); 
+    }
+
+    // check if key exists in the table
+    auto it = table->find(k);
+    if (it == table->end()) {
+        return false;
+    }
+
+    // here we just cast the node to expected type and compare it to the value
+    const toml::node& node = it->second;
+
+    if (auto val = node.as_string()) {
+        return val->get() == expected;
+    } else if (auto val = node.as_integer()) {
+        return QString::number(val->get()) == value;
+    } else if (auto val = node.as_floating_point()) {
+        return QString::number(val->get(), 'f', 6) == value; // precision
+    } else if (auto val = node.as_boolean()) {
+        return (val->get() ? "true" : "false") == expected;
     }
 
     return false;
 }
+
 
 
 // ------------------- HELPERS (to deal with unpredictable types in toml files)
@@ -264,6 +295,50 @@ QVariant PTomlConfig::extractVariant(const toml::node& node) const {
         return list;
     }
 
-    return QVariant();
+    // return QVariant();
+    return QVariant(); // interpret as string
+}
+
+// returns as QVariant for flexibility
+QVariant PTomlConfig::extractVariant(const QString& variant) const {
+    // if (auto val = node.as_string())
+    //     return QString::fromStdString(val->get());
+    // if (auto val = node.as_boolean())
+    //     return val->get();
+    // if (auto val = node.as_integer())
+    //     return static_cast<qint64>(val->get());
+    // if (auto val = node.as_floating_point())
+    //     return val->get();
+    // if (auto val = node.as_array()) {
+    //     QVariantList list;
+    //     for (const auto& item : *val) {
+    //         list.append(extractVariant(item));
+    //     }
+    //     return list;
+    // }
+
+    if (variant.isEmpty()) {
+        return QVariant(""); // empty string
+    }
+
+    if (variant == "true" || variant == "True") {
+        return true; // boolean true
+    } else if (variant == "false" || variant == "False") {
+        return false; // boolean false
+    }
+
+    bool ok = false;
+    int intVal = variant.toInt(&ok);
+    if (ok) {
+        return intVal;
+    }
+
+    double dblVal = variant.toFloat(&ok);
+    if (ok) {
+        return dblVal;
+    }
+
+    // return QVariant();
+    return QVariant(variant); // interpret as string
 }
 

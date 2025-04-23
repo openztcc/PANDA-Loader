@@ -51,6 +51,9 @@ bool PConfigMgr::loadConfig(const QString &filePath)
     if (ext == "ini") {
         qDebug() << "Clone value:" << m_configBackup->getValue("UI", "movievolume2");
         qDebug() << "Original value:" << m_config->getValue("UI", "movievolume2");
+    } else if (ext == "toml") {
+        qDebug() << "Clone value:" << m_configBackup->getValue("", "isoPath");
+        qDebug() << "Original value:" << m_config->getValue("", "isoPath");
     }
 
     QString filename = QFileInfo(filePath).fileName();
@@ -113,17 +116,9 @@ QVariant PConfigMgr::getValue(const QString &section, const QString &key)
 void PConfigMgr::setValue(const QString &key, const QVariant &value, const QString &section)
 {
     // get path extension
-    QString ext = QFileInfo(m_configPath).suffix().toLower();
-    QVariant input = value;
+    // QString ext = QFileInfo(m_configPath).suffix().toLower();
+    QVariant input = m_config->extractVariant(value.toString());
 
-    if (ext == "ini") {
-        // interpret the value to the correct type
-        if (input.toString() == "true") {
-            input = 1;
-        } else if (input.toString() == "false") {
-            input = 0;
-        }
-    }
     QVariant originalValue = m_configBackup->getValue(section, key);
     // interpret original as well  because we now know the type
     if (input.typeId() == QMetaType::Int && originalValue == "") {
@@ -135,7 +130,7 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
         qDebug() << "No changes to save for key: " << key;
         if (m_dirty > 0) {
             if (m_dirty_laundry->valueExists(originalValue.toString(), key, section)) {
-                m_dirty_laundry->removeKey(section, key);
+                m_dirty_laundry->removeKey(key, section);
                 m_dirty--;
                 emit dirtyChanged(m_dirty);
                 qDebug() << "Dirty laundry removed one item. Current count: " << m_dirty;

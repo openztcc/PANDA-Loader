@@ -21,6 +21,7 @@ class IConfigLoader {
         virtual bool valueExists(const QString &value, const QString &key, const QString &section) const = 0;
 
         virtual std::unique_ptr<IConfigLoader> clone() const = 0; // clone so we can use polymorphism
-};
+        virtual QVariant extractVariant(const QString& variant) const = 0;
+    };
 
 #endif // IConfigLoader.h

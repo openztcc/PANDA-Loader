@@ -15,7 +15,7 @@ public:
     // get and set values
     QVariant getValue(const QString &section, const QString &key) const override;
     void setValue(const QString &key, const QVariant &value, const QString &section) override;
-    bool removeKey(const QString &section, const QString &key) override;
+    bool removeKey(const QString &key, const QString &section = "") override;
     bool removeSection(const QString &section) override;
     bool getAllSections() override;
 
@@ -52,12 +52,11 @@ public:
         }
     }
     
-
+    QVariant extractVariant(const QString& variant) const override;
 private:
     CSimpleIniA m_ini;
 
     void interpretVariant(CSimpleIniA& m_ini, const std::string& section, const std::string& key, const QVariant& value);
-    QVariant extractVariant(const QString& query) const;
 };
 
 #endif // PIniConfig.h

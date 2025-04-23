@@ -28,6 +28,14 @@ LayoutFrame {
         settingsPane.currentButton = currentButton
     }
 
+    function determineConfig() {
+        if (mainContent.currentPage.pane === pandaSettings) {
+            return psettings
+        } else {
+            return zoo
+        }
+    }
+
     SimpleModal {
         id: confirmChangesModal
         title: "Unsaved Changes"
@@ -118,6 +126,7 @@ LayoutFrame {
                             let currentPaneBackup = modelData.pane
                             mainContent.currentPage = settingsButtonsRepeater.itemAt(index)
                             mainContent.currentPane = modelData.pane
+                            console.log("Clicked on: " + mainContent.currentPage.text)
 
                             // if (zoo.dirty) {
                             //     confirmChangesModal.open()
@@ -237,6 +246,7 @@ LayoutFrame {
                 // top bar with save changes button
                 SettingsConfirmationBar{
                     id: settingsConfirmationBar
+                    config: determineConfig()
 
                     onDiscarded: () => {
                         replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)

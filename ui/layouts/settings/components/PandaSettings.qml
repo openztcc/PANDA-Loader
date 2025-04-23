@@ -38,7 +38,9 @@ SettingsPane {
             text: psettings.getValue("", modelData.key)
 
             onTextChange: (data) => {
-                pandaSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+                if (modelData.enabled) {
+                    pandaSettingsPane.dataChanged("", modelData.key, data)
+                }
             }
         }
     }
@@ -50,6 +52,10 @@ SettingsPane {
         Layout.fillWidth: true
         checked: psettings.getValue("", "useIsoMounting")
 
+        onControlGroupChecked : (data) => {
+            pandaSettingsPane.dataChanged("", "useIsoMounting", data)
+        }
+
         PTextField {
             id: isoPath
             title: "ISO Path"
@@ -59,7 +65,7 @@ SettingsPane {
             text: psettings.getValue("", "isoPath")
 
             onTextChange: (data) => {
-                pandaSettingsPane.dataChanged(modelData.section, modelData.key, data.toString())
+                pandaSettingsPane.dataChanged("", "isoPath", data)
             }
         }
 
