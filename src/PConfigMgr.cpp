@@ -76,6 +76,23 @@ bool PConfigMgr::saveConfig(const QString &filePath)
     return true;
 }
 
+// Revert changes to the config file
+bool PConfigMgr::revertChanges()
+{
+    if (!m_config) {
+        qDebug() << "Unable to revert changes: config parser not initialized";
+        return false;
+    }
+
+    // Revert the changes to the config file
+    m_config = m_configBackup->clone(); // Restore the backup
+    m_dirty = 0; // Reset dirty flag
+    m_dirty_laundry->clear(); // Clear the dirty laundry list
+    emit dirtyChanged(m_dirty);
+
+    return true;
+}
+
 // Clear the config
 bool PConfigMgr::clear()
 {

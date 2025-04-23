@@ -19,6 +19,7 @@ LayoutFrame {
     property var modelData: null
     property var currentPane: null
     property int dirty: 0
+    property var currentConfig: null
 
     function replaceSettingsPane(pane, stack, currentButton) {
         settingsStack.replace(pane)
@@ -141,7 +142,7 @@ LayoutFrame {
                             
                             // mainContent.cancelledNavigation = true
                             if (mainContent.dirty) {
-                                let config = determineConfig()
+                                let config = mainContent.currentConfig
                                 confirmChangesModal.ask().then(function(result) {
                                     if (result === "save") {
                                         console.log("User chose Save")
@@ -248,8 +249,9 @@ LayoutFrame {
                 // top bar with save changes button
                 SettingsConfirmationBar{
                     id: settingsConfirmationBar
-                    config: determineConfig()
+                    config: mainContent.currentConfig
                     visible: mainContent.dirty ? true : false
+                    dirty: mainContent.dirty
 
                     onDiscarded: () => {
                         replaceSettingsPane(mainContent.currentPane, settingsStack, mainContent.currentPage)
@@ -261,6 +263,7 @@ LayoutFrame {
                 target: zoo
                 function onDirtyChanged(dirty) {
                     mainContent.dirty = dirty
+                    mainContent.currentConfig = zoo
                     console.log("Is data dirty?: " + (dirty ? "true" : "false"))
                 }
             }
@@ -269,6 +272,7 @@ LayoutFrame {
                 target: psettings
                 function onDirtyChanged(dirty) {
                     mainContent.dirty = dirty
+                    mainContent.currentConfig = psettings
                     console.log("Is data dirty?: " + (dirty ? "true" : "false"))
                 }
             }

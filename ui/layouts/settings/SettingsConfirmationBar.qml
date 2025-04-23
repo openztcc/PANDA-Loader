@@ -7,6 +7,7 @@
         id: confirmChangesBar
         property bool hovered: false
         property var config: null
+        property int dirty: 0
         color: Qt.darker("#57704E", 1.2)
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignTop
@@ -64,8 +65,8 @@
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
-                    if (state.dirty) {
-                        config.saveConfig()
+                    if (confirmChangesBar.dirty) {
+                        confirmChangesBar.config.saveConfig()
                         console.log("config.ini changes saved")
                     } else {
                         console.log("No changes to save")
@@ -100,8 +101,8 @@
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
-                    if (state.dirty) {
-                        config.revertChanges()
+                    if (confirmChangesBar.dirty) {
+                        confirmChangesBar.config.revertChanges()
                         confirmChangesBar.discarded()
                         console.log("Reverted changes to config.ini")
                     } else {

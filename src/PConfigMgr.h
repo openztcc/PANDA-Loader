@@ -49,7 +49,8 @@ public:
 
     // meta configuration operations
     bool loadConfig(const QString &filePath);
-    bool saveConfig(const QString &filePath);
+    Q_INVOKABLE bool saveConfig(const QString &filePath);
+    Q_INVOKABLE bool revertChanges();
     bool clear();
     Q_INVOKABLE QVariant getValue(const QString &section, const QString &key);
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
