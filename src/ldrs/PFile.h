@@ -11,13 +11,18 @@ PZip and PFileSystem.
 It provides a common interface for file operations such as read, write, remove, etc.
 */
 
+enum FileType {
+    Zip,
+    Other
+};
+
 class PFile : public QObject {
     Q_OBJECT
-public: 
-    PFile(QObject *parent = nullptr, const QString &filePath = "");
+public:
+    PFile(QObject *parent = nullptr, const QString &filePath = "", FileType type = FileType::Other);
     ~PFile() override = default;
 
-    std::unique_ptr<IVirtualFilesystem> createFilesystem(const QString &filePath) const;
+    std::unique_ptr<IVirtualFilesystem> createFilesystem(const QString &filePath, FileType type = FileType::Other) const;
 
     // mount point functions
     void setRootPath(const QString &path);
@@ -45,5 +50,4 @@ public:
 private:
     std::unique_ptr<IVirtualFilesystem> m_file; // pointer to the virtual filesystem
     QString m_rootPath; // root path of the zip file
-
 };

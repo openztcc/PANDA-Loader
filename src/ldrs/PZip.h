@@ -39,5 +39,5 @@ class PZip : public IVirtualFilesystem {
         QString m_rootPath; // root path of the zip file
     protected:
         QSharedPointer<QuaZip> openZip(const QString &filePath, QuaZip::Mode mode);
-        QSharedPointer<QuaZipFile> openZipFile(QSharedPointer<QuaZip> &zip, QIODevice::OpenMode mode);
+        QSharedPointer<QuaZipFile> openZipFile(QSharedPointer<QuaZip> &zip, const QString &relPath = "", QIODevice::OpenMode mode = QIODevice::ReadOnly);
 };

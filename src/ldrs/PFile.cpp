@@ -1,27 +1,27 @@
 #include "PFile.h"
 
-PFile::PFile(QObject *parent, const QString &filePath) : QObject(parent), m_rootPath("") {
+PFile::PFile(QObject *parent, const QString &filePath, FileType type)
+    : QObject(parent), m_rootPath(""), m_file(nullptr) {
     // Initialize the virtual filesystem object
-    m_file = createFilesystem(filePath);
+    m_file = createFilesystem(filePath, type);
+
 }
 
 // Create a virtual filesystem object
-std::unique_ptr<IVirtualFilesystem> PFile::createFilesystem(const QString &path) const
+std::unique_ptr<IVirtualFilesystem> PFile::createFilesystem(const QString &path, FileType type) const
 {
-    // Get the file extension
-    QString ext = QFileInfo(path).suffix().toLower();
-    qDebug() << "File extension:" << ext;
-    qDebug() << "File path:" << path;
-    if (ext == "zip" || ext == "ztd") {
-        return std::make_unique<PZip>();
+    if (type == FileType::Zip) {
+        qDebug() << "Creating PZip filesystem for path:" << path;
+        return std::make_unique<PZip>(path);
     } else {
+        qDebug() << "Creating PFileSystem filesystem for path:" << path;
         return std::make_unique<PFileSystem>();
     }
 }
 
-PFileData PFile::read(const QString &filePath) {
+PFileData PFile::read(const QString &relFilePath) {
     // Read the file from the virtual filesystem
-    return m_file->read(filePath);
+    return m_file->read(relFilePath);
 }
 
 bool PFile::write(const QString &filePath, const PFileData &data) {

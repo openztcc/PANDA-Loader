@@ -1,15 +1,20 @@
 #include "PZip.h"
 
-PZip::PZip() : m_rootPath("") {
-    QFileInfo fileInfo(m_rootPath);
-    if (!fileInfo.exists()) {
-        qDebug() << "File path does not exist:" << m_rootPath;
-    } else if (!fileInfo.isDir()) {
-        qDebug() << "File path is not a directory:" << m_rootPath;
-    } else {
-        qDebug() << "File path is valid:" << m_rootPath;
+PZip::PZip(const QString &filePath) : m_rootPath("") {
+    if (filePath.isEmpty() || filePath == "") {
+        qDebug() << "No file path provided for PZip: " << filePath;
+        return;
     }
-    m_rootPath = fileInfo.absoluteFilePath();
+
+    QFileInfo fileInfo(filePath);
+    if (!fileInfo.exists()) {
+        qDebug() << "Zip file does not exist:" << filePath;
+    } else if (!fileInfo.isFile()) {
+        qDebug() << "Zip file is not a valid file:" << filePath;
+    } else {
+        m_rootPath = fileInfo.absoluteFilePath();
+        qDebug() << "Zip file path set to:" << m_rootPath;
+    }
 }
 
 void PZip::setRootPath(const QString &path) {
@@ -23,30 +28,42 @@ QString PZip::rootPath() const {
 QSharedPointer<QuaZip> PZip::openZip(const QString &filePath, QuaZip::Mode mode) {
     auto zip = QSharedPointer<QuaZip>::create(filePath);
     if (!zip->open(mode)) {
-        qDebug() << "Failed to open zip file:" << filePath;
+        qDebug() << "Failed to open zip file (openZip):" << filePath;
         return QSharedPointer<QuaZip>::create();
     }
     return zip;
 }
 
-QSharedPointer<QuaZipFile> PZip::openZipFile(QSharedPointer<QuaZip> &zip, QIODevice::OpenMode mode) {
-    auto file = QSharedPointer<QuaZipFile>::create(zip.data());
-    if (!file->open(mode)) {
-        qDebug() << "Failed to open zip file:" << zip->getZipName();
-        return QSharedPointer<QuaZipFile>::create();
+QSharedPointer<QuaZipFile> PZip::openZipFile(QSharedPointer<QuaZip> &zip, const QString &relPath, QIODevice::OpenMode mode) {
+    if (!zip->setCurrentFile(relPath)) {
+        qWarning() << "Failed to set current file in zip:" << relPath;
+        return nullptr;
     }
+
+    auto file = QSharedPointer<QuaZipFile>::create(zip.data());
+
+    if (!file->open(mode)) {
+        qWarning() << "Failed to open current file in zip:" << relPath
+                   << "Error:" << file->getZipError();
+        return nullptr;
+    }
+
     return file;
 }
 
-PFileData PZip::read(const QString &filePath) {
+PFileData PZip::read(const QString &fileName) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::ReadOnly);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, fileName, QIODevice::ReadOnly);
+    if (!file) {
+        qDebug() << "Failed to open file in zip:" << fileName;
+        return PFileData();
+    }
 
     PFileData fileData;
-    fileData.filename = filePath.section('/', -1, -1);
-    fileData.ext = QFileInfo(filePath).suffix();
-    fileData.path = filePath.section('/', 0, -2);
+    fileData.filename = fileName.section('/', -1, -1);
+    fileData.ext = fileName.section('.', -1, -1);
+    fileData.path = fileName;
 
     QByteArray data = file->readAll();
     file->close();
@@ -66,7 +83,7 @@ PFileData PZip::read(const QString &filePath) {
 bool PZip::write(const QString &filePath, const PFileData &data) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdCreate);
 
-    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::WriteOnly);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::WriteOnly);
 
     file->write(data.data);
     file->close();
@@ -105,7 +122,7 @@ bool PZip::move(const QString &filePath, const QString &newLocation) {
 bool PZip::copy(const QString &filePath, const QString &newLocation) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::ReadOnly);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::ReadOnly);
 
     PFileData fileData;
     QByteArray data = file->readAll();
@@ -130,7 +147,7 @@ bool PZip::rename(const QString &filePath, const QString &newFileName) {
 bool PZip::replace(const QString &filePath, const PFileData &data) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::ReadOnly);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::ReadOnly);
 
     if (!write(filePath, data)) {
         qDebug() << "Failed to write data to file in zip:" << filePath;
@@ -176,7 +193,7 @@ bool PZip::removeDir(const QString &dirPath) {
 bool PZip::listFiles(const QString &dirPath) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::ReadOnly);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::ReadOnly);
 
     // TODO: Implement file listing logic here
     // For now, just close the file and zip
