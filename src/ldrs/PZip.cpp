@@ -85,21 +85,19 @@ PFileData PZip::read(const QString &relFilePath) {
 // Write a file to the zip archive given a PFileData object
 // 
 bool PZip::write(const PFileData &data) {
-    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdCreate);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdAdd);
 
     QuaZipFile file(zip.data());
     // path to write to
-    file.setFileName(data.path + "/" + data.filename);
-    // zip header info
-    QuaZipNewInfo info(data.path + "/" + data.filename);
-    qDebug() << "Setting relative path:" << data.path + "/" + data.filename;
+    QuaZipNewInfo info(data.path + data.filename);
+    qDebug() << "Setting relative path:" << data.path + data.filename;
     if (!file.open(QIODevice::WriteOnly, info)) {
-        qDebug() << "Failed to open file for writing in zip:" << data.path + "/" + data.filename;
+        qDebug() << "Failed to open file for writing in zip:" << data.path + data.filename;
         return false;
     }
     
-    file->write(data.data);
-    file->close();
+    file.write(data.data);
+    file.close();
     zip->close();
     return true;
 }
