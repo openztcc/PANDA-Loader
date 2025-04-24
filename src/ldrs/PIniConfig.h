@@ -1,7 +1,10 @@
 #ifndef PINICONFIG_H
 #define PINICONFIG_H
 
+// Project
 #include "../interfaces/IConfigLoader.h"
+
+// External
 #include "SimpleIni.h"
 
 class PIniConfig : public IConfigLoader {
