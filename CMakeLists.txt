@@ -223,6 +223,7 @@ install(TARGETS appPandaLdr
 # ------------- PTestFileSystem -------------
 qt_add_executable(testFileSystem
     tests/PTestFileSystem.cpp
+    src/ldrs/PFile.cpp src/ldrs/PFile.h
     src/ldrs/PFileSystem.cpp src/ldrs/PFileSystem.h
     src/ldrs/PZip.cpp src/ldrs/PZip.h
     src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h

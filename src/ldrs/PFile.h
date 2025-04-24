@@ -1,5 +1,6 @@
 // Project
-#include "../interfaces/IVirtualFilesystem.h"
+#include "PFileSystem.h"
+#include "PZip.h"
 
 // Qt
 #include <QDir>
@@ -10,11 +11,11 @@ PZip and PFileSystem.
 It provides a common interface for file operations such as read, write, remove, etc.
 */
 
-class PFileSystem : public QObject {
+class PFile : public QObject {
     Q_OBJECT
 public: 
-    PFileSystem() = default;
-    ~PFileSystem() override = default;
+    PFile(QObject *parent = nullptr, const QString &filePath = "");
+    ~PFile() override = default;
 
     std::unique_ptr<IVirtualFilesystem> createFilesystem(const QString &filePath) const;
 

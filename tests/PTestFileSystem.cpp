@@ -27,8 +27,7 @@ void PTestFileSystem::testRead()
     QFETCH(bool, expectedData);
 
     // Create a PFileSystem object
-    PFileSystem fileSystem;
-    fileSystem.setRootPath(filePath);
+    PFile fileSystem(this, filePath);
 
     // Read the file
     PFileData fileData = fileSystem.read(filePath);
