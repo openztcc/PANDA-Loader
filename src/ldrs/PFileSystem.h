@@ -11,6 +11,8 @@ class PFileSystem : public IVirtualFilesystem {
         PFileSystem() = default;
         ~PFileSystem() override = default;
 
+        bool create(const QString &filePath) override;
+
         // mount point functions
         void setRootPath(const QString &path) override;
         QString rootPath() const override;

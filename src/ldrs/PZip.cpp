@@ -59,7 +59,7 @@ PFileData PZip::read(const QString &filePath) {
     return fileData;
 }
 
-bool PZip::write(const QString &filePath) {
+bool PZip::write(const QString &filePath, const PFileData &data) {
     QuaZip zip(m_rootPath);
     if (!zip.open(QuaZip::mdCreate)) {
         qDebug() << "Failed to open zip file for writing:" << m_rootPath;
@@ -72,8 +72,7 @@ bool PZip::write(const QString &filePath) {
         return false;
     }
 
-    QByteArray data = "Hello, World!";
-    file.write(data);
+    file.write(data.data);
     file.close();
     zip.close();
     return true;

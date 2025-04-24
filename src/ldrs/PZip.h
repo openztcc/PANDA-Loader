@@ -14,6 +14,8 @@ class PZip : public IVirtualFilesystem {
         PZip() = default;
         ~PZip() override = default;
 
+        bool create(const QString &filePath) override;
+
         // mount point functions
         void setRootPath(const QString &path) override;
         QString rootPath() const override;
