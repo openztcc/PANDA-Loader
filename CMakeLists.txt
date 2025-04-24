@@ -36,14 +36,14 @@ qt_add_executable(appPandaLdr
     src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
     src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
     # models
-    src/models/PModItem.cpp src/models/PModItem.h
+    src/models/PModItem.h src/models/PModItem.cpp
     src/models/PEntityType.cpp src/models/PEntityType.h
     src/models/PModModel.cpp src/models/PModModel.h
-    src/models/PIconData.cpp src/models/PIconData.h
-    src/models/PFile.cpp src/models/PFile.h
+    src/models/PIconData.h
+    src/models/PFile.h
     # interfaces
     src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
-    src/interfaces/IVirtualFileSystem.h src/interfaces/IVirtualFileSystem.cpp
+    src/interfaces/IVirtualFileSystem.h
     )
 
 add_subdirectory(libs/apecore)
@@ -129,14 +129,14 @@ qt_add_qml_module(appPandaLdr
         src/ldrs/PIniConfig.h
         src/ldrs/PTomlConfig.h
         # models
-        /src/models/PModItem.h
-        /src/models/PEntityType.h
-        /src/models/PModModel.h
-        /src/models/PIconData.h
-        /src/models/PFile.h
+        src/models/PModItem.h
+        src/models/PEntityType.h
+        src/models/PModModel.h
+        src/models/PIconData.h
+        src/models/PFile.h
         # interfaces
-        /src/interfaces/IConfigLoader.h
-        /src/interfaces/IVirtualFileSystem.h
+        src/interfaces/IConfigLoader.h
+        src/interfaces/IVirtualFileSystem.h
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -247,11 +247,11 @@ install(TARGETS appPandaLdr
 # ------------- PTestConfigMgr -------------
 qt_add_executable(testConfigMgr
     tests/PTestConfigMgr.cpp
-    src/PConfigMgr.h src/PConfigMgr.cpp
-    src/PZtdMgr.h src/PZtdMgr.cpp
-    interfaces/IConfigLoader.h interfaces/IConfigLoader.cpp
-    src/PIniConfig.h src/PIniConfig.cpp
-    src/PTomlConfig.h src/PTomlConfig.cpp
+    src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
+    src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
+    src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
+    src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
+    src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
 
 )
 
