@@ -19,8 +19,6 @@ class PZip : public IVirtualFilesystem {
         // mount point functions
         void setRootPath(const QString &path) override;
         QString rootPath() const override;
-        bool open(const QString &filePath, int mode) override;
-        bool close() override;
 
         // file operations - relative to root path
         PFileData read(const QString &filePath) override;
@@ -42,4 +40,7 @@ class PZip : public IVirtualFilesystem {
 
     private:
         QString m_rootPath; // root path of the zip file
+    protected:
+        QuaZip openZip(const QString &filePath, int mode);
+        QuaZipFile openZipFile(QuaZip &zip, int mode);
 };
