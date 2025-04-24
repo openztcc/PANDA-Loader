@@ -24,20 +24,26 @@ find_package(QuaZip REQUIRED)
 qt_add_executable(appPandaLdr
     ${SRC_RC}
     src/main.cpp
-    src/PState.cpp src/PState.h
-    src/PController.cpp src/PController.h
-    src/PZtdMgr.cpp src/PZtdMgr.h
-    src/PConfigMgr.cpp src/PConfigMgr.h
-    src/PGraphicsMgr.h src/PGraphicsMgr.cpp
-    src/PDatabaseMgr.cpp src/PDatabaseMgr.h
-    src/PSystemMgr.h src/PSystemMgr.cpp
-    src/PIniConfig.h src/PIniConfig.cpp
-    src/PTomlConfig.h src/PTomlConfig.cpp
-    models/PModItem.cpp models/PModItem.h
-    models/PEntityType.cpp models/PEntityType.h
-    models/PIconData.h
-    models/PModModel.cpp models/PModModel.h
-    interfaces/IConfigLoader.h interfaces/IConfigLoader.cpp
+    # managers
+    src/mgrs/PState.cpp src/mgrs/PState.h
+    src/mgrs/PController.cpp src/mgrs/PController.h
+    src/mgrs/PGraphicsMgr.cpp src/mgrs/PGraphicsMgr.h
+    # loaders
+    src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
+    src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
+    src/ldrs/PDatabaseMgr.cpp src/ldrs/PDatabaseMgr.h
+    src/ldrs/PSystemMgr.cpp src/ldrs/PSystemMgr.h
+    src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
+    src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
+    # models
+    src/models/PModItem.cpp src/models/PModItem.h
+    src/models/PEntityType.cpp src/models/PEntityType.h
+    src/models/PModModel.cpp src/models/PModModel.h
+    src/models/PIconData.cpp src/models/PIconData.h
+    src/models/PFile.cpp src/models/PFile.h
+    # interfaces
+    src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
+    src/interfaces/IVirtualFileSystem.h src/interfaces/IVirtualFileSystem.cpp
     )
 
 add_subdirectory(libs/apecore)
@@ -111,22 +117,26 @@ qt_add_qml_module(appPandaLdr
         ui/layouts/settings/SettingsConfirmationBar.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
-        # sources
-        src/PState.h
-        src/PController.h
-        src/PZtdMgr.h
-        src/PConfigMgr.h
-        src/PGraphicsMgr.h
-        src/PDatabaseMgr.h
-        src/PSystemMgr.cpp
-        src/PIniConfig.h
-        src/PTomlConfig.h
+        # managers
+        src/mgrs/PState.h
+        src/mgrs/PController.h
+        src/mgrs/PGraphicsMgr.h
+        # loaders
+        src/ldrs/PZtdMgr.h
+        src/ldrs/PConfigMgr.h
+        src/ldrs/PDatabaseMgr.h
+        src/ldrs/PSystemMgr.cpp
+        src/ldrs/PIniConfig.h
+        src/ldrs/PTomlConfig.h
         # models
-        models/PModItem.h
-        models/PEntityType.h
-        models/PModModel.h
+        /src/models/PModItem.h
+        /src/models/PEntityType.h
+        /src/models/PModModel.h
+        /src/models/PIconData.h
+        /src/models/PFile.h
         # interfaces
-        interfaces/IConfigLoader.h
+        /src/interfaces/IConfigLoader.h
+        /src/interfaces/IVirtualFileSystem.h
 )
 
 qt_add_resources(appPandaLdr "resources"
