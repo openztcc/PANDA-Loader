@@ -218,60 +218,63 @@ install(TARGETS appPandaLdr
 # # add the main project modules
 # # creates the test exe
 
-# # ------------- PTestZtdMgr -------------
-# qt_add_executable(testZtdMgr
-#     tests/PTestZtdMgr.cpp
-#     src/PZtdMgr.h src/PZtdMgr.cpp
-#     src/PConfigMgr.h src/PConfigMgr.cpp
-#     src/PDatabaseMgr.h src/PDatabaseMgr.cpp
-# )
-
-# # link the required libraries
-# target_link_libraries(testZtdMgr
-#     PRIVATE
-#         Qt6::Test
-#         Qt6::Core
-#         Qt6::Sql
-#         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
-#         tomlplusplus
-#         ApeCore
-# )
-
-# # add test data as resource
-# add_custom_command(TARGET testZtdMgr POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy_directory
-#     ${CMAKE_SOURCE_DIR}/tests/test_data
-#     ${CMAKE_BINARY_DIR}/test_data
-# )
-
-# ------------- PTestConfigMgr -------------
-qt_add_executable(testConfigMgr
-    tests/PTestConfigMgr.cpp
+# ------------- PTestFileSystem -------------
+qt_add_executable(testFileSystem
+    tests/PTestFileSystem.cpp
+    src/ldrs/PFileSystem.cpp src/ldrs/PFileSystem.h
+    src/ldrs/PZip.cpp src/ldrs/PZip.h
     src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
-    src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
-    src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
-    src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
-    src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
-
+     
 )
 
 # link the required libraries
-target_link_libraries(testConfigMgr
+target_link_libraries(testFileSystem
     PRIVATE
         Qt6::Test
         Qt6::Core
         Qt6::Sql
         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
         tomlplusplus
+        ApeCore
+        quazip
         simpleini
 )
 
 # add test data as resource
-add_custom_command(TARGET testConfigMgr POST_BUILD
+add_custom_command(TARGET testFileSystem POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/tests/test_data
     ${CMAKE_BINARY_DIR}/test_data
 )
+
+# ------------- PTestConfigMgr -------------
+# qt_add_executable(testConfigMgr
+#     tests/PTestConfigMgr.cpp
+#     src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
+#     src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
+#     src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
+#     src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
+#     src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
+
+# )
+
+# # link the required libraries
+# target_link_libraries(testConfigMgr
+#     PRIVATE
+#         Qt6::Test
+#         Qt6::Core
+#         Qt6::Sql
+#         ${CMAKE_SOURCE_DIR}/libs/quazip/lib/quazip.a
+#         tomlplusplus
+#         simpleini
+# )
+
+# # add test data as resource
+# add_custom_command(TARGET testConfigMgr POST_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory
+#     ${CMAKE_SOURCE_DIR}/tests/test_data
+#     ${CMAKE_BINARY_DIR}/test_data
+# )
 
 # # ------------- PTestDatabaseMgr -------------
 # qt_add_executable(testDatabaseMgr
@@ -324,7 +327,7 @@ add_custom_command(TARGET testConfigMgr POST_BUILD
 #     ${CMAKE_BINARY_DIR}/test_data
 # )
 
-# add_test(NAME testZtdMgr COMMAND testZtdMgr)
-add_test(NAME testConfigMgr COMMAND testConfigMgr)
+add_test(NAME testFileSystem COMMAND testFileSystem)
+# add_test(NAME testConfigMgr COMMAND testConfigMgr)
 # # add_test(NAME testDatabaseMgr COMMAND testDatabaseMgr)
 # add_test(NAME testGraphicsMgr COMMAND testGraphicsMgr)
