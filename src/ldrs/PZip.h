@@ -1,5 +1,6 @@
 // Project
 #include "../interfaces/IVirtualFilesystem.h"
+#include "../models/PFileData.h"
 
 // External
 #include "quazip.h"
@@ -16,10 +17,12 @@ class PZip : public IVirtualFilesystem {
         // mount point functions
         void setRootPath(const QString &path) override;
         QString rootPath() const override;
+        bool open(const QString &filePath, int mode) override;
+        bool close() override;
 
         // file operations - relative to root path
-        QByteArray read(const QString &filePath) override;
-        bool write(const QString &filePath) override;
+        PFileData read(const QString &filePath) override;
+        bool write(const QString &filePath, const PFileData &data) override;
         bool remove(const QString &filePath) override;
         bool exists(const QString &filePath) override;
 
@@ -27,8 +30,7 @@ class PZip : public IVirtualFilesystem {
         bool move(const QString &filePath, const QString &newLocation) override;
         bool copy(const QString &filePath, const QString &newLocation) override;
         bool rename(const QString &filePath, const QString &newFileName) override;
-        bool replace(const QString &filePath) override;
-        bool add(const QString &filePath) override;
+        bool replace(const QString &filePath, const PFileData &data) override;
 
         // directory operations
         bool makeDir(const QString &dirPath) override;

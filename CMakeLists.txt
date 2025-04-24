@@ -40,7 +40,7 @@ qt_add_executable(appPandaLdr
     src/models/PEntityType.cpp src/models/PEntityType.h
     src/models/PModModel.cpp src/models/PModModel.h
     src/models/PIconData.h
-    src/models/PFile.h
+    src/models/PFileData.h
     # interfaces
     src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
     src/interfaces/IVirtualFileSystem.h
@@ -133,7 +133,7 @@ qt_add_qml_module(appPandaLdr
         src/models/PEntityType.h
         src/models/PModModel.h
         src/models/PIconData.h
-        src/models/PFile.h
+        src/models/PFileData.h
         # interfaces
         src/interfaces/IConfigLoader.h
         src/interfaces/IVirtualFileSystem.h
