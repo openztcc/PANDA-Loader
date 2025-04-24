@@ -114,12 +114,13 @@ bool PZip::remove(const QString &filePath) {
     return true;
 }
 
-bool PZip::exists(const QString &filePath) {
-    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
-
-    bool exists = true;//zip->findFile(filePath);
-    zip->close();
-    return exists;
+bool PZip::exists(const QString &relFilePath) {
+    if (read(relFilePath).data.isEmpty()) {
+        qDebug() << "File does not exist in zip:" << relFilePath;
+        return false;
+    }
+    qDebug() << "File exists in zip:" << relFilePath;
+    return true;
 }
 
 bool PZip::move(const QString &filePath, const QString &newLocation) {
