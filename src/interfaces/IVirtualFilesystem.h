@@ -22,11 +22,12 @@ class IVirtualFilesystem {
         virtual bool copy(const QString &filePath, const QString &newLocation) = 0;
         virtual bool rename(const QString &filePath, const QString &newFileName) = 0;
         virtual bool replace(const QString &filePath) = 0;
-        virtual bool add(const QString &filePath) = 0;
 
         // directory operations
         virtual bool makeDir(const QString &dirPath) = 0;
         virtual bool dirExists(const QString &dirPath) = 0;
+        virtual bool removeDir(const QString &dirPath) = 0;
+        virtual bool listFiles(const QString &dirPath) = 0;
 };
 
 #endif // IVIRTUALFILESYSTEM_H
