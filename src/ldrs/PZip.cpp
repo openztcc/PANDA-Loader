@@ -8,37 +8,37 @@ QString PZip::rootPath() const {
     return m_rootPath;
 }
 
-QuaZip PZip::openZip(const QString &filePath, int mode) {
-    QuaZip zip(filePath);
-    if (!zip.open(mode)) {
+QSharedPointer<QuaZip> PZip::openZip(const QString &filePath, QuaZip::Mode mode) {
+    auto zip = QSharedPointer<QuaZip>::create(filePath);
+    if (!zip->open(mode)) {
         qDebug() << "Failed to open zip file:" << filePath;
-        return false;
+        return QSharedPointer<QuaZip>::create();
     }
-    return true;
+    return zip;
 }
 
-QuaZipFile PZip::openZipFile(QuaZip &zip, int mode) {
-    QuaZipFile file(&zip);
-    if (!file.open(mode)) {
-        qDebug() << "Failed to open zip file:" << zip.getZipName();
-        return false;
+QSharedPointer<QuaZipFile> PZip::openZipFile(QSharedPointer<QuaZip> &zip, QIODevice::OpenMode mode) {
+    auto file = QSharedPointer<QuaZipFile>::create(zip.data());
+    if (!file->open(mode)) {
+        qDebug() << "Failed to open zip file:" << zip->getZipName();
+        return QSharedPointer<QuaZipFile>::create();
     }
-    return true;
+    return file;
 }
 
 PFileData PZip::read(const QString &filePath) {
-    QuaZip zip = open(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QuaZipFile file = openZipFile(zip, QuaZip::mdUnzip);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::ReadOnly);
 
     PFileData fileData;
     fileData.filename = filePath.section('/', -1, -1);
     fileData.ext = QFileInfo(filePath).suffix();
     fileData.path = filePath.section('/', 0, -2);
 
-    QByteArray data = file.readAll();
-    file.close();
-    zip.close();
+    QByteArray data = file->readAll();
+    file->close();
+    zip->close();
 
     fileData.data = data;
 
@@ -52,33 +52,33 @@ PFileData PZip::read(const QString &filePath) {
 }
 
 bool PZip::write(const QString &filePath, const PFileData &data) {
-    QuaZip zip = open(m_rootPath, QuaZip::mdCreate);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdCreate);
 
-    QuaZipFile file = openZipFile(zip, QuaZip::mdCreate);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::WriteOnly);
 
-    file.write(data.data);
-    file.close();
-    zip.close();
+    file->write(data.data);
+    file->close();
+    zip->close();
     return true;
 }
 
 bool PZip::remove(const QString &filePath) {
-    QuaZip zip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    if (!zip.remove(filePath)) {
-        qDebug() << "Failed to remove file from zip:" << filePath;
-        return false;
-    }
+    // if (!zip->remove(filePath)) {
+    //     qDebug() << "Failed to remove file from zip:" << filePath;
+    //     return false;
+    // }
 
-    zip.close();
+    zip->close();
     return true;
 }
 
 bool PZip::exists(const QString &filePath) {
-    QuaZip zip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    bool exists = zip.findFile(filePath);
-    zip.close();
+    bool exists = true;//zip->findFile(filePath);
+    zip->close();
     return exists;
 }
 
@@ -91,15 +91,20 @@ bool PZip::move(const QString &filePath, const QString &newLocation) {
 }
 
 bool PZip::copy(const QString &filePath, const QString &newLocation) {
-    QuaZip zip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QuaZipFile file = openZipFile(zip, QuaZip::mdUnzip);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::ReadOnly);
 
-    QByteArray data = file.readAll();
-    file.close();
-    zip.close();
+    PFileData fileData;
+    QByteArray data = file->readAll();
+    fileData.data = data;
+    fileData.filename = file->getFileName();
+    fileData.ext = file->getFileName().section('.', -1, -1);
+    fileData.path = file->getFileName().section('/', 0, -2);
+    file->close();
+    zip->close();
 
-    return write(newLocation, data);
+    return write(newLocation, fileData);
 }
 
 bool PZip::rename(const QString &filePath, const QString &newFileName) {
@@ -111,60 +116,60 @@ bool PZip::rename(const QString &filePath, const QString &newFileName) {
 }
 
 bool PZip::replace(const QString &filePath, const PFileData &data) {
-    QuaZip zip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QuaZipFile file = openZipFile(zip, QuaZip::mdUnzip);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::ReadOnly);
 
     if (!write(filePath, data)) {
         qDebug() << "Failed to write data to file in zip:" << filePath;
         return false;
     }
-    file.close();
-    zip.close();
+    file->close();
+    zip->close();
     return true;
 }
 
 bool PZip::makeDir(const QString &dirPath) {
-    QuaZip zip = openZip(m_rootPath, QuaZip::mdCreate);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdCreate);
 
-    if (!zip.mkdir(dirPath)) {
-        qDebug() << "Failed to create directory in zip:" << dirPath;
-        return false;
-    }
+    // if (!zip->mkdir(dirPath)) {
+    //     qDebug() << "Failed to create directory in zip:" << dirPath;
+    //     return false;
+    // }
 
-    zip.close();
+    zip->close();
     return true;
 }
 
 bool PZip::dirExists(const QString &dirPath) {
-    QuaZip zip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    bool exists = zip.findFile(dirPath);
-    zip.close();
+    bool exists = true;//zip->findFile(dirPath);
+    zip->close();
     return exists;
 }
 
 bool PZip::removeDir(const QString &dirPath) {
-    QuaZip zip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    if (!zip.remove(dirPath)) {
-        qDebug() << "Failed to remove directory from zip:" << dirPath;
-        return false;
-    }
+    // if (!zip->remove(dirPath)) {
+    //     qDebug() << "Failed to remove directory from zip:" << dirPath;
+    //     return false;
+    // }
 
-    zip.close();
+    zip->close();
     return true;
 }
 
 bool PZip::listFiles(const QString &dirPath) {
-    QuaZip zip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QuaZipFile file = openZipFile(zip, QuaZip::mdUnzip);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, QIODevice::ReadOnly);
 
     // TODO: Implement file listing logic here
     // For now, just close the file and zip
 
-    file.close();
-    zip.close();
+    file->close();
+    zip->close();
     return true;
 }

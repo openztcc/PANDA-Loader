@@ -7,10 +7,10 @@
 #include <QQmlEngine>
 
 // Project
-#include "mgrs/PController.h"
-#include "models/PModItem.h"
-#include "models/PModModel.h"
-#include "ldrs/PConfigMgr.h"
+#include "../src/mgrs/PController.h"
+#include "../src/models/PModItem.h"
+#include "../src/models/PModModel.h"
+#include "../src/ldrs/PConfigMgr.h"
 
 int main(int argc, char *argv[])
 {

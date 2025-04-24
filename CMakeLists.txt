@@ -29,7 +29,7 @@ qt_add_executable(appPandaLdr
     src/mgrs/PController.cpp src/mgrs/PController.h
     src/mgrs/PGraphicsMgr.cpp src/mgrs/PGraphicsMgr.h
     # loaders
-    src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
+    src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp 
     src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
     src/ldrs/PDatabaseMgr.cpp src/ldrs/PDatabaseMgr.h
     src/ldrs/PSystemMgr.cpp src/ldrs/PSystemMgr.h
@@ -60,11 +60,16 @@ add_library(simpleini INTERFACE)
 target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
 target_include_directories(simpleini INTERFACE ${CMAKE_SOURCE_DIR}/libs/simpleini/include)
 
-target_include_directories(
-    appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/src
-    appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/models
-    appPandaLdr PRIVATE ${CMAKE_SOURCE_DIR}/libs/apecore/include
+target_include_directories(appPandaLdr
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/models
+        ${CMAKE_SOURCE_DIR}/src/mgrs
+        ${CMAKE_SOURCE_DIR}/src/ldrs
+        ${CMAKE_SOURCE_DIR}/src/interfaces
+        ${CMAKE_SOURCE_DIR}/libs/apecore/include
 )
+
 
 qt_policy(SET QTP0004 NEW)
 qt_add_qml_module(appPandaLdr
@@ -118,25 +123,22 @@ qt_add_qml_module(appPandaLdr
     RESOURCES images/launch_bg.jpg
     SOURCES
         # managers
-        src/mgrs/PState.h
-        src/mgrs/PController.h
-        src/mgrs/PGraphicsMgr.h
+        src/mgrs/PState.cpp
+        src/mgrs/PController.cpp
+        src/mgrs/PGraphicsMgr.cpp
         # loaders
-        src/ldrs/PZtdMgr.h
-        src/ldrs/PConfigMgr.h
-        src/ldrs/PDatabaseMgr.h
+        src/ldrs/PZtdMgr.cpp
+        src/ldrs/PConfigMgr.cpp
+        src/ldrs/PDatabaseMgr.cpp
         src/ldrs/PSystemMgr.cpp
-        src/ldrs/PIniConfig.h
-        src/ldrs/PTomlConfig.h
+        src/ldrs/PIniConfig.cpp
+        src/ldrs/PTomlConfig.cpp
         # models
-        src/models/PModItem.h
-        src/models/PEntityType.h
-        src/models/PModModel.h
-        src/models/PIconData.h
-        src/models/PFileData.h
+        src/models/PModItem.cpp
+        src/models/PEntityType.cpp
+        src/models/PModModel.cpp
         # interfaces
-        src/interfaces/IConfigLoader.h
-        src/interfaces/IVirtualFileSystem.h
+        src/interfaces/IConfigLoader.cpp
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -224,7 +226,11 @@ qt_add_executable(testFileSystem
     src/ldrs/PFileSystem.cpp src/ldrs/PFileSystem.h
     src/ldrs/PZip.cpp src/ldrs/PZip.h
     src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
-     
+    src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
+    src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
+    src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
+    src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
+    src/interfaces/IVirtualFileSystem.h
 )
 
 # link the required libraries

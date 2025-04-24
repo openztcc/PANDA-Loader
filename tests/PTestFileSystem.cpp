@@ -1,6 +1,5 @@
 #include <QtTest/QtTest>
 #include "../src/ldrs/PFile.h"
-#include "../src/models/PFileData.h"
 
 class PTestFileSystem : public QObject
 {
@@ -43,6 +42,7 @@ void PTestFileSystem::testRead()
     } else {
         QVERIFY(fileData.data.isEmpty());
     }
+}
 
-QTEST_MAIN(PTestZtdMgr)
+QTEST_MAIN(PTestFileSystem)
 #include "PTestFileSystem.moc"

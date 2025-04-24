@@ -34,4 +34,6 @@ class PFileSystem : public IVirtualFilesystem {
 
     private:
         QString m_rootPath; // root path of the zip file
+    protected:
+    QSharedPointer<QFile> openFile(const QString &filePath, QIODevice::OpenMode mode);
 };

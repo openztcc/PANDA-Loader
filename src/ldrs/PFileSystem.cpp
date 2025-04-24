@@ -8,31 +8,40 @@ QString PFileSystem::rootPath() const {
     return m_rootPath;
 }
 
-PFileData PFileSystem::read(const QString &filePath) {
-    QFile file(m_rootPath + "/" + filePath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Failed to open file for reading:" << filePath;
-        return QByteArray();
+QSharedPointer<QFile> PFileSystem::openFile(const QString &filePath, QIODevice::OpenMode mode) {
+    auto file = QSharedPointer<QFile>::create(m_rootPath + "/" + filePath);
+    if (!file->open(mode)) {
+        qDebug() << "Failed to open file:" << filePath;
     }
-    QByteArray data = file.readAll();
-    file.close();
-    return data;
+    return file;
+}
+
+PFileData PFileSystem::read(const QString &filePath) {
+    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
+    
+    QFileInfo fileInfo(filePath);
+    PFileData fileData;
+    fileData.filename = fileInfo.fileName();
+    fileData.ext = fileInfo.suffix();
+    fileData.path = fileInfo.absolutePath();
+    QByteArray data = file->readAll();
+    fileData.data = data;
+
+    file->close();
+
+    return fileData;
 }
 
 bool PFileSystem::write(const QString &filePath, const PFileData &data) {
-    QFile file(m_rootPath + "/" + filePath);
-    if (!file.open(QIODevice::WriteOnly)) {
-        qDebug() << "Failed to open file for writing:" << filePath;
-        return false;
-    }
-    file.write(data);
-    file.close();
+    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::WriteOnly);
+    file->write(data.data);
+    file->close();
     return true;
 }
 
 bool PFileSystem::remove(const QString &filePath) {
-    QFile file(m_rootPath + "/" + filePath);
-    if (!file.remove()) {
+    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
+    if (!file->remove()) {
         qDebug() << "Failed to remove file:" << filePath;
         return false;
     }
@@ -40,13 +49,15 @@ bool PFileSystem::remove(const QString &filePath) {
 }
 
 bool PFileSystem::exists(const QString &filePath) {
-    QFile file(m_rootPath + "/" + filePath);
-    return file.exists();
+    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
+    return file->exists();
 }
 
 bool PFileSystem::move(const QString &filePath, const QString &newLocation) {
-    if (copy(filePath, newLocation)) {
-        return remove(filePath);
+    QString localPath = m_rootPath + "/" + filePath;
+    QString newLocationPath = m_rootPath + "/" + newLocation;
+    if (copy(localPath, newLocationPath)) {
+        return remove(localPath);
     } else {
         qDebug() << "Failed to move file:" << filePath << "to" << newLocation;
         return false;
@@ -54,8 +65,8 @@ bool PFileSystem::move(const QString &filePath, const QString &newLocation) {
 }
 
 bool PFileSystem::copy(const QString &filePath, const QString &newLocation) {
-    QFile file(m_rootPath + "/" + filePath);
-    if (!file.copy(newLocation)) {
+    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
+    if (!file->copy(newLocation)) {
         qDebug() << "Failed to copy file:" << filePath << "to" << newLocation;
         return false;
     }
@@ -67,10 +78,11 @@ bool PFileSystem::rename(const QString &filePath, const QString &newFileName) {
         qDebug() << "Failed to rename file:" << filePath << "to" << newFileName;
         return false;
     }
+    return true;
 }
 
 bool PFileSystem::replace(const QString &filePath, const PFileData &data) {
-    QFile file(m_rootPath + "/" + filePath);
+    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
     if (!remove(filePath)) {
         qDebug() << "Failed to remove file:" << filePath;
         return false;
@@ -85,7 +97,7 @@ bool PFileSystem::replace(const QString &filePath, const PFileData &data) {
 
 bool PFileSystem::makeDir(const QString &dirPath) {
     QDir dir(m_rootPath + "/" + dirPath);
-    if (!dirExists()) {
+    if (!dirExists(dirPath)) {
         if (!dir.mkpath(dirPath)) {
             qDebug() << "Failed to create directory:" << dirPath;
             return false;
@@ -112,7 +124,7 @@ bool PFileSystem::removeDir(const QString &dirPath) {
 
 bool PFileSystem::listFiles(const QString &dirPath) {
     QDir dir(m_rootPath + "/" + dirPath);
-    if (!dirExists()) {
+    if (!dirExists(dirPath)) {
         qDebug() << "Directory does not exist:" << dirPath;
         return false;
     }

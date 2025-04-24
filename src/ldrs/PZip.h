@@ -38,6 +38,6 @@ class PZip : public IVirtualFilesystem {
     private:
         QString m_rootPath; // root path of the zip file
     protected:
-        QuaZip openZip(const QString &filePath, int mode);
-        QuaZipFile openZipFile(QuaZip &zip, int mode);
+        QSharedPointer<QuaZip> openZip(const QString &filePath, QuaZip::Mode mode);
+        QSharedPointer<QuaZipFile> openZipFile(QSharedPointer<QuaZip> &zip, QIODevice::OpenMode mode);
 };
