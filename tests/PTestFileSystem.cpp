@@ -5,14 +5,16 @@ class PTestFileSystem : public QObject
 {
     Q_OBJECT
 private slots:
-    void testRead_data();
-    void testRead();
+    void testReadZip_data();
+    void testReadZip();
+    void testWriteZip_data();
+    void testWriteZip();
 };
 
 // Statics
 QString testDataDir = QFINDTESTDATA("test_data/filesystem/");
 
-void PTestFileSystem::testRead_data()
+void PTestFileSystem::testReadZip_data()
 {
     QTest::addColumn<QString>("filePath");
     QTest::addColumn<QString>("fileName");
@@ -23,7 +25,7 @@ void PTestFileSystem::testRead_data()
     QTest::newRow("Open missing ZTD file.") << testDataDir << "missing.ztd" << "" << false;
 }
 
-void PTestFileSystem::testRead()
+void PTestFileSystem::testReadZip()
 {
     QFETCH(QString, filePath);
     QFETCH(QString, fileName);
@@ -41,9 +43,60 @@ void PTestFileSystem::testRead()
         QVERIFY(!fileData.data.isEmpty());
         QCOMPARE(fileData.filename, "hwnyala.uca");
         QCOMPARE(fileData.ext, "uca");
-        QCOMPARE(fileData.path, "animals/hwnyala.uca");
+        QCOMPARE(fileData.path, "animals/");
     } else {
         QVERIFY(fileData.data.isEmpty());
+    }
+}
+
+void PTestFileSystem::testWriteZip_data()
+{
+    QTest::addColumn<QString>("filePath");
+    QTest::addColumn<QString>("fileName");
+    QTest::addColumn<QString>("relFilePath");
+    QTest::addColumn<bool>("expectedData");
+
+    QTest::newRow("Write to a ZTD file.") << testDataDir << "nyala.ztd" << "animals/" << true;
+    QTest::newRow("Write to missing ZTD file.") << testDataDir << "missing.ztd" << "" << false;
+}
+
+void PTestFileSystem::testWriteZip()
+{
+    QFETCH(QString, filePath);
+    QFETCH(QString, fileName);
+    QFETCH(QString, relFilePath);
+    QFETCH(bool, expectedData);
+
+    // Create a PFileSystem object
+    PFile fileSystem(this, filePath + fileName, FileType::Zip);
+
+    // Create a PFileData object to write
+    PFileData fileData;
+    QByteArray data;
+    QFile file(filePath + "config.toml");
+    if (file.open(QIODevice::ReadOnly)) {
+        data = file.readAll();
+        file.close();
+    }
+    fileData.data = data;
+    fileData.filename = "config.toml";
+    fileData.ext = "toml";
+    fileData.path = relFilePath;
+
+    // Write the file
+    bool result = fileSystem.write(fileData);
+
+    // Read the file back to check if it was written correctly
+    PFileData readFileData = fileSystem.read(relFilePath + fileData.filename);
+
+    // Check if the data is as expected
+    if (expectedData) {
+        QVERIFY(result);
+        QCOMPARE(readFileData.data, fileData.data);
+        QCOMPARE(readFileData.filename, fileData.filename);
+        QCOMPARE(readFileData.ext, fileData.ext);
+        QCOMPARE(readFileData.path, fileData.path);
+        QVERIFY(!result);
     }
 }
 

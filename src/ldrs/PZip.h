@@ -4,6 +4,7 @@
 // External
 #include "quazip.h"
 #include "quazipfile.h"
+#include "quazipnewinfo.h"
 
 // Qt
 #include <QDir>
@@ -19,7 +20,7 @@ class PZip : public IVirtualFilesystem {
 
         // file operations - relative to root path
         PFileData read(const QString &filePath) override;
-        bool write(const QString &filePath, const PFileData &data) override;
+        bool write(const PFileData &data) override;
         bool remove(const QString &filePath) override;
         bool exists(const QString &filePath) override;
 

@@ -51,19 +51,21 @@ QSharedPointer<QuaZipFile> PZip::openZipFile(QSharedPointer<QuaZip> &zip, const 
     return file;
 }
 
-PFileData PZip::read(const QString &fileName) {
+// Read a file from the zip archive
+// usage: PFileData fileData = zip.read("path/to/file.txt");
+PFileData PZip::read(const QString &relFilePath) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
-    QSharedPointer<QuaZipFile> file = openZipFile(zip, fileName, QIODevice::ReadOnly);
+    QSharedPointer<QuaZipFile> file = openZipFile(zip, relFilePath, QIODevice::ReadOnly);
     if (!file) {
-        qDebug() << "Failed to open file in zip:" << fileName;
+        qDebug() << "Failed to open file in zip:" << relFilePath;
         return PFileData();
     }
 
     PFileData fileData;
-    fileData.filename = fileName.section('/', -1, -1);
-    fileData.ext = fileName.section('.', -1, -1);
-    fileData.path = fileName;
+    fileData.filename = relFilePath.section('/', -1, -1);
+    fileData.ext = relFilePath.section('.', -1, -1);
+    fileData.path = relFilePath.section('/', 0, -2) + '/';
 
     QByteArray data = file->readAll();
     file->close();
@@ -80,11 +82,22 @@ PFileData PZip::read(const QString &fileName) {
     return fileData;
 }
 
-bool PZip::write(const QString &filePath, const PFileData &data) {
+// Write a file to the zip archive given a PFileData object
+// 
+bool PZip::write(const PFileData &data) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdCreate);
 
-    QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::WriteOnly);
-
+    QuaZipFile file(zip.data());
+    // path to write to
+    file.setFileName(data.path + "/" + data.filename);
+    // zip header info
+    QuaZipNewInfo info(data.path + "/" + data.filename);
+    qDebug() << "Setting relative path:" << data.path + "/" + data.filename;
+    if (!file.open(QIODevice::WriteOnly, info)) {
+        qDebug() << "Failed to open file for writing in zip:" << data.path + "/" + data.filename;
+        return false;
+    }
+    
     file->write(data.data);
     file->close();
     zip->close();
@@ -133,7 +146,7 @@ bool PZip::copy(const QString &filePath, const QString &newLocation) {
     file->close();
     zip->close();
 
-    return write(newLocation, fileData);
+    return write(fileData);
 }
 
 bool PZip::rename(const QString &filePath, const QString &newFileName) {
@@ -149,7 +162,7 @@ bool PZip::replace(const QString &filePath, const PFileData &data) {
 
     QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::ReadOnly);
 
-    if (!write(filePath, data)) {
+    if (!write(data)) {
         qDebug() << "Failed to write data to file in zip:" << filePath;
         return false;
     }

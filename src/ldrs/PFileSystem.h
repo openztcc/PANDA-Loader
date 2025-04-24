@@ -16,7 +16,7 @@ class PFileSystem : public IVirtualFilesystem {
 
         // file operations - relative to root path
         PFileData read(const QString &filePath) override;
-        bool write(const QString &filePath, const PFileData &data) override;
+        bool write(const PFileData &data) override;
         bool remove(const QString &filePath) override;
         bool exists(const QString &filePath) override;
 
@@ -35,5 +35,5 @@ class PFileSystem : public IVirtualFilesystem {
     private:
         QString m_rootPath; // root path of the zip file
     protected:
-    QSharedPointer<QFile> openFile(const QString &filePath, QIODevice::OpenMode mode);
+        QSharedPointer<QFile> openFile(const QString &filePath, QIODevice::OpenMode mode);
 };

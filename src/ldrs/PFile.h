@@ -32,7 +32,7 @@ public:
 
     // file operations - relative to root path
     PFileData read(const QString &filePath);
-    bool write(const QString &filePath, const PFileData &data);
+    bool write(const PFileData &data);
     bool remove(const QString &filePath);
     bool exists(const QString &filePath);
 

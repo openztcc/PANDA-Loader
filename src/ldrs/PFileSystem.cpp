@@ -32,8 +32,9 @@ PFileData PFileSystem::read(const QString &filePath) {
     return fileData;
 }
 
-bool PFileSystem::write(const QString &filePath, const PFileData &data) {
-    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::WriteOnly);
+bool PFileSystem::write(const PFileData &data) {
+    QString filePath = data.path + "/" + data.filename;
+    QSharedPointer<QFile> file = openFile(filePath, QIODevice::WriteOnly);
     file->write(data.data);
     file->close();
     return true;
@@ -88,7 +89,7 @@ bool PFileSystem::replace(const QString &filePath, const PFileData &data) {
         return false;
     }
 
-    if (!write(filePath, data)) {
+    if (!write(data)) {
         qDebug() << "Failed to write data to file:" << filePath;
         return false;
     }

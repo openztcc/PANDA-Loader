@@ -24,9 +24,9 @@ PFileData PFile::read(const QString &relFilePath) {
     return m_file->read(relFilePath);
 }
 
-bool PFile::write(const QString &filePath, const PFileData &data) {
+bool PFile::write(const PFileData &data) {
     // Write the file to the virtual filesystem
-    return m_file->write(filePath, data);
+    return m_file->write(data);
 }
 
 bool PFile::remove(const QString &filePath) {
