@@ -1,5 +1,17 @@
 #include "PZip.h"
 
+PZip::PZip() : m_rootPath("") {
+    QFileInfo fileInfo(m_rootPath);
+    if (!fileInfo.exists()) {
+        qDebug() << "File path does not exist:" << m_rootPath;
+    } else if (!fileInfo.isDir()) {
+        qDebug() << "File path is not a directory:" << m_rootPath;
+    } else {
+        qDebug() << "File path is valid:" << m_rootPath;
+    }
+    m_rootPath = fileInfo.absoluteFilePath();
+}
+
 void PZip::setRootPath(const QString &path) {
     m_rootPath = path;
 }

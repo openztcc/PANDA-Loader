@@ -10,7 +10,7 @@
 
 class PZip : public IVirtualFilesystem {
     public:
-        PZip() = default;
+        PZip(const QString &filePath = "");
         ~PZip() override = default;
 
         // mount point functions
