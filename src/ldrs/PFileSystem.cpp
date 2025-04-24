@@ -8,7 +8,7 @@ QString PFileSystem::rootPath() const {
     return m_rootPath;
 }
 
-QByteArray PFileSystem::read(const QString &filePath) {
+PFileData PFileSystem::read(const QString &filePath) {
     QFile file(m_rootPath + "/" + filePath);
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Failed to open file for reading:" << filePath;
@@ -19,7 +19,7 @@ QByteArray PFileSystem::read(const QString &filePath) {
     return data;
 }
 
-bool PFileSystem::write(const QString &filePath, const QByteArray &data) {
+bool PFileSystem::write(const QString &filePath, const PFileData &data) {
     QFile file(m_rootPath + "/" + filePath);
     if (!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Failed to open file for writing:" << filePath;
@@ -69,7 +69,7 @@ bool PFileSystem::rename(const QString &filePath, const QString &newFileName) {
     }
 }
 
-bool PFileSystem::replace(const QString &filePath, const QByteArray &data) {
+bool PFileSystem::replace(const QString &filePath, const PFileData &data) {
     QFile file(m_rootPath + "/" + filePath);
     if (!remove(filePath)) {
         qDebug() << "Failed to remove file:" << filePath;

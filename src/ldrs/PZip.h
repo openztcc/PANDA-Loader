@@ -1,20 +1,17 @@
 // Project
 #include "../interfaces/IVirtualFilesystem.h"
-#include "../models/PFileData.h"
 
 // External
 #include "quazip.h"
 #include "quazipfile.h"
 
 // Qt
-#include <QCore>
+#include <QDir>
 
 class PZip : public IVirtualFilesystem {
     public:
         PZip() = default;
         ~PZip() override = default;
-
-        bool create(const QString &filePath) override;
 
         // mount point functions
         void setRootPath(const QString &path) override;

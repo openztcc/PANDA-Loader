@@ -1,7 +1,8 @@
 #ifndef IVIRTUALFILESYSTEM_H
 #define IVIRTUALFILESYSTEM_H
 
-#include <QCore>
+#include <QDir>
+#include "../models/PFileData.h"
 
 class IVirtualFilesystem {
     public:
@@ -12,8 +13,8 @@ class IVirtualFilesystem {
         virtual QString rootPath() const = 0;
 
         // file operations - relative to root path
-        virtual QByteArray read(const QString &filePath) = 0;
-        virtual bool write(const QString &filePath) = 0;
+        virtual PFileData read(const QString &filePath) = 0;
+        virtual bool write(const QString &filePath, const PFileData &data) = 0;
         virtual bool remove(const QString &filePath) = 0;
         virtual bool exists(const QString &filePath) = 0;
 
@@ -21,7 +22,7 @@ class IVirtualFilesystem {
         virtual bool move(const QString &filePath, const QString &newLocation) = 0;
         virtual bool copy(const QString &filePath, const QString &newLocation) = 0;
         virtual bool rename(const QString &filePath, const QString &newFileName) = 0;
-        virtual bool replace(const QString &filePath) = 0;
+        virtual bool replace(const QString &filePath, const PFileData &data) = 0;
 
         // directory operations
         virtual bool makeDir(const QString &dirPath) = 0;

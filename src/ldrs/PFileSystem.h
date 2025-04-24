@@ -2,7 +2,6 @@
 #include "../interfaces/IVirtualFilesystem.h"
 
 // Qt
-#include <QCore>
 #include <QFile>
 #include <QDir>
 
@@ -11,15 +10,13 @@ class PFileSystem : public IVirtualFilesystem {
         PFileSystem() = default;
         ~PFileSystem() override = default;
 
-        bool create(const QString &filePath) override;
-
         // mount point functions
         void setRootPath(const QString &path) override;
         QString rootPath() const override;
 
         // file operations - relative to root path
-        QByteArray read(const QString &filePath) override;
-        bool write(const QString &filePath, const QByteArray &data) override;
+        PFileData read(const QString &filePath) override;
+        bool write(const QString &filePath, const PFileData &data) override;
         bool remove(const QString &filePath) override;
         bool exists(const QString &filePath) override;
 
@@ -27,7 +24,7 @@ class PFileSystem : public IVirtualFilesystem {
         bool move(const QString &filePath, const QString &newLocation) override;
         bool copy(const QString &filePath, const QString &newLocation) override;
         bool rename(const QString &filePath, const QString &newFileName) override;
-        bool replace(const QString &filePath, const QByteArray &data) override;
+        bool replace(const QString &filePath, const PFileData &data) override;
 
         // directory operations
         bool makeDir(const QString &dirPath) override;

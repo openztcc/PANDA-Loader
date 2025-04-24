@@ -5,9 +5,9 @@
 #include <QAbstractListModel>
 #include <QSharedPointer>
 #include "PModItem.h"
-#include "../src/PZTdMgr.h"
-#include "../src/PDatabaseMgr.h"
-#include "../src/PState.h"
+#include "../src/ldrs/PZTdMgr.h"
+#include "../src/ldrs/PDatabaseMgr.h"
+#include "../src/mgrs/PState.h"
 
 class PModItem;
 

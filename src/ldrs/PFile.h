@@ -1,11 +1,8 @@
 // Project
-#include "../models/PFileData.h"
-#include "PZip.h"
-#include "PFileSystem.h"
 #include "../interfaces/IVirtualFilesystem.h"
 
 // Qt
-#include <QCore>
+#include <QDir>
 
 /*
 This is an abstraction layer above the two supported virtual filesystems:

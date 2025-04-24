@@ -1,6 +1,6 @@
-#include <QCore>
+#include <QDir>
 
-struct FileData {
+struct PFileData {
     QByteArray data;
     QString filename;
     QString ext;
