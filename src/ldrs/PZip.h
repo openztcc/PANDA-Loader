@@ -21,6 +21,7 @@ class PZip : public IVirtualFilesystem {
 
         // file operations - relative to root path
         PFileData read(const QString &filePath) override;
+        QList<PFileData> readAll(const QStringList &validDirs = {}, const QStringList &validExts = {}) override;
         bool write(const PFileData &data) override;
         bool remove(const QStringList &itemsToRemove) override;
         bool remove(const QString &itemToRemove);

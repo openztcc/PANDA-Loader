@@ -82,6 +82,48 @@ PFileData PZip::read(const QString &relFilePath) {
     return fileData;
 }
 
+// Read all files from the zip archive
+// usage: QList<PFileData> files = zip.readAll({"path/to/dir"}, {"txt", "png"});
+QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &validExts) {
+    QList<PFileData> filesFound;
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
+
+    for (bool next = zip->goToFirstFile(); next; next = zip->goToNextFile()) {
+        QString currentFileName = zip->getCurrentFileName();
+        QString currentDir = currentFileName.section('/', 0, -2) + '/';
+
+        // check if the file is in a valid directory
+        if (!validDirs.isEmpty() && !validDirs.contains(currentDir)) {
+            continue;
+        }
+
+        // check if the file has a valid extension
+        if (!validExts.isEmpty() && !validExts.contains(currentFileName.section('.', -1, -1))) {
+            continue;
+        }
+
+        QuaZipFile file(zip.data());
+        if (!file.open(QIODevice::ReadOnly)) {
+            qDebug() << "Failed to open file in zip:" << currentFileName;
+            continue;
+        }
+
+        QByteArray data = file.readAll();
+        file.close();
+
+        PFileData fileData;
+        fileData.data = data;
+        fileData.filename = currentFileName.section('/', -1, -1);
+        fileData.ext = currentFileName.section('.', -1, -1);
+        fileData.path = currentDir;
+
+        filesFound.append(fileData);
+    }
+
+    zip->close();
+    return filesFound;
+}
+
 // Write a file to the zip archive given a PFileData object
 // 
 bool PZip::write(const PFileData &data) {

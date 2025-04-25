@@ -27,8 +27,6 @@ public:
     // mount point functions
     void setRootPath(const QString &path);
     QString rootPath() const;
-    bool open(const QString &filePath, int mode);
-    bool close();
 
     // file operations - relative to root path
     PFileData read(const QString &filePath);
