@@ -13,9 +13,9 @@ concerns itself with the mods list and operations over other classes from the UI
 
 // Project includes
 #include "PState.h"
-#include "PZtdMgr.h"
-#include "PDatabaseMgr.h"
-#include "PConfigMgr.h"
+#include "../ldrs/PZtdMgr.h"
+#include "../ldrs/PDatabaseMgr.h"
+#include "../ldrs/PConfigMgr.h"
 #include "PGraphicsMgr.h"
 
 // Models

@@ -1,6 +1,7 @@
 #ifndef PSTATE_H
 #define PSTATE_H
 
+// Qt
 #include <QObject>
 #include <QProcess>
 #include <QMutex>
@@ -8,13 +9,13 @@
 #include <QDebug>
 #include <QFile>
 #include <QQmlEngine>
-#include "../models/PModItem.h"
 #include <QDir>
 #include <QtQml/qqmlregistration.h>
-#include "PSystemMgr.h"
-#include "PConfigMgr.h"
 
-// static functions
+// Project
+#include "../models/PModItem.h"
+#include "../ldrs/PSystemMgr.h"
+#include "../ldrs/PConfigMgr.h"
 
 class PState : public QObject {
     Q_OBJECT

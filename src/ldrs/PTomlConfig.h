@@ -1,7 +1,10 @@
 #ifndef PTOMLCONFIG_H
 #define PTOMLCONFIG_H
 
+// Project
 #include "../interfaces/IConfigLoader.h"
+
+// External
 #include "toml.hpp"
 
 class PTomlConfig : public IConfigLoader {
