@@ -9,6 +9,10 @@ private slots:
     void testReadZip();
     void testWriteZip_data();
     void testWriteZip();
+    void testExistsZip_data();
+    void testExistsZip();
+    void testRemoveZip_data();
+    void testRemoveZip();
 };
 
 // Statics
@@ -98,6 +102,62 @@ void PTestFileSystem::testWriteZip()
         QCOMPARE(readFileData.path, fileData.path);
         QVERIFY(!result);
     }
+}
+
+void PTestFileSystem::testExistsZip_data()
+{
+    QTest::addColumn<QString>("filePath");
+    QTest::addColumn<QString>("fileName");
+    QTest::addColumn<QString>("relFilePath");
+    QTest::addColumn<bool>("expectedData");
+
+    QTest::newRow("Check if file exists in ZTD.") << testDataDir << "nyala.ztd" << "animals/hwnyala.uca" << true;
+    QTest::newRow("Check if file does not exist in ZTD.") << testDataDir << "nyala.ztd" << "animals/missing.uca" << false;
+}
+
+void PTestFileSystem::testExistsZip()
+{
+    QFETCH(QString, filePath);
+    QFETCH(QString, fileName);
+    QFETCH(QString, relFilePath);
+    QFETCH(bool, expectedData);
+
+    // Create a PFileSystem object
+    PFile fileSystem(this, filePath + fileName, FileType::Zip);
+
+    // Check if the file exists
+    bool result = fileSystem.exists(relFilePath);
+
+    // Check if the result is as expected
+    QCOMPARE(result, expectedData);
+}
+
+void PTestFileSystem::testRemoveZip_data()
+{
+    QTest::addColumn<QString>("filePath");
+    QTest::addColumn<QString>("fileName");
+    QTest::addColumn<QString>("relFilePath");
+    QTest::addColumn<bool>("expectedData");
+
+    QTest::newRow("Remove file from ZTD.") << testDataDir << "nyala.ztd" << "animals/hwnyala.uca" << true;
+    QTest::newRow("Remove missing file from ZTD.") << testDataDir << "nyala.ztd" << "animals/missing.uca" << false;
+}
+
+void PTestFileSystem::testRemoveZip()
+{
+    QFETCH(QString, filePath);
+    QFETCH(QString, fileName);
+    QFETCH(QString, relFilePath);
+    QFETCH(bool, expectedData);
+
+    // Create a PFileSystem object
+    PFile fileSystem(this, filePath + fileName, FileType::Zip);
+
+    // Remove the file
+    bool result = fileSystem.remove(relFilePath);
+
+    // Check if the result is as expected
+    QCOMPARE(result, expectedData);
 }
 
 QTEST_MAIN(PTestFileSystem)
