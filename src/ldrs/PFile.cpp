@@ -29,9 +29,14 @@ bool PFile::write(const PFileData &data) {
     return m_file->write(data);
 }
 
-bool PFile::remove(const QString &filePath) {
+bool PFile::remove(const QStringList &filesToRemove) {
     // Remove the file from the virtual filesystem
-    return m_file->remove(filePath);
+    return m_file->remove(filesToRemove);
+}
+
+bool PFile::remove(const QString &fileToRemove) {
+    // Remove the file from the virtual filesystem
+    return m_file->remove({fileToRemove});
 }
 
 bool PFile::exists(const QString &filePath) {

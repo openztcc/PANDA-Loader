@@ -102,37 +102,39 @@ bool PZip::write(const PFileData &data) {
     return true;
 }
 
+// Remove files from the zip archive
+// usage: bool success = zip.remove({"path/to/file1.txt", "path/to/file2.txt"});
 bool PZip::remove(const QStringList &itemsToRemove) {
-    QuaZip openedZip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QSharedPointer<QuaZip> openedZip = openZip(m_rootPath, QuaZip::mdUnzip);
 
     // Create a temporary file that will be the end output
-    QString temp(m_rooTPath + ".tmp");
-    QuaZip outZip = openZip(temp, QuaZip::mdCreate);
+    QString temp(m_rootPath + ".tmp");
+    QSharedPointer<QuaZip> outZip = openZip(temp, QuaZip::mdCreate);
 
-    QuaZipFile fileToCopy(&openedZip);
+    QuaZipFile fileToCopy(openedZip.get());
 
     // copy all files except the ones to remove
-    for (bool next = openedZip.goToFirstFile(); next; next = openedZip.goToNextFile()) {
+    for (bool next = openedZip->goToFirstFile(); next; next = openedZip->goToNextFile()) {
         // start by getting the current file name (could be a directory so will need to check)
-        QString currentFileName = openedZip.getCurrentFileName();
+        QString currentFileName = openedZip->getCurrentFileName();
 
         // check if file is in our list of files to remove. if yes, skip.
-        if (itemsToRemove.contains(fileName)) {
-            qDebug() << "Removing file from zip:" << fileName;
+        if (itemsToRemove.contains(currentFileName)) {
+            qDebug() << "Removing file from zip:" << currentFileName;
             continue;
         }
 
         // if not, copy the file to the new zip file
         if (!fileToCopy.open(QIODevice::ReadOnly)) {
-            qDebug() << "Failed to open file for reading in zip:" << fileName;
+            qDebug() << "Failed to open file for reading in zip:" << currentFileName;
             continue;
         }
 
         // create a new file in the new zip with the same name as the current file
-        QuaZipNewInfo newFileInfo(fileName);
-        QuaZipFile newFile(&outZip);
+        QuaZipNewInfo newFileInfo(currentFileName);
+        QuaZipFile newFile(outZip.get());
         if (!newFile.open(QIODevice::WriteOnly, newFileInfo)) {
-            qDebug() << "Failed to open file for writing in zip:" << fileName;
+            qDebug() << "Failed to open file for writing in zip:" << currentFileName;
             continue;
         }
 
@@ -144,8 +146,8 @@ bool PZip::remove(const QStringList &itemsToRemove) {
     }
 
     // close the zip files
-    openedZip.close();
-    outZip.close();
+    openedZip->close();
+    outZip->close();
 
     // remove the original zip file
     if (!QFile::remove(m_rootPath)) {
@@ -159,6 +161,7 @@ bool PZip::remove(const QStringList &itemsToRemove) {
         return false;
     }
     qDebug() << "Successfully removed files from zip:" << m_rootPath;
+    return true;
 }
 
 

@@ -56,13 +56,14 @@ bool PFileSystem::exists(const QString &filePath) {
 
 bool PFileSystem::move(const QString &filePath, const QString &newLocation) {
     QString localPath = m_rootPath + "/" + filePath;
-    QString newLocationPath = m_rootPath + "/" + newLocation;
-    if (copy(localPath, newLocationPath)) {
-        return remove(localPath);
-    } else {
-        qDebug() << "Failed to move file:" << filePath << "to" << newLocation;
-        return false;
-    }
+    // QString newLocationPath = m_rootPath + "/" + newLocation;
+    // if (copy(localPath, newLocationPath)) {
+    //     return remove(localPath);
+    // } else {
+    //     qDebug() << "Failed to move file:" << filePath << "to" << newLocation;
+    //     return false;
+    // }
+    return true;
 }
 
 bool PFileSystem::copy(const QString &filePath, const QString &newLocation) {
@@ -84,15 +85,15 @@ bool PFileSystem::rename(const QString &filePath, const QString &newFileName) {
 
 bool PFileSystem::replace(const QString &filePath, const PFileData &data) {
     QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
-    if (!remove(filePath)) {
-        qDebug() << "Failed to remove file:" << filePath;
-        return false;
-    }
+    // if (!remove(filePath)) {
+    //     qDebug() << "Failed to remove file:" << filePath;
+    //     return false;
+    // }
 
-    if (!write(data)) {
-        qDebug() << "Failed to write data to file:" << filePath;
-        return false;
-    }
+    // if (!write(data)) {
+    //     qDebug() << "Failed to write data to file:" << filePath;
+    //     return false;
+    // }
     return true;
 }
 

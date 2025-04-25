@@ -33,7 +33,8 @@ public:
     // file operations - relative to root path
     PFileData read(const QString &filePath);
     bool write(const PFileData &data);
-    bool remove(const QString &filePath);
+    bool remove(const QStringList &filesToRemove);
+    bool remove(const QString &fileToRemove);
     bool exists(const QString &filePath);
 
     // move/rename
