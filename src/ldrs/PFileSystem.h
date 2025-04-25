@@ -27,10 +27,10 @@ class PFileSystem : public IVirtualFilesystem {
         bool replace(const QString &filePath, const PFileData &data) override;
 
         // directory operations
-        bool makeDir(const QString &dirPath) override;
-        bool dirExists(const QString &dirPath) override;
-        bool removeDir(const QString &dirPath) override;
-        bool listFiles(const QString &dirPath) override;
+        // bool makeDir(const QString &dirPath) override;
+        // bool dirExists(const QString &dirPath) override;
+        // bool removeDir(const QString &dirPath) override;
+        // bool listFiles(const QString &dirPath) override;
 
     private:
         QString m_rootPath; // root path of the zip file

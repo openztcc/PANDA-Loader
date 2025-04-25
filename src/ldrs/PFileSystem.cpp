@@ -41,12 +41,18 @@ bool PFileSystem::write(const PFileData &data) {
 }
 
 bool PFileSystem::remove(const QStringList &itemsToRemove) {
-    // QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
-    // if (!file->remove()) {
-    //     qDebug() << "Failed to remove file:" << filePath;
-    //     return false;
-    // }
+    for (const QString &item : itemsToRemove) {
+        QString filePath = m_rootPath + "/" + item;
+        if (!QFile::remove(filePath)) {
+            qDebug() << "Failed to remove file:" << filePath;
+            return false;
+        }
+    }
     return true;
+}
+
+bool PFileSystem::remove(const QString &itemToRemove) {
+    return remove({itemToRemove});
 }
 
 bool PFileSystem::exists(const QString &filePath) {
@@ -56,13 +62,11 @@ bool PFileSystem::exists(const QString &filePath) {
 
 bool PFileSystem::move(const QString &filePath, const QString &newLocation) {
     QString localPath = m_rootPath + "/" + filePath;
-    // QString newLocationPath = m_rootPath + "/" + newLocation;
-    // if (copy(localPath, newLocationPath)) {
-    //     return remove(localPath);
-    // } else {
-    //     qDebug() << "Failed to move file:" << filePath << "to" << newLocation;
-    //     return false;
-    // }
+    QString newPath = m_rootPath + "/" + newLocation;
+    if (!QFile::rename(localPath, newPath)) {
+        qDebug() << "Failed to move file:" << localPath << "to" << newPath;
+        return false;
+    }
     return true;
 }
 
@@ -76,7 +80,9 @@ bool PFileSystem::copy(const QString &filePath, const QString &newLocation) {
 }
 
 bool PFileSystem::rename(const QString &filePath, const QString &newFileName) {
-    if (!copy(filePath, newFileName)) {
+    QFileInfo fileInfo(m_rootPath + "/" + filePath);
+    QString newFilePath = fileInfo.absolutePath() + "/" + newFileName;
+    if (!QFile::rename(fileInfo.absoluteFilePath(), newFilePath)) {
         qDebug() << "Failed to rename file:" << filePath << "to" << newFileName;
         return false;
     }
