@@ -1,14 +1,19 @@
 #ifndef PCONFIGMGR_H
 #define PCONFIGMGR_H
 
-#include "toml.hpp"
-#include "PZtdMgr.h"
+// Qt
 #include <QSettings>
 #include <QDir>
 #include <QBuffer>
 #include <QIODevice>
 #include <QtCore>
+
+// External
 #include <SimpleIni.h>
+#include "toml.hpp"
+
+// Project
+#include "PZtdMgr.h"
 #include "../interfaces/IConfigLoader.h"
 #include "PIniConfig.h"
 #include "PTomlConfig.h"

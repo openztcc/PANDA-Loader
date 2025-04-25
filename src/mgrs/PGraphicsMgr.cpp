@@ -21,7 +21,8 @@ OutputBuffer outputBufferCopy(const OutputBuffer& src) {
 // Get the graphic buffers from a ztd file
 QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFilePath) {
     QMap<QString, OutputBuffer> graphicBuffers;
-    QStringList graphicPaths = PConfigMgr::getIconPaths(ztdFilePath);
+    PConfigMgr config = PConfigMgr(nullptr, ztdFilePath);
+    QStringList graphicPaths = config.getValue("Icon", "Icon").toStringList();
     std::vector<std::unique_ptr<QTemporaryFile>> tempFiles;
 
 

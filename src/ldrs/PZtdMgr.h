@@ -1,9 +1,12 @@
 #ifndef PZTDMGR
 #define PZTDMGR
 
+// External
 #include "quazip.h"
 #include "quazipfile.h"
 #include "quazipnewinfo.h"
+
+// Qt
 #include <QDir>
 #include <QUuid>
 #include <QBuffer>

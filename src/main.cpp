@@ -1,15 +1,16 @@
+// Qt
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "PState.h"
 #include <QObject>
 #include <QJSValue>
-#include "PController.h"
 #include <QQmlContext>
 #include <QQmlEngine>
-#include "../models/PModItem.h"
-#include "PController.h"
-#include "../models/PModModel.h"
-#include "PConfigMgr.h"
+
+// Project
+#include "../src/mgrs/PController.h"
+#include "../src/models/PModItem.h"
+#include "../src/models/PModModel.h"
+#include "../src/ldrs/PConfigMgr.h"
 
 int main(int argc, char *argv[])
 {

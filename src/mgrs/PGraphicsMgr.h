@@ -1,12 +1,17 @@
 #ifndef PGRAPHICSMGR_H
 #define PGRAPHICSMGR_H
 
+// Qt
 #include <QObject>
-#include "ApeCore.h"
 #include <QDir>
 #include <QTemporaryFile>
-#include "PConfigMgr.h"
-#include "PDatabaseMgr.h"
+
+// Project
+#include "../ldrs/PConfigMgr.h"
+#include "../ldrs/PDatabaseMgr.h"
+
+// External
+#include "ApeCore.h"
 
 class PGraphicsMgr : public QObject
 {

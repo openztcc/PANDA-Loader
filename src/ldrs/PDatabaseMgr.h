@@ -1,6 +1,7 @@
 #ifndef PDATABASEMGR_H
 #define PDATABASEMGR_H
 
+// Qt
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -9,7 +10,9 @@
 #include <QStringList>
 #include <QDir>
 #include <QCoreApplication>
-#include "PGraphicsMgr.h"
+
+// Project
+#include "../mgrs/PGraphicsMgr.h"
 #include "PZtdMgr.h"
 #include "../models/PModItem.h"
 
