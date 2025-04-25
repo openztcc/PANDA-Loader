@@ -83,20 +83,6 @@ bool PFileSystem::rename(const QString &filePath, const QString &newFileName) {
     return true;
 }
 
-bool PFileSystem::replace(const QString &filePath, const PFileData &data) {
-    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
-    // if (!remove(filePath)) {
-    //     qDebug() << "Failed to remove file:" << filePath;
-    //     return false;
-    // }
-
-    // if (!write(data)) {
-    //     qDebug() << "Failed to write data to file:" << filePath;
-    //     return false;
-    // }
-    return true;
-}
-
 bool PFileSystem::makeDir(const QString &dirPath) {
     QDir dir(m_rootPath + "/" + dirPath);
     if (!dirExists(dirPath)) {

@@ -30,7 +30,6 @@ class PZip : public IVirtualFilesystem {
         bool move(const QString &filePath, const QString &newLocation) override;
         bool copy(const QString &filePath, const QString &newLocation) override;
         bool rename(const QString &filePath, const QString &newFileName) override;
-        bool replace(const QString &filePath, const PFileData &data) override;
 
         // directory operations
         bool makeDir(const QString &dirPath) override;

@@ -59,11 +59,6 @@ bool PFile::rename(const QString &filePath, const QString &newFileName) {
     return m_file->rename(filePath, newFileName);
 }
 
-bool PFile::replace(const QString &filePath, const PFileData &data) {
-    // Replace the file in the virtual filesystem
-    return m_file->replace(filePath, data);
-}
-
 bool PFile::makeDir(const QString &dirPath) {
     // Create a directory in the virtual filesystem
     return m_file->makeDir(dirPath);

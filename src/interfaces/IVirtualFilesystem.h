@@ -22,7 +22,6 @@ class IVirtualFilesystem {
         virtual bool move(const QString &filePath, const QString &newLocation) = 0;
         virtual bool copy(const QString &filePath, const QString &newLocation) = 0;
         virtual bool rename(const QString &filePath, const QString &newFileName) = 0;
-        virtual bool replace(const QString &filePath, const PFileData &data) = 0;
 
         // directory operations
         virtual bool makeDir(const QString &dirPath) = 0;

@@ -41,7 +41,6 @@ public:
     bool move(const QString &filePath, const QString &newLocation);
     bool copy(const QString &filePath, const QString &newLocation);
     bool rename(const QString &filePath, const QString &newFileName);
-    bool replace(const QString &filePath, const PFileData &data);
 
     // directory operations
     bool makeDir(const QString &dirPath);
