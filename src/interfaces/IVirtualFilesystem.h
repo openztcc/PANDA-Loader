@@ -15,7 +15,7 @@ class IVirtualFilesystem {
         // file operations - relative to root path
         virtual PFileData read(const QString &filePath) = 0;
         virtual bool write(const PFileData &data) = 0;
-        virtual bool remove(const QString &filePath) = 0;
+        virtual bool remove(const QStringList &itemsToRemove) = 0;
         virtual bool exists(const QString &filePath) = 0;
 
         // move/rename

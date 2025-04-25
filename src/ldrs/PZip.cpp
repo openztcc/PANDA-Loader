@@ -161,6 +161,15 @@ bool PZip::remove(const QStringList &itemsToRemove) {
     qDebug() << "Successfully removed files from zip:" << m_rootPath;
 }
 
+
+// Remove a single file from the zip archive
+// usage: bool success = zip.remove("path/to/file.txt");
+bool PZip::remove(const QString &itemToRemove) {
+    QStringList itemsToRemove;
+    itemsToRemove.append(itemToRemove);
+    return remove(itemsToRemove);
+}
+
 bool PZip::exists(const QString &relFilePath) {
     if (read(relFilePath).data.isEmpty()) {
         qDebug() << "File does not exist in zip:" << relFilePath;

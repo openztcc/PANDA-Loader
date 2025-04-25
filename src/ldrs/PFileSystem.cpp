@@ -40,12 +40,12 @@ bool PFileSystem::write(const PFileData &data) {
     return true;
 }
 
-bool PFileSystem::remove(const QString &filePath) {
-    QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
-    if (!file->remove()) {
-        qDebug() << "Failed to remove file:" << filePath;
-        return false;
-    }
+bool PFileSystem::remove(const QStringList &itemsToRemove) {
+    // QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
+    // if (!file->remove()) {
+    //     qDebug() << "Failed to remove file:" << filePath;
+    //     return false;
+    // }
     return true;
 }
 
