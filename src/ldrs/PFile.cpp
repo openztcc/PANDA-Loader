@@ -59,26 +59,6 @@ bool PFile::rename(const QString &filePath, const QString &newFileName) {
     return m_file->rename(filePath, newFileName);
 }
 
-bool PFile::makeDir(const QString &dirPath) {
-    // Create a directory in the virtual filesystem
-    return m_file->makeDir(dirPath);
-}
-
-bool PFile::dirExists(const QString &dirPath) {
-    // Check if the directory exists in the virtual filesystem
-    return m_file->dirExists(dirPath);
-}
-
-bool PFile::removeDir(const QString &dirPath) {
-    // Remove the directory from the virtual filesystem
-    return m_file->removeDir(dirPath);
-}
-
-bool PFile::listFiles(const QString &dirPath) {
-    // List the files in the directory in the virtual filesystem
-    return m_file->listFiles(dirPath);
-}
-
 void PFile::setRootPath(const QString &path) {
     m_rootPath = path;
 }

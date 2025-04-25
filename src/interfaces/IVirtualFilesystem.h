@@ -24,10 +24,11 @@ class IVirtualFilesystem {
         virtual bool rename(const QString &filePath, const QString &newFileName) = 0;
 
         // directory operations
-        virtual bool makeDir(const QString &dirPath) = 0;
-        virtual bool dirExists(const QString &dirPath) = 0;
-        virtual bool removeDir(const QString &dirPath) = 0;
-        virtual bool listFiles(const QString &dirPath) = 0;
+        // TODO: not needed yet, but implement for future
+        // virtual bool makeDir(const QString &dirPath) = 0;
+        // virtual bool dirExists(const QString &dirPath) = 0;
+        // virtual bool removeDir(const QString &dirPath) = 0;
+        // virtual bool listFiles(const QString &dirPath) = 0;
 };
 
 #endif // IVIRTUALFILESYSTEM_H

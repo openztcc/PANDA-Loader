@@ -43,10 +43,10 @@ public:
     bool rename(const QString &filePath, const QString &newFileName);
 
     // directory operations
-    bool makeDir(const QString &dirPath);
-    bool dirExists(const QString &dirPath);
-    bool removeDir(const QString &dirPath);
-    bool listFiles(const QString &dirPath);
+    // bool makeDir(const QString &dirPath);
+    // bool dirExists(const QString &dirPath);
+    // bool removeDir(const QString &dirPath);
+    // bool listFiles(const QString &dirPath);
 private:
     std::unique_ptr<IVirtualFilesystem> m_file; // pointer to the virtual filesystem
     QString m_rootPath; // root path of the zip file
