@@ -201,6 +201,7 @@ bool PZip::remove(const QString &itemToRemove) {
     return remove(itemsToRemove);
 }
 
+// Check if a file exists in the zip archive
 bool PZip::exists(const QString &relFilePath) {
     if (read(relFilePath).data.isEmpty()) {
         qDebug() << "File does not exist in zip:" << relFilePath;
@@ -210,17 +211,29 @@ bool PZip::exists(const QString &relFilePath) {
     return true;
 }
 
+// Move a file in the zip archive
+// usage: bool success = zip.move("path/to/file.txt", "new/path/to/file.txt");
+// note: this will copy the file to the new location and remove the old one
 bool PZip::move(const QString &filePath, const QString &newLocation) {
-    if (!copy(filePath, newLocation)) {
-        qDebug() << "Failed to move file:" << filePath << "to" << newLocation;
+    if (!write(newLocation)) {
+        qDebug() << "Failed to write file to zip:" << filePath;
         return false;
     }
     return remove(filePath);
 }
 
+// Copy a file in the zip archive
+// usage: bool success = zip.copy("path/to/file.txt", "new/path/to/file.txt");
+// note: this will not remove the old file and will return true if the file already exists
 bool PZip::copy(const QString &filePath, const QString &newLocation) {
-    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
+    // if the two paths are the same, return true
+    if (filePath == newLocation) {
+        qDebug() << "File paths are the same, no need to copy:" << filePath;
+        return true;
+    }
+
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
     QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::ReadOnly);
 
     PFileData fileData;
@@ -236,25 +249,7 @@ bool PZip::copy(const QString &filePath, const QString &newLocation) {
 }
 
 bool PZip::rename(const QString &filePath, const QString &newFileName) {
-    if (!copy(filePath, newFileName)) {
-        qDebug() << "Failed to rename file:" << filePath << "to" << newFileName;
-        return false;
-    }
-    return remove(filePath);
-}
-
-bool PZip::replace(const QString &filePath, const PFileData &data) {
-    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
-
-    QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::ReadOnly);
-
-    if (!write(data)) {
-        qDebug() << "Failed to write data to file in zip:" << filePath;
-        return false;
-    }
-    file->close();
-    zip->close();
-    return true;
+    return move(filePath, newFileName);
 }
 
 bool PZip::makeDir(const QString &dirPath) {
