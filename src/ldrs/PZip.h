@@ -8,6 +8,7 @@
 
 // Qt
 #include <QDir>
+#include <QTemporaryFile>
 
 class PZip : public IVirtualFilesystem {
     public:
