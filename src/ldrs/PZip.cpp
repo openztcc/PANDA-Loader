@@ -87,15 +87,35 @@ PFileData PZip::read(const QString &relFilePath) {
 bool PZip::write(const PFileData &data) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdAdd);
 
-    QuaZipFile file(zip.data());
     // path to write to
-    QuaZipNewInfo info(data.path + data.filename);
-    qDebug() << "Setting relative path:" << data.path + data.filename;
-    if (!file.open(QIODevice::WriteOnly, info)) {
-        qDebug() << "Failed to open file for writing in zip:" << data.path + data.filename;
-        return false;
+    QString relPath = data.path + data.filename;
+
+    // check if the file already exists in the zip
+    if (exists(relPath)) {
+        // if it exists, remove it first
+
+        // first close the zip file otherwise it will not be able to remove the file
+        zip->close();
+
+        // then remove the file from the zip
+        if (!remove(relPath)) {
+            return false;
+        }
+
+        // reopen the zip file for writing
+        zip = openZip(m_rootPath, QuaZip::mdAdd);
     }
-    
+
+    QuaZipFile file(zip.data());
+    QuaZipNewInfo info(data.path + data.filename);
+
+    qDebug() << "Setting relative path:" << relPath;
+
+    if (!file.open(QIODevice::WriteOnly, info)) {
+        qDebug() << "Failed to open file for writing in zip:" << relPath
+                 << "Error:" << file.getZipError();
+        return false;
+    } 
     file.write(data.data);
     file.close();
     zip->close();
@@ -150,10 +170,18 @@ bool PZip::remove(const QStringList &itemsToRemove) {
     outZip->close();
 
     // remove the original zip file
-    if (!QFile::remove(m_rootPath)) {
-        qDebug() << "Failed to remove original zip file:" << m_rootPath;
+    QFile removeFile(m_rootPath);
+    if (!removeFile.remove()) {
+        qDebug() << "Failed to remove original zip file:" << m_rootPath << "Error:" << removeFile.errorString();
+
+        // remove the temporary zip file
+        if (!QFile::remove(temp)) {
+            qDebug() << "Failed to remove temporary zip file:" << temp;
+        }
+        removeFile.close();
         return false;
     }
+    removeFile.close();
 
     // rename the temporary zip file to the original zip file name
     if (!QFile::rename(temp, m_rootPath)) {
