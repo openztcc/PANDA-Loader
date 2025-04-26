@@ -2,7 +2,7 @@
 #define PINICONFIG_H
 
 // Project
-#include "../interfaces/IConfigLoader.h"
+#include "IConfigLoader.h"
 
 // External
 #include "SimpleIni.h"

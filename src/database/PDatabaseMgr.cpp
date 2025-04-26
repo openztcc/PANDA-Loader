@@ -494,11 +494,11 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
             qDebug() << "ZTD already exists in database: " << filename;
             continue;
         } else { // process icons if do not exist
-            QMap<QString, OutputBuffer> buffers = PGraphicsMgr::getGraphicBuffers(ztd);
+            QMap<QString, OutputBuffer> buffers = PApeFile::getGraphicBuffers(ztd);
             if (buffers.isEmpty()) {
                 qDebug() << "No buffers to process for ztd: " << ztd;
             } else {
-                iconPaths = PGraphicsMgr::processIcons(buffers);
+                iconPaths = PApeFile::processIcons(buffers);
             }
         }
 

@@ -1,5 +1,8 @@
+#ifndef PZIP_H
+#define PZIP_H
+
 // Project
-#include "../interfaces/IVirtualFilesystem.h"
+#include "IVirtualFilesystem.h"
 
 // External
 #include "quazip.h"
@@ -21,6 +24,7 @@ class PZip : public IVirtualFilesystem {
 
         // file operations - relative to root path
         PFileData read(const QString &filePath) override;
+        QList<PFileData> readAll(const QStringList &validDirs = {}, const QStringList &validExts = {});
         bool write(const PFileData &data) override;
         bool remove(const QStringList &itemsToRemove) override;
         bool remove(const QString &itemToRemove);
@@ -43,3 +47,5 @@ class PZip : public IVirtualFilesystem {
         QSharedPointer<QuaZip> openZip(const QString &filePath, QuaZip::Mode mode);
         QSharedPointer<QuaZipFile> openZipFile(QSharedPointer<QuaZip> &zip, const QString &relPath = "", QIODevice::OpenMode mode = QIODevice::ReadOnly);
 };
+
+#endif // PZIP_H

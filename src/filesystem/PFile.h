@@ -1,3 +1,6 @@
+#ifndef PFILE_H
+#define PFILE_H
+
 // Project
 #include "PFileSystem.h"
 #include "PZip.h"
@@ -27,11 +30,10 @@ public:
     // mount point functions
     void setRootPath(const QString &path);
     QString rootPath() const;
-    bool open(const QString &filePath, int mode);
-    bool close();
 
     // file operations - relative to root path
     PFileData read(const QString &filePath);
+    QList<PFileData> readAll(const QStringList& validFolders = {}, const QStringList &validExts = {});
     bool write(const PFileData &data);
     bool remove(const QStringList &filesToRemove);
     bool remove(const QString &fileToRemove);
@@ -51,3 +53,5 @@ private:
     std::unique_ptr<IVirtualFilesystem> m_file; // pointer to the virtual filesystem
     QString m_rootPath; // root path of the zip file
 };
+
+#endif // PFILE_H

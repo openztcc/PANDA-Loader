@@ -24,6 +24,10 @@ PFileData PFile::read(const QString &relFilePath) {
     return m_file->read(relFilePath);
 }
 
+QList<PFileData> PFile::readAll(const QStringList& validFolders, const QStringList &validExts) {
+    return m_file->readAll(validFolders, validExts);
+}
+
 bool PFile::write(const PFileData &data) {
     // Write the file to the virtual filesystem
     return m_file->write(data);

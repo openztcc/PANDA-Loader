@@ -1,17 +1,20 @@
-#ifndef PMODMODEL_H
-#define PMODMODEL_H
+#ifndef PModMgr_H
+#define PModMgr_H
 
+// Qt
 #include <QObject>
 #include <QAbstractListModel>
 #include <QSharedPointer>
+
+// Project
 #include "PModItem.h"
-#include "../src/ldrs/PZTdMgr.h"
-#include "../src/ldrs/PDatabaseMgr.h"
-#include "../src/mgrs/PState.h"
+#include "PZTdMgr.h"
+#include "PDatabaseMgr.h"
+#include "PAppController.h"
 
 class PModItem;
 
-class PModModel : public QAbstractListModel
+class PModMgr : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -34,7 +37,7 @@ public:
         ModVersionRole
     };
 
-    explicit PModModel(QObject *parent = nullptr);
+    explicit PModMgr(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -47,12 +50,12 @@ public:
     Q_INVOKABLE QList<QSharedPointer<PModItem>> modsList() const { return m_mods_list; }
     void removeMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
-    void addState(PState *state);
+    void addState(PAppController *state);
     void replaceMod(QSharedPointer<PModItem> mod);
 
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;
-    PState *m_state;
+    PAppController *m_state;
 };
 
-#endif // PMODMODEL_H
+#endif // PModMgr_H

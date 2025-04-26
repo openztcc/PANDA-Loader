@@ -1,17 +1,17 @@
-#include "PModModel.h"
+#include "PModMgr.h"
 
-PModModel::PModModel(QObject *parent) : QAbstractListModel(parent)
+PModMgr::PModMgr(QObject *parent) : QAbstractListModel(parent)
 {
 
 }
 
-int PModModel::rowCount(const QModelIndex &parent) const
+int PModMgr::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_mods_list.size();
 }
 
-QVariant PModModel::data(const QModelIndex &index, int role) const
+QVariant PModMgr::data(const QModelIndex &index, int role) const
 {
     qDebug () << "Fetching data for index: " << index.row() << ", role: " << role;
     if (index.isValid() && index.row() >= 0 && index.row() < m_mods_list.length())
@@ -60,9 +60,9 @@ QVariant PModModel::data(const QModelIndex &index, int role) const
 }
 
 // Maps the roles to the data
-QHash<int, QByteArray> PModModel::roleNames() const
+QHash<int, QByteArray> PModMgr::roleNames() const
 {
-    qDebug() << "PModModel::roleNames() called";
+    qDebug() << "PModMgr::roleNames() called";
     QHash<int, QByteArray> roles;
 
     roles[ModTitleRole] = "title";
@@ -86,7 +86,7 @@ QHash<int, QByteArray> PModModel::roleNames() const
 
 // --------------- Manage Mod List ------------------
 
-void PModModel::loadMods()
+void PModMgr::loadMods()
 {
     // Placeholder for loading mods; dynamic sqlite query later
     beginResetModel();
@@ -118,7 +118,7 @@ void PModModel::loadMods()
     endResetModel();
 }
 
-void PModModel::reloadMod(int index)
+void PModMgr::reloadMod(int index)
 {
     // Reload mod from database
     beginResetModel();
@@ -137,7 +137,7 @@ void PModModel::reloadMod(int index)
 }
 
 // Reload mod from database
-void PModModel::reloadMod(QSharedPointer<PModItem> mod)
+void PModMgr::reloadMod(QSharedPointer<PModItem> mod)
 {
     // Get index from mod list
     int index = m_mods_list.indexOf(mod);
@@ -152,7 +152,7 @@ void PModModel::reloadMod(QSharedPointer<PModItem> mod)
 }
 
 // Updates the mod list based on the property (filter) and search term (value) for filtering and live search
-void PModModel::updateModList(QString property, QString value) 
+void PModMgr::updateModList(QString property, QString value) 
 {
     // Placeholder for updating mod list; dynamic sqlite query later
     beginResetModel();
@@ -189,7 +189,7 @@ void PModModel::updateModList(QString property, QString value)
 }
 
 // Removes a mod from the list and database
-void PModModel::removeMod(int index)
+void PModMgr::removeMod(int index)
 {
     // remove mod from list
     beginRemoveRows(QModelIndex(), index, index);
@@ -198,7 +198,7 @@ void PModModel::removeMod(int index)
 }
 
 // Adds a mod to the list and database
-void PModModel::addMod(QSharedPointer<PModItem> mod)
+void PModMgr::addMod(QSharedPointer<PModItem> mod)
 {
     beginInsertRows(QModelIndex(), m_mods_list.size(), m_mods_list.size());
     qDebug() << "Adding mod to list: " << mod->title();
@@ -207,12 +207,12 @@ void PModModel::addMod(QSharedPointer<PModItem> mod)
     qDebug() << "New mod count: " << m_mods_list.size();
 }
 
-void PModModel::addState(PState *state)
+void PModMgr::addState(PAppController *state)
 {
     m_state = state;
 }
 
-void PModModel::replaceMod(QSharedPointer<PModItem> newMod) {
+void PModMgr::replaceMod(QSharedPointer<PModItem> newMod) {
     int index = m_mods_list.indexOf(newMod);
     if (index == -1) {
         for (int i = 0; i < m_mods_list.size(); ++i) {

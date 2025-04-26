@@ -14,7 +14,8 @@
 
 // Project
 #include "PZtdMgr.h"
-#include "../interfaces/IConfigLoader.h"
+#include "IConfigLoader.h"
+#include "PFileData.h"
 #include "PIniConfig.h"
 #include "PTomlConfig.h"
 
@@ -40,20 +41,14 @@ public:
         IniData& operator=(IniData&&) = default;
     };
 
-    PConfigMgr(QObject *parent = nullptr, const QString &filepath = "") : QObject(parent) {
-        m_dirty = 0;
-        
-        if (!filepath.isEmpty()) {
-            loadConfig(filepath);
-        } else {
-            qDebug() << "No file path provided for PConfigMgr: " << filepath;
-        }
-    }
+    PConfigMgr(QObject *parent = nullptr, const QString &filepath = "");
+    PConfigMgr(QObject *parent, const PFileData &fileData = PFileData());
 
     ~PConfigMgr();
 
     // meta configuration operations
     bool loadConfig(const QString &filePath);
+    bool loadConfig(const PFileData &fileData);
     bool saveConfig(const QString &filePath);
     Q_INVOKABLE bool saveConfig();
     Q_INVOKABLE bool revertChanges();
@@ -64,23 +59,11 @@ public:
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);
 
-    // asset configuration operations
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(const QString &ztdFilePath);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getIconAniConfigInZtd(const QString &ztdFilePath);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getIconAniConfigInZtd(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
-    static QStringList getIconAniPaths(const QString &ztdFilePath);
-    static QStringList getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
-    static QStringList getIconPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &aniFiles);
-    static QStringList getIconPaths(const QString &ztdFilePath);
-
     // setters and getters for QProperties
     int isDirty() const { return m_dirty; }
     void setDirty(bool dirty) { m_dirty = dirty; }
 
     // operator overloads
-    // copy overload
     PConfigMgr& operator=(const PConfigMgr& other) {
         if (this != &other) {
             m_configPath = other.m_configPath;

@@ -1,4 +1,5 @@
 #include "PZip.h"
+#include <qregularexpression.h>
 
 PZip::PZip(const QString &filePath) : m_rootPath("") {
     if (filePath.isEmpty() || filePath == "") {
@@ -80,6 +81,90 @@ PFileData PZip::read(const QString &relFilePath) {
     qDebug() << "File path:" << fileData.path;
 
     return fileData;
+}
+
+// Read all files from the zip archive
+// usage: QList<PFileData> files = zip.readAll({"path/to/dir"}, {"txt", "png"});
+// note: empty dirs will read all directories and empty exts will read all files,
+//       dir with value "/" will read all files in the root directory
+//       dir with value "dir/" will read all files in the dir directory
+//       ext with value "txt" will read all files with the txt extension
+//       ext with value "" will read all files with no extension
+QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &validExts) {
+    QList<PFileData> filesFound;
+    QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
+    QStringList fileList = zip->getFileNameList();
+    QStringList validFiles;
+
+    QSet<int> foundIndices; // to avoid duplicates
+    for (const QString &dir : validDirs) {
+        for (const QString &path : fileList) {
+            // validate paths
+            bool validPath = false;
+
+            if (validDirs.isEmpty()) { // fine, we can read all files
+                validPath = true;
+            } else if (dir == "/") { // root path
+                validPath = !path.contains("/");
+            } else { // just checks if in validDirs
+                validPath = path.startsWith(dir.endsWith("/") ? dir : dir + "/");
+            }
+
+            if (!validPath) {
+                continue;
+            }
+
+            // validate extensions using regex
+            bool validExt = false;
+            QRegularExpression re("\\.([^\\.]+)$");
+            QRegularExpressionMatch match = re.match(path);
+            QString ext; 
+            if (match.hasMatch()) { // if match get ext *.ext
+                ext = match.captured(1);
+            } else { // no match, no ext
+                ext = "";
+            }
+
+            if (validExts.isEmpty()) { // look for all files
+                validExt = true;
+            } else {
+                validExt = validExts.contains(ext);
+            }
+
+            if (!validExt) {
+                continue;
+            }
+
+            // make  sure we avoid duplicates
+            int index = fileList.indexOf(path);
+            if (!foundIndices.contains(index)) {
+                foundIndices.insert(index);
+                validFiles.append(path);
+            }
+        }
+    }
+
+    if (validFiles.isEmpty()) {
+        qDebug() << "No valid files found in zip:" << m_rootPath;
+        return filesFound;
+    } else {
+        qDebug() << "Print valid files found:" << validFiles.size();
+        for (const QString &validFile : validFiles) {
+            qDebug() << "Valid file found:" << validFile;
+        }
+    }
+
+    // read the valid files
+    for (const QString &validFile : validFiles) {
+        PFileData file = read(validFile);
+        if (!file.data.isEmpty()) {
+            filesFound.append(file);
+        } else {
+            qDebug() << "Failed to read file in zip:" << file.filename;
+        }
+    }
+    zip->close();
+    return filesFound;
 }
 
 // Write a file to the zip archive given a PFileData object
@@ -215,7 +300,9 @@ bool PZip::exists(const QString &relFilePath) {
 // usage: bool success = zip.move("path/to/file.txt", "new/path/to/file.txt");
 // note: this will copy the file to the new location and remove the old one
 bool PZip::move(const QString &filePath, const QString &newLocation) {
-    if (!write(newLocation)) {
+    PFileData updatedFile = read(filePath);
+    updatedFile.path = newLocation;
+    if (!write(updatedFile)) {
         qDebug() << "Failed to write file to zip:" << filePath;
         return false;
     }

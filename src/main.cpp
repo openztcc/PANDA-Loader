@@ -7,23 +7,23 @@
 #include <QQmlEngine>
 
 // Project
-#include "../src/mgrs/PController.h"
-#include "../src/models/PModItem.h"
-#include "../src/models/PModModel.h"
-#include "../src/ldrs/PConfigMgr.h"
+#include "PModController.h"
+#include "PModItem.h"
+#include "PModMgr.h"
+#include "PConfigMgr.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    // Register the PState singleton
-    PState *p_state = new PState(&app);
-    qmlRegisterSingletonInstance("PandaLdr", 1, 0, "PState", p_state);
+    // Register the PAppController singleton
+    PAppController *p_state = new PAppController(&app);
+    qmlRegisterSingletonInstance("PandaLdr", 1, 0, "PAppController", p_state);
 
-    // Register the PController singleton
-    PController *controller = new PController(&app, p_state);
-    PState *state = new PState(&app);
+    // Register the PModController singleton
+    PModController *controller = new PModController(&app, p_state);
+    PAppController *state = new PAppController(&app);
     PConfigMgr *zoo = state->m_zooini.get();
     PConfigMgr *settings = state->m_pandacfg.get();
     engine.rootContext()->setContextProperty("modController", controller);
@@ -39,9 +39,9 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<PModItem>("PandaLdr", 1, 0, "PModItem", "PModItem can only be created in C++");
 
     // meta objects
-    qRegisterMetaType<PModModel*>("PModModel*");
-    qmlRegisterType<PModModel>("PandaLdr", 1, 0, "PModModel");
-    qmlRegisterType<PController>("PandaLdr", 1, 0, "PController");
+    qRegisterMetaType<PModMgr*>("PModMgr*");
+    qmlRegisterType<PModMgr>("PandaLdr", 1, 0, "PModMgr");
+    qmlRegisterType<PModController>("PandaLdr", 1, 0, "PModController");
 
     // Load the main QML file
     QObject::connect(

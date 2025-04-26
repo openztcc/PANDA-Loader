@@ -2,7 +2,7 @@
 #define PTOMLCONFIG_H
 
 // Project
-#include "../interfaces/IConfigLoader.h"
+#include "IConfigLoader.h"
 
 // External
 #include "toml.hpp"

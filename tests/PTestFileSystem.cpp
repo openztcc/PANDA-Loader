@@ -1,5 +1,6 @@
 #include <QtTest/QtTest>
-#include "../src/ldrs/PFile.h"
+#include "PFile.h"
+#include "PConfigMgr.h"
 
 class PTestFileSystem : public QObject
 {
@@ -13,6 +14,8 @@ private slots:
     void testExistsZip();
     void testRemoveZip_data();
     void testRemoveZip();
+    void testReadAllZip_data();
+    void testReadAllZip();
 };
 
 // Statics
@@ -158,6 +161,43 @@ void PTestFileSystem::testRemoveZip()
 
     // Check if the result is as expected
     QCOMPARE(result, expectedData);
+}
+
+void PTestFileSystem::testReadAllZip_data()
+{
+    QTest::addColumn<QString>("filePath");
+    QTest::addColumn<QString>("fileName");
+    QTest::addColumn<bool>("expectedData");
+
+    QTest::newRow("Read all files from ZTD.") << testDataDir << "ferret.ztd" << true;
+    QTest::newRow("Read all files from missing ZTD.") << testDataDir << "missing.ztd" << false;
+}
+
+void PTestFileSystem::testReadAllZip()
+{
+    QFETCH(QString, filePath);
+    QFETCH(QString, fileName);
+    QFETCH(bool, expectedData);
+
+    // Create a PFileSystem object
+    PFile fileSystem(this, filePath + fileName, FileType::Zip);
+
+    // Read all files
+    QList<PFileData> files = fileSystem.readAll({"animals/"}, {"uca"});
+    qDebug() << "Files found:" << files.size();
+
+    PConfigMgr configMgr(this, files[0]);
+
+    qDebug() << "Config manager:" << configMgr.getValue("m/Icon", "Icon");
+    qDebug() << "Config manager:" << configMgr.getValue("f/Icon", "Icon");
+
+    // Check if the data is as expected
+    if (expectedData) {
+        QVERIFY(!files.isEmpty());
+        QCOMPARE(files.size(), 2); // Assuming there are 2 files in the zip for this test case
+    } else {
+        QVERIFY(files.isEmpty());
+    }
 }
 
 QTEST_MAIN(PTestFileSystem)
