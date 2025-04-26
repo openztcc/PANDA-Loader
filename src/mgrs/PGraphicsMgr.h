@@ -9,6 +9,7 @@
 // Project
 #include "../ldrs/PConfigMgr.h"
 #include "../ldrs/PDatabaseMgr.h"
+#include "../ldrs/PFile.h"
 
 // External
 #include "ApeCore.h"
