@@ -168,7 +168,7 @@ void PTestFileSystem::testReadAllZip_data()
     QTest::addColumn<QString>("fileName");
     QTest::addColumn<bool>("expectedData");
 
-    QTest::newRow("Read all files from ZTD.") << testDataDir << "nyala.ztd" << true;
+    QTest::newRow("Read all files from ZTD.") << testDataDir << "ferret.ztd" << true;
     QTest::newRow("Read all files from missing ZTD.") << testDataDir << "missing.ztd" << false;
 }
 
@@ -182,7 +182,9 @@ void PTestFileSystem::testReadAllZip()
     PFile fileSystem(this, filePath + fileName, FileType::Zip);
 
     // Read all files
-    QList<PFileData> files = fileSystem.readAll({}, {"uca", "toml"});
+    QList<PFileData> files = fileSystem.readAll({"animals/hwferret/icfmarkh/", "/"}, {"toml", "uca", "", "ani", "pal"});
+
+    qDebug() << "Files found:" << files.size();
 
     // Check if the data is as expected
     if (expectedData) {
