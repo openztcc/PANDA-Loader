@@ -40,20 +40,14 @@ public:
         IniData& operator=(IniData&&) = default;
     };
 
-    PConfigMgr(QObject *parent = nullptr, const QString &filepath = "") : QObject(parent) {
-        m_dirty = 0;
-        
-        if (!filepath.isEmpty()) {
-            loadConfig(filepath);
-        } else {
-            qDebug() << "No file path provided for PConfigMgr: " << filepath;
-        }
-    }
+    PConfigMgr(QObject *parent = nullptr, const QString &filepath = "");
+    PConfigMgr(QObject *parent, PFileData &fileData = PFileData());
 
     ~PConfigMgr();
 
     // meta configuration operations
     bool loadConfig(const QString &filePath);
+    bool loadConfig(const PFileData &fileData);
     bool saveConfig(const QString &filePath);
     Q_INVOKABLE bool saveConfig();
     Q_INVOKABLE bool revertChanges();

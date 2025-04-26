@@ -182,7 +182,7 @@ void PTestFileSystem::testReadAllZip()
     PFile fileSystem(this, filePath + fileName, FileType::Zip);
 
     // Read all files
-    QList<PFileData> files = fileSystem.readAll({"animals/hwferret/icfmarkh/", "/"}, {"toml", "uca", "", "ani", "pal"});
+    QList<PFileData> files = fileSystem.readAll({"animals/"}, {"uca"});
 
     qDebug() << "Files found:" << files.size();
 

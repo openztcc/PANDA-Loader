@@ -5,6 +5,26 @@ const QString m_metaConfigName = "meta.toml";
 const QString m_configDirPath = QDir::homePath() + "/.config/PandaLdr/"; // temporary
 const QString m_metaConfigDirPath = m_configDirPath + "meta_configs/"; // temporary
 
+PConfigMgr::PConfigMgr(QObject *parent, const QString &filepath) : QObject(parent), m_dirty(0), m_config(nullptr), m_configBackup(nullptr), m_dirty_laundry(nullptr)
+{
+    m_dirty = 0;
+    
+    if (!filepath.isEmpty()) {
+        loadConfig(filepath);
+    } else {
+        qDebug() << "No file path provided for PConfigMgr: " << filepath;
+    }
+}
+
+PConfigMgr::PConfigMgr(QObject *parent, PFileData &fileData) : QObject(parent), m_dirty(0), m_config(nullptr), m_configBackup(nullptr), m_dirty_laundry(nullptr)
+{
+    if (!fileData.data.isEmpty()) {
+        loadConfig(fileData);
+    } else {
+        qDebug() << "No data provided for config file";
+    }
+}
+
 PConfigMgr::~PConfigMgr() {}
 
 // Create a parser based on the file extension
@@ -56,6 +76,32 @@ bool PConfigMgr::loadConfig(const QString &filePath)
     qDebug() << "Config path: " << m_configPath;
 
     return true;
+}
+
+// Load config from a PFileData object
+// TODO: Eventually rework this to use the PFileData object directly instead of creating a temporary file
+bool PConfigMgr::loadConfig(const PFileData &fileData)
+{
+    if (fileData.data.isEmpty()) {
+        qDebug() << "No data provided for config file";
+        return false;
+    }
+
+    // Create a temporary file to load the config from
+    QString tempFilePath = QDir::tempPath() + "/" + QUuid::createUuid().toString(QUuid::WithoutBraces) + ".tmp";
+    QFile tempFile(tempFilePath);
+    if (!tempFile.open(QIODevice::WriteOnly)) {
+        qDebug() << "Failed to create temporary file: " << tempFilePath;
+        return false;
+    }
+    tempFile.write(fileData.data);
+    tempFile.close();
+
+    // Load the config from the temporary file
+    bool result = loadConfig(tempFilePath);
+    QFile::remove(tempFilePath); // Remove the temporary file
+
+    return result;
 }
 
 // Save the config to disk
