@@ -1,8 +1,8 @@
 #include "PModController.h"
 
-PModController::PModController(QObject *parent, PState *state)
+PModController::PModController(QObject *parent, PAppController *state)
 {
-    m_model = new PModModel(this);
+    m_model = new PModMgr(this);
     m_state = state;
     m_model->addState(state);
     m_model->loadMods();
@@ -84,7 +84,7 @@ void PModController::deleteSelected()
 bool PModController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
 {
     if (!m_state) {
-        qCritical() << "PState is null, cannot toggle mod";
+        qCritical() << "PAppController is null, cannot toggle mod";
         return false;
     }
 

@@ -25,9 +25,9 @@ qt_add_executable(appPandaLdr
     ${SRC_RC}
     src/main.cpp
     # controllers
-    src/controllers/PState.cpp src/controllers/PState.h
+    src/controllers/PAppController.cpp src/controllers/PAppController.h
     src/controllers/PModController.cpp src/controllers/PModController.h
-    src/controllers/PModModel.cpp src/controllers/PModModel.h
+    src/controllers/PModMgr.cpp src/controllers/PModMgr.h
     src/controllers/PSystemMgr.cpp src/controllers/PSystemMgr.h
     # graphics
     src/graphics/PApeFile.cpp src/graphics/PApeFile.h
@@ -118,9 +118,9 @@ qt_add_qml_module(appPandaLdr
     RESOURCES images/launch_bg.jpg
     SOURCES
         # controllers
-        src/controllers/PState.cpp
+        src/controllers/PAppController.cpp
         src/controllers/PModController.cpp
-        src/controllers/PModModel.cpp
+        src/controllers/PModMgr.cpp
         src/controllers/PSystemMgr.cpp
         # graphics
         src/graphics/PApeFile.cpp

@@ -47,7 +47,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked: PState.launchZT()
+                onClicked: PAppController.launchZT()
             }
 
 

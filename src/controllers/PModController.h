@@ -12,14 +12,14 @@ concerns itself with the mods list and operations over other classes from the UI
 #include <QVector>
 
 // Project includes
-#include "PState.h"
+#include "PAppController.h"
 #include "PZtdMgr.h"
 #include "PDatabaseMgr.h"
 #include "PConfigMgr.h"
 #include "PApeFile.h"
 
 // Models
-#include "PModModel.h"
+#include "PModMgr.h"
 #include "PModItem.h"
 
 // Third-party includes
@@ -37,9 +37,9 @@ class PModController : public QObject
     Q_PROPERTY(QAbstractListModel* model READ model CONSTANT)
 
 public:
-    explicit PModController(QObject *parent = nullptr, PState *state = nullptr);
+    explicit PModController(QObject *parent = nullptr, PAppController *state = nullptr);
 
-    PModModel* model() const { return m_model; }
+    PModMgr* model() const { return m_model; }
 
     QSharedPointer<PModItem> getModAsObject(QString modId) const;
     int modCount() const;
@@ -80,8 +80,8 @@ private:
     QList<QSharedPointer<PModItem>> m_selected_mods;
     QSharedPointer<PModItem> m_currentMod;
     QSharedPointer<PModItem> m_previousMod;
-    PState *m_state;
-    PModModel *m_model;
+    PAppController *m_state;
+    PModMgr *m_model;
 };
 
 #endif // PModController_H
