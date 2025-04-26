@@ -30,7 +30,7 @@ qt_add_executable(appPandaLdr
     src/controllers/PModModel.cpp src/controllers/PModModel.h
     src/controllers/PSystemMgr.cpp src/controllers/PSystemMgr.h
     # graphics
-    src/graphics/PGraphicsMgr.cpp src/graphics/PGraphicsMgr.h
+    src/graphics/PApeFile.cpp src/graphics/PApeFile.h
     # config
     src/config/IConfigLoader.h
     src/config/PConfigMgr.cpp src/config/PConfigMgr.h
@@ -123,7 +123,7 @@ qt_add_qml_module(appPandaLdr
         src/controllers/PModModel.cpp
         src/controllers/PSystemMgr.cpp
         # graphics
-        src/graphics/PGraphicsMgr.cpp
+        src/graphics/PApeFile.cpp
         # config
         src/config/PConfigMgr.cpp
         src/config/PIniConfig.cpp
@@ -248,6 +248,8 @@ qt_add_executable(testFileSystem
     src/filesystem/PFileSystem.h src/filesystem/PFileSystem.cpp
     src/filesystem/PFile.h src/filesystem/PFile.cpp
     src/filesystem/PZip.h src/filesystem/PZip.cpp
+
+    src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp
 )
 
 target_include_directories(testFileSystem
@@ -341,7 +343,7 @@ add_custom_command(TARGET testFileSystem POST_BUILD
 # qt_add_executable(testGraphicsMgr
 #     tests/PTestGraphicsMgr.cpp
 #     src/PConfigMgr.h src/PConfigMgr.cpp
-#     src/PGraphicsMgr.h src/PGraphicsMgr.cpp
+#     src/PApeFile.h src/PApeFile.cpp
 #     src/PZtdMgr.h src/PZtdMgr.cpp
 # )
 

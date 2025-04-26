@@ -1,6 +1,6 @@
-#include "PGraphicsMgr.h"
+#include "PApeFile.h"
 
-PGraphicsMgr::PGraphicsMgr() {}
+PApeFile::PApeFile() {}
 
 OutputBuffer outputBufferCopy(const OutputBuffer& src) {
     OutputBuffer copy;
@@ -19,7 +19,7 @@ OutputBuffer outputBufferCopy(const OutputBuffer& src) {
 
 
 // Get the graphic buffers from a ztd file
-QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFilePath) {
+QMap<QString, OutputBuffer> PApeFile::getGraphicBuffers(const QString &ztdFilePath) {
     QMap<QString, OutputBuffer> graphicBuffers;
     PConfigMgr config = PConfigMgr(nullptr, ztdFilePath);
     QStringList graphicPaths = config.getValue("Icon", "Icon").toStringList();
@@ -111,7 +111,7 @@ QMap<QString, OutputBuffer> PGraphicsMgr::getGraphicBuffers(const QString &ztdFi
 
 // Process graphic buffers into cached PNG files
 // returns paths to the generated PNG files
-QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffers) {
+QStringList PApeFile::processIcons(QMap<QString, OutputBuffer> &graphicBuffers) {
     QStringList pngPaths;
     for (auto it = graphicBuffers.begin(); it != graphicBuffers.end(); ++it) {
         QString graphicName = it.key();
@@ -143,7 +143,7 @@ QStringList PGraphicsMgr::processIcons(QMap<QString, OutputBuffer> &graphicBuffe
 }
 
 // Deletes the icons from filesystem
-bool PGraphicsMgr::deleteIcons(const QString &modId) {
+bool PApeFile::deleteIcons(const QString &modId) {
     // Get the home path
     QString homePath = QDir::homePath() + "/.panda/modicons/";
     QDir dir(homePath);

@@ -1,3 +1,6 @@
+#ifndef PFILESYSTEM_H
+#define PFILESYSTEM_H
+
 // Project
 #include "IVirtualFilesystem.h"
 
@@ -38,3 +41,5 @@ class PFileSystem : public IVirtualFilesystem {
     protected:
         QSharedPointer<QFile> openFile(const QString &filePath, QIODevice::OpenMode mode);
 };
+
+#endif // PFILESYSTEM_H

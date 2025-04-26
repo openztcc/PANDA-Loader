@@ -43,7 +43,7 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
     }
 
     // delete icons associated with mod
-    if (PGraphicsMgr::deleteIcons(mod->id())) {
+    if (PApeFile::deleteIcons(mod->id())) {
         qDebug() << "Deleted icons for mod: " << mod->id();
     } else {
         qDebug() << "Failed to delete icons for mod: " << mod->id();

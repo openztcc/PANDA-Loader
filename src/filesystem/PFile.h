@@ -1,3 +1,6 @@
+#ifndef PFILE_H
+#define PFILE_H
+
 // Project
 #include "PFileSystem.h"
 #include "PZip.h"
@@ -50,3 +53,5 @@ private:
     std::unique_ptr<IVirtualFilesystem> m_file; // pointer to the virtual filesystem
     QString m_rootPath; // root path of the zip file
 };
+
+#endif // PFILE_H

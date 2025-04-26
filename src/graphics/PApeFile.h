@@ -1,5 +1,5 @@
-#ifndef PGRAPHICSMGR_H
-#define PGRAPHICSMGR_H
+#ifndef PAPEFILE_H
+#define PAPEFILE_H
 
 // Qt
 #include <QObject>
@@ -14,11 +14,11 @@
 // External
 #include "ApeCore.h"
 
-class PGraphicsMgr : public QObject
+class PApeFile : public QObject
 {
     Q_OBJECT
 public:
-    PGraphicsMgr();
+PApeFile();
     static QMap<QString, OutputBuffer> getGraphicBuffers(const QString &ztdFilePath);
     static QStringList processIcons(QMap<QString, OutputBuffer> &graphicBuffers);
     static bool deleteIcons(const QString &modId);
@@ -26,4 +26,4 @@ private:
     QString m_outputiconsPath = QDir::homePath() + "/.panda/modicons/";
 };
 
-#endif // PGRAPHICSMGR_H
+#endif // PAPEFILE_H

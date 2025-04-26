@@ -12,7 +12,7 @@
 #include <QCoreApplication>
 
 // Project
-#include "PGraphicsMgr.h"
+#include "PApeFile.h"
 #include "PZtdMgr.h"
 #include "PModItem.h"
 

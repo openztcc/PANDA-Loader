@@ -1,3 +1,6 @@
+#ifndef PZIP_H
+#define PZIP_H
+
 // Project
 #include "IVirtualFilesystem.h"
 
@@ -44,3 +47,5 @@ class PZip : public IVirtualFilesystem {
         QSharedPointer<QuaZip> openZip(const QString &filePath, QuaZip::Mode mode);
         QSharedPointer<QuaZipFile> openZipFile(QSharedPointer<QuaZip> &zip, const QString &relPath = "", QIODevice::OpenMode mode = QIODevice::ReadOnly);
 };
+
+#endif // PZIP_H

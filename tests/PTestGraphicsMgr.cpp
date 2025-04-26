@@ -1,5 +1,5 @@
 #include <QtTest/QtTest>
-#include "PGraphicsMgr.h"
+#include "PApeFile.h"
 
 class PTestGraphicsMgr : public QObject
 {
@@ -30,7 +30,7 @@ void PTestGraphicsMgr::testGetGraphicBuffers()
     QFETCH(bool, expected);
 
     // Get graphic buffers
-    QMap<QString, OutputBuffer> graphicBuffers = PGraphicsMgr::getGraphicBuffers(ztdFilePath);
+    QMap<QString, OutputBuffer> graphicBuffers = PApeFile::getGraphicBuffers(ztdFilePath);
 
     if (expected) {
         QVERIFY(!graphicBuffers.isEmpty());
@@ -57,10 +57,10 @@ void PTestGraphicsMgr::testProcessIcons()
     QFETCH(bool, expected);
 
     // Get graphic buffers
-    QMap<QString, OutputBuffer> graphicBuffers = PGraphicsMgr::getGraphicBuffers(ztdFilePath);
+    QMap<QString, OutputBuffer> graphicBuffers = PApeFile::getGraphicBuffers(ztdFilePath);
 
     // Process icons
-    QStringList processedIcons = PGraphicsMgr::processIcons(graphicBuffers);
+    QStringList processedIcons = PApeFile::processIcons(graphicBuffers);
 
     if (expected) {
         QVERIFY(!processedIcons.isEmpty());
