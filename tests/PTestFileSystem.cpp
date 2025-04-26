@@ -13,6 +13,8 @@ private slots:
     void testExistsZip();
     void testRemoveZip_data();
     void testRemoveZip();
+    void testReadAllZip_data();
+    void testReadAllZip();
 };
 
 // Statics
@@ -158,6 +160,39 @@ void PTestFileSystem::testRemoveZip()
 
     // Check if the result is as expected
     QCOMPARE(result, expectedData);
+}
+
+void PTestFileSystem::testReadAllZip_data()
+{
+    QTest::addColumn<QString>("filePath");
+    QTest::addColumn<QString>("fileName");
+    QTest::addColumn<bool>("expectedData");
+
+    QTest::newRow("Read all files from ZTD.") << testDataDir << "nyala.ztd" << true;
+    QTest::newRow("Read all files from missing ZTD.") << testDataDir << "missing.ztd" << false;
+}
+
+void PTestFileSystem::testReadAllZip()
+{
+    QFETCH(QString, filePath);
+    QFETCH(QString, fileName);
+    QFETCH(bool, expectedData);
+
+    // Create a PFileSystem object
+    PFile fileSystem(this, filePath + fileName, FileType::Zip);
+
+    // Read all files
+    QList<PFileData> files = fileSystem.readAll({}, {"uca", "toml"});
+
+    // Check if the data is as expected
+    if (expectedData) {
+        QVERIFY(!files.isEmpty());
+        QCOMPARE(files.size(), 2); // Assuming there are 2 files in the zip for this test case
+        QCOMPARE(files[0].filename, "hwnyala.uca");
+        QCOMPARE(files[1].filename, "config.toml");
+    } else {
+        QVERIFY(files.isEmpty());
+    }
 }
 
 QTEST_MAIN(PTestFileSystem)

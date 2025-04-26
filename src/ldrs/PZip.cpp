@@ -257,7 +257,9 @@ bool PZip::exists(const QString &relFilePath) {
 // usage: bool success = zip.move("path/to/file.txt", "new/path/to/file.txt");
 // note: this will copy the file to the new location and remove the old one
 bool PZip::move(const QString &filePath, const QString &newLocation) {
-    if (!write(newLocation)) {
+    PFileData updatedFile = read(filePath);
+    updatedFile.path = newLocation;
+    if (!write(updatedFile)) {
         qDebug() << "Failed to write file to zip:" << filePath;
         return false;
     }
