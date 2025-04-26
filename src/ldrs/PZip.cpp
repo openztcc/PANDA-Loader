@@ -132,7 +132,6 @@ QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &
             }
 
             if (!validExt) {
-                qDebug() << "Invalid extension in zip:" << path;
                 continue;
             }
 

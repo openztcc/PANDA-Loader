@@ -1,3 +1,6 @@
+#ifndef PFILEDATA_H
+#define PFILEDATA_H
+
 #include <QDir>
 
 struct PFileData {
@@ -6,3 +9,5 @@ struct PFileData {
     QString ext;
     QString path;
 };
+
+#endif // PFILEDATA_H

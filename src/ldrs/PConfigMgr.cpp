@@ -16,7 +16,7 @@ PConfigMgr::PConfigMgr(QObject *parent, const QString &filepath) : QObject(paren
     }
 }
 
-PConfigMgr::PConfigMgr(QObject *parent, PFileData &fileData) : QObject(parent), m_dirty(0), m_config(nullptr), m_configBackup(nullptr), m_dirty_laundry(nullptr)
+PConfigMgr::PConfigMgr(QObject *parent, const PFileData &fileData) : QObject(parent), m_dirty(0), m_config(nullptr), m_configBackup(nullptr), m_dirty_laundry(nullptr)
 {
     if (!fileData.data.isEmpty()) {
         loadConfig(fileData);
@@ -88,7 +88,7 @@ bool PConfigMgr::loadConfig(const PFileData &fileData)
     }
 
     // Create a temporary file to load the config from
-    QString tempFilePath = QDir::tempPath() + "/" + QUuid::createUuid().toString(QUuid::WithoutBraces) + ".tmp";
+    QString tempFilePath = QDir::tempPath() + "/" + QUuid::createUuid().toString(QUuid::WithoutBraces) + ".tmp.ini";
     QFile tempFile(tempFilePath);
     if (!tempFile.open(QIODevice::WriteOnly)) {
         qDebug() << "Failed to create temporary file: " << tempFilePath;

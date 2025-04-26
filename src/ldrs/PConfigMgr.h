@@ -15,6 +15,7 @@
 // Project
 #include "PZtdMgr.h"
 #include "../interfaces/IConfigLoader.h"
+#include "../models/PFileData.h"
 #include "PIniConfig.h"
 #include "PTomlConfig.h"
 
@@ -41,7 +42,7 @@ public:
     };
 
     PConfigMgr(QObject *parent = nullptr, const QString &filepath = "");
-    PConfigMgr(QObject *parent, PFileData &fileData = PFileData());
+    PConfigMgr(QObject *parent, const PFileData &fileData = PFileData());
 
     ~PConfigMgr();
 

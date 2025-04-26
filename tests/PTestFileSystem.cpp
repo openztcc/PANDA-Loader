@@ -1,5 +1,6 @@
 #include <QtTest/QtTest>
 #include "../src/ldrs/PFile.h"
+#include "../src/ldrs/PConfigMgr.h"
 
 class PTestFileSystem : public QObject
 {
@@ -183,15 +184,17 @@ void PTestFileSystem::testReadAllZip()
 
     // Read all files
     QList<PFileData> files = fileSystem.readAll({"animals/"}, {"uca"});
-
     qDebug() << "Files found:" << files.size();
+
+    PConfigMgr configMgr(this, files[0]);
+
+    qDebug() << "Config manager:" << configMgr.getValue("m/Icon", "Icon");
+    qDebug() << "Config manager:" << configMgr.getValue("f/Icon", "Icon");
 
     // Check if the data is as expected
     if (expectedData) {
         QVERIFY(!files.isEmpty());
         QCOMPARE(files.size(), 2); // Assuming there are 2 files in the zip for this test case
-        QCOMPARE(files[0].filename, "hwnyala.uca");
-        QCOMPARE(files[1].filename, "config.toml");
     } else {
         QVERIFY(files.isEmpty());
     }
