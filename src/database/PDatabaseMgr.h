@@ -12,9 +12,9 @@
 #include <QCoreApplication>
 
 // Project
-#include "../mgrs/PGraphicsMgr.h"
+#include "PGraphicsMgr.h"
 #include "PZtdMgr.h"
-#include "../models/PModItem.h"
+#include "PModItem.h"
 
 class PDatabaseMgr : public QObject
 {

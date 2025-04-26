@@ -13,14 +13,14 @@ concerns itself with the mods list and operations over other classes from the UI
 
 // Project includes
 #include "PState.h"
-#include "../ldrs/PZtdMgr.h"
-#include "../ldrs/PDatabaseMgr.h"
-#include "../ldrs/PConfigMgr.h"
+#include "PZtdMgr.h"
+#include "PDatabaseMgr.h"
+#include "PConfigMgr.h"
 #include "PGraphicsMgr.h"
 
 // Models
-#include "../models/PModModel.h"
-#include "../models/PModItem.h"
+#include "PModModel.h"
+#include "PModItem.h"
 
 // Third-party includes
 #include "toml.hpp"

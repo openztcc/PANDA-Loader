@@ -1,5 +1,5 @@
 #include <QtTest/QtTest>
-#include "../src/PGraphicsMgr.h"
+#include "PGraphicsMgr.h"
 
 class PTestGraphicsMgr : public QObject
 {

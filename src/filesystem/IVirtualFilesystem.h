@@ -2,7 +2,7 @@
 #define IVIRTUALFILESYSTEM_H
 
 #include <QDir>
-#include "../models/PFileData.h"
+#include "PFileData.h"
 
 class IVirtualFilesystem {
     public:

@@ -1,5 +1,5 @@
 // Project
-#include "../interfaces/IVirtualFilesystem.h"
+#include "IVirtualFilesystem.h"
 
 // Qt
 #include <QFile>

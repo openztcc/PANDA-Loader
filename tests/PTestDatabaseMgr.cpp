@@ -1,6 +1,6 @@
 #include <QtTest/QtTest>
 #include <QVector>
-#include "../PDatabaseMgr.h"
+#include "PDatabaseMgr.h"
 
 class PTestDatabaseMgr : public QObject
 {

@@ -1,6 +1,6 @@
 #include <QtTest/QtTest>
-#include "../src/ldrs/PFile.h"
-#include "../src/ldrs/PConfigMgr.h"
+#include "PFile.h"
+#include "PConfigMgr.h"
 
 class PTestFileSystem : public QObject
 {

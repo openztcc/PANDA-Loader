@@ -1,13 +1,16 @@
 #ifndef PMODMODEL_H
 #define PMODMODEL_H
 
+// Qt
 #include <QObject>
 #include <QAbstractListModel>
 #include <QSharedPointer>
+
+// Project
 #include "PModItem.h"
-#include "../src/ldrs/PZTdMgr.h"
-#include "../src/ldrs/PDatabaseMgr.h"
-#include "../src/mgrs/PState.h"
+#include "PZTdMgr.h"
+#include "PDatabaseMgr.h"
+#include "PState.h"
 
 class PModItem;
 

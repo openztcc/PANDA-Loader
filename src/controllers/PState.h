@@ -13,9 +13,9 @@
 #include <QtQml/qqmlregistration.h>
 
 // Project
-#include "../models/PModItem.h"
-#include "../ldrs/PSystemMgr.h"
-#include "../ldrs/PConfigMgr.h"
+#include "PModItem.h"
+#include "PSystemMgr.h"
+#include "PConfigMgr.h"
 
 class PState : public QObject {
     Q_OBJECT

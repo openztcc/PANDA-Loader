@@ -7,9 +7,9 @@
 #include <QTemporaryFile>
 
 // Project
-#include "../ldrs/PConfigMgr.h"
-#include "../ldrs/PDatabaseMgr.h"
-#include "../ldrs/PFile.h"
+#include "PConfigMgr.h"
+#include "PDatabaseMgr.h"
+#include "PFile.h"
 
 // External
 #include "ApeCore.h"

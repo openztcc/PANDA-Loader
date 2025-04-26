@@ -24,26 +24,32 @@ find_package(QuaZip REQUIRED)
 qt_add_executable(appPandaLdr
     ${SRC_RC}
     src/main.cpp
-    # managers
-    src/mgrs/PState.cpp src/mgrs/PState.h
-    src/mgrs/PController.cpp src/mgrs/PController.h
-    src/mgrs/PGraphicsMgr.cpp src/mgrs/PGraphicsMgr.h
-    # loaders
-    src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp 
-    src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
-    src/ldrs/PDatabaseMgr.cpp src/ldrs/PDatabaseMgr.h
-    src/ldrs/PSystemMgr.cpp src/ldrs/PSystemMgr.h
-    src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
-    src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
+    # controllers
+    src/controllers/PState.cpp src/controllers/PState.h
+    src/controllers/PController.cpp src/controllers/PController.h
+    src/controllers/PModModel.cpp src/controllers/PModModel.h
+    src/controllers/PSystemMgr.cpp src/controllers/PSystemMgr.h
+    # graphics
+    src/graphics/PGraphicsMgr.cpp src/graphics/PGraphicsMgr.h
+    # config
+    src/config/IConfigLoader.h
+    src/config/PConfigMgr.cpp src/config/PConfigMgr.h
+    src/config/PIniConfig.cpp src/config/PIniConfig.h
+    src/config/PTomlConfig.cpp src/config/PTomlConfig.h
     # models
     src/models/PModItem.h src/models/PModItem.cpp
     src/models/PEntityType.cpp src/models/PEntityType.h
-    src/models/PModModel.cpp src/models/PModModel.h
     src/models/PIconData.h
     src/models/PFileData.h
-    # interfaces
-    src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
-    src/interfaces/IVirtualFileSystem.h
+    # filesystem
+    src/filesystem/IVirtualFileSystem.h
+    src/filesystem/PFileSystem.h src/filesystem/PFileSystem.cpp
+    src/filesystem/PFile.h src/filesystem/PFile.cpp
+    src/filesystem/PZip.h src/filesystem/PZip.cpp
+    # database
+    src/database/PDatabaseMgr.cpp src/database/PDatabaseMgr.h
+
+    src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp 
     )
 
 add_subdirectory(libs/apecore)
@@ -59,17 +65,6 @@ add_library(simpleini INTERFACE)
 
 target_include_directories(tomlplusplus INTERFACE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
 target_include_directories(simpleini INTERFACE ${CMAKE_SOURCE_DIR}/libs/simpleini/include)
-
-target_include_directories(appPandaLdr
-    PRIVATE
-        ${CMAKE_SOURCE_DIR}/src
-        ${CMAKE_SOURCE_DIR}/src/models
-        ${CMAKE_SOURCE_DIR}/src/mgrs
-        ${CMAKE_SOURCE_DIR}/src/ldrs
-        ${CMAKE_SOURCE_DIR}/src/interfaces
-        ${CMAKE_SOURCE_DIR}/libs/apecore/include
-)
-
 
 qt_policy(SET QTP0004 NEW)
 qt_add_qml_module(appPandaLdr
@@ -122,23 +117,41 @@ qt_add_qml_module(appPandaLdr
         ui/layouts/settings/SettingsConfirmationBar.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
-        # managers
-        src/mgrs/PState.cpp
-        src/mgrs/PController.cpp
-        src/mgrs/PGraphicsMgr.cpp
-        # loaders
-        src/ldrs/PZtdMgr.cpp
-        src/ldrs/PConfigMgr.cpp
-        src/ldrs/PDatabaseMgr.cpp
-        src/ldrs/PSystemMgr.cpp
-        src/ldrs/PIniConfig.cpp
-        src/ldrs/PTomlConfig.cpp
+        # controllers
+        src/controllers/PState.cpp
+        src/controllers/PController.cpp
+        src/controllers/PModModel.cpp
+        src/controllers/PSystemMgr.cpp
+        # graphics
+        src/graphics/PGraphicsMgr.cpp
+        # config
+        src/config/PConfigMgr.cpp
+        src/config/PIniConfig.cpp
+        src/config/PTomlConfig.cpp
         # models
         src/models/PModItem.cpp
         src/models/PEntityType.cpp
-        src/models/PModModel.cpp
-        # interfaces
-        src/interfaces/IConfigLoader.cpp
+        # filesystem
+        src/filesystem/PFileSystem.cpp
+        src/filesystem/PFile.cpp
+        src/filesystem/PZip.cpp
+        # database
+        src/database/PDatabaseMgr.cpp
+
+        src/ldrs/PZtdMgr.cpp 
+)
+
+target_include_directories(appPandaLdr
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/models
+        ${CMAKE_SOURCE_DIR}/src/controllers
+        ${CMAKE_SOURCE_DIR}/src/graphics
+        ${CMAKE_SOURCE_DIR}/src/filesystem
+        ${CMAKE_SOURCE_DIR}/src/config
+        ${CMAKE_SOURCE_DIR}/src/database
+        ${CMAKE_SOURCE_DIR}/src/ldrs
+        ${CMAKE_SOURCE_DIR}/libs/apecore/include
 )
 
 qt_add_resources(appPandaLdr "resources"
@@ -223,15 +236,31 @@ install(TARGETS appPandaLdr
 # ------------- PTestFileSystem -------------
 qt_add_executable(testFileSystem
     tests/PTestFileSystem.cpp
-    src/ldrs/PFile.cpp src/ldrs/PFile.h
-    src/ldrs/PFileSystem.cpp src/ldrs/PFileSystem.h
-    src/ldrs/PZip.cpp src/ldrs/PZip.h
-    src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
-    src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
-    src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
-    src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
-    src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
-    src/interfaces/IVirtualFileSystem.h
+    # config
+    src/config/IConfigLoader.h
+    src/config/PConfigMgr.cpp src/config/PConfigMgr.h
+    src/config/PIniConfig.cpp src/config/PIniConfig.h
+    src/config/PTomlConfig.cpp src/config/PTomlConfig.h
+    # models
+    src/models/PFileData.h
+    # filesystem
+    src/filesystem/IVirtualFileSystem.h
+    src/filesystem/PFileSystem.h src/filesystem/PFileSystem.cpp
+    src/filesystem/PFile.h src/filesystem/PFile.cpp
+    src/filesystem/PZip.h src/filesystem/PZip.cpp
+)
+
+target_include_directories(testFileSystem
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/models
+        ${CMAKE_SOURCE_DIR}/src/controllers
+        ${CMAKE_SOURCE_DIR}/src/graphics
+        ${CMAKE_SOURCE_DIR}/src/filesystem
+        ${CMAKE_SOURCE_DIR}/src/config
+        ${CMAKE_SOURCE_DIR}/src/database
+        ${CMAKE_SOURCE_DIR}/src/ldrs
+        ${CMAKE_SOURCE_DIR}/libs/apecore/include
 )
 
 # link the required libraries

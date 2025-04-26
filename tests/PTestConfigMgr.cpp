@@ -1,5 +1,5 @@
 #include <QtTest/QtTest>
-#include "../src/PConfigMgr.h"
+#include "PConfigMgr.h"
 
 class PTestConfigMgr : public QObject
 {
