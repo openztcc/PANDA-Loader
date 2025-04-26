@@ -64,23 +64,11 @@ public:
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);
 
-    // asset configuration operations
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getAllConfigInZtd(const QString &ztdFilePath);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(const QString &ztdFilePath);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getCoreConfigInZtd(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getIconAniConfigInZtd(const QString &ztdFilePath);
-    static std::vector<std::unique_ptr<PConfigMgr::IniData>> getIconAniConfigInZtd(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
-    static QStringList getIconAniPaths(const QString &ztdFilePath);
-    static QStringList getIconAniPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &configFiles);
-    static QStringList getIconPaths(std::vector<std::unique_ptr<PConfigMgr::IniData>> &aniFiles);
-    static QStringList getIconPaths(const QString &ztdFilePath);
-
     // setters and getters for QProperties
     int isDirty() const { return m_dirty; }
     void setDirty(bool dirty) { m_dirty = dirty; }
 
     // operator overloads
-    // copy overload
     PConfigMgr& operator=(const PConfigMgr& other) {
         if (this != &other) {
             m_configPath = other.m_configPath;
