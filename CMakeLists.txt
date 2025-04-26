@@ -26,7 +26,7 @@ qt_add_executable(appPandaLdr
     src/main.cpp
     # controllers
     src/controllers/PState.cpp src/controllers/PState.h
-    src/controllers/PController.cpp src/controllers/PController.h
+    src/controllers/PModController.cpp src/controllers/PModController.h
     src/controllers/PModModel.cpp src/controllers/PModModel.h
     src/controllers/PSystemMgr.cpp src/controllers/PSystemMgr.h
     # graphics
@@ -119,7 +119,7 @@ qt_add_qml_module(appPandaLdr
     SOURCES
         # controllers
         src/controllers/PState.cpp
-        src/controllers/PController.cpp
+        src/controllers/PModController.cpp
         src/controllers/PModModel.cpp
         src/controllers/PSystemMgr.cpp
         # graphics

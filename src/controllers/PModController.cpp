@@ -1,6 +1,6 @@
-#include "PController.h"
+#include "PModController.h"
 
-PController::PController(QObject *parent, PState *state)
+PModController::PModController(QObject *parent, PState *state)
 {
     m_model = new PModModel(this);
     m_state = state;
@@ -8,7 +8,7 @@ PController::PController(QObject *parent, PState *state)
     m_model->loadMods();
 }
 
-QSharedPointer<PModItem> PController::getModAsObject(QString id) const
+QSharedPointer<PModItem> PModController::getModAsObject(QString id) const
 {
     PDatabaseMgr db;
     db.openDatabase();
@@ -23,18 +23,18 @@ QSharedPointer<PModItem> PController::getModAsObject(QString id) const
     return modItem;
 }
 
-int PController::modCount() const
+int PModController::modCount() const
 {
     return m_model->modsList().size();
 }
 
-void PController::addMod(QSharedPointer<PModItem> mod)
+void PModController::addMod(QSharedPointer<PModItem> mod)
 {
     m_model->addMod(mod);
     emit modAdded(mod);
 }
 
-void PController::removeMod(QSharedPointer<PModItem> mod)
+void PModController::removeMod(QSharedPointer<PModItem> mod)
 {
     int index = m_model->modsList().indexOf(mod);
     if (index == -1)
@@ -72,7 +72,7 @@ void PController::removeMod(QSharedPointer<PModItem> mod)
 }
 
 // Deletes selected mods from the database and filesystem
-void PController::deleteSelected()
+void PModController::deleteSelected()
 {
     for (const auto& mod : m_selected_mods) {
         removeMod(mod);
@@ -81,7 +81,7 @@ void PController::deleteSelected()
     emit selectedModsListUpdated(m_selected_mods);
 }
 
-bool PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
+bool PModController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
 {
     if (!m_state) {
         qCritical() << "PState is null, cannot toggle mod";
@@ -154,12 +154,12 @@ bool PController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
 }
 
 
-void PController::reloadMod(QSharedPointer<PModItem> mod)
+void PModController::reloadMod(QSharedPointer<PModItem> mod)
 {
     m_model->reloadMod(mod);
 }
 
-void PController::setSelectedModsEnabled(bool enabled)
+void PModController::setSelectedModsEnabled(bool enabled)
 {
     QList<QSharedPointer<PModItem>> mods = m_selected_mods;
     QVector<QString> successful_mods;
@@ -185,7 +185,7 @@ void PController::setSelectedModsEnabled(bool enabled)
     db.closeDatabase();
 }
 
-void PController::changeOpacity(QObject* qmlItem, float opacity)
+void PModController::changeOpacity(QObject* qmlItem, float opacity)
 {
     if (qmlItem) {
         qmlItem->setProperty("opacity", opacity);
@@ -195,7 +195,7 @@ void PController::changeOpacity(QObject* qmlItem, float opacity)
     }
 }
 
-void PController::selectMod(int index)
+void PModController::selectMod(int index)
 {
     if (index < 0 || index >= m_model->modsList().size())
     {
@@ -212,7 +212,7 @@ void PController::selectMod(int index)
     emit modSelected();
 }
 
-void PController::deselectMod(int index)
+void PModController::deselectMod(int index)
 {
     if (index < 0 || index >= m_model->modsList().size())
     {
@@ -238,7 +238,7 @@ void PController::deselectMod(int index)
     }
 }
 
-void PController::clearSelection()
+void PModController::clearSelection()
 {
     // Clear the current mod and emit the deselected signal
     m_previousMod = m_currentMod;
@@ -247,7 +247,7 @@ void PController::clearSelection()
     emit modDeselected();
 }
 
-void PController::setCurrentMod(QObject* mod)
+void PModController::setCurrentMod(QObject* mod)
 { 
     // convert QObject to PModItem
     PModItem* modItem = qobject_cast<PModItem*>(mod);
@@ -278,7 +278,7 @@ void PController::setCurrentMod(QObject* mod)
     qDebug() << "Mod not found in list: " << modItem->title();
 }
 
-QList<QObject*> PController::selectedMods() const
+QList<QObject*> PModController::selectedMods() const
 {
     QList<QObject*> selectedModsList;
     for (const auto& mod : m_selected_mods) {
@@ -287,7 +287,7 @@ QList<QObject*> PController::selectedMods() const
     return selectedModsList;
 }
 
-void PController::addModToSelection(QObject* mod)
+void PModController::addModToSelection(QObject* mod)
 {
     // convert QObject to PModItem
     PModItem* modItem = qobject_cast<PModItem*>(mod);
@@ -310,12 +310,12 @@ void PController::addModToSelection(QObject* mod)
     qDebug() << "Mod not found in list: " << modItem->title();
 }
 
-void PController::updateModList(QString orderBy, QString searchTerm)
+void PModController::updateModList(QString orderBy, QString searchTerm)
 {
     m_model->updateModList(orderBy, searchTerm);
 }
 
-void PController::selectAll()
+void PModController::selectAll()
 {
     m_selected_mods.clear();
     for (const auto& mod : m_model->modsList()) {

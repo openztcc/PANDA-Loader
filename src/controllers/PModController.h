@@ -1,5 +1,5 @@
-#ifndef PCONTROLLER_H
-#define PCONTROLLER_H
+#ifndef PModController_H
+#define PModController_H
 
 /* This controller class will manipulate the state of the application. Mainly, it
 concerns itself with the mods list and operations over other classes from the UI. */
@@ -27,7 +27,7 @@ concerns itself with the mods list and operations over other classes from the UI
 
 class PModItem;
 
-class PController : public QObject
+class PModController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QObject* currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
@@ -37,7 +37,7 @@ class PController : public QObject
     Q_PROPERTY(QAbstractListModel* model READ model CONSTANT)
 
 public:
-    explicit PController(QObject *parent = nullptr, PState *state = nullptr);
+    explicit PModController(QObject *parent = nullptr, PState *state = nullptr);
 
     PModModel* model() const { return m_model; }
 
@@ -84,4 +84,4 @@ private:
     PModModel *m_model;
 };
 
-#endif // PCONTROLLER_H
+#endif // PModController_H
