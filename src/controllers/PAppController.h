@@ -13,11 +13,11 @@
 #include <QtQml/qqmlregistration.h>
 
 // Project
-#include "../models/PModItem.h"
-#include "../ldrs/PSystemMgr.h"
-#include "../ldrs/PConfigMgr.h"
+#include "PModItem.h"
+#include "PSystemMgr.h"
+#include "PConfigMgr.h"
 
-class PState : public QObject {
+class PAppController : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON
@@ -26,7 +26,7 @@ class PState : public QObject {
     Q_PROPERTY(int dirty READ dirty NOTIFY dirtyChanged)
 
 public:
-    explicit PState(QObject *parent = nullptr);
+    explicit PAppController(QObject *parent = nullptr);
     Q_INVOKABLE int launchZT();
     QString getGamePath();
     void setGamePath(QString);

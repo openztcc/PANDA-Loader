@@ -1,7 +1,7 @@
-#include "PState.h"
+#include "PAppController.h"
 #include <qdir.h>
 
-PState::PState(QObject *parent) : QObject(parent) {
+PAppController::PAppController(QObject *parent) : QObject(parent) {
     m_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\";
     m_resource_path = "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon\\dlupdate\\";
     m_mods = QVector<PModItem>();
@@ -20,14 +20,14 @@ PState::PState(QObject *parent) : QObject(parent) {
 
     loadZooIni();
 
-    // this connects the worker PConfigMgr objects to this manager PState object so that there
+    // this connects the worker PConfigMgr objects to this manager PAppController object so that there
     // is one "source of truth" for the dirty flag
-    // TODO: these connections work but PState slot needs fixed
-    connect(m_zooini.get(), &PConfigMgr::dirtyChanged, this, &PState::onConfigDirtyChanged);
-    connect(m_pandacfg.get(), &PConfigMgr::dirtyChanged, this, &PState::onConfigDirtyChanged);
+    // TODO: these connections work but PAppController slot needs fixed
+    connect(m_zooini.get(), &PConfigMgr::dirtyChanged, this, &PAppController::onConfigDirtyChanged);
+    connect(m_pandacfg.get(), &PConfigMgr::dirtyChanged, this, &PAppController::onConfigDirtyChanged);
 }
 
-int PState::launchZT() {
+int PAppController::launchZT() {
     // QMutexLocker locker(&mutex);
     QString _path = this->m_path + "\\zoo.exe";
 
@@ -72,16 +72,16 @@ int PState::launchZT() {
     return 0;
 }
 
-void PState::setGamePath(QString path) {
+void PAppController::setGamePath(QString path) {
     m_path = path;
     emit pathChanged();
 }
 
-QString PState::getGamePath() {
+QString PAppController::getGamePath() {
     return m_path;
 }
 
-QStringList PState::getZtdList() {
+QStringList PAppController::getZtdList() {
     // Get list of ztd files in m_resource_path
     QDir dir(m_resource_path);
     QStringList filters;
@@ -101,7 +101,7 @@ QStringList PState::getZtdList() {
     return ztdList;
 }
 
-bool PState::loadZooIni() {
+bool PAppController::loadZooIni() {
     // Load the Zoo Tycoon config file
     m_zooini = std::make_unique<PConfigMgr>(this, m_path + "\\zoo.ini");
     if (!m_zooini) {
@@ -111,7 +111,7 @@ bool PState::loadZooIni() {
     return true;
 }
 
-bool PState::loadPandaCfg() {
+bool PAppController::loadPandaCfg() {
     // panda config file path
     QString configPath = m_configPath + "/panda.toml";
     // check if the config file exists

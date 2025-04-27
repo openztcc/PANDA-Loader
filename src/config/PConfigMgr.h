@@ -14,8 +14,8 @@
 
 // Project
 #include "PZtdMgr.h"
-#include "../interfaces/IConfigLoader.h"
-#include "../models/PFileData.h"
+#include "IConfigLoader.h"
+#include "PFileData.h"
 #include "PIniConfig.h"
 #include "PTomlConfig.h"
 

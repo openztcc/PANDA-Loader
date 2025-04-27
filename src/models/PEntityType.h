@@ -5,7 +5,7 @@
 #include <QStringList>
 #include <QMap>
 #include <memory>
-#include "../models/PIconData.h"
+#include "PIconData.h"
 #include <QSettings>
 
 class PEntityType {

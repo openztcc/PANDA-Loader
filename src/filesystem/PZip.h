@@ -1,14 +1,22 @@
+#ifndef PZIP_H
+#define PZIP_H
+
 // Project
-#include "../interfaces/IVirtualFilesystem.h"
+#include "IVirtualFilesystem.h"
+
+// External
+#include "quazip.h"
+#include "quazipfile.h"
+#include "quazipnewinfo.h"
 
 // Qt
-#include <QFile>
 #include <QDir>
+#include <QTemporaryFile>
 
-class PFileSystem : public IVirtualFilesystem {
+class PZip : public IVirtualFilesystem {
     public:
-        PFileSystem() = default;
-        ~PFileSystem() override = default;
+        PZip(const QString &filePath = "");
+        ~PZip() override = default;
 
         // mount point functions
         void setRootPath(const QString &path) override;
@@ -16,7 +24,7 @@ class PFileSystem : public IVirtualFilesystem {
 
         // file operations - relative to root path
         PFileData read(const QString &filePath) override;
-        QList<PFileData> readAll(const QStringList& validFolders, const QStringList &validExts) override { return {}; }; // TODO: implement
+        QList<PFileData> readAll(const QStringList &validDirs = {}, const QStringList &validExts = {});
         bool write(const PFileData &data) override;
         bool remove(const QStringList &itemsToRemove) override;
         bool remove(const QString &itemToRemove);
@@ -36,5 +44,8 @@ class PFileSystem : public IVirtualFilesystem {
     private:
         QString m_rootPath; // root path of the zip file
     protected:
-        QSharedPointer<QFile> openFile(const QString &filePath, QIODevice::OpenMode mode);
+        QSharedPointer<QuaZip> openZip(const QString &filePath, QuaZip::Mode mode);
+        QSharedPointer<QuaZipFile> openZipFile(QSharedPointer<QuaZip> &zip, const QString &relPath = "", QIODevice::OpenMode mode = QIODevice::ReadOnly);
 };
+
+#endif // PZIP_H
