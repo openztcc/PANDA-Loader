@@ -62,42 +62,16 @@ QSqlQuery PModDal::getAllMods() {
     return m_db.returnQuery("SELECT * FROM mods ORDER BY title");
 }
 
-// Return results within orderBy filter and searchTerm
-// TODO: Handle case where searchTerm is empty or just spaces, should return all mods
-// in this filter
-QSqlQuery PModDal::queryMods(const QString &propertyName, const QString &searchTerm) {
-    QSqlQuery query(m_db);
-
-    QString property = propertyName;
-
-    // Default order by title if not specified
-    if (property.isEmpty()) {
-        property = "title"; 
-    }
-
-    qDebug() << "Searching mods with order by: " << property << " and search term: " << searchTerm;
-
-    QString queryStr = QString("SELECT * FROM mods WHERE %1 LIKE :searchTerm ORDER BY title").arg(propertyName);
-    query.prepare(queryStr);
-    query.bindValue(":searchTerm", "%" + searchTerm + "%");
-    
-    if (!query.exec()) {
-        qDebug() << "Error running search query: " << query.lastError().text();
-    }
-
-    return query;
-}
-
 // Get search results as a list of strings
-QStringList PModDal::searchMods(const QString &propertyName, const QString &searchTerm) {
-    QSqlQuery query = queryMods(propertyName, searchTerm);
-    QStringList results;
+QVector<QSharedPointer<PModItem>> PModDal::searchMods(PDatabase::Operation operation, const QString &propertyName, const QString &searchTerm) {
+    QSqlQuery query = m_db.runOperation(operation, "mods", {propertyName, searchTerm});
+    QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
 
     while (query.next()) {
-        results.append(query.value("title").toString());
+        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(query);
+        modItems.append(modItem);
     }
-
-    return results;
+    return modItems;
 }
 
 // Static version of getModByPk
@@ -236,68 +210,4 @@ void PModDal::loadModsFromZTDs(const QStringList &ztdList)
     // // close database
     // db.closeDatabase();
     qDebug() << "Loaded mods from ZTDs";
-}
-
-// Populate mod item from query result
-QSharedPointer<PModItem> PModDal::populateModItem(QSqlQuery &query) {
-    QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
-
-    modItem->setTitle(query.value("title").toString());
-    modItem->setAuthors(query.value("authors").toString().split(", "));
-    modItem->setDescription(query.value("description").toString());
-    modItem->setEnabled(query.value("enabled").toBool());
-    modItem->setCategory(query.value("category").toString());
-    modItem->setTags(query.value("tags").toString().split(", "));
-    modItem->setId(query.value("mod_id").toString());
-    modItem->setFilename(query.value("filename").toString());
-    modItem->setIconPaths(query.value("iconpaths").toString().split(", "));
-    modItem->setDependencyId(query.value("dep_id").toString());
-    modItem->setLocation(query.value("location").toString());
-    modItem->setOGLocation(query.value("oglocation").toString());
-    modItem->setSelected(query.value("is_selected").toBool());
-    modItem->setVersion(query.value("version").toString());
-
-    return modItem;
-}
-
-// Get the first result as a PModItem object
-QSharedPointer<PModItem> PModDal::queryToModItem(QSqlQuery &query) {
-    QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
-
-    if (!query.exec()) {
-        qDebug() << "Error running query:" << query.lastError();
-        return modItem;
-    }
-
-    if (query.next()) {
-        modItem = populateModItem(query);
-    } else {
-        qDebug() << "Mod not found with ID:" << query.lastError();
-        return modItem;
-    }
-
-    return modItem;
-}
-
-// Get a query result as a PModItem object
-QSharedPointer<PModItem> PModDal::queryToModItem(QString property, QString value) {
-    QSqlQuery query(m_db);
-    query.prepare("SELECT * FROM mods WHERE " + property + " = :value");
-    query.bindValue(":value", value);
-
-    return queryToModItem(query);
-}
-
-// Get a query result as a list of PModItem objects
-QVector<QSharedPointer<PModItem>> PModDal::queryToModItems(QString property, QString value) {
-    QSqlQuery query = queryMods(property, value);
-    QVector<QSharedPointer<PModItem>> modItems;
-
-    while (query.next()) {
-        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
-        modItem = populateModItem(query);
-        modItems.append(modItem);
-    }
-
-    return modItems;
 }

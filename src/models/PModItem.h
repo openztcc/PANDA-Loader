@@ -55,6 +55,7 @@ public:
         const QString &id, const QString &depId, const QString &filename,
         const QString &location, const QStringList &iconpaths, const QString &oglocation, 
         bool selected, QObject *parent = nullptr);
+    PModItem(SqlQuery &query);
         
     int modIndex() const;
     void setmodIndex(int newModIndex);

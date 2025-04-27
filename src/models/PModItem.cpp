@@ -44,6 +44,25 @@ PModItem::PModItem(const QString &title, const QString &description, const QStri
     m_selected = false;
 }
 
+PModItem::PModItem(QObject *parent, SqlQuery &query) : QObject(parent)
+{
+    m_index = 0;
+    setTitle(query.value("title").toString());
+    setAuthors(query.value("authors").toString().split(", "));
+    setDescription(query.value("description").toString());
+    setEnabled(query.value("enabled").toBool());
+    setCategory(query.value("category").toString());
+    setTags(query.value("tags").toString().split(", "));
+    setId(query.value("mod_id").toString());
+    setFilename(query.value("filename").toString());
+    setIconPaths(query.value("iconpaths").toString().split(", "));
+    setDependencyId(query.value("dep_id").toString());
+    setLocation(query.value("location").toString());
+    setOGLocation(query.value("oglocation").toString());
+    setSelected(query.value("is_selected").toBool());
+    setVersion(query.value("version").toString());
+}
+
 int PModItem::modIndex() const
 {
     return m_index;

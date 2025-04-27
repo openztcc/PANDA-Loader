@@ -27,18 +27,15 @@ class PModDal : public QObject {
 
         // Mod operations
         bool insertMod(const PModItem &mod);
-        bool deleteMod(const QString &modId);
-        bool updateMod(const QString &modId, const QString &key, const QString &value);
+        bool deleteMod(const QString &table, const QMap<QString, QVariant> &conditions);
+        bool updateMod(const QString &table, const QMap<QString, 
+            QVariant> &setFields, const QMap<QString, QVariant> &whereConditions);
         bool doesModExist(const QString &modId);
         QSqlQuery getAllMods();
-        QSqlQuery queryMods(const QString &propertyName, const QString &searchTerm);
-        QStringList searchMods(const QString &propertyName, const QString &searchTerm);
+        QVector<QSharedPointer<PModItem>> searchMods(PDatabase::Operation operation, 
+            const QString &propertyName, const QString &searchTerm);
         Q_INVOKABLE QSharedPointer<PModItem> getModByPk(const QString &modId);
-        QSharedPointer<PModItem> populateModItem(QSqlQuery &query);
         void loadModsFromZTDs(const QStringList &ztdList);
-        QSharedPointer<PModItem> queryToModItem(QSqlQuery &query);
-        QSharedPointer<PModItem> queryToModItem(QString property, QString value);
-        QVector<QSharedPointer<PModItem>> queryToModItems(QString property, QString value);
     private:
         PDatabase m_db;
         const QString m_dbName = "panda.padb";
