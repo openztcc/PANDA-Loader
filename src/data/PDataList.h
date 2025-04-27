@@ -16,7 +16,7 @@ class PDataList : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    PDataList(QObject *parent, QStringList ztdList) : QAbstractListModel(parent) {}
+    PDataList(QObject *parent) : QAbstractListModel(parent) {}
 
     // size of the list
     int rowCount(const QModelIndex &parent) const

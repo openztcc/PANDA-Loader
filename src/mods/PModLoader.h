@@ -15,6 +15,7 @@
 #include "PZTdMgr.h"
 #include "PDatabase.h"
 #include "PAppController.h"
+#include "PDataList.h"
 
 class PModItem;
 
@@ -25,7 +26,7 @@ public:
 
     explicit PModList(QObject *parent = nullptr, QStringList ztdList = QStringList());
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int size(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
 
@@ -39,7 +40,7 @@ public:
     void replaceMod(QSharedPointer<PModItem> mod);
 
 private:
-    QList<QSharedPointer<PModItem>> m_mods_list;
+    PDataList<PModItem> m_mods_list;
     QStringList m_ztdList;
 };
 

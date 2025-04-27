@@ -47,10 +47,13 @@ qt_add_executable(appPandaLdr
     src/filesystem/PFile.h src/filesystem/PFile.cpp
     src/filesystem/PZip.h src/filesystem/PZip.cpp
     # mods
-    src/mods/PModList.h src/mods/PModList.cpp
     src/mods/PModController.cpp src/mods/PModController.h
+    src/mods/PModGateway.cpp src/mods/PModGateway.h
+    src/mods/PModLoader.cpp src/mods/PModLoader.h
     # database
     src/database/PDatabase.cpp src/database/PDatabase.h
+    # data
+    src/data/PDataList.h
 
     src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp 
     )
@@ -140,8 +143,9 @@ qt_add_qml_module(appPandaLdr
         # database
         src/database/PDatabase.cpp
         # mods
-        src/mods/PModList.cpp
         src/mods/PModController.cpp
+        src/mods/PModGateway.cpp
+        src/mods/PModLoader.cpp
 
         src/ldrs/PZtdMgr.cpp 
 )
@@ -157,6 +161,7 @@ target_include_directories(appPandaLdr
         ${CMAKE_SOURCE_DIR}/src/database
         ${CMAKE_SOURCE_DIR}/src/ldrs
         ${CMAKE_SOURCE_DIR}/src/mods
+        ${CMAKE_SOURCE_DIR}/src/data
         ${CMAKE_SOURCE_DIR}/libs/apecore/include
 )
 
