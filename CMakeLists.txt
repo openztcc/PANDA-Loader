@@ -48,8 +48,9 @@ qt_add_executable(appPandaLdr
     src/filesystem/PZip.h src/filesystem/PZip.cpp
     # mods
     src/mods/PModController.cpp src/mods/PModController.h
-    src/mods/PModDAL.cpp src/mods/PModDAL.h
+    src/mods/PModDal.cpp src/mods/PModDal.h
     src/mods/PModLoader.cpp src/mods/PModLoader.h
+    src/mods/PDepDal.cpp src/mods/PDepDal.h
     # database
     src/database/PDatabase.cpp src/database/PDatabase.h
     # data
@@ -144,8 +145,9 @@ qt_add_qml_module(appPandaLdr
         src/database/PDatabase.cpp
         # mods
         src/mods/PModController.cpp
-        src/mods/PModDAL.cpp
+        src/mods/PModDal.cpp
         src/mods/PModLoader.cpp
+        src/mods/PDepDal.cpp
 
         src/ldrs/PZtdMgr.cpp 
 )
