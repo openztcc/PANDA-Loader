@@ -28,66 +28,12 @@ bool PModDal::insertMod(const PModItem &mod)
     return m_db.runQuery(m_insertModQuery, params);
 }
 
-bool PModDal::deleteMod(const QString &modId) {
-    QSqlQuery query(m_db);
-    
-    // Check if mod exists
-    query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id");
-    query.bindValue(":mod_id", modId);
-    if (!query.exec()) {
-        qDebug() << "Error running query: " << query.lastError();
-        return false;
-    }
-
-    // Get the mod_id count
-    if (query.next()) {
-        int count = query.value(0).toInt();
-        if (count == 0) {
-            qDebug() << "Mod does not exist";
-            return false;
-        }
-    }
-    else {
-        qDebug() << "Error getting mod_id count: " << query.lastError();
-        return false;
-    }
-
-    // Delete the mod
-    query.prepare("DELETE FROM mods WHERE mod_id = :mod_id");
-    query.bindValue(":mod_id", modId);
-
-    if (!query.exec()) {
-        qDebug() << "Failed to delete mod: " << query.lastError();
-        return false;
-    }
-
-    return true;
+bool PModDal::deleteMod(const QString &table, const QMap<QString, QVariant> &conditions) {
+    m_db.runOperation(PDatabase::Operation::Delete, table, conditions);
 }
 
-bool PModDal::updateMod(const QString &modId, const QString &key, const QString &value) {
-    QSqlQuery query(m_db);
-
-    // Check if mod exists
-    if (!doesModExist(modId)) {
-        return false;
-    }
-
-    // Check if key exists
-    if (!doesKeyExist(modId, key)) {
-        return false;
-    }
-
-    // Update the mod
-    query.prepare("UPDATE mods SET " + key + " = :value WHERE mod_id = :mod_id");
-    query.bindValue(":value", value);
-    query.bindValue(":mod_id", modId);
-
-    if (!query.exec()) {
-        qDebug() << "Failed to update mod: " << query.lastError();
-        return false;
-    }
-
-    return true;
+bool PModDal::updateMod(const QString &table, const QMap<QString, QVariant> &setFields, const QMap<QString, QVariant> &whereConditions) {
+    m_db.runOperation(PDatabase::Operation::Update, table, setFields, {}, whereConditions);
 }
 
 bool PModDal::doesModExist(const QString &modId) {
