@@ -108,6 +108,16 @@ bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
     return true;
 }
 
+// returnQuery runs a given query and returns the result as a QSqlQuery object
+// usage: returnQuery("SELECT * FROM mods WHERE title = 'Mod Title'")
+QSqlQuery PDatabase::returnQuery(const QString &query) {
+    QSqlQuery q(m_db);
+    if (!q.exec(query)) {
+        qDebug() << "Error running query: " << q.lastError().text();
+    }
+    return q;
+}
+
 // Most operations will generally be done in bulk, so this will help when
 // user uses things like the filter tags to run one query and get all results
 // usage: selectWhere("mods", {{"title", "Mod Title"}, {"enabled", true}}, {"title", OrderBy::Ascending})

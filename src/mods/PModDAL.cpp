@@ -29,42 +29,37 @@ bool PModDal::insertMod(const PModItem &mod)
 }
 
 bool PModDal::deleteMod(const QString &table, const QMap<QString, QVariant> &conditions) {
-    m_db.runOperation(PDatabase::Operation::Delete, table, conditions);
+    QSqlQuery deletedMods = m_db.runOperation(PDatabase::Operation::Delete, table, conditions);
+    if (deletedMods.lastError().isValid()) {
+        qDebug() << "Error deleting mod: " << deletedMods.lastError().text();
+        return false;
+    }
 }
 
 bool PModDal::updateMod(const QString &table, const QMap<QString, QVariant> &setFields, const QMap<QString, QVariant> &whereConditions) {
-    m_db.runOperation(PDatabase::Operation::Update, table, setFields, {}, whereConditions);
-}
-
-bool PModDal::doesModExist(const QString &modId) {
-    QSqlQuery query(m_db);
-    query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id");
-    query.bindValue(":mod_id", modId);
-
-    if (!query.exec()) {
-        qDebug() << "Error running query: " << query.lastError();
+    QSqlQuery updatedMods = m_db.runOperation(PDatabase::Operation::Update, table, setFields, {}, "", whereConditions);
+    if (updatedMods.lastError().isValid()) {
+        qDebug() << "Error updating mod: " << updatedMods.lastError().text();
         return false;
     }
-
-    if (query.next()) {
-        int count = query.value(0).toInt();
-        if (count == 0) {
-            return false;
-        }
-    }
-    else {
-        qDebug() << "Error getting mod_id count: " << query.lastError();
-        return false;
-    }
-
     return true;
 }
 
+bool PModDal::doesModExist(const QString &modId) {
+    QSqlQuery doesExist = m_db.runOperation(PDatabase::Operation::Select, "mods", {{"mod_id", modId}});
+    if (doesExist.lastError().isValid()) {
+        qDebug() << "Error checking if mod exists: " << doesExist.lastError().text();
+        return false;
+    }
+    if (doesExist.size() > 0) {
+        return true; // Mod exists
+    }
+}
+
+// TODO: update runOperation to handle select all queries so that user can potentially
+// use orderBy and groupBy to get all mods in a certain order or group
 QSqlQuery PModDal::getAllMods() {
-    QSqlQuery query(m_db);
-    query.prepare("SELECT * FROM mods");
-    query.exec();
-    return query;
+    return m_db.returnQuery("SELECT * FROM mods ORDER BY title");
 }
 
 // Return results within orderBy filter and searchTerm

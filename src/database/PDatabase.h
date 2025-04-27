@@ -36,6 +36,7 @@ public:
     void close();
     bool createTables(const QStringList &tableQueries);
     bool runQuery(const QString &query);
+    QSqlQuery returnQuery(const QString &query);
     bool runQuery(const QString &query, const QVariantMap &params);
     QSqlQuery runOperation(Operation op, const QString &table, const QMap<QString, 
         QVariant> &conditions, const QPair<QString, OrderBy> &orderBy = {}, const QString &groupBy = "",
