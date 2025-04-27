@@ -11,6 +11,12 @@
 #include <QDir>
 #include <QCoreApplication>
 
+enum OrderBy
+{
+    Ascending,
+    Descending
+};
+
 class PDatabase : public QObject
 {
     Q_OBJECT
@@ -23,7 +29,7 @@ public:
     bool createTables(const QStringList &tableQueries);
     bool runQuery(const QString &query);
     bool runQuery(const QString &query, const QVariantMap &params);
-    QSqlQuery selectWhere(const QString &table, const QMap<QString, QVariant> &conditions, const QPair &orderBy = {});
+    QSqlQuery selectWhere(const QString &table, const QMap<QString, QVariant> &conditions, const QPair<QString, OrderBy> &orderBy = {});
     bool doesKeyExist(const QString &modId, const QString &key);
 
 private:

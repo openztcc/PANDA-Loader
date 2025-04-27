@@ -139,7 +139,7 @@ bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
 
 // Most operations will generally be done in bulk, so this will help when
 // user uses things like the filter tags to run one query and get all results
-// usage: selectWhere("mods", {{"title", "Mod Title"}, {"enabled", true}}, "title ASC")
+// usage: selectWhere("mods", {{"title", "Mod Title"}, {"enabled", true}}, {"title", OrderBy::Ascending})
 QSqlQuery PDatabase::selectWhere(const QString &table, const QMap<QString, QVariant> &conditions, const QPair &orderBy) {
     QSqlQuery query(m_db);
 
@@ -163,7 +163,14 @@ QSqlQuery PDatabase::selectWhere(const QString &table, const QMap<QString, QVari
 
     // if orderBy is not empty, add it to the query
     if (!orderBy.isEmpty()) {
-        query += " ORDER BY " + orderBy.first + " " + orderBy.second;
+        switch (orderBy.second) {
+            case OrderBy::Ascending:
+                query += " ORDER BY " + orderBy.first + " ASC";
+                break;
+            case OrderBy::Descending:
+                query += " ORDER BY " + orderBy.first + " DESC";
+                break;
+        }
     }
 
     // prepare the query
