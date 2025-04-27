@@ -140,7 +140,9 @@ bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
 // Most operations will generally be done in bulk, so this will help when
 // user uses things like the filter tags to run one query and get all results
 // usage: selectWhere("mods", {{"title", "Mod Title"}, {"enabled", true}}, {"title", OrderBy::Ascending})
-QSqlQuery PDatabase::selectWhere(const QString &table, const QMap<QString, QVariant> &conditions, const QPair &orderBy) {
+// TODO: add limit support later. currently don't see a need.
+QSqlQuery PDatabase::runOperation(Operation operation, const QString &table, const QMap<QString, QVariant> &conditions, 
+    const QPair &orderBy, const QString &groupBy, const QMap<QString, QVariant> &secondaryConditions) {
     QSqlQuery query(m_db);
 
     if (conditions.isEmpty()) {
@@ -149,34 +151,26 @@ QSqlQuery PDatabase::selectWhere(const QString &table, const QMap<QString, QVari
     }
 
     // prepare query str
-    QString query = "SELECT * FROM " + table + " WHERE ";
-    QStringList whereClauses;
-
-    // build where clause from conditions
-    // TODO: add support for other operators (e.g. <, >, !=, etc.)
-    // query ex: SELECT * FROM mods WHERE title = :title AND enabled = :enabled
-    for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
-        whereClauses.append(it.key() + " = :" + it.key());
+    QString queryStr;
+    switch (operation) {
+        case Operation::Select:
+            queryStr = buildSelectQuery(table, conditions, orderBy, groupBy);
+            break;
+        case Operation::Insert:
+            queryStr = buildInsertQuery(table, conditions);
+            break;
+        case Operation::Update:
+            queryStr = buildUpdateQuery(table, conditions, secondaryConditions);
+            break;
+        case Operation::Delete:
+            queryStr = buildDeleteQuery(table, conditions);
+            break;
     }
 
-    query += whereClauses.join(" AND "); // join with AND
+    // prepare query
+    query.prepare(queryStr);
 
-    // if orderBy is not empty, add it to the query
-    if (!orderBy.isEmpty()) {
-        switch (orderBy.second) {
-            case OrderBy::Ascending:
-                query += " ORDER BY " + orderBy.first + " ASC";
-                break;
-            case OrderBy::Descending:
-                query += " ORDER BY " + orderBy.first + " DESC";
-                break;
-        }
-    }
-
-    // prepare the query
-    query.prepare(query);
-
-    // bind the parameters to query
+    // bind parameters to the query
     for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
         query.bindValue(":" + it.key(), it.value());
     }
@@ -188,4 +182,106 @@ QSqlQuery PDatabase::selectWhere(const QString &table, const QMap<QString, QVari
     }
 
     return query;
+}
+
+// -------------------- HELPERS
+
+// build select query string
+// usage: buildSelectQuery("mods", {{"title", "Mod Title"}, {"enabled", true}}, {"title", OrderBy::Ascending})
+// returns: SELECT * FROM mods WHERE title = :title AND enabled = :enabled ORDER BY title ASC
+QString PDatabase::buildSelectQuery(const QString &table, const QMap<QString, QVariant> &conditions, 
+    const QPair<QString, OrderBy> &orderBy, const QString &groupBy) {
+    QString queryStr = "SELECT * FROM " + table + " WHERE ";
+    QStringList whereClauses;
+
+    // build where clause from conditions
+    for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
+        whereClauses.append(it.key() + " = :" + it.key());
+    }
+
+    queryStr += whereClauses.join(" AND "); // join with AND
+
+    // if orderBy is not empty, add it to the query
+    if (!orderBy.isEmpty()) {
+        switch (orderBy.second) {
+            case OrderBy::Ascending:
+                queryStr += " ORDER BY " + orderBy.first + " ASC";
+                break;
+            case OrderBy::Descending:
+                queryStr += " ORDER BY " + orderBy.first + " DESC";
+                break;
+        }
+    }
+
+    // if groupBy is not empty, add it to the query
+    if (!groupBy.isEmpty()) {
+        queryStr += " GROUP BY " + groupBy;
+    }
+
+    return queryStr;
+}
+
+// build insert query string
+// usage: buildInsertQuery("mods", {{"title", "Mod Title"}, {"enabled", true}})
+// returns: INSERT INTO mods (title, enabled) VALUES (:title, :enabled)
+QString PDatabase::buildInsertQuery(const QString &table, const QMap<QString, QVariant> &values) {
+    QString queryStr = "INSERT INTO " + table + " (";
+    QStringList valueClauses;
+
+    // build value clause from values
+    for (auto it = values.constBegin(); it != values.constEnd(); ++it) {
+        queryStr += it.key() + ", ";
+        valueClauses.append(":" + it.key());
+    }
+
+    // remove last comma and space
+    queryStr.chop(2);
+    queryStr += ") VALUES (" + valueClauses.join(", ") + ")";
+
+    return queryStr;
+}
+
+// build update query string
+// usage: buildUpdateQuery("mods", {{"title", "Mod Title"}, {"enabled", true}}, {{"mod_id", "123"}})
+// returns: UPDATE mods SET title = :title, enabled = :enabled WHERE mod_id = :mod_id
+// note: conditions is useful as a QMap because it can, for example, edit author names
+// for multiple mods at once. Will be lots of use cases where author is unknown by default.
+QString PDatabase::buildUpdateQuery(const QString &table, const QMap<QString, QVariant> &setFields, 
+    const QMap<QString, QVariant> &whereConditions) {
+    QString queryStr = "UPDATE " + table + " SET ";
+    QStringList setClauses;
+    QStringList whereClauses;
+
+    // build set clause from values
+    for (auto it = whereConditions.constBegin(); it != whereConditions.constEnd(); ++it) {
+        setClauses.append(it.key() + " = :" + it.key());
+    }
+
+    queryStr += setClauses.join(", "); // join with comma
+
+    // build where clause from conditions
+    for (auto it = whereConditions.constBegin(); it != whereConditions.constEnd(); ++it) {
+        whereClauses.append(it.key() + " = :" + it.key());
+    }
+
+    queryStr += " WHERE " + whereClauses.join(" AND "); // join with AND
+
+    return queryStr;
+}
+
+// build delete query string
+// usage: buildDeleteQuery("mods", {{"mod_id", "123"}})
+// returns: DELETE FROM mods WHERE mod_id = :mod_id
+QString PDatabase::buildDeleteQuery(const QString &table, const QMap<QString, QVariant> &conditions) {
+    QString queryStr = "DELETE FROM " + table + " WHERE ";
+    QStringList whereClauses;
+
+    // build where clause from conditions
+    for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
+        whereClauses.append(it.key() + " = :" + it.key());
+    }
+
+    queryStr += whereClauses.join(" AND "); // join with AND
+
+    return queryStr;
 }
