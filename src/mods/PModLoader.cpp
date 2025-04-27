@@ -11,6 +11,8 @@ int PModList::rowCount(const QModelIndex &parent) const
     return m_mods_list.size();
 }
 
+// The data method is used to fetch the data for a given index and role
+// for a QAbstractListModel
 QVariant PModList::data(const QModelIndex &index, int role) const
 {
     qDebug () << "Fetching data for index: " << index.row() << ", role: " << role;
@@ -18,40 +20,7 @@ QVariant PModList::data(const QModelIndex &index, int role) const
     {
         QSharedPointer<PModItem> mod = m_mods_list[index.row()];
         qDebug() << "Fetching data for mod: " << mod->title();
-        switch ((Role) role)
-        {
-            case ModTitleRole:
-                return mod->title();
-            case ModAuthorRole:
-                return mod->authors();
-            case ModDescriptionRole:
-                return mod->description();
-            case ModEnabledRole:
-                return mod->enabled();
-            case ModCategoryRole:
-                return mod->category();
-            case ModTagsRole:
-                return mod->tags();
-            case ModIdRole:
-                return mod->id();
-            case ModFilenameRole:
-                return mod->filename();
-            case ModDependencyIdRole:
-                return mod->dependencyId();
-            case ModLocationRole:
-                return mod->location();
-            case ModIconPathsRole:
-                return mod->iconpaths();
-            case ModOgLocationRole:
-                return mod->oglocation();
-            case ModSelectedRole:
-                return mod->selected();
-            case ModVersionRole:
-                return mod->version();
-            case ModObjectRole:
-                qDebug() << "Returning mod object: " << mod->title();
-                return QVariant::fromValue(mod.data()); // return a whole mod object
-        }
+        mod->getData(role); // this just translates the role to the data
     }
 
     // Return empty if the index is invalid
@@ -59,29 +28,12 @@ QVariant PModList::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-// Maps the roles to the data
+// roleNames are a map that gives each enum role a string descriptor that
+// can be called from QML
 QHash<int, QByteArray> PModList::roleNames() const
 {
     qDebug() << "PModList::roleNames() called";
-    QHash<int, QByteArray> roles;
-
-    roles[ModTitleRole] = "title";
-    roles[ModAuthorRole] = "authors";
-    roles[ModDescriptionRole] = "description";
-    roles[ModEnabledRole] = "enabled";
-    roles[ModCategoryRole] = "category";
-    roles[ModTagsRole] = "tags";
-    roles[ModIdRole] = "id";
-    roles[ModFilenameRole] = "filename";
-    roles[ModDependencyIdRole] = "depId";
-    roles[ModLocationRole] = "location";
-    roles[ModObjectRole] = "instance"; // return a whole mod object
-    roles[ModIconPathsRole] = "iconpaths";
-    roles[ModOgLocationRole] = "oglocation";
-    roles[ModSelectedRole] = "selected";
-    roles[ModVersionRole] = "version";
-
-    return roles;
+    return PModItem::roleNames();
 }
 
 // --------------- Manage Mod List ------------------

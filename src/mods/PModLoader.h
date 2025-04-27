@@ -22,10 +22,19 @@ class PModItem;
 class PModList : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QObject* currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
+    Q_PROPERTY(QList<QObject*> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
+    Q_PROPERTY(QObject* previousMod READ previousMod NOTIFY previousModChanged)
+    Q_PROPERTY(int modCount READ modCount NOTIFY modAdded)
+    Q_PROPERTY(QAbstractListModel* model READ model CONSTANT)
 public:
 
     explicit PModList(QObject *parent = nullptr, QStringList ztdList = QStringList());
 
+    // Model object
+    PModList* model() const { return m_model; }
+
+    // Mod list properties
     int size(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
@@ -38,10 +47,19 @@ public:
     void removeMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
     void replaceMod(QSharedPointer<PModItem> mod);
-
+signals:
+    void modAdded(QSharedPointer<PModItem>);
+    void modRemoved(QSharedPointer<PModItem>);
+    void modSelected();
+    void modDeselected();
+    void previousModChanged();
+    void currentModChanged();
+    void selectedModsListUpdated(QList<QSharedPointer<PModItem>> mods);
 private:
     PDataList<PModItem> m_mods_list;
     QStringList m_ztdList;
+    QList<QSharedPointer<PModItem>> m_selected_mods;
+
 };
 
 #endif // PMODLIST_H

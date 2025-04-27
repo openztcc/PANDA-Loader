@@ -11,17 +11,21 @@
 // - QML
 
 // Qt
-#include <QCore>
+#include <QObject>
 
 // Project
 #include "PModItem.h"
 #include "PDatabase.h"
 #include "PModQueries.h"
 
-class PModDal {
+class PModDal : public QObject {
+
     public:
+        // Constructor
         PModDal();
         ~PModDal() = default;
+
+        // Mod operations
         bool insertMod(const PModItem &mod);
         bool deleteMod(const QString &modId);
         bool updateMod(const QString &modId, const QString &key, const QString &value);
@@ -38,6 +42,9 @@ class PModDal {
     private:
         PDatabase m_db;
         const QString m_dbName = "panda.padb";
-};
+        PModList
+        QSharedPointer<PModItem> m_currentMod;
+
+    };
 
 #endif // PModDal_H

@@ -110,7 +110,7 @@ public:
     }
 
     QVariant getData(int role) const;
-    QHash<int, QByteArray> roleNames() const;
+    static QHash<int, QByteArray> roleNames() const;
 
 signals:
     void modIndexChanged();
