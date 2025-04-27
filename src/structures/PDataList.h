@@ -11,9 +11,6 @@
 #include <QAbstractListModel>
 #include <QSharedPointer>
 
-#include "PAppController.h"
-
-// template class
 template <typename T>
 class PDataList : public QAbstractListModel
 {
@@ -35,8 +32,8 @@ public:
         if (index.isValid() && index.row() >= 0 && index.row() < m_mods_list.length())
         {
             QSharedPointer<T> item = m_list[index.row()];
-            qDebug() << "Fetching data for mod: " << mod->title();
-            item->getData(role); // Call the getData method of the item object
+            item->getData(role);
+            return item->getData(role);
         }
 
         // Return empty if the index is invalid
@@ -56,6 +53,48 @@ public:
         beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
         m_list.append(item);
         endInsertRows();
+    }
+
+    // remove item from the list
+    void removeItem(int index)
+    {
+        beginRemoveRows(QModelIndex(), index, index);
+        m_list.removeAt(index);
+        endRemoveRows();
+    }
+
+    // remove multiple items from the list
+    void removeItems(QList<QSharedPointer<T>> items)
+    {
+        beginResetModel();
+        for (const auto& item : items) {
+            m_list.removeOne(item);
+        }
+        endResetModel();
+    }
+
+    // replace item in the list
+    void replaceItem(int row)
+    {
+        if (row >= 0 && row < m_list.size()) {
+            QModelIndex index = this->index(row);
+            emit dataChanged(index, index);
+        }
+    }
+
+    void replaceList(QList<QSharedPointer<T>> list)
+    {
+        beginResetModel();
+        m_list = list;
+        endResetModel();
+    }
+
+    // clear the list
+    void clearList()
+    {
+        beginResetModel();
+        m_list.clear();
+        endResetModel();
     }
 
 private:
