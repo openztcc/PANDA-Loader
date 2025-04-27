@@ -51,6 +51,7 @@ qt_add_executable(appPandaLdr
     src/mods/PModDal.cpp src/mods/PModDal.h
     src/mods/PModLoader.cpp src/mods/PModLoader.h
     src/mods/PDepDal.cpp src/mods/PDepDal.h
+    src/mods/PModQueries.h
     # database
     src/database/PDatabase.cpp src/database/PDatabase.h
     # data

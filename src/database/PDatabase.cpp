@@ -2,12 +2,12 @@
 
 
 // init all db structs
-PDatabase::PDatabase(const QString &dbPath) : m_dbPath(dbPath) {
+PDatabase::PDatabase(const QString &dbPath, const QString &connection) : m_dbPath(dbPath) {
     // remove old connection
     if (QSqlDatabase::contains(m_dbPath)) {
         QSqlDatabase::removeDatabase(m_dbPath);
     }
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db = QSqlDatabase::addDatabase("QSQLITE", connection);
     m_db.setDatabaseName(m_dbPath);
 
     // try to open database

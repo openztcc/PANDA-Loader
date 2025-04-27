@@ -16,6 +16,7 @@
 // Project
 #include "PModItem.h"
 #include "PDatabase.h"
+#include "PModQueries.h"
 
 class PModDal {
     public:
@@ -36,58 +37,7 @@ class PModDal {
         QVector<QSharedPointer<PModItem>> queryToModItems(QString property, QString value);
     private:
         PDatabase m_db;
-        const QString m_tableName = "mods";
-        const QString m_createTableQuery = 
-            "CREATE TABLE IF NOT EXISTS mods ("
-            "pk INTEGER PRIMARY KEY AUTOINCREMENT, "
-            "title TEXT NOT NULL, "
-            "authors TEXT NOT NULL, "
-            "description TEXT, "
-            "enabled INTEGER NOT NULL, "
-            "category TEXT, "
-            "tags TEXT, "
-            "version TEXT NOT NULL, "
-            "mod_id TEXT NOT NULL UNIQUE, "
-            "dep_id TEXT, "
-            "iconpaths TEXT, "
-            "filename TEXT, "
-            "location TEXT, "
-            "oglocation TEXT, "
-            "is_selected INTEGER NOT NULL, "
-            "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
-            ");";
-
-        const QString m_insertModQuery = 
-            "INSERT INTO mods ("
-            "title, "
-            "authors, "
-            "description, "
-            "enabled, "
-            "category, "
-            "tags, "
-            "version, "
-            "mod_id, "
-            "dep_id, "
-            "filename, "
-            "location, "
-            "iconpaths, "
-            "oglocation, "
-            "is_selected) "
-            "VALUES ("
-            ":title, "
-            ":authors, "
-            ":description, "
-            ":enabled, "
-            ":category, "
-            ":tags, "
-            ":version, "
-            ":mod_id, "
-            ":dep_id, "
-            ":filename, "
-            ":location, "
-            ":iconpaths, "
-            ":oglocation, "
-            ":is_selected)";
+        const QString m_dbName = "panda.padb";
 };
 
 #endif // PModDal_H

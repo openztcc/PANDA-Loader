@@ -29,7 +29,7 @@ class PDatabase : public QObject
 {
     Q_OBJECT
 public:
-    PDatabase(const QString &dbPath);
+    PDatabase(const QString &dbPath, const QString &connection = "default");
     ~PDatabase();
 
     bool open();

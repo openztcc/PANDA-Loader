@@ -1,8 +1,8 @@
 #include "PModDal.h"
 
 PModDal::PModDal() {
-    m_db = PDatabase();
-    if (!m_db.openDatabase()) {
+    m_db = PDatabase(QDir::homePath() + "/panda.padb", "ModDal");
+    if (!m_db.open()) {
         qDebug() << "Failed to open database in PModDal";
     }
 }
