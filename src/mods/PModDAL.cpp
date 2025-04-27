@@ -74,26 +74,14 @@ QVector<QSharedPointer<PModItem>> PModDal::searchMods(PDatabase::Operation opera
     return modItems;
 }
 
-// Static version of getModByPk
-QSharedPointer<PModItem> PModDal::getModByPk(const QString &modId) {
-    return queryToModItem("mod_id", modId);
-}
-
 // Grabs mods from ZTDs and stores them in database
 // TODO: Add any errors to a list of errors to display to user
 // TODO: Add a check to see if mod already exists in database
 // TODO: Add meta.toml file to ztd if it doesn't exist
 // TODO: If meta.toml does not exist, add to list of errors for user
 // TODO: Let user decide if it's a duplicate or not
-void PModDal::loadModsFromZTDs(const QStringList &ztdList)
+void PModDal::loadModsFromFile(const QStringList &ztdList)
 {
-    // open database
-    // PModDal db;
-    // if (!db.openDatabase()) {
-    //     qDebug() << "Failed to open database for loading mods from ZTDs";
-    //     return; // Failed to open database
-    // }
-
     // Insert mods into database
     for (const QString &ztd : ztdList)
     {

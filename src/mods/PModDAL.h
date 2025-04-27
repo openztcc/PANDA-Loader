@@ -34,8 +34,7 @@ class PModDal : public QObject {
         QSqlQuery getAllMods();
         QVector<QSharedPointer<PModItem>> searchMods(PDatabase::Operation operation, 
             const QString &propertyName, const QString &searchTerm);
-        Q_INVOKABLE QSharedPointer<PModItem> getModByPk(const QString &modId);
-        void loadModsFromZTDs(const QStringList &ztdList);
+        void loadModsFromFile(const QStringList &ztdList);
     private:
         PDatabase m_db;
         const QString m_dbName = "panda.padb";
