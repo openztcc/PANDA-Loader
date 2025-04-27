@@ -5,7 +5,7 @@
 #include <QString>
 #include <QtQml/qqmlregistration.h>
 
-// This class contains all meta data in context of a single mod item.
+// This class contains all meta data in context of a single mod item in a QAbstractListModel
 
 class PModItem : public QObject
 {

@@ -1,126 +1,29 @@
-#include "PModGateway.h"
+#include "PModDAL.h"
 
-bool PModGateway::insertMod(const QString &title, const QString &description, const QStringList &authors, 
-    const QString &version, bool enabled, const QStringList &tags, const QString &category, 
-    const QString &id, const QString &depId, const QString &filename,
-    const QString &location, const QStringList &iconpaths, const QString &oglocation,
-    bool selected, QObject *parent)
-                             {
-    QSqlQuery query(m_db);
-
-    // Check for missing required fields
-    if (title.isEmpty() || version.isEmpty() || id.isEmpty()) {
-        qDebug() << "Missing required fields for mod insert";
-        return false;
-    }
-
-    query.prepare("INSERT INTO mods (title, authors, description, enabled, category, tags, version, mod_id, dep_id, filename, location, iconpaths, oglocation, is_selected) "
-                  "VALUES (:title, :authors, :description, :enabled, :category, :tags, :version, :mod_id, :dep_id, :filename, :location, :iconpaths, :oglocation, :is_selected)");
+bool PModDAL::insertMod(cconst PModItem &mod) 
+{
+    QVariantMap params;
+    params.insert(":title", mod.title());
+    params.insert(":authors", mod.authors().join(", "));
+    params.insert(":description", mod.description());
+    params.insert(":enabled", mod.enabled() ? 1 : 0);
+    params.insert(":category", mod.category());
+    params.insert(":tags", mod.tags().join(", "));
+    params.insert(":version", mod.version());
+    params.insert(":mod_id", mod.id());
+    params.insert(":dep_id", mod.dependencyId());
+    params.insert(":filename", mod.filename());
+    params.insert(":location", mod.location());
+    params.insert(":iconpaths", mod.iconpaths().join(", "));
+    params.insert(":oglocation", mod.oglocation());
+    params.insert(":is_selected", mod.selected() ? 1 : 0);
     
-    // Bind required values
-    query.bindValue(":title", title);
-    query.bindValue(":version", version);
-    query.bindValue(":mod_id", id);
-    
-    // add authors to author field
-    if (!authors.isEmpty()) {
-        query.bindValue(":authors", authors.join(", "));
-    }
-    else {
-        query.bindValue(":authors", "");
-    }
-
-    // add description to description field
-    if (!description.isEmpty()) {
-        query.bindValue(":description", description);
-    }
-    else {
-        query.bindValue(":description", "");
-    }
-
-    // add enabled to enabled field
-    if (enabled) {
-        query.bindValue(":enabled", 1);
-    }
-    else {
-        query.bindValue(":enabled", 0);
-    }
-
-    // add tags to tags field
-    if (!tags.isEmpty()) {
-        query.bindValue(":tags", tags.join(", "));
-    }
-    else {
-        query.bindValue(":tags", "");
-    }
-
-    // add category to category field
-    if (!tags.isEmpty()) {
-        query.bindValue(":category", category);
-    }
-    else {
-        query.bindValue(":category", "Uncategorized");
-    }
-
-    // Insert dep id
-    if (!depId.isEmpty()) {
-        query.bindValue(":dep_id", depId);
-    } 
-    else {
-        query.bindValue(":dep_id", "");
-    }
-
-    // Insert mod location and filename
-    if (!location.isEmpty()) {
-        query.bindValue(":location", location);
-    } 
-    else {
-        query.bindValue(":location", "");
-    }
-    if (!filename.isEmpty()) {
-        query.bindValue(":filename", filename);
-    } 
-    else {
-        query.bindValue(":filename", "");
-    }
-
-    if (!iconpaths.isEmpty()) {
-        query.bindValue(":iconpaths", iconpaths.join(", "));
-    } 
-    else {
-        query.bindValue(":iconpaths", "");
-    }
-
-    if (!oglocation.isEmpty()) {
-        query.bindValue(":oglocation", oglocation);
-    } 
-    else {
-        query.bindValue(":oglocation", "");
-    }
-
-    if (selected) {
-        query.bindValue(":is_selected", 1);
-    } 
-    else {
-        query.bindValue(":is_selected", 0);
-    }
-
-    // Execute the query
-    if (!query.exec()) {
-        qDebug() << "Failed to insert mod: " << query.lastError();
-        return false;
-    }
+    m_db.runQuery(m_insertModQuery, params);
 
     return true;
 }
 
-// TODO: Fix tags so they insert as a list
-bool PModGateway::insertMod(const PModItem &mod) {
-    return insertMod(mod.title(), mod.description(), {mod.authors()}, mod.version(), mod.enabled(), mod.tags(), mod.category(), mod.id(), mod.dependencyId(),
-        mod.filename(), mod.location(), mod.iconpaths(), mod.oglocation(), mod.selected());
-}
-
-bool PModGateway::deleteMod(const QString &modId) {
+bool PModDAL::deleteMod(const QString &modId) {
     QSqlQuery query(m_db);
     
     // Check if mod exists
@@ -156,7 +59,7 @@ bool PModGateway::deleteMod(const QString &modId) {
     return true;
 }
 
-bool PModGateway::updateMod(const QString &modId, const QString &key, const QString &value) {
+bool PModDAL::updateMod(const QString &modId, const QString &key, const QString &value) {
     QSqlQuery query(m_db);
 
     // Check if mod exists
@@ -182,7 +85,7 @@ bool PModGateway::updateMod(const QString &modId, const QString &key, const QStr
     return true;
 }
 
-bool PModGateway::addDependency(const QString &modId, const PDependency &dependency) {
+bool PModDAL::addDependency(const QString &modId, const PDependency &dependency) {
     QSqlQuery query(m_db);
 
     // Check if mod exists
@@ -247,7 +150,7 @@ bool PModGateway::addDependency(const QString &modId, const PDependency &depende
 }
 
 //TODO: Fix so it removes dependency from mod, not just dependencies table
-bool PModGateway::removeDependency(const QString &dependencyId) {
+bool PModDAL::removeDependency(const QString &dependencyId) {
     QSqlQuery query(m_db);
 
     // Remove the dependency from dependencies table
@@ -262,7 +165,7 @@ bool PModGateway::removeDependency(const QString &dependencyId) {
     return true;
 }
 
-bool PModGateway::doesDependencyExist(const QString &dependencyId) {
+bool PModDAL::doesDependencyExist(const QString &dependencyId) {
     QSqlQuery query(m_db);
 
     // Check if dependency exists
@@ -288,7 +191,7 @@ bool PModGateway::doesDependencyExist(const QString &dependencyId) {
     return true;
 }
 
-bool PModGateway::doesModExist(const QString &modId) {
+bool PModDAL::doesModExist(const QString &modId) {
     QSqlQuery query(m_db);
     query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id");
     query.bindValue(":mod_id", modId);
@@ -312,7 +215,7 @@ bool PModGateway::doesModExist(const QString &modId) {
     return true;
 }
 
-QSqlQuery PModGateway::getAllMods() {
+QSqlQuery PModDAL::getAllMods() {
     QSqlQuery query(m_db);
     query.prepare("SELECT * FROM mods");
     query.exec();
@@ -322,7 +225,7 @@ QSqlQuery PModGateway::getAllMods() {
 // Return results within orderBy filter and searchTerm
 // TODO: Handle case where searchTerm is empty or just spaces, should return all mods
 // in this filter
-QSqlQuery PModGateway::queryMods(const QString &propertyName, const QString &searchTerm) {
+QSqlQuery PModDAL::queryMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query(m_db);
 
     QString property = propertyName;
@@ -346,7 +249,7 @@ QSqlQuery PModGateway::queryMods(const QString &propertyName, const QString &sea
 }
 
 // Get search results as a list of strings
-QStringList PModGateway::searchMods(const QString &propertyName, const QString &searchTerm) {
+QStringList PModDAL::searchMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query = queryMods(propertyName, searchTerm);
     QStringList results;
 
@@ -358,7 +261,7 @@ QStringList PModGateway::searchMods(const QString &propertyName, const QString &
 }
 
 // Static version of getModByPk
-QSharedPointer<PModItem> PModGateway::getModByPk(const QString &modId) {
+QSharedPointer<PModItem> PModDAL::getModByPk(const QString &modId) {
     return queryToModItem("mod_id", modId);
 }
 
@@ -368,10 +271,10 @@ QSharedPointer<PModItem> PModGateway::getModByPk(const QString &modId) {
 // TODO: Add meta.toml file to ztd if it doesn't exist
 // TODO: If meta.toml does not exist, add to list of errors for user
 // TODO: Let user decide if it's a duplicate or not
-void PModGateway::loadModsFromZTDs(const QStringList &ztdList)
+void PModDAL::loadModsFromZTDs(const QStringList &ztdList)
 {
     // open database
-    // PModGateway db;
+    // PModDAL db;
     // if (!db.openDatabase()) {
     //     qDebug() << "Failed to open database for loading mods from ZTDs";
     //     return; // Failed to open database
@@ -496,7 +399,7 @@ void PModGateway::loadModsFromZTDs(const QStringList &ztdList)
 }
 
 // Populate mod item from query result
-QSharedPointer<PModItem> PModGateway::populateModItem(QSqlQuery &query) {
+QSharedPointer<PModItem> PModDAL::populateModItem(QSqlQuery &query) {
     QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
     modItem->setTitle(query.value("title").toString());
@@ -518,7 +421,7 @@ QSharedPointer<PModItem> PModGateway::populateModItem(QSqlQuery &query) {
 }
 
 // Get the first result as a PModItem object
-QSharedPointer<PModItem> PModGateway::queryToModItem(QSqlQuery &query) {
+QSharedPointer<PModItem> PModDAL::queryToModItem(QSqlQuery &query) {
     QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
     if (!query.exec()) {
@@ -537,7 +440,7 @@ QSharedPointer<PModItem> PModGateway::queryToModItem(QSqlQuery &query) {
 }
 
 // Get a query result as a PModItem object
-QSharedPointer<PModItem> PModGateway::queryToModItem(QString property, QString value) {
+QSharedPointer<PModItem> PModDAL::queryToModItem(QString property, QString value) {
     QSqlQuery query(m_db);
     query.prepare("SELECT * FROM mods WHERE " + property + " = :value");
     query.bindValue(":value", value);
@@ -546,7 +449,7 @@ QSharedPointer<PModItem> PModGateway::queryToModItem(QString property, QString v
 }
 
 // Get a query result as a list of PModItem objects
-QVector<QSharedPointer<PModItem>> PModGateway::queryToModItems(QString property, QString value) {
+QVector<QSharedPointer<PModItem>> PModDAL::queryToModItems(QString property, QString value) {
     QSqlQuery query = queryMods(property, value);
     QVector<QSharedPointer<PModItem>> modItems;
 

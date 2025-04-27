@@ -98,3 +98,31 @@ bool PDatabase::doesKeyExist(const QString &modId, const QString &key) {
 
     return true;
 }
+
+// runs a given query
+bool PDatabase::runQuery(const QString &query) {
+    QSqlQuery q(m_db);
+    if (!q.exec(query)) {
+        qDebug() << "Error running query: " << q.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+// runs a given query with parameters
+bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
+    QSqlQuery q(m_db);
+    q.prepare(query);
+
+    // bind parameters to the query
+    for (auto it = params.constBegin(); it != params.constEnd(); ++it) {
+        q.bindValue(it.key(), it.value());
+    }
+
+    // run prepared query
+    if (!q.exec()) {
+        qDebug() << "Error running query: " << q.lastError().text();
+        return false;
+    }
+    return true;
+}

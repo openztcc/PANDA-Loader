@@ -60,7 +60,7 @@ void PModItem::setmodIndex(int newModIndex)
 
 QString PModItem::title() const
 {
-    return m_title;
+    return m_title.isEmpty() ? "Unknown" : m_title;
 }
 
 void PModItem::setTitle(const QString &newModTitle)
@@ -74,7 +74,7 @@ void PModItem::setTitle(const QString &newModTitle)
 
 QStringList PModItem::authors() const
 {
-    return m_authors;
+    return m_authors.isEmpty() ? QStringList{"Unknown"} : m_authors;
 }
 
 void PModItem::setAuthors(const QStringList &newModAuthor)
@@ -88,7 +88,7 @@ void PModItem::setAuthors(const QStringList &newModAuthor)
 
 QString PModItem::description() const
 {
-    return m_description;
+    return m_description.isEmpty() ? "No description available" : m_description;
 }
 
 void PModItem::setDescription(const QString &newModDescription)
@@ -102,7 +102,7 @@ void PModItem::setDescription(const QString &newModDescription)
 
 bool PModItem::enabled() const
 {
-    return m_enabled;
+    return m_enabled ? true : false;
 }
 
 void PModItem::setEnabled(bool newModEnabled)
@@ -116,7 +116,7 @@ void PModItem::setEnabled(bool newModEnabled)
 
 QString PModItem::category() const
 {
-    return m_category;
+    return m_category.isEmpty() ? "Unknown" : m_category;
 }
 
 void PModItem::setCategory(const QString &newModCategory)
@@ -130,7 +130,7 @@ void PModItem::setCategory(const QString &newModCategory)
 
 QStringList PModItem::tags() const
 {
-    return m_tags;
+    return m_tags.isEmpty() ? QStringList() : m_tags;
 }
 
 void PModItem::setTags(const QStringList &newModTags)
@@ -144,7 +144,7 @@ void PModItem::setTags(const QStringList &newModTags)
 
 QString PModItem::id() const
 {
-    return m_id;
+    return m_id.isEmpty() ? "Unknown" : m_id;
 }
 
 void PModItem::setId(const QString &newModId)
@@ -158,7 +158,7 @@ void PModItem::setId(const QString &newModId)
 
 QString PModItem::location() const
 {
-    return m_location;
+    return m_location.isEmpty() ? "Unknown" : m_location;
 }
 
 void PModItem::setLocation(const QString &newModLocation)
@@ -172,7 +172,7 @@ void PModItem::setLocation(const QString &newModLocation)
 
 QString PModItem::filename() const
 {
-    return m_filename;
+    return m_filename.isEmpty() ? "Unknown" : m_filename;
 }
 
 void PModItem::setFilename(const QString &newModFilename)
@@ -186,7 +186,7 @@ void PModItem::setFilename(const QString &newModFilename)
 
 QStringList PModItem::iconpaths() const
 {
-    return m_iconpaths;
+    return m_iconpaths.isEmpty() ? QStringList() : m_iconpaths;
 }
 
 void PModItem::setIconPaths(const QStringList &newModIconPaths)
@@ -200,7 +200,7 @@ void PModItem::setIconPaths(const QStringList &newModIconPaths)
 
 QString PModItem::dependencyId() const
 {
-    return m_dependency_id;
+    return m_dependency_id.isEmpty() ? "Unknown" : m_dependency_id;
 }
 
 void PModItem::setDependencyId(const QString &newDependencyId)

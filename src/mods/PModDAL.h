@@ -1,12 +1,12 @@
-#ifndef PMODGATEWAY_H
-#define PMODGATEWAY_H
+#ifndef PMODDAL_H
+#define PMODDAL_H
 
 // This class is the layer between the QML and C++. It is responsible for
 // communicating data between the mod loader and the database.
 // The mod loader structure is as such:
 
 // - Database, Files, and Configs
-// - PModGateway, Model
+// - PModDAL, Model
 // - PModLoader < ---- facilitates model and db
 // - QML
 
@@ -17,15 +17,10 @@
 #include "PModItem.h"
 #include "PDatabase.h"
 
-class PModGateway {
+class PModDAL {
     public:
-        PModGateway(QObject *parent = nullptr);
-        ~PModGateway();
-        bool insertMod(const QString &title, const QString &description, const QStringList &authors, 
-            const QString &version, bool enabled, const QStringList &tags, const QString &category, 
-            const QString &id, const QString &depId, const QString &filename,
-            const QString &location, const QStringList &iconpaths, const QString &oglocation,
-            bool selected, QObject *parent);
+        PModDAL(QObject *parent = nullptr);
+        ~PModDAL();
         bool insertMod(const PModItem &mod);
         bool deleteMod(const QString &modId);
         bool updateMod(const QString &modId, const QString &key, const QString &value);
@@ -43,6 +38,7 @@ class PModGateway {
         QSharedPointer<PModItem> queryToModItem(QString property, QString value);
         QVector<QSharedPointer<PModItem>> queryToModItems(QString property, QString value);
     private:
+        PDatabase m_db;
         const QString m_tableName = "mods";
         const QString m_createTableQuery = 
             "CREATE TABLE IF NOT EXISTS mods ("
@@ -77,6 +73,9 @@ class PModGateway {
             "FOREIGN KEY(mod_id) REFERENCES mods(mod_id)"
             ");";
 
+        const QString m_insertModQuery = 
+            "INSERT INTO mods (title, authors, description, enabled, category, tags, version, mod_id, dep_id, filename, location, iconpaths, oglocation, is_selected) "
+            "VALUES (:title, :authors, :description, :enabled, :category, :tags, :version, :mod_id, :dep_id, :filename, :location, :iconpaths, :oglocation, :is_selected)";
 };
 
-#endif // PMODGATEWAY_H
+#endif // PModDAL_H
