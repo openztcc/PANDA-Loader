@@ -219,3 +219,65 @@ void PModItem::setUIComponent(QObject* item)
         emit qmlItemChanged();
     }
 }
+
+QVariant PModItem::getData(int role) const
+{
+    switch ((Role) role)
+    {
+        case ModTitleRole:
+            return title();
+        case ModAuthorRole:
+            return authors();
+        case ModDescriptionRole:
+            return description();
+        case ModEnabledRole:
+            return enabled();
+        case ModCategoryRole:
+            return category();
+        case ModTagsRole:
+            return tags();
+        case ModIdRole:
+            return id();
+        case ModFilenameRole:
+            return filename();
+        case ModDependencyIdRole:
+            return dependencyId();
+        case ModLocationRole:
+            return location();
+        case ModIconPathsRole:
+            return iconpaths();
+        case ModOgLocationRole:
+            return oglocation();
+        case ModSelectedRole:
+            return selected();
+        case ModVersionRole:
+            return version();
+        case ModObjectRole:
+            qDebug() << "Returning mod object: " << title();
+            return QVariant::fromValue(this); // return a whole mod object
+    }
+}
+
+QHash<int, QByteArray> PModItem::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+
+    roles[ModTitleRole] = "title";
+    roles[ModAuthorRole] = "authors";
+    roles[ModDescriptionRole] = "description";
+    roles[ModEnabledRole] = "enabled";
+    roles[ModCategoryRole] = "category";
+    roles[ModTagsRole] = "tags";
+    roles[ModIdRole] = "id";
+    roles[ModFilenameRole] = "filename";
+    roles[ModDependencyIdRole] = "depId";
+    roles[ModLocationRole] = "location";
+    roles[ModObjectRole] = "instance"; // return a whole mod object
+    roles[ModIconPathsRole] = "iconpaths";
+    roles[ModOgLocationRole] = "oglocation";
+    roles[ModSelectedRole] = "selected";
+    roles[ModVersionRole] = "version";
+
+    return roles;
+}
+

@@ -31,6 +31,24 @@ class PModItem : public QObject
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY isSelectedChanged)
 
 public:
+    enum Role {
+        ModTitleRole = Qt::UserRole + 1,
+        ModAuthorRole,
+        ModDescriptionRole,
+        ModEnabledRole,
+        ModCategoryRole,
+        ModTagsRole,
+        ModIdRole,
+        ModObjectRole,
+        ModFilenameRole,
+        ModIconPathsRole,
+        ModDependencyIdRole,
+        ModLocationRole,
+        ModOgLocationRole,
+        ModSelectedRole,
+        ModVersionRole
+    };
+
     explicit PModItem(QObject *parent = nullptr);
     PModItem(const QString &title, const QString &description, const QStringList &authors, 
         const QString &version, bool enabled, const QStringList &tags, const QString &category, 
@@ -90,6 +108,9 @@ public:
             emit isSelectedChanged();
         }
     }
+
+    QVariant getData(int role) const;
+    QHash<int, QByteArray> roleNames() const;
 
 signals:
     void modIndexChanged();

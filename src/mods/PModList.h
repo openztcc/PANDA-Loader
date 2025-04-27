@@ -23,24 +23,6 @@ class PModList : public QAbstractListModel
     Q_OBJECT
 public:
 
-    enum Role {
-        ModTitleRole = Qt::UserRole + 1,
-        ModAuthorRole,
-        ModDescriptionRole,
-        ModEnabledRole,
-        ModCategoryRole,
-        ModTagsRole,
-        ModIdRole,
-        ModObjectRole,
-        ModFilenameRole,
-        ModIconPathsRole,
-        ModDependencyIdRole,
-        ModLocationRole,
-        ModOgLocationRole,
-        ModSelectedRole,
-        ModVersionRole
-    };
-
     explicit PModList(QObject *parent = nullptr, QStringList ztdList = QStringList());
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
