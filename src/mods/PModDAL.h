@@ -58,8 +58,36 @@ class PModDal {
             ");";
 
         const QString m_insertModQuery = 
-            "INSERT INTO mods (title, authors, description, enabled, category, tags, version, mod_id, dep_id, filename, location, iconpaths, oglocation, is_selected) "
-            "VALUES (:title, :authors, :description, :enabled, :category, :tags, :version, :mod_id, :dep_id, :filename, :location, :iconpaths, :oglocation, :is_selected)";
+            "INSERT INTO mods ("
+            "title, "
+            "authors, "
+            "description, "
+            "enabled, "
+            "category, "
+            "tags, "
+            "version, "
+            "mod_id, "
+            "dep_id, "
+            "filename, "
+            "location, "
+            "iconpaths, "
+            "oglocation, "
+            "is_selected) "
+            "VALUES ("
+            ":title, "
+            ":authors, "
+            ":description, "
+            ":enabled, "
+            ":category, "
+            ":tags, "
+            ":version, "
+            ":mod_id, "
+            ":dep_id, "
+            ":filename, "
+            ":location, "
+            ":iconpaths, "
+            ":oglocation, "
+            ":is_selected)";
 };
 
 #endif // PModDal_H

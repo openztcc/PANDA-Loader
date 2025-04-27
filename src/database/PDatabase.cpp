@@ -1,7 +1,7 @@
 #include "PDatabase.h"
 
 
-
+// init all db structs
 PDatabase::PDatabase() {
     m_dbPath = QCoreApplication::applicationDirPath() + QDir::separator() + m_dbName;
     // remove old connection
@@ -18,7 +18,7 @@ PDatabase::PDatabase() {
 
 PDatabase::~PDatabase() {}
 
-bool PDatabase::openDatabase() {
+bool PDatabase::open() {
 
     if (!m_db.open()) {
         qDebug() << "Failed to open database: " << m_db.lastError();
@@ -49,20 +49,25 @@ bool PDatabase::openDatabase() {
     return true;
 }
 
-void PDatabase::closeDatabase() {
+void PDatabase::close() {
     m_db.close();
 }
 
-bool PDatabase::createTables() {
-    QSqlQuery query(m_db);
-    if (!query.exec(m_createTableQuery)) {
-        qDebug() << "Failed to create table: " << query.lastError();
+// Create tables if they do not exist. Called every time PANDA is started.
+// usage: createTables({"CREATE TABLE IF NOT EXISTS mods ......", 
+//                     "CREATE TABLE IF NOT EXISTS dependencies ..."})
+bool PDatabase::createTables(const QStringList &tableQueries) {
+    if (tableQueries.isEmpty()) {
+        qDebug() << "No table queries provided to createTables()";
         return false;
     }
 
-    if (!query.exec(m_createDependenciesTableQuery)) {
-        qDebug() << "Failed to create dependencies table: " << query.lastError();
-        return false;
+    for (const QString &query : tableQueries) {
+        QSqlQuery q(m_db);
+        if (!q.exec(query)) {
+            qDebug() << "Error creating table: " << q.lastError().text();
+            return false;
+        }
     }
 
     return true;
@@ -100,6 +105,7 @@ bool PDatabase::doesKeyExist(const QString &modId, const QString &key) {
 }
 
 // runs a given query
+// usage: runQuery("SELECT * FROM mods WHERE title = 'Mod Title'")
 bool PDatabase::runQuery(const QString &query) {
     QSqlQuery q(m_db);
     if (!q.exec(query)) {
@@ -110,6 +116,10 @@ bool PDatabase::runQuery(const QString &query) {
 }
 
 // runs a given query with parameters
+// usage: runQuery("INSERT INTO mods (title, authors) VALUES (:title, :authors)", 
+//                {{"title", "Mod Title"}, {"authors", "Author1, Author2"}})
+// Note: The parameters should be passed as a QVariantMap where the keys are the parameter names
+// and the values are the corresponding values to bind to the query.
 bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
     QSqlQuery q(m_db);
     q.prepare(query);
@@ -125,4 +135,50 @@ bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
         return false;
     }
     return true;
+}
+
+// Most operations will generally be done in bulk, so this will help when
+// user uses things like the filter tags to run one query and get all results
+// usage: selectWhere("mods", {{"title", "Mod Title"}, {"enabled", true}}, "title ASC")
+QSqlQuery PDatabase::selectWhere(const QString &table, const QMap<QString, QVariant> &conditions, const QPair &orderBy) {
+    QSqlQuery query(m_db);
+
+    if (conditions.isEmpty()) {
+        qDebug() << "No conditions provided for selectWhere()";
+        return query;
+    }
+
+    // prepare query str
+    QString query = "SELECT * FROM " + table + " WHERE ";
+    QStringList whereClauses;
+
+    // build where clause from conditions
+    // TODO: add support for other operators (e.g. <, >, !=, etc.)
+    // query ex: SELECT * FROM mods WHERE title = :title AND enabled = :enabled
+    for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
+        whereClauses.append(it.key() + " = :" + it.key());
+    }
+
+    query += whereClauses.join(" AND "); // join with AND
+
+    // if orderBy is not empty, add it to the query
+    if (!orderBy.isEmpty()) {
+        query += " ORDER BY " + orderBy.first + " " + orderBy.second;
+    }
+
+    // prepare the query
+    query.prepare(query);
+
+    // bind the parameters to query
+    for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
+        query.bindValue(":" + it.key(), it.value());
+    }
+
+    // execute query
+    if (!query.exec()) {
+        qDebug() << "Failed to run selectWhere: " << query.lastError().text();
+        return query;
+    }
+
+    return query;
 }

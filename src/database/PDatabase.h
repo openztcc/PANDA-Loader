@@ -18,11 +18,12 @@ public:
     PDatabase();
     ~PDatabase();
 
-    bool openDatabase();
-    void closeDatabase();
+    bool open();
+    void close();
     bool createTables(const QStringList &tableQueries);
     bool runQuery(const QString &query);
     bool runQuery(const QString &query, const QVariantMap &params);
+    QSqlQuery selectWhere(const QString &table, const QMap<QString, QVariant> &conditions, const QPair &orderBy = {});
     bool doesKeyExist(const QString &modId, const QString &key);
 
 private:
