@@ -29,7 +29,7 @@ class PDatabase : public QObject
 {
     Q_OBJECT
 public:
-    PDatabase();
+    PDatabase(const QString &dbPath);
     ~PDatabase();
 
     bool open();
@@ -40,12 +40,9 @@ public:
     QSqlQuery runOperation(Operation op, const QString &table, const QMap<QString, 
         QVariant> &conditions, const QPair<QString, OrderBy> &orderBy = {}, const QString &groupBy = "",
         const QMap<QString, QVariant> &secondaryConditions = {});
-    bool delete
-    bool doesKeyExist(const QString &modId, const QString &key);
 
 private:
     QSqlDatabase m_db;
-    const QString m_dbName = "panda-ldr.padb";
     QString m_dbPath;
 
     // helpers

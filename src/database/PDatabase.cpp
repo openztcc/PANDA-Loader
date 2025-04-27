@@ -2,8 +2,7 @@
 
 
 // init all db structs
-PDatabase::PDatabase() {
-    m_dbPath = QCoreApplication::applicationDirPath() + QDir::separator() + m_dbName;
+PDatabase::PDatabase(const QString &dbPath) : m_dbPath(dbPath) {
     // remove old connection
     if (QSqlDatabase::contains(m_dbPath)) {
         QSqlDatabase::removeDatabase(m_dbPath);
@@ -11,12 +10,15 @@ PDatabase::PDatabase() {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName(m_dbPath);
 
-    if (!openDatabase()) {
+    // try to open database
+    if (!open()) {
         qDebug() << "Failed to open database";
     }
 }
 
-PDatabase::~PDatabase() {}
+PDatabase::~PDatabase() {
+    close();
+}
 
 bool PDatabase::open() {
 
@@ -68,37 +70,6 @@ bool PDatabase::createTables(const QStringList &tableQueries) {
             qDebug() << "Error creating table: " << q.lastError().text();
             return false;
         }
-    }
-
-    return true;
-}
-
-bool PDatabase::doesKeyExist(const QString &modId, const QString &key) {
-    QSqlQuery query(m_db);
-    
-    // Check if mod exists
-    if (!doesModExist(modId)) {
-        return false;
-    }
-
-    // Check if key exists
-    query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id AND " + key + " IS NOT NULL");
-    query.bindValue(":mod_id", modId);
-
-    if (!query.exec()) {
-        qDebug() << "Error running query: " << query.lastError();
-        return false;
-    }
-
-    if (query.next()) {
-        int count = query.value(0).toInt();
-        if (count == 0) {
-            return false;
-        }
-    }
-    else {
-        qDebug() << "Error getting key count: " << query.lastError();
-        return false;
     }
 
     return true;
