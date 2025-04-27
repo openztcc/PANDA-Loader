@@ -1,6 +1,13 @@
-#include "PModDAL.h"
+#include "PModDal.h"
 
-bool PModDAL::insertMod(cconst PModItem &mod) 
+PModDal::PModDal() {
+    m_db = PDatabase();
+    if (!m_db.openDatabase()) {
+        qDebug() << "Failed to open database in PModDal";
+    }
+}
+
+bool PModDal::insertMod(const PModItem &mod) 
 {
     QVariantMap params;
     params.insert(":title", mod.title());
@@ -18,12 +25,10 @@ bool PModDAL::insertMod(cconst PModItem &mod)
     params.insert(":oglocation", mod.oglocation());
     params.insert(":is_selected", mod.selected() ? 1 : 0);
     
-    m_db.runQuery(m_insertModQuery, params);
-
-    return true;
+    return m_db.runQuery(m_insertModQuery, params);
 }
 
-bool PModDAL::deleteMod(const QString &modId) {
+bool PModDal::deleteMod(const QString &modId) {
     QSqlQuery query(m_db);
     
     // Check if mod exists
@@ -59,7 +64,7 @@ bool PModDAL::deleteMod(const QString &modId) {
     return true;
 }
 
-bool PModDAL::updateMod(const QString &modId, const QString &key, const QString &value) {
+bool PModDal::updateMod(const QString &modId, const QString &key, const QString &value) {
     QSqlQuery query(m_db);
 
     // Check if mod exists
@@ -85,113 +90,7 @@ bool PModDAL::updateMod(const QString &modId, const QString &key, const QString 
     return true;
 }
 
-bool PModDAL::addDependency(const QString &modId, const PDependency &dependency) {
-    QSqlQuery query(m_db);
-
-    // Check if mod exists
-    if (!doesModExist(modId)) {
-        return false;
-    }
-    
-    // Insert dependency data into dependencies table
-    query.prepare("INSERT INTO dependencies (mod_id, dependency_id, name, min_version, optional, ordering, link) "
-                  "VALUES (:mod_id, :dependency_id, :name, :min_version, :optional, :ordering, :link)");
-    
-    if (dependency.modId.isEmpty() || modId.isEmpty() || dependency.dependencyId.isEmpty()) {
-        qDebug() << "Dependency modId is empty";
-        return false;
-    }
-    else {
-        query.bindValue(":mod_id", modId);
-        query.bindValue(":dependency_id", dependency.modId);
-    }
-
-    if (dependency.name.isEmpty()) {
-        query.bindValue(":name", "");
-    } 
-    else {
-        query.bindValue(":name", dependency.name);
-    }
-
-    if (dependency.min_version.isEmpty()) {
-        query.bindValue(":min_version", "");
-    } 
-    else {
-        query.bindValue(":min_version", dependency.min_version);
-    }
-
-    if (dependency.optional) {
-        query.bindValue(":optional", 1);
-    } 
-    else {
-        query.bindValue(":optional", 0);
-    }
-
-    if (dependency.ordering.isEmpty()) {
-        query.bindValue(":ordering", "");
-    } 
-    else {
-        query.bindValue(":ordering", dependency.ordering);
-    }
-
-    if (dependency.link.isEmpty()) {
-        query.bindValue(":link", "");
-    } 
-    else {
-        query.bindValue(":link", dependency.link);
-    }
-
-    if (!query.exec()) {
-        qDebug() << "Failed to add dependency: " << query.lastError();
-        return false;
-    }
-
-    return true;
-}
-
-//TODO: Fix so it removes dependency from mod, not just dependencies table
-bool PModDAL::removeDependency(const QString &dependencyId) {
-    QSqlQuery query(m_db);
-
-    // Remove the dependency from dependencies table
-    query.prepare("DELETE FROM dependencies WHERE dependency_id = :dependency_id");
-    query.bindValue(":dependency_id", dependencyId);
-
-    if (!query.exec()) {
-        qDebug() << "Failed to remove dependency: " << query.lastError();
-        return false;
-    }
-
-    return true;
-}
-
-bool PModDAL::doesDependencyExist(const QString &dependencyId) {
-    QSqlQuery query(m_db);
-
-    // Check if dependency exists
-    query.prepare("SELECT COUNT(*) FROM dependencies WHERE dependency_id = :dependency_id");
-    query.bindValue(":dependency_id", dependencyId);
-
-    if (!query.exec()) {
-        qDebug() << "Error running query: " << query.lastError();
-        return false;
-    }
-
-    if (query.next()) {
-        int count = query.value(0).toInt();
-        if (count == 0) {
-            return false;
-        }
-    }
-    else {
-        qDebug() << "Error getting dependency count: " << query.lastError();
-        return false;
-    }
-
-    return true;
-}
-
-bool PModDAL::doesModExist(const QString &modId) {
+bool PModDal::doesModExist(const QString &modId) {
     QSqlQuery query(m_db);
     query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id");
     query.bindValue(":mod_id", modId);
@@ -215,7 +114,7 @@ bool PModDAL::doesModExist(const QString &modId) {
     return true;
 }
 
-QSqlQuery PModDAL::getAllMods() {
+QSqlQuery PModDal::getAllMods() {
     QSqlQuery query(m_db);
     query.prepare("SELECT * FROM mods");
     query.exec();
@@ -225,7 +124,7 @@ QSqlQuery PModDAL::getAllMods() {
 // Return results within orderBy filter and searchTerm
 // TODO: Handle case where searchTerm is empty or just spaces, should return all mods
 // in this filter
-QSqlQuery PModDAL::queryMods(const QString &propertyName, const QString &searchTerm) {
+QSqlQuery PModDal::queryMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query(m_db);
 
     QString property = propertyName;
@@ -249,7 +148,7 @@ QSqlQuery PModDAL::queryMods(const QString &propertyName, const QString &searchT
 }
 
 // Get search results as a list of strings
-QStringList PModDAL::searchMods(const QString &propertyName, const QString &searchTerm) {
+QStringList PModDal::searchMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query = queryMods(propertyName, searchTerm);
     QStringList results;
 
@@ -261,7 +160,7 @@ QStringList PModDAL::searchMods(const QString &propertyName, const QString &sear
 }
 
 // Static version of getModByPk
-QSharedPointer<PModItem> PModDAL::getModByPk(const QString &modId) {
+QSharedPointer<PModItem> PModDal::getModByPk(const QString &modId) {
     return queryToModItem("mod_id", modId);
 }
 
@@ -271,10 +170,10 @@ QSharedPointer<PModItem> PModDAL::getModByPk(const QString &modId) {
 // TODO: Add meta.toml file to ztd if it doesn't exist
 // TODO: If meta.toml does not exist, add to list of errors for user
 // TODO: Let user decide if it's a duplicate or not
-void PModDAL::loadModsFromZTDs(const QStringList &ztdList)
+void PModDal::loadModsFromZTDs(const QStringList &ztdList)
 {
     // open database
-    // PModDAL db;
+    // PModDal db;
     // if (!db.openDatabase()) {
     //     qDebug() << "Failed to open database for loading mods from ZTDs";
     //     return; // Failed to open database
@@ -399,7 +298,7 @@ void PModDAL::loadModsFromZTDs(const QStringList &ztdList)
 }
 
 // Populate mod item from query result
-QSharedPointer<PModItem> PModDAL::populateModItem(QSqlQuery &query) {
+QSharedPointer<PModItem> PModDal::populateModItem(QSqlQuery &query) {
     QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
     modItem->setTitle(query.value("title").toString());
@@ -421,7 +320,7 @@ QSharedPointer<PModItem> PModDAL::populateModItem(QSqlQuery &query) {
 }
 
 // Get the first result as a PModItem object
-QSharedPointer<PModItem> PModDAL::queryToModItem(QSqlQuery &query) {
+QSharedPointer<PModItem> PModDal::queryToModItem(QSqlQuery &query) {
     QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
     if (!query.exec()) {
@@ -440,7 +339,7 @@ QSharedPointer<PModItem> PModDAL::queryToModItem(QSqlQuery &query) {
 }
 
 // Get a query result as a PModItem object
-QSharedPointer<PModItem> PModDAL::queryToModItem(QString property, QString value) {
+QSharedPointer<PModItem> PModDal::queryToModItem(QString property, QString value) {
     QSqlQuery query(m_db);
     query.prepare("SELECT * FROM mods WHERE " + property + " = :value");
     query.bindValue(":value", value);
@@ -449,7 +348,7 @@ QSharedPointer<PModItem> PModDAL::queryToModItem(QString property, QString value
 }
 
 // Get a query result as a list of PModItem objects
-QVector<QSharedPointer<PModItem>> PModDAL::queryToModItems(QString property, QString value) {
+QVector<QSharedPointer<PModItem>> PModDal::queryToModItems(QString property, QString value) {
     QSqlQuery query = queryMods(property, value);
     QVector<QSharedPointer<PModItem>> modItems;
 

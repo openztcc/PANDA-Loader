@@ -1,12 +1,12 @@
-#ifndef PMODDAL_H
-#define PMODDAL_H
+#ifndef PModDal_H
+#define PModDal_H
 
 // This class is the layer between the QML and C++. It is responsible for
 // communicating data between the mod loader and the database.
 // The mod loader structure is as such:
 
 // - Database, Files, and Configs
-// - PModDAL, Model
+// - PModDal, Model
 // - PModLoader < ---- facilitates model and db
 // - QML
 
@@ -17,17 +17,14 @@
 #include "PModItem.h"
 #include "PDatabase.h"
 
-class PModDAL {
+class PModDal {
     public:
-        PModDAL(QObject *parent = nullptr);
-        ~PModDAL();
+        PModDal();
+        ~PModDal() = default;
         bool insertMod(const PModItem &mod);
         bool deleteMod(const QString &modId);
         bool updateMod(const QString &modId, const QString &key, const QString &value);
-        bool addDependency(const QString &modId, const PDependency &dependency);
-        bool removeDependency(const QString &depId);
         bool doesModExist(const QString &modId);
-        bool doesDependencyExist(const QString &dependencyId);
         QSqlQuery getAllMods();
         QSqlQuery queryMods(const QString &propertyName, const QString &searchTerm);
         QStringList searchMods(const QString &propertyName, const QString &searchTerm);
@@ -60,22 +57,9 @@ class PModDAL {
             "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
             ");";
 
-        const QString m_createDependenciesTableQuery =
-            "CREATE TABLE IF NOT EXISTS dependencies ("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            "mod_id TEXT NOT NULL, "
-            "dependency_id TEXT NOT NULL, "
-            "name TEXT NOT NULL, "
-            "min_version TEXT, "
-            "optional INTEGER NOT NULL, "
-            "ordering TEXT, "
-            "link TEXT, "
-            "FOREIGN KEY(mod_id) REFERENCES mods(mod_id)"
-            ");";
-
         const QString m_insertModQuery = 
             "INSERT INTO mods (title, authors, description, enabled, category, tags, version, mod_id, dep_id, filename, location, iconpaths, oglocation, is_selected) "
             "VALUES (:title, :authors, :description, :enabled, :category, :tags, :version, :mod_id, :dep_id, :filename, :location, :iconpaths, :oglocation, :is_selected)";
 };
 
-#endif // PModDAL_H
+#endif // PModDal_H
