@@ -1,8 +1,8 @@
-#include "PSystemMgr.h"
+#include "PLauncher.h"
 
-PSystemMgr::PSystemMgr() {}
+PLauncher::PLauncher() {}
 
-bool PSystemMgr::isIsoMounted(const QString &isoPath)
+bool PLauncher::isIsoMounted(const QString &isoPath)
 {
     QProcess process;
     process.start("powershell", QStringList() 
@@ -14,7 +14,7 @@ bool PSystemMgr::isIsoMounted(const QString &isoPath)
     return (output.toLower() == "true");
 }
 
-bool PSystemMgr::mountIso(const QString& isoPath, QString& mountPoint) {
+bool PLauncher::mountIso(const QString& isoPath, QString& mountPoint) {
     QProcess process;
     
     #ifdef Q_OS_WIN
@@ -41,9 +41,9 @@ bool PSystemMgr::mountIso(const QString& isoPath, QString& mountPoint) {
     return (process.exitCode() == 0);
 }
 
-bool PSystemMgr::mountIsoIfNeeded(const QString &isoPath)
+bool PLauncher::mountIsoIfNeeded(const QString &isoPath)
 {
-    if (PSystemMgr::isIsoMounted(isoPath)) {
+    if (PLauncher::isIsoMounted(isoPath)) {
         qDebug() << "ISO is already mounted, skipping mount operation";
         // TODO: get  drive letter of already mounted ISO
         // QString driveLetter = getDriveLetter(isoPath);
@@ -51,7 +51,7 @@ bool PSystemMgr::mountIsoIfNeeded(const QString &isoPath)
     else {
         // Proceed with mounting
         QString mountPoint;
-        if (PSystemMgr::mountIso(isoPath, mountPoint)) {
+        if (PLauncher::mountIso(isoPath, mountPoint)) {
             qDebug() << "Successfully mounted ISO to" << mountPoint;
         } 
         else {

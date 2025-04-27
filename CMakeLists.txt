@@ -24,11 +24,10 @@ find_package(QuaZip REQUIRED)
 qt_add_executable(appPandaLdr
     ${SRC_RC}
     src/main.cpp
-    # controllers
-    src/controllers/PAppController.cpp src/controllers/PAppController.h
-    src/controllers/PModController.cpp src/controllers/PModController.h
-    src/controllers/PModMgr.cpp src/controllers/PModMgr.h
-    src/controllers/PSystemMgr.cpp src/controllers/PSystemMgr.h
+    # app
+    src/app/PAppController.cpp src/app/PAppController.h
+    src/app/PLauncher.cpp src/app/PLauncher.h
+    src/app/PAppSettings.h src/app/PAppSettings.cpp
     # graphics
     src/graphics/PApeFile.cpp src/graphics/PApeFile.h
     # config
@@ -41,13 +40,17 @@ qt_add_executable(appPandaLdr
     src/models/PEntityType.cpp src/models/PEntityType.h
     src/models/PIconData.h
     src/models/PFileData.h
+    src/models/PDependency.h
     # filesystem
     src/filesystem/IVirtualFileSystem.h
     src/filesystem/PFileSystem.h src/filesystem/PFileSystem.cpp
     src/filesystem/PFile.h src/filesystem/PFile.cpp
     src/filesystem/PZip.h src/filesystem/PZip.cpp
+    # mods
+    src/mods/PModList.h src/mods/PModList.cpp
+    src/mods/PModController.cpp src/mods/PModController.h
     # database
-    src/database/PDatabaseMgr.cpp src/database/PDatabaseMgr.h
+    src/database/PDatabase.cpp src/database/PDatabase.h
 
     src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp 
     )
@@ -117,11 +120,10 @@ qt_add_qml_module(appPandaLdr
         ui/layouts/settings/SettingsConfirmationBar.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
-        # controllers
-        src/controllers/PAppController.cpp
-        src/controllers/PModController.cpp
-        src/controllers/PModMgr.cpp
-        src/controllers/PSystemMgr.cpp
+        # app
+        src/app/PAppController.cpp
+        src/app/PLauncher.cpp
+        src/app/PAppSettings.cpp
         # graphics
         src/graphics/PApeFile.cpp
         # config
@@ -136,7 +138,10 @@ qt_add_qml_module(appPandaLdr
         src/filesystem/PFile.cpp
         src/filesystem/PZip.cpp
         # database
-        src/database/PDatabaseMgr.cpp
+        src/database/PDatabase.cpp
+        # mods
+        src/mods/PModList.cpp
+        src/mods/PModController.cpp
 
         src/ldrs/PZtdMgr.cpp 
 )
@@ -145,12 +150,13 @@ target_include_directories(appPandaLdr
     PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/models
-        ${CMAKE_SOURCE_DIR}/src/controllers
+        ${CMAKE_SOURCE_DIR}/src/app
         ${CMAKE_SOURCE_DIR}/src/graphics
         ${CMAKE_SOURCE_DIR}/src/filesystem
         ${CMAKE_SOURCE_DIR}/src/config
         ${CMAKE_SOURCE_DIR}/src/database
         ${CMAKE_SOURCE_DIR}/src/ldrs
+        ${CMAKE_SOURCE_DIR}/src/mods
         ${CMAKE_SOURCE_DIR}/libs/apecore/include
 )
 
@@ -256,12 +262,13 @@ target_include_directories(testFileSystem
     PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/models
-        ${CMAKE_SOURCE_DIR}/src/controllers
+        ${CMAKE_SOURCE_DIR}/src/app
         ${CMAKE_SOURCE_DIR}/src/graphics
         ${CMAKE_SOURCE_DIR}/src/filesystem
         ${CMAKE_SOURCE_DIR}/src/config
         ${CMAKE_SOURCE_DIR}/src/database
         ${CMAKE_SOURCE_DIR}/src/ldrs
+        ${CMAKE_SOURCE_DIR}/src/mods
         ${CMAKE_SOURCE_DIR}/libs/apecore/include
 )
 
@@ -317,7 +324,7 @@ add_custom_command(TARGET testFileSystem POST_BUILD
 # # ------------- PTestDatabaseMgr -------------
 # qt_add_executable(testDatabaseMgr
 #     tests/PTestDatabaseMgr.cpp
-#     PDatabaseMgr.h PDatabaseMgr.cpp
+#     PDatabase.h PDatabase.cpp
 #     PConfigMgr.h PConfigMgr.cpp
 #     PZtdMgr.h PZtdMgr.cpp
 # )

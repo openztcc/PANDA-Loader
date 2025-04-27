@@ -1,5 +1,5 @@
-#ifndef PDATABASEMGR_H
-#define PDATABASEMGR_H
+#ifndef PDatabase_H
+#define PDatabase_H
 
 // Qt
 #include <QObject>
@@ -15,24 +15,14 @@
 #include "PApeFile.h"
 #include "PZtdMgr.h"
 #include "PModItem.h"
+#include "PDependency.h"
 
-class PDatabaseMgr : public QObject
+class PDatabase : public QObject
 {
     Q_OBJECT
 public:
-    PDatabaseMgr();
-    ~PDatabaseMgr();
-
-    struct PDependency
-    {
-        QString dependencyId;
-        QString modId;
-        QString name;
-        QString min_version;
-        bool optional;
-        QString ordering;
-        QString link;
-    };
+    PDatabase();
+    ~PDatabase();
 
     bool openDatabase();
     void closeDatabase();
@@ -105,7 +95,7 @@ private:
 };
 
 // Declare metatypes
-Q_DECLARE_METATYPE(PDatabaseMgr::PDependency)
-Q_DECLARE_METATYPE(QVector<PDatabaseMgr::PDependency>)
+Q_DECLARE_METATYPE(PDependency)
+Q_DECLARE_METATYPE(QVector<PDependency>)
 
-#endif // PDATABASEMGR_H
+#endif // PDatabase_H

@@ -153,7 +153,7 @@ bool PApeFile::deleteIcons(const QString &modId) {
     }
 
     // Get the icon paths from database
-    PDatabaseMgr db;
+    PDatabase db;
     db.openDatabase();
     QStringList iconPaths = db.getModByPk(modId)->iconpaths();
     db.closeDatabase();

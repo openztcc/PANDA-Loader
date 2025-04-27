@@ -1,8 +1,8 @@
-#include "PDatabaseMgr.h"
+#include "PDatabase.h"
 
 
 
-PDatabaseMgr::PDatabaseMgr() {
+PDatabase::PDatabase() {
     m_dbPath = QCoreApplication::applicationDirPath() + QDir::separator() + m_dbName;
     // remove old connection
     if (QSqlDatabase::contains(m_dbPath)) {
@@ -16,9 +16,9 @@ PDatabaseMgr::PDatabaseMgr() {
     }
 }
 
-PDatabaseMgr::~PDatabaseMgr() {}
+PDatabase::~PDatabase() {}
 
-bool PDatabaseMgr::openDatabase() {
+bool PDatabase::openDatabase() {
 
     if (!m_db.open()) {
         qDebug() << "Failed to open database: " << m_db.lastError();
@@ -49,11 +49,11 @@ bool PDatabaseMgr::openDatabase() {
     return true;
 }
 
-void PDatabaseMgr::closeDatabase() {
+void PDatabase::closeDatabase() {
     m_db.close();
 }
 
-bool PDatabaseMgr::createTables() {
+bool PDatabase::createTables() {
     QSqlQuery query(m_db);
     if (!query.exec(m_createTableQuery)) {
         qDebug() << "Failed to create table: " << query.lastError();
@@ -68,7 +68,7 @@ bool PDatabaseMgr::createTables() {
     return true;
 }
 
-bool PDatabaseMgr::insertMod(const QString &title, const QString &description, const QStringList &authors, 
+bool PDatabase::insertMod(const QString &title, const QString &description, const QStringList &authors, 
     const QString &version, bool enabled, const QStringList &tags, const QString &category, 
     const QString &id, const QString &depId, const QString &filename,
     const QString &location, const QStringList &iconpaths, const QString &oglocation,
@@ -183,12 +183,12 @@ bool PDatabaseMgr::insertMod(const QString &title, const QString &description, c
 }
 
 // TODO: Fix tags so they insert as a list
-bool PDatabaseMgr::insertMod(const PModItem &mod) {
+bool PDatabase::insertMod(const PModItem &mod) {
     return insertMod(mod.title(), mod.description(), {mod.authors()}, mod.version(), mod.enabled(), mod.tags(), mod.category(), mod.id(), mod.dependencyId(),
         mod.filename(), mod.location(), mod.iconpaths(), mod.oglocation(), mod.selected());
 }
 
-bool PDatabaseMgr::deleteMod(const QString &modId) {
+bool PDatabase::deleteMod(const QString &modId) {
     QSqlQuery query(m_db);
     
     // Check if mod exists
@@ -224,7 +224,7 @@ bool PDatabaseMgr::deleteMod(const QString &modId) {
     return true;
 }
 
-bool PDatabaseMgr::updateMod(const QString &modId, const QString &key, const QString &value) {
+bool PDatabase::updateMod(const QString &modId, const QString &key, const QString &value) {
     QSqlQuery query(m_db);
 
     // Check if mod exists
@@ -250,7 +250,7 @@ bool PDatabaseMgr::updateMod(const QString &modId, const QString &key, const QSt
     return true;
 }
 
-bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &dependency) {
+bool PDatabase::addDependency(const QString &modId, const PDependency &dependency) {
     QSqlQuery query(m_db);
 
     // Check if mod exists
@@ -316,7 +316,7 @@ bool PDatabaseMgr::addDependency(const QString &modId, const PDependency &depend
 
 
 //TODO: Fix so it removes dependency from mod, not just dependencies table
-bool PDatabaseMgr::removeDependency(const QString &dependencyId) {
+bool PDatabase::removeDependency(const QString &dependencyId) {
     QSqlQuery query(m_db);
 
     // Remove the dependency from dependencies table
@@ -331,7 +331,7 @@ bool PDatabaseMgr::removeDependency(const QString &dependencyId) {
     return true;
 }
 
-bool PDatabaseMgr::doesModExist(const QString &modId) {
+bool PDatabase::doesModExist(const QString &modId) {
     QSqlQuery query(m_db);
     query.prepare("SELECT COUNT(*) FROM mods WHERE mod_id = :mod_id");
     query.bindValue(":mod_id", modId);
@@ -355,7 +355,7 @@ bool PDatabaseMgr::doesModExist(const QString &modId) {
     return true;
 }
 
-bool PDatabaseMgr::doesDependencyExist(const QString &dependencyId) {
+bool PDatabase::doesDependencyExist(const QString &dependencyId) {
     QSqlQuery query(m_db);
 
     // Check if dependency exists
@@ -381,7 +381,7 @@ bool PDatabaseMgr::doesDependencyExist(const QString &dependencyId) {
     return true;
 }
 
-bool PDatabaseMgr::doesKeyExist(const QString &modId, const QString &key) {
+bool PDatabase::doesKeyExist(const QString &modId, const QString &key) {
     QSqlQuery query(m_db);
     
     // Check if mod exists
@@ -412,7 +412,7 @@ bool PDatabaseMgr::doesKeyExist(const QString &modId, const QString &key) {
     return true;
 }
 
-QSqlQuery PDatabaseMgr::getAllMods() {
+QSqlQuery PDatabase::getAllMods() {
     QSqlQuery query(m_db);
     query.prepare("SELECT * FROM mods");
     query.exec();
@@ -422,7 +422,7 @@ QSqlQuery PDatabaseMgr::getAllMods() {
 // Return results within orderBy filter and searchTerm
 // TODO: Handle case where searchTerm is empty or just spaces, should return all mods
 // in this filter
-QSqlQuery PDatabaseMgr::queryMods(const QString &propertyName, const QString &searchTerm) {
+QSqlQuery PDatabase::queryMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query(m_db);
 
     QString property = propertyName;
@@ -446,7 +446,7 @@ QSqlQuery PDatabaseMgr::queryMods(const QString &propertyName, const QString &se
 }
 
 // Get search results as a list of strings
-QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString &searchTerm) {
+QStringList PDatabase::searchMods(const QString &propertyName, const QString &searchTerm) {
     QSqlQuery query = queryMods(propertyName, searchTerm);
     QStringList results;
 
@@ -458,7 +458,7 @@ QStringList PDatabaseMgr::searchMods(const QString &propertyName, const QString 
 }
 
 // Static version of getModByPk
-QSharedPointer<PModItem> PDatabaseMgr::getModByPk(const QString &modId) {
+QSharedPointer<PModItem> PDatabase::getModByPk(const QString &modId) {
     return queryToModItem("mod_id", modId);
 }
 
@@ -468,10 +468,10 @@ QSharedPointer<PModItem> PDatabaseMgr::getModByPk(const QString &modId) {
 // TODO: Add meta.toml file to ztd if it doesn't exist
 // TODO: If meta.toml does not exist, add to list of errors for user
 // TODO: Let user decide if it's a duplicate or not
-void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
+void PDatabase::loadModsFromZTDs(const QStringList &ztdList)
 {
     // open database
-    // PDatabaseMgr db;
+    // PDatabase db;
     // if (!db.openDatabase()) {
     //     qDebug() << "Failed to open database for loading mods from ZTDs";
     //     return; // Failed to open database
@@ -596,7 +596,7 @@ void PDatabaseMgr::loadModsFromZTDs(const QStringList &ztdList)
 }
 
 // Populate mod item from query result
-QSharedPointer<PModItem> PDatabaseMgr::populateModItem(QSqlQuery &query) {
+QSharedPointer<PModItem> PDatabase::populateModItem(QSqlQuery &query) {
     QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
     modItem->setTitle(query.value("title").toString());
@@ -618,7 +618,7 @@ QSharedPointer<PModItem> PDatabaseMgr::populateModItem(QSqlQuery &query) {
 }
 
 // Get the first result as a PModItem object
-QSharedPointer<PModItem> PDatabaseMgr::queryToModItem(QSqlQuery &query) {
+QSharedPointer<PModItem> PDatabase::queryToModItem(QSqlQuery &query) {
     QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create();
 
     if (!query.exec()) {
@@ -637,7 +637,7 @@ QSharedPointer<PModItem> PDatabaseMgr::queryToModItem(QSqlQuery &query) {
 }
 
 // Get a query result as a PModItem object
-QSharedPointer<PModItem> PDatabaseMgr::queryToModItem(QString property, QString value) {
+QSharedPointer<PModItem> PDatabase::queryToModItem(QString property, QString value) {
     QSqlQuery query(m_db);
     query.prepare("SELECT * FROM mods WHERE " + property + " = :value");
     query.bindValue(":value", value);
@@ -646,7 +646,7 @@ QSharedPointer<PModItem> PDatabaseMgr::queryToModItem(QString property, QString 
 }
 
 // Get a query result as a list of PModItem objects
-QVector<QSharedPointer<PModItem>> PDatabaseMgr::queryToModItems(QString property, QString value) {
+QVector<QSharedPointer<PModItem>> PDatabase::queryToModItems(QString property, QString value) {
     QSqlQuery query = queryMods(property, value);
     QVector<QSharedPointer<PModItem>> modItems;
 

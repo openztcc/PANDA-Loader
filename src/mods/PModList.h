@@ -1,5 +1,9 @@
-#ifndef PModMgr_H
-#define PModMgr_H
+#ifndef PMODLIST_H
+#define PMODLIST_H
+
+// This is an implementation of the QAbstractListModel class and is only meant to
+// serve as 1) a wrapper around the PModItem class, and 2) a datastructure for the QML
+// view to display the list of mods. 
 
 // Qt
 #include <QObject>
@@ -9,12 +13,12 @@
 // Project
 #include "PModItem.h"
 #include "PZTdMgr.h"
-#include "PDatabaseMgr.h"
+#include "PDatabase.h"
 #include "PAppController.h"
 
 class PModItem;
 
-class PModMgr : public QAbstractListModel
+class PModList : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -37,7 +41,7 @@ public:
         ModVersionRole
     };
 
-    explicit PModMgr(QObject *parent = nullptr);
+    explicit PModList(QObject *parent = nullptr, QStringList ztdList = QStringList());
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -50,12 +54,11 @@ public:
     Q_INVOKABLE QList<QSharedPointer<PModItem>> modsList() const { return m_mods_list; }
     void removeMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
-    void addState(PAppController *state);
     void replaceMod(QSharedPointer<PModItem> mod);
 
 private:
     QList<QSharedPointer<PModItem>> m_mods_list;
-    PAppController *m_state;
+    QStringList m_ztdList;
 };
 
-#endif // PModMgr_H
+#endif // PMODLIST_H

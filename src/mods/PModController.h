@@ -14,12 +14,12 @@ concerns itself with the mods list and operations over other classes from the UI
 // Project includes
 #include "PAppController.h"
 #include "PZtdMgr.h"
-#include "PDatabaseMgr.h"
+#include "PDatabase.h"
 #include "PConfigMgr.h"
 #include "PApeFile.h"
 
 // Models
-#include "PModMgr.h"
+#include "PModList.h"
 #include "PModItem.h"
 
 // Third-party includes
@@ -39,7 +39,7 @@ class PModController : public QObject
 public:
     explicit PModController(QObject *parent = nullptr, PAppController *state = nullptr);
 
-    PModMgr* model() const { return m_model; }
+    PModList* model() const { return m_model; }
 
     QSharedPointer<PModItem> getModAsObject(QString modId) const;
     int modCount() const;
@@ -81,7 +81,7 @@ private:
     QSharedPointer<PModItem> m_currentMod;
     QSharedPointer<PModItem> m_previousMod;
     PAppController *m_state;
-    PModMgr *m_model;
+    PModList *m_model;
 };
 
 #endif // PModController_H

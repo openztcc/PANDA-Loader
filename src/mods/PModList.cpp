@@ -1,17 +1,17 @@
-#include "PModMgr.h"
+#include "PModList.h"
 
-PModMgr::PModMgr(QObject *parent) : QAbstractListModel(parent)
+PModList::PModList(QObject *parent, QStringList ztdList) : QAbstractListModel(parent), m_ztdList(ztdList)
 {
-
+    m_ztdList = ztdList;
 }
 
-int PModMgr::rowCount(const QModelIndex &parent) const
+int PModList::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_mods_list.size();
 }
 
-QVariant PModMgr::data(const QModelIndex &index, int role) const
+QVariant PModList::data(const QModelIndex &index, int role) const
 {
     qDebug () << "Fetching data for index: " << index.row() << ", role: " << role;
     if (index.isValid() && index.row() >= 0 && index.row() < m_mods_list.length())
@@ -60,9 +60,9 @@ QVariant PModMgr::data(const QModelIndex &index, int role) const
 }
 
 // Maps the roles to the data
-QHash<int, QByteArray> PModMgr::roleNames() const
+QHash<int, QByteArray> PModList::roleNames() const
 {
-    qDebug() << "PModMgr::roleNames() called";
+    qDebug() << "PModList::roleNames() called";
     QHash<int, QByteArray> roles;
 
     roles[ModTitleRole] = "title";
@@ -86,21 +86,18 @@ QHash<int, QByteArray> PModMgr::roleNames() const
 
 // --------------- Manage Mod List ------------------
 
-void PModMgr::loadMods()
+void PModList::loadMods()
 {
     // Placeholder for loading mods; dynamic sqlite query later
     beginResetModel();
     // Clear existing mods
     m_mods_list.clear();
 
-    // Load mods from directory
-    QStringList ztdList = m_state->getZtdList();
-
     // Open db
-    PDatabaseMgr db;
+    PDatabase db;
     db.openDatabase();
     // Load mods from ztds
-    db.loadModsFromZTDs(ztdList);
+    db.loadModsFromZTDs(m_ztdList);
 
     // Get all mods from database
     QSqlQuery query = db.getAllMods();
@@ -118,14 +115,14 @@ void PModMgr::loadMods()
     endResetModel();
 }
 
-void PModMgr::reloadMod(int index)
+void PModList::reloadMod(int index)
 {
     // Reload mod from database
     beginResetModel();
     if (index >= 0 && index < m_mods_list.size())
     {
         // qDebug() << "Reloading mod: " << mod->modTitle();
-        PDatabaseMgr db;
+        PDatabase db;
         db.openDatabase();
         QString id = m_mods_list[index]->id();
         QSharedPointer<PModItem> newMod = db.getModByPk(id);
@@ -137,7 +134,7 @@ void PModMgr::reloadMod(int index)
 }
 
 // Reload mod from database
-void PModMgr::reloadMod(QSharedPointer<PModItem> mod)
+void PModList::reloadMod(QSharedPointer<PModItem> mod)
 {
     // Get index from mod list
     int index = m_mods_list.indexOf(mod);
@@ -152,7 +149,7 @@ void PModMgr::reloadMod(QSharedPointer<PModItem> mod)
 }
 
 // Updates the mod list based on the property (filter) and search term (value) for filtering and live search
-void PModMgr::updateModList(QString property, QString value) 
+void PModList::updateModList(QString property, QString value) 
 {
     // Placeholder for updating mod list; dynamic sqlite query later
     beginResetModel();
@@ -160,7 +157,7 @@ void PModMgr::updateModList(QString property, QString value)
     m_mods_list.clear();
 
     // Open db
-    PDatabaseMgr db;
+    PDatabase db;
     db.openDatabase();
 
     QSqlQuery query;
@@ -189,7 +186,7 @@ void PModMgr::updateModList(QString property, QString value)
 }
 
 // Removes a mod from the list and database
-void PModMgr::removeMod(int index)
+void PModList::removeMod(int index)
 {
     // remove mod from list
     beginRemoveRows(QModelIndex(), index, index);
@@ -198,7 +195,7 @@ void PModMgr::removeMod(int index)
 }
 
 // Adds a mod to the list and database
-void PModMgr::addMod(QSharedPointer<PModItem> mod)
+void PModList::addMod(QSharedPointer<PModItem> mod)
 {
     beginInsertRows(QModelIndex(), m_mods_list.size(), m_mods_list.size());
     qDebug() << "Adding mod to list: " << mod->title();
@@ -207,12 +204,7 @@ void PModMgr::addMod(QSharedPointer<PModItem> mod)
     qDebug() << "New mod count: " << m_mods_list.size();
 }
 
-void PModMgr::addState(PAppController *state)
-{
-    m_state = state;
-}
-
-void PModMgr::replaceMod(QSharedPointer<PModItem> newMod) {
+void PModList::replaceMod(QSharedPointer<PModItem> newMod) {
     int index = m_mods_list.indexOf(newMod);
     if (index == -1) {
         for (int i = 0; i < m_mods_list.size(); ++i) {

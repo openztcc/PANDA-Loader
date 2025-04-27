@@ -2,15 +2,14 @@
 
 PModController::PModController(QObject *parent, PAppController *state)
 {
-    m_model = new PModMgr(this);
+    m_model = new PModList(this);
     m_state = state;
-    m_model->addState(state);
     m_model->loadMods();
 }
 
 QSharedPointer<PModItem> PModController::getModAsObject(QString id) const
 {
-    PDatabaseMgr db;
+    PDatabase db;
     db.openDatabase();
 
     QSharedPointer<PModItem> modItem = db.getModByPk(id);
@@ -50,7 +49,7 @@ void PModController::removeMod(QSharedPointer<PModItem> mod)
     }
 
     // delete mod from database
-    PDatabaseMgr db;
+    PDatabase db;
     db.openDatabase();
     db.deleteMod(mod->id());
     db.closeDatabase();
@@ -137,7 +136,7 @@ bool PModController::setModEnabled(QSharedPointer<PModItem> mod, bool enabled)
     }
 
     // Update the mod in the database
-    PDatabaseMgr db;
+    PDatabase db;
     db.openDatabase();
     db.updateMod(mod->id(), "location", targetLocation);
     db.updateMod(mod->id(), "enabled", enabled ? "1" : "0");
@@ -171,7 +170,7 @@ void PModController::setSelectedModsEnabled(bool enabled)
         }
     }
 
-    PDatabaseMgr db;
+    PDatabase db;
     db.openDatabase();
     for (const auto& id : successful_mods) {
         QSharedPointer<PModItem> mod = db.getModByPk(id);

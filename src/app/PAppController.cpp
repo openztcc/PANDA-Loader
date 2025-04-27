@@ -49,7 +49,7 @@ int PAppController::launchZT() {
             return 0;
         }
         // mount the iso
-        if (!PSystemMgr::mountIsoIfNeeded(isoPath)) {
+        if (!PLauncher::mountIsoIfNeeded(isoPath)) {
             qWarning() << "Failed to mount ISO file: " << isoPath;
             return 0;
         }

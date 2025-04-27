@@ -8,7 +8,7 @@
 
 // Project
 #include "PConfigMgr.h"
-#include "PDatabaseMgr.h"
+#include "PDatabase.h"
 #include "PFile.h"
 
 // External

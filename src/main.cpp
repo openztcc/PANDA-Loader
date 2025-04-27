@@ -9,7 +9,7 @@
 // Project
 #include "PModController.h"
 #include "PModItem.h"
-#include "PModMgr.h"
+#include "PModList.h"
 #include "PConfigMgr.h"
 
 int main(int argc, char *argv[])
@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<PModItem>("PandaLdr", 1, 0, "PModItem", "PModItem can only be created in C++");
 
     // meta objects
-    qRegisterMetaType<PModMgr*>("PModMgr*");
-    qmlRegisterType<PModMgr>("PandaLdr", 1, 0, "PModMgr");
+    qRegisterMetaType<PModList*>("PModList*");
+    qmlRegisterType<PModList>("PandaLdr", 1, 0, "PModList");
     qmlRegisterType<PModController>("PandaLdr", 1, 0, "PModController");
 
     // Load the main QML file

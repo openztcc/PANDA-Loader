@@ -1,5 +1,5 @@
-#ifndef PSYSTEMMGR_H
-#define PSYSTEMMGR_H
+#ifndef PLauncher_H
+#define PLauncher_H
 
 // Qt
 #include <QObject>
@@ -8,11 +8,11 @@
 #include <QDebug>
 #include <QFile>
 
-class PSystemMgr : public QObject
+class PLauncher : public QObject
 {
     Q_OBJECT
 public:
-    PSystemMgr();
+    PLauncher();
     static bool isIsoMounted(const QString &isoPath);
     static bool mountIso(const QString& isoPath, QString& mountPoint);
     static bool mountIsoIfNeeded(const QString &isoPath);
@@ -20,4 +20,4 @@ public:
     // static QFile getFileFromURL(const QString &url, const QString &fileName = "");
 };
 
-#endif // PSYSTEMMGR_H
+#endif // PLauncher_H
