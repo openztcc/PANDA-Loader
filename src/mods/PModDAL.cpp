@@ -205,6 +205,7 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
                 epMod.setListed(false); // since this is a collection item, we don't want to show it in the modlist
 
                 QStringList aniPaths = getIconAniPaths(epConfig, epCategory);
+                QStringList iconPaths = getIconPaths(aniPaths, ztdFile);
             }
         }
 
@@ -476,7 +477,7 @@ QStringList PModDal::generateTagsFromConfig(const PConfig &config) {
 }
 
 // TODO: Expand this to include more categories
-QStringList PModDal::determineIconType(const PConfigMgr &config, const QString &category) {
+QStringList PModDal::getIconAniPaths(const PConfigMgr &config, const QString &category) {
     QStringList iconAniPaths;
     if (category == "Animals") {
         // animals have 1-2 icon ani paths
@@ -495,5 +496,43 @@ QStringList PModDal::determineIconType(const PConfigMgr &config, const QString &
         return {config.getValue("Icon", "Icon").toString()};
     } else {
         return QStringList();
+    }
+}
+
+QStringList PModDal::getIconPaths(const QStringList &aniPaths, const PFile &ztd) {
+    QStringList iconPaths;
+    PConfigMgr aniConfig(nullptr, ztd);
+
+    for (const QString &aniPath : aniPaths) {
+        // get the ani path and generate the icon path
+        QString iconPath = buildIconPath(aniConfig);
+        iconPaths.append(iconPath);
+    }
+
+    QStringList pngPaths;
+    for (const QString &path : iconPaths) {
+        // get the ani path and generate the icon path
+        QStringList pngs = PGraphics::generateGraphicsAsPng(iconPaths);
+        for (const QString &png : pngs) {
+            pngPaths.append(png);
+        }
+    }
+    return pngPaths;
+}
+
+QString PModDal::buildIconPath(const PConfigMgr &aniFile) {
+    // ani files provide the directory structure in key/value pairs
+    // [animation]
+    // dir0 = "animals"
+    // dir1 = "ferret"
+    // dir2 = "other"
+    // animation = "n" or "N"
+    // the number of dirN keys isn't guaranteed to be the same for all ani files
+
+    for (int i = 0; i < aniFile.size(); i++) {
+        QString dir = aniFile.getValue("dir" + QString::number(i)).toString();
+        if (!dir.isEmpty()) {
+            iconPath += dir + "/";
+        }
     }
 }
