@@ -35,6 +35,8 @@ class PModDal : public QObject {
         QVector<QSharedPointer<PModItem>> searchMods(PDatabase::Operation operation, 
             const QString &propertyName, const QString &searchTerm);
         void loadModsFromFile(const QStringList &ztdList);
+        QString determineModCategory(const PConfig &config);
+        QStringList generateTagsFromConfig(const PConfig &config);
     private:
         PDatabase m_db;
         const QString m_dbName = "panda.padb";
