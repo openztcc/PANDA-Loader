@@ -443,10 +443,13 @@ QMap<QString, QVariant> PModDal::generateFileData(const QString &filePath) {
 }
 
 QStringList PModDal::generateTagsFromConfig(const PConfig &config) {
-    QStringList tags;
+    QStringList tags = config.getAllKeys("member").value_or({});
 
-    // Generate from [member] section
-    for (const auto &member : config.getValue("member").value_or({})) {
-        tags.append(member);
+    // Clean up the tags; format in proper case
+    for (int i = 0; i < tags.size(); i++) {
+        QString tag = tags[i];
+        tag[0] = tag[0].toUpper();
+        tags[i] = tag;
     }
+    return tags;
 }
