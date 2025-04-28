@@ -133,6 +133,8 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
         bool MetaMisc = foundMeta && contentModsDetected == 0;
         bool NoMetaNoEntry = !foundMeta && contentModsDetected == 0;
 
+        // ------------------------------------------------------------------- Build the base information for the mod
+
         if (MetaCollection) { // meta.toml found + collection of mods
             // Load the meta file and get the mod data
             toml::table config = toml::parse(metaData.data());
@@ -146,6 +148,22 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
             mod = buildDefaultMod(ztd, entryPoints);            
         } else {
             mod = buildModFromEntryPoints(entryPoints, ztd);
+        }
+
+        // ------------------------------------------------------------------- Insert file data (size, date, etc.)
+        QMap<QString, QVariant> fileData = generateFileData(ztd);
+        mod.setFileDate(fileData["date"].toString());
+        mod.setFileSize(fileData["size"].toString());
+        mod.setOriginalLocation(fileData["location"].toString());
+        mod.setCurrentLocation(fileData["location"].toString());
+        mod.setFileName(fileData["filename"].toString());
+
+        // ------------------------------------------------------------------- Set the category for the mod
+        if (contentModsDetected > 0) {
+            QString category = determineCategory(entryPoints);
+            mod.setCategory(category);
+        } else {
+            mod.setCategory("Not Assigned");
         }
 
 
@@ -401,4 +419,14 @@ PModItem PModDal::buildDefaultMod(const QString &ztdPath) {
     mod.setDependencyId(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
     return mod;
+}
+
+QMap<QString, QVariant> PModDal::generateFileData(const QString &filePath) {
+    QFileInfo fileInfo(filePath);
+    QMap<QString, QString> fileData;
+    fileData.insert("filename", fileInfo.fileName());
+    fileData.insert("size", QString::number(fileInfo.size()));
+    fileData.insert("date", fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss"));
+    fileData.insert("location", fileInfo.absolutePath());
+    return fileData;
 }
