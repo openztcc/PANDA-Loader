@@ -1,12 +1,12 @@
-#ifndef PModDal_H
-#define PModDal_H
+#ifndef PModDataAccess_H
+#define PModDataAccess_H
 
 // This class is the layer between the QML and C++. It is responsible for
 // communicating data between the mod loader and the database.
 // The mod loader structure is as such:
 
 // - Database, Files, and Configs
-// - PModDal, Model
+// - PModDataAccess, Model
 // - PModLoader < ---- facilitates model and db
 // - QML
 
@@ -18,12 +18,12 @@
 #include "PDatabase.h"
 #include "PModQueries.h"
 
-class PModDal : public QObject {
+class PModDataAccess : public QObject {
 
     public:
         // Constructor
-        PModDal();
-        ~PModDal() = default;
+        PModDataAccess();
+        ~PModDataAccess() = default;
 
         // Mod operations
         bool insertMod(const PModItem &mod);
@@ -45,4 +45,4 @@ class PModDal : public QObject {
 
     };
 
-#endif // PModDal_H
+#endif // PModDataAccess_H                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
