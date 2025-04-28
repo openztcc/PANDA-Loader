@@ -58,6 +58,16 @@ bool PIniConfig::getAllSections() {
     return false;
 }
 
+QStringList PIniConfig::getAllKeys(const QString &section) {
+    CSimpleIniA::TNamesDepend keys;
+    m_ini.GetAllKeys(section.toStdString().c_str(), keys);
+    QStringList keyList;
+    for (const auto &key : keys) {
+        keyList.append(QString(key.pItem));
+    }
+    return keyList;
+}
+
 // ---------------------------- Exist tests
 
 bool PIniConfig::sectionExists(const QString &section) const {

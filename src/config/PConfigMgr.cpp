@@ -213,23 +213,17 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
     m_config->setValue(key, input, section);
 }
 
-// Get a key value from a toml table as a list (ie tags and authors)
-QVector<QString> PConfigMgr::getKeyValueAsList(const QString &key, const toml::table &config)
+// Returns all keys in the config file within a section
+QStringList PConfigMgr::getAllKeys(const QString &section) const
 {
-    QVector<QString> result;
-
-    // Find value in table
-    if (auto it = config.find(key.toStdString()); it != config.end()) {
-        if (auto arrVal = it->second.as_array()) {
-            for (const auto &item : *arrVal) {
-                if (auto strVal = item.as_string()) {
-                    result.append(QString::fromStdString(strVal->get()));
-                }
-            }
-        }
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return QStringList();
     }
 
-    return result;
+    // Get all keys in the config file within a section
+    QStringList keys = m_config->getAllKeys(section);
+    return keys;
 }
 
 // Updates the meta configuration in a ztd file

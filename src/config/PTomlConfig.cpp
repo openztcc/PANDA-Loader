@@ -132,6 +132,26 @@ bool PTomlConfig::getAllSections() {
     return false;
 }
 
+// TODO: unit test for this function
+QStringList PTomlConfig::getAllKeys(const QString &section) {
+    std::string s = section.toStdString();
+    QStringList keys;
+
+    if (s == "") {
+        for (const auto& [key, value] : m_toml) {
+            keys.append(QString::fromStdString(key));
+        }
+    } else {
+        if (auto* settings = m_toml[s].as_table()) {
+            for (const auto& [key, value] : *settings) {
+                keys.append(QString::fromStdString(key));
+            }
+        }
+    }
+
+    return keys;
+}
+
 // ---------------------------- EXIST TESTS
 
 bool PTomlConfig::sectionExists(const QString &section) const {

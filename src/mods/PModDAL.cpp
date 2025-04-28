@@ -166,6 +166,14 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
             mod.setCategory("Not Assigned");
         }
 
+        // ------------------------------------------------------------------- Set the tags for the mod
+        if (contentModsDetected > 0) {
+            QStringList tags = generateTagsFromConfig(meta);
+            mod.setTags(tags);
+        } else {
+            mod.setTags(QStringList() << "Misc" << "Not Assigned");
+        }
+
 
         // Check if config exists
         if (!foundMeta) {
@@ -345,18 +353,21 @@ PModItem PModDal::buildModFromToml(const toml::table &config, const QString &ztd
 
     mod.setEnabled(true);
     mod.setListed(true);
+
     mod.setCategory(""); // this will be determined later from rel path
     mod.setTags(config.getValue("tags").value_or({"Unknown"}));
     mod.setFilename(config.getValue("filename").value_or("Unknown"));
-    mod.setLocation(config.getValue("location").value_or(ztdPath));
-    mod.location = location;
     mod.setFileSize(fileSize);
     mod.setFileDate(fileDate);
+
     mod.setIconPaths({}); // this will be determined later
+
     mod.setCurrentLocation(ztdPath); // renamed from setOGLocation
     mod.setDisabledLocation(ztdPath); // new field for disabled location
     mod.setOriginalLocation(ztdPath); // new field for original location
+
     mod.setSelected(false);
+
     mod.setDependencyId(config.getValue("dep_id").value_or("None"));
 
     return mod;
@@ -429,4 +440,13 @@ QMap<QString, QVariant> PModDal::generateFileData(const QString &filePath) {
     fileData.insert("date", fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss"));
     fileData.insert("location", fileInfo.absolutePath());
     return fileData;
+}
+
+QStringList PModDal::generateTagsFromConfig(const PConfig &config) {
+    QStringList tags;
+
+    // Generate from [member] section
+    for (const auto &member : config.getValue("member").value_or({})) {
+        tags.append(member);
+    }
 }

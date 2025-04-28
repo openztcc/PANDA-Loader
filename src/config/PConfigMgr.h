@@ -55,7 +55,7 @@ public:
     bool clear();
     Q_INVOKABLE QVariant getValue(const QString &section, const QString &key);
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
-    static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
+    QStringList getAllKeys(const QString &section = "") const;
     static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
     static bool removeMetaConfig(const QString &ztdFilePath);
 

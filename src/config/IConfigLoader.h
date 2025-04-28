@@ -15,6 +15,7 @@ class IConfigLoader {
         virtual bool removeKey(const QString &section, const QString &key) = 0;
         virtual bool removeSection(const QString &section) = 0;
         virtual bool getAllSections() = 0;
+        virtual QStringList getAllKeys(const QString &section) = 0;
 
         virtual bool sectionExists(const QString &section) const = 0;
         virtual bool keyExists(const QString &key, const QString &section) const = 0;
