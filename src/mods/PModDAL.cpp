@@ -529,10 +529,18 @@ QString PModDal::buildIconPath(const PConfigMgr &aniFile) {
     // animation = "n" or "N"
     // the number of dirN keys isn't guaranteed to be the same for all ani files
 
-    for (int i = 0; i < aniFile.size(); i++) {
-        QString dir = aniFile.getValue("dir" + QString::number(i)).toString();
-        if (!dir.isEmpty()) {
-            iconPath += dir + "/";
+    // clamp limit to 10 directory parts
+    QString iconPath;
+    for (int i = 0; i < 10; i++) {
+        QString dirKey = "dir" + QString::number(i);
+        QString dirValue = aniFile.getValue(dirKey, "animation").toString();
+        if (dirValue.isEmpty()) {
+            break; // no more directories to add
         }
+        iconPath += dirValue + "/";
     }
+    // remove the last "/" from the path
+    iconPath.chop(1);
+
+    return iconPath;
 }
