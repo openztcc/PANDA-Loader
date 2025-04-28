@@ -166,15 +166,18 @@ void PModDataAccess::loadModsFromFile(const QStringList &ztdList)
             // at this point, no entrypoint mod will have a meta.toml file, so most data will need to be be pulled from ini files
             collectionMods = buildCollectionMods(entryPoints);
         } else {
-            // if it's not a collection, then we can just set the icon paths from the entrypoints
-            for (const PFileData &entryPoint : entryPoints) {
-                PConfigMgr epConfig(nullptr, entryPoint);
-                QStringList epIconPaths = getIconPngPaths(entryPoint, ztd);
+            // if it's not a collection, then we can just set the icon paths from the entrypoint
+            if (isSingleMod) {
+                PConfigMgr epConfig(nullptr, entryPoints[0]);
+                QStringList epIconPaths = getIconPngPaths(entryPoints[0], ztd);
                 if (!epIconPaths.isEmpty()) {
                     mod.setIconPaths(epIconPaths);
                 } else {
                     mod.setIconsPaths({});
                 }
+            } else {
+                // if no entrypoints, then set the icon paths to empty
+                mod.setIconsPaths({});
             }
         }
 
@@ -287,9 +290,8 @@ PModItem PModDataAccess::buildModFromToml(const PConfigMgr &config) {
     // if dependency table exists, then add the dependency id to the mod and add to db
     QMap<QString, QVariant> depTable = config.getValue("dependencies").value_or({});
     if (!depTable.isEmpty()) {
-        PDepDal depDal;
         for (const auto &dep : depTable) {
-            PDependency dependency = depDal.addDependency(mod.id(), dep);
+            PDepDataAccess dependency(mod.id(), dep);
             if (dependency.isValid()) {
                 mod.setDependencyId(dependency.id());
             }
