@@ -117,7 +117,8 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
         // those are "hacks".
         // Or: if no entrypoint files exist, just load file with default data.
 
-        // If no meta file found and 
+        // If no meta file found and no entrypoints found, then this might be a misc category
+        // of mod (i.e. config tweaks, or anything else that doesn't add content to the game)
         int contentModsDetected = entryPoints.size();
         if (contentModsDetected == 0 && !foundMeta) {
             qDebug() << "No content mods detected in ztd: " << ztd;
@@ -147,6 +148,8 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
             // that reads in the config and determines values
 
             if (contentModsDetected > 0) {
+                // The ani paths are the configuration files that contain the paths to the graphics
+                QMap<QStringList, QString> iconPaths;
                 for (const PFileData &entryPoint : entryPoints) {
 
                     // --------------------- Get Type, Category, and determine Icon paths ---------------------
@@ -157,46 +160,65 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
                         // otherwise type is the filename of the entrypoint
                         type = entryPoint.filename.split(".").first();
                     }
-                    QMap<QString, QString> iconPathList;
-                    QStringList oIcon = config.getValue("Icon", "Icon").toString();
-                    QString fIcon;
-                    QString mIcon;
-                    bool foundIcon = !oIcon.isEmpty() || oIcon == "";
+                    // Get the category
+                    QString category = determineCategory(entryPoint);
 
-                    // if oIcon is found, then it's an object
-                
-                    if (!foundIcon) {
-                        // try to find unit icons
-                        fIcon = config.getValue("f/Icon", "Icon").toString();
-                        mIcon = config.getValue("m/Icon", "Icon").toString();
-                    }
+                    // Get icons and their generated paths. Graphics will be saved in the following format:
+                    // type + "_" + <number> + "_" + aniFileName + ".png"
+                    // ex: "gsblstnd_1_SE.png"
+                    if (category == "Building" || category == "Scenery") {
+                        // get icon path for objects
+                        QString aniPath = config.getValue("Icon", "Icon").toString();
+                        if (!aniPath.isEmpty()) {
+                            qDebug() << "ERROR: ani path is empty for: " << entryPoint.path;
+                        } else {
+                            QString graphicPath = PGraphics::generateGraphicsAsPng(iconPath, ztd);
 
-                    bool foundIcon = !fIcon.isEmpty() || fIcon == "" || !mIcon.isEmpty() || mIcon == "";
-
-                    // if fIcon and/or m/Icon are found, then it's a unit
-
-                    if (foundIcon) {
-                        // process the graphics into png files
-                        if (!oIcon.isEmpty()) {
-                            // process the graphics into png files
-                            QStringList pathsToGraphics = PGraphics::generateGraphicsAsPng(oIcon, ztd);
-                            mod.setIconPaths(pathsToGraphics);
-                        }
-                        else if (!fIcon.isEmpty()) {
-                            // process the graphics into png files
-                            QStringList pathsToGraphics = PGraphics::generateGraphicsAsPng({fIcon, mIcon}, ztd);
-                            mod.setIconPaths(pathsToGraphics);
+                            PFile aniFile(ztd);
+                            PFileData aniData = aniFile.read(aniPath);
+                            PConfig aniConfig(nullptr, aniData);
+                            QStringList iconPaths = PGraphics::generateGraphicsAsPng(aniPaths, type);
+                            iconPaths.insert(iconPaths, aniPath);
                         }
                     }
+                    else if (category == "Animals") {
+                        // get icon path for animals
+                        QString aniPathF = config.getValue("f/Icon", "Icon").toString();
+                        QString aniPathM = config.getValue("m/Icon", "Icon").toString();
+                        if (!aniPathF.isEmpty()) {
+                            qDebug() << "ERROR: ani path is empty for: " << entryPoint.path;
+                        } else {
+                            QString graphicPathF = PGraphics::generateGraphicsAsPng(iconPath, ztd);
+                            iconPaths.insert(iconPath, graphicPathF);
+                        }
+                        if (!aniPathM.isEmpty()) {
+                            qDebug() << "ERROR: ani path is empty for: " << entryPoint.path;
+                        } else {
+                            QString graphicPathM = PGraphics::generateGraphicsAsPng(iconPath, ztd);
+                            iconPaths.insert(iconPath, graphicPathM);
+                        }
+                    } 
 
                     // ---------------------- Get Description, Title -----------------------
-                    QString description = config.getValue("cLongHelp", "1033").toString();
-                    QString title = config.getValue("cName", "1033").toString();
-                    QString category = determineCategory(config);
-                    if (category.isEmpty()) {
-                        category = "Unknown";
+
+                    if (category == "Animals") {}
+                        QString description = config.getValue("cLongHelp", "1033").toString();
+                        QString title = config.getValue("cName", "1033").toString();
+                        QString category = determineCategory(config);
+                        if (category.isEmpty()) {
+                            category = "Unknown";
+                        }
+                        QStringList tags = generateTagsFromConfig(config);
+                    } else {
+                        // TODO: For misc mods that have a cName, we can get the name and description
+                        // from the binary language file. Will need to find a library to parse the binary.
+                        QString description = "";
+                        QString title = ""
+                        QString category = determineCategory(config);
+                        if (category.isEmpty()) {
+                            category = "Unknown";
+                        }
                     }
-                    QStringList tags = generateTagsFromConfig(config);
 
                     // ---------------------- File meta data -----------------------
                     QString fileSize = QFile(ztd).size();
@@ -205,78 +227,33 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
                     QString filePath = QFileInfo(ztd).absoluteFilePath();
                     QString fileLocation = QFileInfo(ztd).absolutePath();
 
-                    // ---------------------- Remaining ------------------------
-                    QString 
+                    // --------------------- Create mod item ---------------------
+                    PModItem mod;
+                    mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
+                    mod.setTitle(title);
+                    mod.setAuthors({"Unknown"});
+                    mod.setDescription(description);
+                    mod.setEnabled(true);
+                    mod.setCategory(category);
+                    mod.setTags(tags);
+                    mod.setVersion("1.0.0");
+                    mod.setFilename(fileName);
+                    mod.setCollection(fileName);
+                    mod.setLocation(fileLocation);
+                    mod.setIconPaths(iconPaths);
+                    mod.setOGLocation(filePath);
+                    mod.setSelected(false);
+                    mod.setDependencyId(QUuid::createUuid().toString(QUuid::WithoutBraces));
+                    mod.setFileSize(fileSize);
+                    mod.setFileDate(fileDate);
+                    mod.setFilePath(filePath);
+                    mod.setFileLocation(fileLocation);
+                    mod.setFileName(fileName);
+
+                    insertMod(mod);
                 }
             }
         }
-        else {
-
-            // Get meta config from ztd
-            QByteArray fileData = PZtdMgr::getFileFromRelPath(ztd, "meta.toml");
-            std::istringstream tomlStream(fileData.toStdString());
-            toml::table config = toml::parse(tomlStream);
-
-            // Grab mod_id from config
-            mod.setId(meta.getValue("", "mod_id").toString());
-            if (mod.id().isEmpty()) {
-                mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
-            }
-
-            // Check if mod_id already exists in database
-            // TODO: Let user decide if it's a duplicate or not
-            if (doesModExist(mod.id())) {
-                qDebug() << "Mod already exists in database: " << mod.id();
-                continue; // Skip this mod
-            }
-
-            // Get other values from config
-            mod.setTitle(meta.getValue("", "name").toString());
-            if (mod.title().isEmpty()) {
-                mod.setTitle("Unknown");
-            }
-
-            mod.setAuthors(meta.getValue("", "authors").toStringList());
-            if (mod.authors().isEmpty()) {
-                mod.setAuthors({"Unknown"});
-            }
-
-            mod.setDescription(meta.getValue("", "description").toString());
-            if (mod.description().isEmpty()) {
-                mod.setDescription("No description found");
-            }
-
-            mod.setEnabled(true);
-
-            mod.setTags(meta.getValue("", "tags").toStringList());
-            // remove "All" from tags if it exists
-            QStringList tags = mod.tags();
-            tags.removeAll("All");
-            mod.setTags(tags);
-            if (mod.tags().isEmpty()) {
-                mod.setTags({"Unknown"});
-            }
-
-            mod.setCategory(mod.tags()[0]);
-            qDebug() << "Added category: " << mod.category() << " to mod " << mod.title();
-            if (mod.category().isEmpty()) {
-                mod.setCategory("Unknown");
-            }
-
-            mod.setVersion(meta.getValue("", "version").toString());
-            if (mod.version().isEmpty()) {
-                mod.setVersion("1.0.0");
-            }
-
-            mod.setFilename(filename);
-            mod.setLocation(location);
-            mod.setIconPaths(iconPaths);
-            mod.setOGLocation(location);
-            mod.setSelected(false);
-        }
-
-        insertMod(mod);
-
     }
 
     // // close database
@@ -284,7 +261,7 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
     qDebug() << "Loaded mods from ZTDs";
 }
 
-QString PModDal::determineCatFromExt(const PFileData &fileData) {
+QString PModDal::determineCategory(const PFileData &fileData) {
     switch (fileData.ext) {
         case "ucb":
             return "Building";
@@ -303,4 +280,30 @@ QString PModDal::determineCatFromExt(const PFileData &fileData) {
     }
 }
 
-QMap<QString, QString> PModDal::
+PModItem PModDal::buildModFromToml(const toml::table &config, const QString &ztdPath) {
+    PModItem mod;
+    QFileInfo fileInfo(ztdPath);
+    QString filename = fileInfo.fileName();
+    QString location = fileInfo.absolutePath();
+    QString fileSize  = QString::number(fileInfo.size());
+    QString fileDate = fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
+    mod.setId(config.getValue("mod_id").value_or("Unknown"));
+    mod.setTitle(config.getValue("title").value_or("Unknown"));
+    mod.setAuthors(config.getValue("authors").value_or({"Unknown"}));
+    mod.setDescription(config.getValue("description").value_or("No description found"));
+    mod.setEnabled(true);
+    mod.setCategory(""); // this will be determined later from rel path
+    mod.setTags(config.getValue("tags").value_or({"Unknown"}));
+    mod.setVersion(config.getValue("version").value_or("1.0.0"));
+    mod.setFilename(config.getValue("filename").value_or("Unknown"));
+    mod.setLocation(config.getValue("location").value_or(ztdPath));
+    mod.location = location;
+    mod.setFileSize(fileSize);
+    mod.setFileDate(fileDate);
+    mod.setIconPaths({}); // this will be determined later
+    mod.setOGLocation(ztdPath);
+    mod.setSelected(false);
+    mod.setDependencyId(config.getValue("dep_id").value_or("None"));
+
+    return mod;
+}
