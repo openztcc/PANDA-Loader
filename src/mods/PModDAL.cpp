@@ -120,22 +120,32 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
         // If no meta file found and no entrypoints found, then this might be a misc category
         // of mod (i.e. config tweaks, or anything else that doesn't add content to the game)
         int contentModsDetected = entryPoints.size();
-        if (contentModsDetected == 0 && !foundMeta) {
-            qDebug() << "No content mods detected in ztd: " << ztd;
-            mod.setTitle(filename);
-            mod.setAuthors({"Unknown"});
-            mod.setDescription("No description found");
-            mod.setLocation(location);
-            mod.setFilename(filename);
-            mod.setEnabled(true);
-            mod.setCategory("Unknown");
-            mod.setTags({"Unknown"});
-            mod.setVersion("1.0.0");
-            mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
-            mod.setIconPaths({});
-            mod.setOGLocation(ztd);
-            mod.setSelected(false);
-            insertMod(mod);
+
+        // if found meta file and more than 1 entrypoint, then this is 
+        // a content pack. we will call it a collection.
+        // for these kinds of mods, the 'collection' will be the name of the mod
+        // and every 'mod' within the collection will be delisted in the modlist.
+        // instead, they will be show in the infopane.
+        PModItem mod;
+
+        bool MetaCollection = foundMeta && contentModsDetected > 1;
+        bool MetaSingle = foundMeta && contentModsDetected == 1;
+        bool MetaMisc = foundMeta && contentModsDetected == 0;
+        bool NoMetaNoEntry = !foundMeta && contentModsDetected == 0;
+
+        if (MetaCollection) { // meta.toml found + collection of mods
+            // Load the meta file and get the mod data
+            toml::table config = toml::parse(metaData.data());
+            mod = buildModFromToml(config, ztd);    
+        } else if (MetaSingle || MetaMisc) { // meta.toml found + single mod
+            // if found meta file and only 1 entrypoint, then this is a single mod. easy!
+            toml::table config = toml::parse(metaData.data());
+            mod = buildModFromToml(config, ztd);            
+        } else if (NoMetaNoEntry) { // no meta file + no entrypoints. user will need to manually configure this mod.
+            // if no meta file and no entrypoints, then this is a misc mod
+            mod = buildDefaultMod(ztd, entryPoints);            
+        } else {
+            mod = buildModFromEntryPoints(entryPoints, ztd);
         }
 
 
@@ -261,6 +271,8 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
     qDebug() << "Loaded mods from ZTDs";
 }
 
+// Determine the category of the mod based on the file extension and path
+// Possible categories are: Building, Scenery, Animals, misc, Unknown
 QString PModDal::determineCategory(const PFileData &fileData) {
     switch (fileData.ext) {
         case "ucb":
@@ -280,6 +292,7 @@ QString PModDal::determineCategory(const PFileData &fileData) {
     }
 }
 
+// Determine the category of the mod based on the meta.toml file in the root of the ztd
 PModItem PModDal::buildModFromToml(const toml::table &config, const QString &ztdPath) {
     PModItem mod;
     QFileInfo fileInfo(ztdPath);
@@ -287,23 +300,105 @@ PModItem PModDal::buildModFromToml(const toml::table &config, const QString &ztd
     QString location = fileInfo.absolutePath();
     QString fileSize  = QString::number(fileInfo.size());
     QString fileDate = fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
+
+    // values from TOML file
     mod.setId(config.getValue("mod_id").value_or("Unknown"));
-    mod.setTitle(config.getValue("title").value_or("Unknown"));
+    mod.setTitle(config.getValue("name").value_or("Unknown"));
     mod.setAuthors(config.getValue("authors").value_or({"Unknown"}));
     mod.setDescription(config.getValue("description").value_or("No description found"));
+    mod.setVersion(config.getValue("version").value_or("1.0.0"));
+    mod.setLink(config.getValue("link").value_or("Unknown"));
+
+    // if dependency table exists, then add the dependency id to the mod and add to db
+    QMap<QString, QVariant> depTable = config.getValue("dependencies").value_or({});
+    if (!depTable.isEmpty()) {
+        PDepDal depDal;
+        for (const auto &dep : depTable) {
+            PDependency dependency = depDal.addDependency(mod.id(), dep);
+            if (dependency.isValid()) {
+                mod.setDependencyId(dependency.id());
+            }
+        }
+    }
+    // if no dependency table, then set the dependency id to None
+    else {
+        mod.setDependencyId("None");
+    }
+
     mod.setEnabled(true);
+    mod.setListed(true);
     mod.setCategory(""); // this will be determined later from rel path
     mod.setTags(config.getValue("tags").value_or({"Unknown"}));
-    mod.setVersion(config.getValue("version").value_or("1.0.0"));
     mod.setFilename(config.getValue("filename").value_or("Unknown"));
     mod.setLocation(config.getValue("location").value_or(ztdPath));
     mod.location = location;
     mod.setFileSize(fileSize);
     mod.setFileDate(fileDate);
     mod.setIconPaths({}); // this will be determined later
-    mod.setOGLocation(ztdPath);
+    mod.setCurrentLocation(ztdPath); // renamed from setOGLocation
+    mod.setDisabledLocation(ztdPath); // new field for disabled location
+    mod.setOriginalLocation(ztdPath); // new field for original location
     mod.setSelected(false);
     mod.setDependencyId(config.getValue("dep_id").value_or("None"));
+
+    return mod;
+}
+
+// Build a mod item from the entry points found in the ztd file
+PModItem PModDal::buildModFromEntryPoints(const QList<PFileData> &entryPoints, const QString &ztdPath) {
+    PModItem mod;
+    QFileInfo fileInfo(ztdPath);
+    QString filename = fileInfo.fileName();
+    QString location = fileInfo.absolutePath();
+    QString fileSize  = QString::number(fileInfo.size());
+    QString fileDate = fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
+    mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
+    mod.setTitle(filename);
+    mod.setAuthors({"Unknown"});
+    mod.setDescription("No description found");
+    mod.setEnabled(true);
+    mod.setListed(true);
+    mod.setCategory(""); // this will be determined later from rel path
+    mod.setTags({"Unknown"});
+    mod.setVersion("1.0.0");
+    mod.setFilename(filename);
+    mod.setLocation(location);
+    mod.location = location;
+    mod.setFileSize(fileSize);
+    mod.setFileDate(fileDate);
+    mod.setIconPaths({}); // this will be determined later
+    mod.setOGLocation(ztdPath);
+    mod.setSelected(false);
+    mod.setDependencyId(QUuid::createUuid().toString(QUuid::WithoutBraces));
+
+    return mod;
+}
+
+PModItem PModDal::buildDefaultMod(const QString &ztdPath) {
+    PModItem mod;
+    QFileInfo fileInfo(ztdPath);
+    QString filename = fileInfo.fileName();
+    QString location = fileInfo.absolutePath();
+    QString fileSize  = QString::number(fileInfo.size());
+    QString fileDate = fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
+    mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
+    mod.setTitle(filename);
+    mod.setAuthors({"Unknown"});
+    mod.setListed(true);
+    mod.setDescription("No description found");
+    mod.setEnabled(true);
+    mod.setCategory(""); // this will be determined later from rel path
+    mod.setTags({"Unknown"});
+    mod.setVersion("1.0.0");
+    mod.setFilename(filename);
+    mod.setLocation(location);
+    mod.location = location;
+    mod.setFileSize(fileSize);
+    mod.setFileDate(fileDate);
+    mod.setIconPaths({}); // this will be determined later
+    mod.setOGLocation(ztdPath);
+    mod.setSelected(false);
+    mod.setDependencyId(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
     return mod;
 }
