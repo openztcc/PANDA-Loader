@@ -126,25 +126,17 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
         // instead, they will be show in the infopane.
         PModItem mod;
 
-        bool MetaCollection = foundMeta && contentModsDetected > 1;
-        bool MetaSingle = foundMeta && contentModsDetected == 1;
-        bool MetaMisc = foundMeta && contentModsDetected == 0;
-        bool NoMetaNoEntry = !foundMeta && contentModsDetected == 0;
         bool isCollection = contentModsDetected > 1;
+        bool isSingleMod = contentModsDetected == 1;
 
         // ------------------------------------------------------------------- Build the base information for the mod
 
-        if (MetaCollection) { // meta.toml found + collection of mods
+        if (foundMeta) { // meta.toml
             // Load the meta file and get the mod data
             toml::table config = toml::parse(metaData.data());
             mod = buildModFromToml(config, ztd);
             mod.setCollection(true); // set the collection flag   
-        } else if (MetaSingle || MetaMisc) { // meta.toml found + single mod
-            // if found meta file and only 1 entrypoint, then this is a single mod. easy!
-            toml::table config = toml::parse(metaData.data());
-            mod = buildModFromToml(config, ztd);
-            mod.setCollection(false);
-        } else if (NoMetaNoEntry) { // no meta file + no entrypoints. user will need to manually configure this mod.
+        } else if (NoMetaNoEntryPoint) { // no meta file + no entrypoints. user will need to manually configure this mod.
             // if no meta file and no entrypoints, then this is a misc mod
             mod = buildDefaultMod(ztd, entryPoints);
             mod.setCollection(false);           
@@ -156,24 +148,25 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
         generateFileData(ztd, mod);
 
         // ------------------------------------------------------------------- Set the category for the mod
-        if (contentModsDetected > 0) {
-            QString category = determineCategory(entryPoints);
-            mod.setCategory(category);
-        } else {
-            mod.setCategory("Not Assigned");
-        }
+        QString category = determineCategory(entryPoints);
+        mod.setCategory(category);
 
         // ------------------------------------------------------------------- Set the tags for the mod
-        if (contentModsDetected > 0) {
+        if (isCollection) {
             QStringList tags = generateTagsFromConfig(meta);
             mod.setTags(tags);
+        } else if (isSingleMod) {
+            PConfigMgr cfg(nullptr, entryPoints[0]);
+            QStringList tags = generateTagsFromConfig(cfg);
+            mod.setTags(tags);
         } else {
-            mod.setTags(QStringList() << "Misc" << "Not Assigned");
+            mod.setTags({}); // no tags found
         }
 
         // ------------------------------------------------------------------- Set mod status flags
         mod.setEnabled(true);
         mod.setSelected(false);
+        mod.setListed(true); 
 
         // ------------------------------------------------------------------- Set the icon paths for the mod
         QStringList iconPaths;
@@ -204,127 +197,51 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
                 epMod.setSelected(false);
                 epMod.setListed(false); // since this is a collection item, we don't want to show it in the modlist
 
-                QStringList aniPaths = getIconAniPaths(epConfig, epCategory);
-                QStringList iconPaths = getIconPaths(aniPaths, ztdFile);
+                QStringList epIconPaths = getIconPaths(entryPoint, ztd);
+                if (!epIconPaths.isEmpty()) {
+                    epMod.setIconPaths(epIconPaths);
+                } else {
+                    epMod.setIconsPaths({});
+                }
+
+                // get the description and title from the config file
+                QString epDescription = determineDescription(epConfig, epCategory);
+                QString epTitle = determineTitle(epConfig, epCategory);
+
+                epMod.setDescription(epDescription);
+                epMod.setTitle(epTitle);
             }
-        }
-
-
-        // Check if config exists
-        if (!foundMeta) {
-            qDebug() << "No meta config found in ztd: " << ztd;
-
-            // See if we can fill in the blanks
-            // TODO: decouple this section into its own entitytype class
-            // that reads in the config and determines values
-
-            if (contentModsDetected > 0) {
-                // The ani paths are the configuration files that contain the paths to the graphics
-                QMap<QStringList, QString> iconPaths;
-                for (const PFileData &entryPoint : entryPoints) {
-
-                    // --------------------- Get Type, Category, and determine Icon paths ---------------------
-                    // Get the type
-                    PConfig config(nullptr, entryPoint);
-                    QString type = config.getValue("Type", "Global").toString(); // this is usually the "codename" of the mod
-                    if (type.isEmpty()) {
-                        // otherwise type is the filename of the entrypoint
-                        type = entryPoint.filename.split(".").first();
-                    }
-                    // Get the category
-                    QString category = determineCategory(entryPoint);
-
-                    // Get icons and their generated paths. Graphics will be saved in the following format:
-                    // type + "_" + <number> + "_" + aniFileName + ".png"
-                    // ex: "gsblstnd_1_SE.png"
-                    if (category == "Building" || category == "Scenery") {
-                        // get icon path for objects
-                        QString aniPath = config.getValue("Icon", "Icon").toString();
-                        if (!aniPath.isEmpty()) {
-                            qDebug() << "ERROR: ani path is empty for: " << entryPoint.path;
-                        } else {
-                            QString graphicPath = PGraphics::generateGraphicsAsPng(iconPath, ztd);
-
-                            PFile aniFile(ztd);
-                            PFileData aniData = aniFile.read(aniPath);
-                            PConfig aniConfig(nullptr, aniData);
-                            QStringList iconPaths = PGraphics::generateGraphicsAsPng(aniPaths, type);
-                            iconPaths.insert(iconPaths, aniPath);
-                        }
-                    }
-                    else if (category == "Animals") {
-                        // get icon path for animals
-                        QString aniPathF = config.getValue("f/Icon", "Icon").toString();
-                        QString aniPathM = config.getValue("m/Icon", "Icon").toString();
-                        if (!aniPathF.isEmpty()) {
-                            qDebug() << "ERROR: ani path is empty for: " << entryPoint.path;
-                        } else {
-                            QString graphicPathF = PGraphics::generateGraphicsAsPng(iconPath, ztd);
-                            iconPaths.insert(iconPath, graphicPathF);
-                        }
-                        if (!aniPathM.isEmpty()) {
-                            qDebug() << "ERROR: ani path is empty for: " << entryPoint.path;
-                        } else {
-                            QString graphicPathM = PGraphics::generateGraphicsAsPng(iconPath, ztd);
-                            iconPaths.insert(iconPath, graphicPathM);
-                        }
-                    } 
-
-                    // ---------------------- Get Description, Title -----------------------
-
-                    if (category == "Animals") {}
-                        QString description = config.getValue("cLongHelp", "1033").toString();
-                        QString title = config.getValue("cName", "1033").toString();
-                        QString category = determineCategory(config);
-                        if (category.isEmpty()) {
-                            category = "Unknown";
-                        }
-                        QStringList tags = generateTagsFromConfig(config);
-                    } else {
-                        // TODO: For misc mods that have a cName, we can get the name and description
-                        // from the binary language file. Will need to find a library to parse the binary.
-                        QString description = "";
-                        QString title = ""
-                        QString category = determineCategory(config);
-                        if (category.isEmpty()) {
-                            category = "Unknown";
-                        }
-                    }
-
-                    // ---------------------- File meta data -----------------------
-                    QString fileSize = QFile(ztd).size();
-                    QString fileDate = QFileInfo(ztd).lastModified().toString("yyyy-MM-dd hh:mm:ss");
-                    QString fileName = QFileInfo(ztd).fileName();
-                    QString filePath = QFileInfo(ztd).absoluteFilePath();
-                    QString fileLocation = QFileInfo(ztd).absolutePath();
-
-                    // --------------------- Create mod item ---------------------
-                    PModItem mod;
-                    mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
-                    mod.setTitle(title);
-                    mod.setAuthors({"Unknown"});
-                    mod.setDescription(description);
-                    mod.setEnabled(true);
-                    mod.setCategory(category);
-                    mod.setTags(tags);
-                    mod.setVersion("1.0.0");
-                    mod.setFilename(fileName);
-                    mod.setCollection(fileName);
-                    mod.setLocation(fileLocation);
-                    mod.setIconPaths(iconPaths);
-                    mod.setOGLocation(filePath);
-                    mod.setSelected(false);
-                    mod.setDependencyId(QUuid::createUuid().toString(QUuid::WithoutBraces));
-                    mod.setFileSize(fileSize);
-                    mod.setFileDate(fileDate);
-                    mod.setFilePath(filePath);
-                    mod.setFileLocation(fileLocation);
-                    mod.setFileName(fileName);
-
-                    insertMod(mod);
+        } else {
+            // if it's not a collection, then we can just set the icon paths from the entrypoints
+            for (const PFileData &entryPoint : entryPoints) {
+                PConfigMgr epConfig(nullptr, entryPoint);
+                QStringList epIconPaths = getIconPaths(entryPoint, ztd);
+                if (!epIconPaths.isEmpty()) {
+                    mod.setIconPaths(epIconPaths);
+                } else {
+                    mod.setIconsPaths({});
                 }
             }
         }
+
+        insertMod(mod); // insert the mod into the database
+
+        if (collectionMods.size() > 0) {
+            for (const PModItem &collectionMod : collectionMods) {
+                insertMod(collectionMod); // insert the collection mods into the database
+            }
+        }
+
+
+                    // // ---------------------- Get Description, Title -----------------------
+
+                    // if (category == "Animals") {}
+                    //     QString description = config.getValue("cLongHelp", "1033").toString();
+                    //     QString title = config.getValue("cName", "1033").toString();
+                    //     QString category = determineCategory(config);
+                    //     if (category.isEmpty()) {
+                    //         category = "Unknown";
+                    //     }
     }
 
     // // close database
@@ -335,6 +252,10 @@ void PModDal::loadModsFromFile(const QStringList &ztdList)
 // Determine the category of the mod based on the file extension and path
 // Possible categories are: Building, Scenery, Animals, misc, Unknown
 QString PModDal::determineCategory(const PFileData &fileData) {
+    if (fileData.size() == 0) {
+        return "Unknown";
+    }
+
     switch (fileData.ext) {
         case "ucb":
             return "Building";
@@ -380,16 +301,6 @@ PModItem PModDal::buildModFromToml(const PConfigMgr &config) {
     else {
         mod.setDependencyId("None");
     }
-
-    mod.setListed(true);
-
-    mod.setIconPaths({}); // this will be determined later
-
-    mod.setCurrentLocation(ztdPath); // renamed from setOGLocation
-    mod.setDisabledLocation(ztdPath); // new field for disabled location
-    mod.setOriginalLocation(ztdPath); // new field for original location
-
-
     mod.setDependencyId(config.getValue("dep_id").value_or("None"));
 
     return mod;
@@ -476,6 +387,13 @@ QStringList PModDal::generateTagsFromConfig(const PConfig &config) {
     return tags;
 }
 
+QStringList PModDal::getIconPaths(const PConfigMgr &config, const QString &category, const PFile &ztd) {
+    QStringList iconPaths;
+    QStringList aniPaths = getIconAniPaths(config, category);
+    QStringList iconPaths = getIconPaths(aniPaths, ztd);
+    return iconPaths;
+}
+
 // TODO: Expand this to include more categories
 QStringList PModDal::getIconAniPaths(const PConfigMgr &config, const QString &category) {
     QStringList iconAniPaths;
@@ -505,7 +423,7 @@ QStringList PModDal::getIconPaths(const QStringList &aniPaths, const PFile &ztd)
 
     for (const QString &aniPath : aniPaths) {
         // get the ani path and generate the icon path
-        QString iconPath = buildIconPath(aniConfig);
+        QString iconPath = buildGraphicPath(aniConfig);
         iconPaths.append(iconPath);
     }
 
@@ -520,15 +438,14 @@ QStringList PModDal::getIconPaths(const QStringList &aniPaths, const PFile &ztd)
     return pngPaths;
 }
 
-QString PModDal::buildIconPath(const PConfigMgr &aniFile) {
-    // ani files provide the directory structure in key/value pairs
-    // [animation]
-    // dir0 = "animals"
-    // dir1 = "ferret"
-    // dir2 = "other"
-    // animation = "n" or "N"
-    // the number of dirN keys isn't guaranteed to be the same for all ani files
-
+// ani files provide the directory structure in key/value pairs
+// [animation]
+// dir0 = "animals"
+// dir1 = "ferret"
+// dir2 = "other"
+// animation = "n" or "N"
+// the number of dirN keys isn't guaranteed to be the same for all ani files
+QString PModDal::buildGraphicPath(const PConfigMgr &aniFile) {
     // clamp limit to 10 directory parts
     QString iconPath;
     for (int i = 0; i < 10; i++) {

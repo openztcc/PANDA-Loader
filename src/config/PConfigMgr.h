@@ -56,8 +56,6 @@ public:
     Q_INVOKABLE QVariant getValue(const QString &section, const QString &key);
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
     QStringList getAllKeys(const QString &section = "") const;
-    static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
-    static bool removeMetaConfig(const QString &ztdFilePath);
 
     // setters and getters for QProperties
     int isDirty() const { return m_dirty; }
