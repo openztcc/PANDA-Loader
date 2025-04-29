@@ -20,7 +20,7 @@ class PFileSystem : public IVirtualFilesystem {
         // file operations - relative to root path
         QSharedPointer<PFileData> read(const QString &filePath) override;
         QVector<QSharedPointer<PFileData>> readAll(const QStringList& validFolders, const QStringList &validExts) override { return {}; }; // TODO: implement
-        bool write(QSharedPointer<PFileData> data) override;
+        bool write(const QSharedPointer<PFileData> &data) override;
         bool remove(const QStringList &itemsToRemove) override;
         bool remove(const QString &itemToRemove);
         bool exists(const QString &filePath) override;

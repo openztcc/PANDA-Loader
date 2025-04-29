@@ -19,7 +19,7 @@ concerns itself with the mods list and operations over other classes from the UI
 #include "PApeFile.h"
 
 // Models
-#include "PModList.h"
+#include "PModLoader.h"
 #include "PModItem.h"
 
 // Third-party includes

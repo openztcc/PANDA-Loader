@@ -34,7 +34,7 @@ public:
     // file operations - relative to root path
     QSharedPointer<PFileData> read(const QString &filePath);
     QVector<QSharedPointer<PFileData>> readAll(const QStringList& validFolders = {}, const QStringList &validExts = {});
-    bool write(const PFileData &data);
+    bool write(const QSharedPointer<PFileData> &data);
     bool remove(const QStringList &filesToRemove);
     bool remove(const QString &fileToRemove);
     bool exists(const QString &filePath);

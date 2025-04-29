@@ -33,9 +33,11 @@ public:
     QStringList generateTagsFromConfig(const QSharedPointer<PConfigMgr> &config);
     QString determineCategory(const QSharedPointer<PFileData> &fileData);
     QStringList getIconPngPaths(const QSharedPointer<PConfigMgr> &config, const QSharedPointer<PFileData> &entryPoint, const QString &category, PFile &ztd);
-    QStringList getIconAniPaths(const QSharedPointer<PConfigMgr> &config, const QString &category);
-    QStringList getIconPaths(const QStringList &aniPaths, const QSharedPointer<PFile> &ztd);
+    QMap<QString, QString> getIconAniPaths(const QSharedPointer<PConfigMgr> &config, const QString &category);
+    QStringList getIconPaths(const QStringList &aniPaths, const QSharedPointer<PFile> &ztd,
+        const QSharedPointer<PConfigMgr> &entryPointConfig, const QString &category);
     QString buildGraphicPath(const QSharedPointer<PConfigMgr> &aniFile);
+    QString buildIconFileName(const QSharedPointer<PConfigMgr> &entryPointConfig, const QString &category, const QString &aniFileName);
 
 private:
     QSharedPointer<PModDataAccess> m_dataAccess;

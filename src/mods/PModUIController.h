@@ -34,7 +34,7 @@ public:
     explicit PModUIController(QObject *parent = nullptr, QStringList ztdList = QStringList());
 
     // Model object
-    PDataList<PModItem> model() const { return m_mods_list; }
+    const PDataList<QSharedPointer<PModItem>>& model() const { return m_mods_list; }
 
     // Mod list properties
     int size(const QModelIndex &parent = QModelIndex()) const;
@@ -55,9 +55,9 @@ signals:
     void currentModChanged();
     void selectedModsListUpdated(QList<QSharedPointer<PModItem>> mods);
 private:
-    PDataList<PModItem> m_mods_list;
+    PDataList<QSharedPointer<PModItem>> m_mods_list;
     QStringList m_ztdList;
-    QList<QSharedPointer<PModItem>> m_selected_mods;
+    QVector<QSharedPointer<PModItem>> m_selected_mods;
     PModDataAccess m_dataAccess;
     PModLoader m_loader;
     QMap<QString, QVariant> m_current_filters;

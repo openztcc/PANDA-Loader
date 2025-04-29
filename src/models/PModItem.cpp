@@ -135,7 +135,7 @@ PModItem::PModItem(QObject *parent, const QSqlQuery &query) : QObject(parent)
 
     // Mod flags
     setEnabled(query.value("enabled").toBool());
-    setIsCollection(query.value("is_collection").toString());
+    setIsCollection(query.value("is_collection").toBool());
     setSelected(query.value("is_selected").toBool());
     setListed(query.value("listed").toBool());
 

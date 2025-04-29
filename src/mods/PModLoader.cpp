@@ -272,29 +272,32 @@ QStringList PModLoader::getIconPngPaths(const QSharedPointer<PConfigMgr> &config
 }
 
 // TODO: Expand this to include more categories
-QStringList PModLoader::getIconAniPaths(const QSharedPointer<PConfigMgr> &config, const QString &category) {
-    QStringList iconAniPaths;
+QMap<QString, QString> PModLoader::getIconAniPaths(const QSharedPointer<PConfigMgr> &config, const QString &category) {
+    QMap<QString, QString> iconAniPaths;
     if (category == "Animals") {
         // animals have 1-2 icon ani paths
         // [m/Icon] and [f/Icon]. Sometimes only one exists.
-        QString aniPathF = config->getValue("f/Icon", "Icon").toString();
-        QString aniPathM = config->getValue("m/Icon", "Icon").toString();
+        const QString &aniPathF = config->getValue("f/Icon", "Icon").toString();
+        const QString &aniPathM = config->getValue("m/Icon", "Icon").toString();
         if (!aniPathF.isEmpty()) {
-            iconAniPaths.append(aniPathF);
+            iconAniPaths.insert(aniPathF, "female");
         }
         if (!aniPathM.isEmpty()) {
-            iconAniPaths.append(aniPathM);
+            iconAniPaths.insert(aniPathM, "male");
         }
-        return iconAniPaths;
     } else if (category == "Building" || category == "Scenery") {
         // objects have just 1 icon ani path
-        return {config->getValue("Icon", "Icon").toString()};
+        const QString &iconPath = config->getValue("Icon", "Icon").toString();
+        const QString &fileName = iconPath.split("/").last();
+        iconAniPaths.insert(iconPath, fileName);
     } else {
-        return QStringList();
+        return {};
     }
+    return iconAniPaths;
 }
 
-QStringList PModLoader::getIconPaths(const QStringList &aniPaths, const QSharedPointer<PFile> &ztd) {
+QStringList PModLoader::getIconPaths(const QStringList &aniPaths, const QSharedPointer<PFile> &ztd,
+                                     const QSharedPointer<PConfigMgr> &entryPointConfig, const QString &category) {
     QVector<QSharedPointer<PFileData>> graphicFileData;
 
     for (const QString &aniPath : aniPaths) {
@@ -303,6 +306,7 @@ QStringList PModLoader::getIconPaths(const QStringList &aniPaths, const QSharedP
         QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData);
 
         QString aniFileName = aniPath.split('/').last(); // get the ani file name from the rel path
+        QString filename = buildIconFileName(entryPointConfig, category, aniFileName);
 
         QString iconPath = buildGraphicPath(aniConfig);
         iconPaths.append(iconPath);
@@ -317,6 +321,13 @@ QStringList PModLoader::getIconPaths(const QStringList &aniPaths, const QSharedP
         }
     }
     return pngPaths;
+}
+
+QString buildIconFileName(const QSharedPointer<PConfigMgr> &entryPointConfig, const QString &category, const QString &aniFileName) {
+    QString cat = category.toLower();
+    if (cat == "animals") {
+        QString animalSex
+    }
 }
 
 // ani files provide the directory structure in key/value pairs

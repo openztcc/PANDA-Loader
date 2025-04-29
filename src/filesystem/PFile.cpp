@@ -28,7 +28,7 @@ QVector<QSharedPointer<PFileData>> PFile::readAll(const QStringList& validFolder
     return m_file->readAll(validFolders, validExts);
 }
 
-bool PFile::write(const PFileData &data) {
+bool PFile::write(const QSharedPointer<PFileData> &data) {
     // Write the file to the virtual filesystem
     return m_file->write(data);
 }

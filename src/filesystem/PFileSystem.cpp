@@ -32,7 +32,7 @@ QSharedPointer<PFileData> PFileSystem::read(const QString &filePath) {
     return fileData;
 }
 
-bool PFileSystem::write(QSharedPointer<PFileData> data) {
+bool PFileSystem::write(const QSharedPointer<PFileData> &data) {
     QString filePath = data->path + "/" + data->filename;
     QSharedPointer<QFile> file = openFile(filePath, QIODevice::WriteOnly);
     file->write(data->data);

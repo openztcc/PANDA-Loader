@@ -9,7 +9,7 @@
 // Project
 #include "PModController.h"
 #include "PModItem.h"
-#include "PModList.h"
+#include "PModLoader.h"
 #include "PConfigMgr.h"
 
 int main(int argc, char *argv[])

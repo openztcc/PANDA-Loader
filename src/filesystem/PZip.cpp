@@ -168,8 +168,8 @@ QVector<QSharedPointer<PFileData>> PZip::readAll(const QStringList &validDirs, c
 }
 
 // Write a file to the zip archive given a PFileData object
-// 
-bool PZip::write(QSharedPointer<PFileData> data) {
+//
+bool PZip::write(const QSharedPointer<PFileData> &data) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdAdd);
 
     // path to write to
@@ -288,7 +288,7 @@ bool PZip::remove(const QString &itemToRemove) {
 
 // Check if a file exists in the zip archive
 bool PZip::exists(const QString &relFilePath) {
-    if (read(relFilePath).data.isEmpty()) {
+    if (read(relFilePath)->data.isEmpty()) {
         qDebug() << "File does not exist in zip:" << relFilePath;
         return false;
     }
@@ -300,8 +300,8 @@ bool PZip::exists(const QString &relFilePath) {
 // usage: bool success = zip.move("path/to/file.txt", "new/path/to/file.txt");
 // note: this will copy the file to the new location and remove the old one
 bool PZip::move(const QString &filePath, const QString &newLocation) {
-    PFileData updatedFile = read(filePath);
-    updatedFile.path = newLocation;
+    QSharedPointer<PFileData> updatedFile = read(filePath);
+    updatedFile->path = newLocation;
     if (!write(updatedFile)) {
         qDebug() << "Failed to write file to zip:" << filePath;
         return false;
@@ -323,12 +323,12 @@ bool PZip::copy(const QString &filePath, const QString &newLocation) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
     QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::ReadOnly);
 
-    PFileData fileData;
+    QSharedPointer<PFileData> fileData = QSharedPointer<PFileData>::create();
     QByteArray data = file->readAll();
-    fileData.data = data;
-    fileData.filename = file->getFileName();
-    fileData.ext = file->getFileName().section('.', -1, -1);
-    fileData.path = file->getFileName().section('/', 0, -2);
+    fileData->data = data;
+    fileData->filename = file->getFileName();
+    fileData->ext = file->getFileName().section('.', -1, -1);
+    fileData->path = file->getFileName().section('/', 0, -2);
     file->close();
     zip->close();
 

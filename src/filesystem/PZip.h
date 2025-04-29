@@ -24,8 +24,8 @@ class PZip : public IVirtualFilesystem {
 
         // file operations - relative to root path
         QSharedPointer<PFileData> read(const QString &filePath) override;
-        QVector<QSharedPointer<PFileData>> readAll(const QStringList &validDirs = {}, const QStringList &validExts = {});
-        bool write(QSharedPointer<PFileData> data) override;
+        QVector<QSharedPointer<PFileData>> readAll(const QStringList &validDirs = {}, const QStringList &validExts = {}) override;
+        bool write(const QSharedPointer<PFileData> &data) override;
         bool remove(const QStringList &itemsToRemove) override;
         bool remove(const QString &itemToRemove);
         bool exists(const QString &filePath) override;
