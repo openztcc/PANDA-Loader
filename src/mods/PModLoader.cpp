@@ -158,7 +158,6 @@ QString PModLoader::determineCategory(const PFileData &fileData) {
     } else {
             return "Unknown";
     }
-    }
 }
 
 QList<PModItem> PModLoader::buildCollectionMods(QList<PFileData> entryPoints, PModItem &mod) {
@@ -269,7 +268,7 @@ QStringList PModLoader::generateTagsFromConfig(PConfigMgr &config) {
     return tags;
 }
 
-QStringList PModLoader::getIconPngPaths(PConfigMgr &config, const QString &category, const PFile &ztd) {
+QStringList PModLoader::getIconPngPaths(PConfigMgr &config, const QString &category, PFile &ztd) {
     QStringList aniPaths = getIconAniPaths(config, category);
     QStringList iconPaths = getIconPaths(aniPaths, ztd);
     return iconPaths;
@@ -313,7 +312,7 @@ QStringList PModLoader::getIconPaths(const QStringList &aniPaths, PFile &ztd) {
     QStringList pngPaths;
     for (const QString &path : iconPaths) {
         // get the ani path and generate the icon path
-        QStringList pngs = PGraphics::generateGraphicsAsPng(iconPaths);
+        QStringList pngs = PApeFile::generateGraphicsAsPng(iconPaths);
         for (const QString &png : pngs) {
             pngPaths.append(png);
         }

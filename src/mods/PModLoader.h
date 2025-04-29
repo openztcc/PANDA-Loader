@@ -8,6 +8,8 @@
 #include "PDatabase.h"
 #include "PModQueries.h"
 #include "PFileData.h"
+#include "PConfigMgr.h"
+#include "PApeFile.h"
 
 class PModLoader : public QObject
 {
@@ -23,6 +25,10 @@ public:
     Q_INVOKABLE void loadModsFromFile(const QStringList &filePath);
 
     QString determineCategory(const PFileData &fileData);
+    QStringList getIconPngPaths(PConfigMgr &config, const QString &category, PFile &ztd);
+    QStringList getIconAniPaths(PConfigMgr &config, const QString &category);
+    QStringList getIconPaths(const QStringList &aniPaths, PFile &ztd);
+    QString buildGraphicPath(PConfigMgr &aniFile);
 
 };
 
