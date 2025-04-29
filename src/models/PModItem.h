@@ -4,6 +4,7 @@
 #include <qqml.h>
 #include <QString>
 #include <QtQml/qqmlregistration.h>
+#include <QSqlQuery>
 
 // This class contains all meta data in context of a single mod item in a QAbstractListModel
 
@@ -55,7 +56,7 @@ public:
         const QString &id, const QString &depId, const QString &filename,
         const QString &location, const QStringList &iconpaths, const QString &oglocation, 
         bool selected, QObject *parent = nullptr);
-    PModItem(SqlQuery &query);
+    PModItem(QObject *parent = nullptr, const QSqlQuery &query = QSqlQuery());
         
     int modIndex() const;
     void setmodIndex(int newModIndex);
@@ -111,7 +112,7 @@ public:
     }
 
     QVariant getData(int role) const;
-    static QHash<int, QByteArray> roleNames() const;
+    static QHash<int, QByteArray> roleNames();
 
 signals:
     void modIndexChanged();

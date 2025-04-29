@@ -1,7 +1,7 @@
 #ifndef PDEPDAL_H
 #define PDEPDAL_H
 
-#include <QCore>
+#include <QObject>
 
 // Project
 #include "PDependency.h"

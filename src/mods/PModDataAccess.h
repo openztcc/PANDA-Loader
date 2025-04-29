@@ -17,6 +17,7 @@
 #include "PModItem.h"
 #include "PDatabase.h"
 #include "PModQueries.h"
+#include "PConfigMgr.h"
 
 class PModDataAccess : public QObject {
 
@@ -32,15 +33,15 @@ class PModDataAccess : public QObject {
             QVariant> &setFields, const QMap<QString, QVariant> &whereConditions);
         bool doesModExist(const QString &modId);
         QSqlQuery getAllMods();
-        QVector<QSharedPointer<PModItem>> searchMods(PDatabase::Operation operation, 
+        QVector<QSharedPointer<PModItem>> searchMods(Operation operation,
             const QString &propertyName, const QString &searchTerm);
         void loadModsFromFile(const QStringList &ztdList);
-        QString determineModCategory(const PConfig &config);
-        QStringList generateTagsFromConfig(const PConfig &config);
+        QString determineModCategory(const PConfigMgr &config);
+        QStringList generateTagsFromConfig(const PConfigMgr &config);
     private:
         PDatabase m_db;
         const QString m_dbName = "panda.padb";
-        PModList
+        // PModList
         QSharedPointer<PModItem> m_currentMod;
 
     };

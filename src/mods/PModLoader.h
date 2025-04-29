@@ -1,5 +1,5 @@
-#ifndef PMODLIST_H
-#define PMODLIST_H
+#ifndef PModLoader_H
+#define PModLoader_H
 
 // This is an implementation of the QAbstractListModel class and is only meant to
 // serve as 1) a wrapper around the PModItem class, and 2) a datastructure for the QML
@@ -19,7 +19,7 @@
 
 class PModItem;
 
-class PModList : public QAbstractListModel
+class PModLoader : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QObject* currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
@@ -29,10 +29,10 @@ class PModList : public QAbstractListModel
     Q_PROPERTY(QAbstractListModel* model READ model CONSTANT)
 public:
 
-    explicit PModList(QObject *parent = nullptr, QStringList ztdList = QStringList());
+    explicit PModLoader(QObject *parent = nullptr, QStringList ztdList = QStringList());
 
     // Model object
-    PModList* model() const { return m_model; }
+    PModLoader* model() const { return m_model; }
 
     // Mod list properties
     int size(const QModelIndex &parent = QModelIndex()) const;
@@ -62,4 +62,4 @@ private:
 
 };
 
-#endif // PMODLIST_H
+#endif // PModLoader_H

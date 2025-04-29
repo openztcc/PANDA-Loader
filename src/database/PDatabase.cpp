@@ -2,7 +2,7 @@
 
 
 // init all db structs
-PDatabase::PDatabase(const QString &dbPath, const QString &connection) : m_dbPath(dbPath) {
+PDatabase::PDatabase(const QString &dbPath, const QString &connection, const QStringList &tableQueries) : m_dbPath(dbPath) {
     // remove old connection
     if (QSqlDatabase::contains(m_dbPath)) {
         QSqlDatabase::removeDatabase(m_dbPath);
@@ -14,6 +14,8 @@ PDatabase::PDatabase(const QString &dbPath, const QString &connection) : m_dbPat
     if (!open()) {
         qDebug() << "Failed to open database";
     }
+
+    m_tableQueries = tableQueries;
 }
 
 PDatabase::~PDatabase() {
@@ -45,7 +47,7 @@ bool PDatabase::open() {
 
     if (isNewDatabase) {
         qDebug() << "Database is brand new, initializing tables...";
-        return createTables();
+        return createTables(m_tableQueries);
     }
 
     return true;
@@ -123,7 +125,7 @@ QSqlQuery PDatabase::returnQuery(const QString &query) {
 // usage: selectWhere("mods", {{"title", "Mod Title"}, {"enabled", true}}, {"title", OrderBy::Ascending})
 // TODO: add limit support later. currently don't see a need.
 QSqlQuery PDatabase::runOperation(Operation operation, const QString &table, const QMap<QString, QVariant> &conditions, 
-    const QPair &orderBy, const QString &groupBy, const QMap<QString, QVariant> &secondaryConditions) {
+    const QPair<QString, OrderBy> &orderBy, const QString &groupBy, const QMap<QString, QVariant> &secondaryConditions) {
     QSqlQuery query(m_db);
 
     if (conditions.isEmpty()) {
@@ -183,7 +185,7 @@ QString PDatabase::buildSelectQuery(const QString &table, const QMap<QString, QV
     queryStr += whereClauses.join(" AND "); // join with AND
 
     // if orderBy is not empty, add it to the query
-    if (!orderBy.isEmpty()) {
+    if (!orderBy.first.isEmpty()) {
         switch (orderBy.second) {
             case OrderBy::Ascending:
                 queryStr += " ORDER BY " + orderBy.first + " ASC";

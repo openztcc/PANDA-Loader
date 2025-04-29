@@ -14,7 +14,6 @@
 template <typename T>
 class PDataList : public QAbstractListModel
 {
-    Q_OBJECT
 public:
     PDataList(QObject *parent) : QAbstractListModel(parent) {}
 
@@ -29,7 +28,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const
     {
         qDebug () << "Fetching data for index: " << index.row() << ", role: " << role;
-        if (index.isValid() && index.row() >= 0 && index.row() < m_mods_list.length())
+        if (index.isValid() && index.row() >= 0 && index.row() < m_list.length())
         {
             QSharedPointer<T> item = m_list[index.row()];
             item->getData(role);

@@ -44,7 +44,7 @@ PModItem::PModItem(const QString &title, const QString &description, const QStri
     m_selected = false;
 }
 
-PModItem::PModItem(QObject *parent, SqlQuery &query) : QObject(parent)
+PModItem::PModItem(QObject *parent, const QSqlQuery &query) : QObject(parent)
 {
     m_index = 0;
     setTitle(query.value("title").toString());
@@ -277,7 +277,7 @@ QVariant PModItem::getData(int role) const
     }
 }
 
-QHash<int, QByteArray> PModItem::roleNames() const
+QHash<int, QByteArray> PModItem::roleNames()
 {
     QHash<int, QByteArray> roles;
 

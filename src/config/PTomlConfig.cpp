@@ -139,12 +139,12 @@ QStringList PTomlConfig::getAllKeys(const QString &section) {
 
     if (s == "") {
         for (const auto& [key, value] : m_toml) {
-            keys.append(QString::fromStdString(key));
+            keys.append(QString::fromStdString(key.data()));
         }
     } else {
         if (auto* settings = m_toml[s].as_table()) {
             for (const auto& [key, value] : *settings) {
-                keys.append(QString::fromStdString(key));
+                keys.append(QString::fromStdString(key.data()));
             }
         }
     }

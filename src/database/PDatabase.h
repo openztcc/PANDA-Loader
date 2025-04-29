@@ -29,7 +29,7 @@ class PDatabase : public QObject
 {
     Q_OBJECT
 public:
-    PDatabase(const QString &dbPath, const QString &connection = "default");
+    PDatabase(const QString &dbPath, const QString &connection = "default", const QStringList &tableQueries = {});
     ~PDatabase();
 
     bool open();
@@ -45,6 +45,7 @@ public:
 private:
     QSqlDatabase m_db;
     QString m_dbPath;
+    QStringList m_tableQueries;
 
     // helpers
     QString buildSelectQuery(const QString &table, const QMap<QString, QVariant> &conditions, 
