@@ -36,6 +36,8 @@ class PModDataAccess : public QObject {
         QVector<QSharedPointer<PModItem>> getAllMods(const OrderBy &orderBy = OrderBy::Ascending, const QPair<QString, QVariant> &exception = {});
         QVector<QSharedPointer<PModItem>> searchMods(Operation operation,
             const QString &propertyName, const QString &searchTerm);
+        QVector<QSharedPointer<PModItem>> searchMods(Operation operation,
+            const QMap<QString, QVariant> &conditions);
         void loadModsFromFile(const QStringList &ztdList);
     private:
         PDatabase m_db;

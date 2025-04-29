@@ -38,9 +38,9 @@ void PModUIController::reloadMod(int index)
 }
 
 // Updates the mod list based on the property (filter) and search term (value) for filtering and live search
-void PModUIController::searchMods(QString property, QString value) 
+void PModUIController::searchMods() 
 {
-    m_dataAccess.searchMods(Operation::Select, property, value);
+    m_mods_list.replaceList(m_dataAccess.searchMods(Operation::Select, m_current_filters));
 }
 
 // Removes a mod from the list and database

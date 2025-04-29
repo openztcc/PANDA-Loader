@@ -96,3 +96,15 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation
     }
     return modItems;
 }
+
+// Get search results as a list of strings
+QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation, const QMap<QString, QVariant> &conditions) {
+    QSqlQuery query = m_db.runOperation(operation, "mods", conditions);
+    QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
+
+    while (query.next()) {
+        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(query);
+        modItems.append(modItem);
+    }
+    return modItems;
+}

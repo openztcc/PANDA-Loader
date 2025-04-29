@@ -43,7 +43,7 @@ public:
 
     void loadMods();
     void reloadMod(int index);
-    Q_INVOKABLE void updateModList(QString property, QString value);
+    Q_INVOKABLE void searchMods();
     void deleteMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
 signals:
