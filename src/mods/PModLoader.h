@@ -24,6 +24,11 @@ public:
     // Load mods from a given file
     Q_INVOKABLE void loadModsFromFile(const QStringList &filePath);
 
+    QVector<QSharedPointer<PModItem>> buildCollectionMods(QList<PFileData> entryPoints, QSharedPointer<PModItem> mod, PFile &ztd);
+    QSharedPointer<PModItem> buildModFromToml(PConfigMgr &config);
+    QSharedPointer<PModItem> buildDefaultMod(const QString &ztdPath);
+    void generateFileData(const QString &filePath, QSharedPointer<PModItem> mod);
+    QStringList generateTagsFromConfig(PConfigMgr &config);
     QString determineCategory(const PFileData &fileData);
     QStringList getIconPngPaths(PConfigMgr &config, const QString &category, PFile &ztd);
     QStringList getIconAniPaths(PConfigMgr &config, const QString &category);

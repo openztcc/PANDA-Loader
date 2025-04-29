@@ -45,7 +45,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         // for these kinds of mods, the 'collection' will be the name of the mod
         // and every 'mod' within the collection will be delisted in the modlist.
         // instead, they will be show in the infopane.
-        PModItem mod(this);
+        QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(nullptr);
 
         bool isCollection = contentModsDetected > 1;
         bool isSingleMod = contentModsDetected == 1;
@@ -55,57 +55,58 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         if (foundMeta) { // meta.toml
             // Load the meta file and get the mod data
             toml::table config = toml::parse(metaData.data);
-            mod = buildModFromToml(config, ztd);
-            mod.setCollection(true); // set the collection flag   
+            mod = buildModFromToml(config);
+            mod->setCollection(true); // set the collection flag
         } else { // no meta file + no entrypoints. user will need to manually configure this mod.
             // if no meta file and no entrypoints, then this is a misc mod
-            mod = buildDefaultMod(ztd, entryPoints);
-            mod.setCollection(false);           
+            mod = buildDefaultMod(ztd);
+            mod->setCollection(false);
         }
 
         // ------------------------------------------------------------------- Insert file data (size, date, etc.)
         generateFileData(ztd, mod);
 
-        // ------------------------------------------------------------------- Set the category for the mod
-        QString category = determineModCategory(entryPoints);
-        mod.setCategory(category);
-
         // ------------------------------------------------------------------- Set the tags for the mod
         if (isCollection) {
             QStringList tags = generateTagsFromConfig(meta);
-            mod.setTags(tags);
+            mod->setTags(tags);
         } else if (isSingleMod) {
             PConfigMgr cfg(nullptr, entryPoints[0]);
             QStringList tags = generateTagsFromConfig(cfg);
-            mod.setTags(tags);
+            mod->setTags(tags);
         } else {
-            mod.setTags({}); // no tags found
+            mod->setTags({}); // no tags found
         }
 
         // ------------------------------------------------------------------- Set mod status flags
-        mod.setEnabled(true);
-        mod.setSelected(false);
-        mod.setListed(true); 
+        mod->setEnabled(true);
+        mod->setSelected(false);
+        mod->setListed(true);
 
         // ------------------------------------------------------------------- Set the icon paths for the mod
         QStringList iconPaths;
-        QList<PModItem> collectionMods;
+        QVector<QSharedPointer<PModItem>> collectionMods;
         if (isCollection) { // if it's a collection, we need to create mod listings for each mod in the entrypoint list
             // at this point, no entrypoint mod will have a meta.toml file, so most data will need to be be pulled from ini files
-            collectionMods = buildCollectionMods(entryPoints);
+            collectionMods = buildCollectionMods(entryPoints, mod, ztdFile);
+            mod->setCategory("Collection");
         } else {
             // if it's not a collection, then we can just set the icon paths from the entrypoint
             if (isSingleMod) {
                 PConfigMgr epConfig(nullptr, entryPoints[0]);
-                QStringList epIconPaths = getIconPngPaths(entryPoints[0], ztd);
+                // ------------------------------------------------------------------- Set the category for the mod
+                QString category = determineCategory(entryPoints[0]);
+                mod->setCategory(category);
+
+                QStringList epIconPaths = getIconPngPaths(epConfig, category, ztdFile);
                 if (!epIconPaths.isEmpty()) {
-                    mod.setIconPaths(epIconPaths);
+                    mod->setIconPaths(epIconPaths);
                 } else {
-                    mod.setIconPaths({});
+                    mod->setIconPaths({});
                 }
             } else {
                 // if no entrypoints, then set the icon paths to empty
-                mod.setIconPaths({});
+                mod->setIconPaths({});
             }
         }
 
@@ -160,100 +161,100 @@ QString PModLoader::determineCategory(const PFileData &fileData) {
     }
 }
 
-QList<PModItem> PModLoader::buildCollectionMods(QList<PFileData> entryPoints, PModItem &mod) {
-    QList<PModItem> collectionMods;
+QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(QList<PFileData> entryPoints, QSharedPointer<PModItem> mod, PFile &ztd) {
+    QVector<QSharedPointer<PModItem>> collectionMods;
     for (const PFileData &entryPoint : entryPoints) {
+        QSharedPointer<PModItem> epMod = QSharedPointer<PModItem>::create(nullptr);
         PConfigMgr epConfig(nullptr, entryPoint);
-        PModItem epMod;
         // first, copy some base mod data from the collection mod
-        epMod.setAuthors(mod.authors());
-        epMod.setId(mod.id());
-        epMod.setVersion(mod.version());
+        epMod->setAuthors(mod->authors());
+        epMod->setId(mod->id());
+        epMod->setVersion(mod->version());
 
-        epMod.setCollectionId(mod.id());
+        epMod->setCollectionId(mod->id());
 
-        epMod.setFilename(mod.filename());
-        epMod.setCurrentLocation(mod.currentLocation());
-        epMod.setOriginalLocation(mod.currentLocation());
-        epMod.setDisabledLocation("");
-        epMod.setFileSize(mod.fileSize());
+        epMod->setFilename(mod->filename());
+        epMod->setCurrentLocation(mod->currentLocation());
+        epMod->setOriginalLocation(mod->currentLocation());
+        epMod->setDisabledLocation("");
+        epMod->setFileSize(mod->fileSize());
 
         // generate the rest of the data
         QString epCategory = determineCategory(entryPoint);
-        epMod.setCategory(epCategory);
-        epMod.setTags(generateTagsFromConfig(entryPoint));
-        epMod.setEnabled(true);
-        epMod.setSelected(false);
-        epMod.setListed(false); // since this is a collection item, we don't want to show it in the modlist
+        epMod->setCategory(epCategory);
+        epMod->setTags(generateTagsFromConfig(epConfig));
+        epMod->setEnabled(true);
+        epMod->setSelected(false);
+        epMod->setListed(false); // since this is a collection item, we don't want to show it in the modlist
 
-        QStringList epIconPaths = getIconPaths(entryPoint, ztd);
-        if (!epIconPaths.isEmpty()) {
-            epMod.setIconPaths(epIconPaths);
+        QStringList epIconPngPaths = getIconPngPaths(epConfig, epCategory, ztd);
+        if (!epIconPngPaths.isEmpty()) {
+            epMod->setIconPaths(epIconPngPaths);
         } else {
-            epMod.setIconsPaths({});
+            epMod->setIconPaths({});
         }
 
         // get the description and title from the config file
         QString epDescription = determineDescription(epConfig, epCategory);
         QString epTitle = determineTitle(epConfig, epCategory);
 
-        epMod.setDescription(epDescription);
-        epMod.setTitle(epTitle);
+        epMod->setDescription(epDescription);
+        epMod->setTitle(epTitle);
         collectionMods.append(epMod);
     }
 
 }
 
 // Determine the category of the mod based on the meta.toml file in the root of the ztd
-PModItem PModLoader::buildModFromToml(PConfigMgr &config) {
-    PModItem mod;
+QSharedPointer<PModItem> PModLoader::buildModFromToml(PConfigMgr &config) {
+    QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(nullptr);
 
     // values from TOML file
-    mod.setId(config.getValue("mod_id", "").toString());
-    mod.setTitle(config.getValue("name", "").toString());
-    mod.setAuthors(config.getValue("authors", "").toStringList());
-    mod.setDescription(config.getValue("description", "").toString());
-    mod.setVersion(config.getValue("version", "").toString());
-    mod.setLink(config.getValue("link", "").toString());
+    mod->setId(config.getValue("mod_id", "").toString());
+    mod->setTitle(config.getValue("name", "").toString());
+    mod->setAuthors(config.getValue("authors", "").toStringList());
+    mod->setDescription(config.getValue("description", "").toString());
+    mod->setVersion(config.getValue("version", "").toString());
+    mod->setLink(config.getValue("link", "").toString());
 
     // if dependency table exists, then add the dependency id to the mod and add to db
     QMap<QString, QVariant> depTable = config.getValue("dependencies", "").toMap();
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
-            PDepDataAccess dependency(mod.id(), dep);
+            PDepDataAccess dependency(mod->id(), dep);
             if (dependency.isValid()) {
-                mod.setDependencyId(dependency.id());
+                mod->setDependencyId(dependency.id());
             }
         }
     }
     // if no dependency table, then set the dependency id to None
     else {
-        mod.setDependencyId("None");
+        mod->setDependencyId("None");
     }
-    mod.setDependencyId(config.getValue("dep_id").value_or("None"));
+    mod->setDependencyId(config.getValue("dep_id", "").toString());
 
     return mod;
 }
 
-PModItem PModLoader::buildDefaultMod(const QString &ztdPath) {
-    PModItem mod;
-    mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
-    mod.setTitle(QFileInfo(ztdPath).fileName());
-    mod.setAuthors({"Unknown"});
-    mod.setDescription("No description found");
-    mod.setVersion("1.0.0");
+QSharedPointer<PModItem> PModLoader::buildDefaultMod(const QString &ztdPath) {
+    QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(nullptr);
+    mod->setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
+    mod->setTitle(QFileInfo(ztdPath).fileName());
+    mod->setAuthors({"Unknown"});
+    mod->setDescription("No description found");
+    mod->setVersion("1.0.0");
 
     return mod;
 }
 
-void PModLoader::generateFileData(const QString &filePath, PModItem &mod) {
+void PModLoader::generateFileData(const QString &filePath, QSharedPointer<PModItem> mod) {
     QFileInfo fileInfo(filePath);
-    mod.setFilename(fileInfo.fileName());
-    mod.setFileSize(QString::number(fileInfo.size()));
-    mod.setFileDate(fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss"));
-    mod.setCurrentLocation(fileInfo.absolutePath());
-    mod.setOriginalLocation(fileInfo.absolutePath());
-    mod.setDisabledLocation("");
+    mod->setFilename(fileInfo.fileName());
+    mod->setFileSize(QString::number(fileInfo.size()));
+    mod->setFileDate(fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss"));
+    mod->setCurrentLocation(fileInfo.absolutePath());
+    mod->setOriginalLocation(fileInfo.absolutePath());
+    mod->setDisabledLocation("");
 }
 
 QStringList PModLoader::generateTagsFromConfig(PConfigMgr &config) {
