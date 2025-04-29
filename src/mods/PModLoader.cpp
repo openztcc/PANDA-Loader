@@ -20,14 +20,14 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         
         // File loading and parsing
         PFile ztdFile(this, ztd, FileType::Zip); // Load the ztd file
-        PFileData metaData = ztdFile.read("meta.toml"); // get the meta.toml at the root of the ztd (as a PFileData object)
-        bool foundMeta = !metaData.data.isEmpty(); // did we find a meta.toml file in the ztd?
+        QSharedPointer<PFileData> metaData = ztdFile.read("meta.toml"); // get the meta.toml at the root of the ztd (as a PFileData object)
+        bool foundMeta = !metaData->data.isEmpty(); // did we find a meta.toml file in the ztd?
 
         // load the meta file so we can parse it
-        PConfigMgr meta;
+        QSharedPointer<PConfigMgr> meta = QSharedPointer<PConfigMgr>::create();
         if (foundMeta) {
             // Load the meta file and get the mod data
-            meta.loadConfig(metaData.data);
+            meta->loadConfig(metaData->data);
         } else {
             qDebug() << "No meta config found in ztd: " << ztd;
         }
@@ -50,7 +50,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
 
         if (foundMeta) { // meta.toml
             // Load the meta file and get the mod data
-            PConfigMgr config(this, metaData.data);
+            PConfigMgr config(this, metaData->data);
             mod = buildModFromToml(config);
             mod->setIsCollection(true); // set the collection flag
         } else { // no meta file + no entrypoints. user will need to manually configure this mod.
@@ -67,7 +67,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
             QStringList tags = generateTagsFromConfig(meta);
             mod->setTags(tags);
         } else if (isSingleMod) {
-            PConfigMgr cfg(nullptr, entryPoints[0]);
+            QSharedPointer<PConfigMgr> cfg = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]);
             QStringList tags = generateTagsFromConfig(cfg);
             mod->setTags(tags);
         } else {
@@ -89,7 +89,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         } else {
             // if it's not a collection, then we can just set the icon paths from the entrypoint
             if (isSingleMod) {
-                PConfigMgr epConfig(nullptr, entryPoints[0]);
+                QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]);
                 // ------------------------------------------------------------------- Set the category for the mod
                 QString category = determineCategory(entryPoints[0]);
                 mod->setCategory(category);
@@ -133,12 +133,12 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
 
 // Determine the category of the mod based on the file extension and path
 // Possible categories are: Building, Scenery, Animals, misc, Unknown
-QString PModLoader::determineCategory(const PFileData &fileData) {
-    if (fileData.data.size() == 0) {
+QString PModLoader::determineCategory(const QSharedPointer<PFileData> &fileData) {
+    if (fileData->data.size() == 0) {
         return "Unknown";
     }
 
-    QString ext = fileData.ext;
+    QString ext = fileData->ext;
 
     if (ext == "ucb") {
             return "Building";
@@ -147,7 +147,7 @@ QString PModLoader::determineCategory(const PFileData &fileData) {
     } else if (ext == "uca") {
             return "Animals";
     } else if (ext == "ai") {
-        QStringList pathParts = fileData.path.split("/");
+        QStringList pathParts = fileData->path.split("/");
         // category is always the first part of the path
         QString category = pathParts[0];
         // return proper case for category
@@ -157,11 +157,11 @@ QString PModLoader::determineCategory(const PFileData &fileData) {
     }
 }
 
-QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(QList<PFileData> entryPoints, QSharedPointer<PModItem> mod, PFile &ztd) {
+QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(const QVector<QSharedPointer<PFileData>> &entryPoints, const QSharedPointer<PModItem> &mod, PFile &ztd) {
     QVector<QSharedPointer<PModItem>> collectionMods;
-    for (const PFileData &entryPoint : entryPoints) {
+    for (const QSharedPointer<PFileData> &entryPoint : entryPoints) {
         QSharedPointer<PModItem> epMod = QSharedPointer<PModItem>::create(nullptr);
-        PConfigMgr epConfig(nullptr, entryPoint);
+        QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoint);
         // first, copy some base mod data from the collection mod
         epMod->setAuthors(mod->authors());
         epMod->setId(mod->id());
@@ -183,7 +183,7 @@ QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(QList<PFileDat
         epMod->setSelected(false);
         epMod->setListed(false); // since this is a collection item, we don't want to show it in the modlist
 
-        QStringList epIconPngPaths = getIconPngPaths(epConfig, epCategory, ztd);
+        QStringList epIconPngPaths = getIconPngPaths(epConfig, entryPoint, epCategory, ztd);
         if (!epIconPngPaths.isEmpty()) {
             epMod->setIconPaths(epIconPngPaths);
         } else {
@@ -243,7 +243,7 @@ QSharedPointer<PModItem> PModLoader::buildDefaultMod(const QString &ztdPath) {
     return mod;
 }
 
-void PModLoader::generateFileData(const QString &filePath, QSharedPointer<PModItem> mod) {
+void PModLoader::generateFileData(const QString &filePath, QSharedPointer<PModItem> &mod) {
     QFileInfo fileInfo(filePath);
     mod->setFilename(fileInfo.fileName());
     mod->setFileSize(QString::number(fileInfo.size()));
@@ -253,8 +253,8 @@ void PModLoader::generateFileData(const QString &filePath, QSharedPointer<PModIt
     mod->setDisabledLocation("");
 }
 
-QStringList PModLoader::generateTagsFromConfig(PConfigMgr &config) {
-    QStringList tags = config.getAllKeys("member");
+QStringList PModLoader::generateTagsFromConfig(const QSharedPointer<PConfigMgr> &config) {
+    QStringList tags = config->getAllKeys("member");
 
     // Clean up the tags; format in proper case
     for (int i = 0; i < tags.size(); i++) {
@@ -265,20 +265,20 @@ QStringList PModLoader::generateTagsFromConfig(PConfigMgr &config) {
     return tags;
 }
 
-QStringList PModLoader::getIconPngPaths(PConfigMgr &config, const QString &category, PFile &ztd) {
+QStringList PModLoader::getIconPngPaths(const QSharedPointer<PConfigMgr> &config, const QSharedPointer<PFileData> &entryPoint, const QString &category, PFile &ztd) {
     QStringList aniPaths = getIconAniPaths(config, category);
     QStringList iconPaths = getIconPaths(aniPaths, ztd);
     return iconPaths;
 }
 
 // TODO: Expand this to include more categories
-QStringList PModLoader::getIconAniPaths(PConfigMgr &config, const QString &category) {
+QStringList PModLoader::getIconAniPaths(const QSharedPointer<PConfigMgr> &config, const QString &category) {
     QStringList iconAniPaths;
     if (category == "Animals") {
         // animals have 1-2 icon ani paths
         // [m/Icon] and [f/Icon]. Sometimes only one exists.
-        QString aniPathF = config.getValue("f/Icon", "Icon").toString();
-        QString aniPathM = config.getValue("m/Icon", "Icon").toString();
+        QString aniPathF = config->getValue("f/Icon", "Icon").toString();
+        QString aniPathM = config->getValue("m/Icon", "Icon").toString();
         if (!aniPathF.isEmpty()) {
             iconAniPaths.append(aniPathF);
         }
@@ -288,21 +288,21 @@ QStringList PModLoader::getIconAniPaths(PConfigMgr &config, const QString &categ
         return iconAniPaths;
     } else if (category == "Building" || category == "Scenery") {
         // objects have just 1 icon ani path
-        return {config.getValue("Icon", "Icon").toString()};
+        return {config->getValue("Icon", "Icon").toString()};
     } else {
         return QStringList();
     }
 }
 
-QStringList PModLoader::getIconPaths(const QStringList &aniPaths, PFile &ztd) {
+QStringList PModLoader::getIconPaths(const QStringList &aniPaths, const QSharedPointer<PFile> &ztd) {
     QVector<QSharedPointer<PFileData>> graphicFileData;
 
     for (const QString &aniPath : aniPaths) {
         // get the ani path and generate the icon path
-        PFileData aniData = ztd.read(aniPath);
-        PConfigMgr aniConfig(nullptr, aniData);
+        QSharedPointer<PFileData> aniData = ztd->read(aniPath);
+        QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData);
 
-        QString aniFileName = aniPath.section("/").last(); // get the ani file name from the rel path
+        QString aniFileName = aniPath.split('/').last(); // get the ani file name from the rel path
 
         QString iconPath = buildGraphicPath(aniConfig);
         iconPaths.append(iconPath);
@@ -326,12 +326,12 @@ QStringList PModLoader::getIconPaths(const QStringList &aniPaths, PFile &ztd) {
 // dir2 = "other"
 // animation = "n" or "N"
 // the number of dirN keys isn't guaranteed to be the same for all ani files
-QString PModLoader::buildGraphicPath(PConfigMgr &aniFile) {
+QString PModLoader::buildGraphicPath(const QSharedPointer<PConfigMgr> &aniFile) {
     // clamp limit to 10 directory parts
     QString iconPath;
     for (int i = 0; i < 10; i++) {
         QString dirKey = "dir" + QString::number(i);
-        QString dirValue = aniFile.getValue(dirKey, "animation").toString();
+        QString dirValue = aniFile->getValue(dirKey, "animation").toString();
         if (dirValue.isEmpty()) {
             break; // no more directories to add
         }
