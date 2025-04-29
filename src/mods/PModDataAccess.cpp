@@ -60,8 +60,29 @@ bool PModDataAccess::doesModExist(const QString &modId) {
 
 // TODO: update runOperation to handle select all queries so that user can potentially
 // use orderBy and groupBy to get all mods in a certain order or group
-QSqlQuery PModDataAccess::getAllMods() {
-    return m_db.returnQuery("SELECT * FROM mods ORDER BY title");
+QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const OrderBy &orderBy, const QPair<QString, QVariant> &exception) {
+    QString order;
+    if (orderBy == OrderBy::Ascending) {
+        order = "ASC";
+    } else if (orderBy == OrderBy::Descending) {
+        order = "DESC";
+    } else {
+        order = "ASC"; // def ascending
+    }
+
+    QSqlQuery query;
+    if (exception.isEmpty()) {
+        query = m_db.returnQuery("SELECT * FROM mods ORDER BY " + order);
+    } else { // return mods without the exception key/value
+        query = m_db.returnQuery("SELECT * FROM mods WHERE " + exception.first + " != " + exception.second.toString() + " ORDER BY " + order);
+    }
+
+    QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
+    while (query.next()) {
+        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(query);
+        modItems.append(modItem);
+    }
+    return modItems;
 }
 
 // Get search results as a list of strings

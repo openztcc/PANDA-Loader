@@ -33,12 +33,10 @@ class PModDataAccess : public QObject {
         bool updateMod(const QString &table, const QMap<QString, 
             QVariant> &setFields, const QMap<QString, QVariant> &whereConditions);
         bool doesModExist(const QString &modId);
-        QSqlQuery getAllMods();
+        QVector<QSharedPointer<PModItem>> getAllMods(const OrderBy &orderBy = OrderBy::Ascending, const QPair<QString, QVariant> &exception = {});
         QVector<QSharedPointer<PModItem>> searchMods(Operation operation,
             const QString &propertyName, const QString &searchTerm);
         void loadModsFromFile(const QStringList &ztdList);
-        QString determineModCategory(const PConfigMgr &config);
-        QStringList generateTagsFromConfig(const PConfigMgr &config);
     private:
         PDatabase m_db;
 

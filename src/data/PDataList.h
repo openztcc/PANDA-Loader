@@ -116,7 +116,7 @@ public:
     }
 
 private:
-    QList<QSharedPointer<T>> m_list;
+    QVector<QSharedPointer<T>> m_list;
 };
 
 #endif // PDataList_H
