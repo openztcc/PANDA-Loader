@@ -18,6 +18,7 @@
 #include "PDatabase.h"
 #include "PModQueries.h"
 #include "PConfigMgr.h"
+#include "PFile.h"
 
 class PModDataAccess : public QObject {
 
@@ -40,6 +41,7 @@ class PModDataAccess : public QObject {
         QStringList generateTagsFromConfig(const PConfigMgr &config);
     private:
         PDatabase m_db;
+
         const QString m_dbName = "panda.padb";
         // PModList
         QSharedPointer<PModItem> m_currentMod;

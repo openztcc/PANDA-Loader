@@ -22,7 +22,7 @@ PModItem::PModItem(const QString &title, const QString &description, const QStri
                    const QString &version, bool enabled, const QStringList &tags, const QString &category,
                    const QString &id, const QString &depId, const QString &filename,
                    const QString &location, const QStringList &iconpaths, const QString &oglocation,
-                   bool selected, QObject *parent)
+                   bool selected, bool listed, QObject *parent)
 
 : QObject(parent), 
     m_title(title),
@@ -37,11 +37,13 @@ PModItem::PModItem(const QString &title, const QString &description, const QStri
     m_iconpaths(iconpaths),
     m_dependency_id(depId),
     m_oglocation(oglocation),
-    m_selected(selected)
+    m_selected(selected),
+    m_listed(listed)
 {
     m_index = 0;
     m_ui_component = nullptr;
     m_selected = false;
+    m_listed = true;
 }
 
 PModItem::PModItem(QObject *parent, const QSqlQuery &query) : QObject(parent)
@@ -61,6 +63,7 @@ PModItem::PModItem(QObject *parent, const QSqlQuery &query) : QObject(parent)
     setOGLocation(query.value("oglocation").toString());
     setSelected(query.value("is_selected").toBool());
     setVersion(query.value("version").toString());
+    setListed(query.value("listed").toBool());
 }
 
 int PModItem::modIndex() const
@@ -239,6 +242,11 @@ void PModItem::setUIComponent(QObject* item)
     }
 }
 
+bool PModItem::listed() const
+{
+    return m_listed ? true : false;
+}
+
 QVariant PModItem::getData(int role) const
 {
     switch ((Role) role)
@@ -271,6 +279,8 @@ QVariant PModItem::getData(int role) const
             return selected();
         case ModVersionRole:
             return version();
+        case ModListedRole:
+            return listed();
         case ModObjectRole:
             qDebug() << "Returning mod object: " << title();
             return QVariant::fromValue(this); // return a whole mod object
@@ -296,6 +306,7 @@ QHash<int, QByteArray> PModItem::roleNames()
     roles[ModOgLocationRole] = "oglocation";
     roles[ModSelectedRole] = "selected";
     roles[ModVersionRole] = "version";
+    roles[ModListedRole] = "listed";
 
     return roles;
 }

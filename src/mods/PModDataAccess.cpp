@@ -1,7 +1,6 @@
 #include "PModDataAccess.h"
 
-PModDataAccess::PModDataAccess() {
-    m_db = PDatabase(QDir::homePath() + "/panda.padb", "ModDal");
+PModDataAccess::PModDataAccess() : m_db(PDatabase(QDir::homePath() + "/panda.padb", "ModDal")) {
     if (!m_db.open()) {
         qDebug() << "Failed to open database in PModDataAccess";
     }
@@ -25,19 +24,20 @@ bool PModDataAccess::insertMod(const PModItem &mod)
     params.insert(":oglocation", mod.oglocation());
     params.insert(":is_selected", mod.selected() ? 1 : 0);
     
-    return m_db.runQuery(m_insertModQuery, params);
+    return m_db.runQuery(PQueries::ModsInsertQuery, params);
 }
 
 bool PModDataAccess::deleteMod(const QString &table, const QMap<QString, QVariant> &conditions) {
-    QSqlQuery deletedMods = m_db.runOperation(PDatabase::Operation::Delete, table, conditions);
+    QSqlQuery deletedMods = m_db.runOperation(Operation::Delete, table, conditions);
     if (deletedMods.lastError().isValid()) {
         qDebug() << "Error deleting mod: " << deletedMods.lastError().text();
         return false;
     }
+    return true;
 }
 
 bool PModDataAccess::updateMod(const QString &table, const QMap<QString, QVariant> &setFields, const QMap<QString, QVariant> &whereConditions) {
-    QSqlQuery updatedMods = m_db.runOperation(PDatabase::Operation::Update, table, setFields, {}, "", whereConditions);
+    QSqlQuery updatedMods = m_db.runOperation(Operation::Update, table, setFields, {}, "", whereConditions);
     if (updatedMods.lastError().isValid()) {
         qDebug() << "Error updating mod: " << updatedMods.lastError().text();
         return false;
@@ -46,7 +46,7 @@ bool PModDataAccess::updateMod(const QString &table, const QMap<QString, QVarian
 }
 
 bool PModDataAccess::doesModExist(const QString &modId) {
-    QSqlQuery doesExist = m_db.runOperation(PDatabase::Operation::Select, "mods", {{"mod_id", modId}});
+    QSqlQuery doesExist = m_db.runOperation(Operation::Select, "mods", {{"mod_id", modId}});
     if (doesExist.lastError().isValid()) {
         qDebug() << "Error checking if mod exists: " << doesExist.lastError().text();
         return false;
@@ -65,8 +65,8 @@ QSqlQuery PModDataAccess::getAllMods() {
 }
 
 // Get search results as a list of strings
-QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(PDatabase::Operation operation, const QString &propertyName, const QString &searchTerm) {
-    QSqlQuery query = m_db.runOperation(operation, "mods", {propertyName, searchTerm});
+QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation, const QString &propertyName, const QString &searchTerm) {
+    QSqlQuery query = m_db.runOperation(operation, "mods", QMap<QString, QVariant>({propertyName, searchTerm}));
     QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
 
     while (query.next()) {
@@ -88,22 +88,22 @@ void PModDataAccess::loadModsFromFile(const QStringList &ztdList)
     for (const QString &ztd : ztdList)
     {
         // Check if ztd already exists in database
-        QVector<QSharedPointer<PModItem>> existingMods = searchMods(PDatabase::Operation::Select, "filename", QFileInfo(ztd).fileName());
+        QVector<QSharedPointer<PModItem>> existingMods = searchMods(Operation::Select, "filename", QFileInfo(ztd).fileName());
         if (!existingMods.isEmpty()) {
-            qDebug() << "ZTD already exists in database: " << filename;
+            qDebug() << "ZTD already exists in database: " << QFileInfo(ztd).fileName();
             continue; // skip mod
         }
         
         // File loading and parsing
-        PFile ztdFile(ztd); // Load the ztd file
+        PFile ztdFile(this, ztd, FileType::Zip); // Load the ztd file
         PFileData metaData = ztdFile.read("meta.toml"); // get the meta.toml at the root of the ztd (as a PFileData object)
-        bool foundMeta = !metaData.isEmpty(); // did we find a meta.toml file in the ztd?
+        bool foundMeta = !metaData.data.isEmpty(); // did we find a meta.toml file in the ztd?
 
         // load the meta file so we can parse it
         PConfigMgr meta;
         if (foundMeta) {
             // Load the meta file and get the mod data
-            meta.loadConfig(metaData.data());
+            meta.loadConfig(metaData.data);
         } else {
             qDebug() << "No meta config found in ztd: " << ztd;
         }
@@ -117,7 +117,7 @@ void PModDataAccess::loadModsFromFile(const QStringList &ztdList)
         // for these kinds of mods, the 'collection' will be the name of the mod
         // and every 'mod' within the collection will be delisted in the modlist.
         // instead, they will be show in the infopane.
-        PModItem mod;
+        PModItem mod(this);
 
         bool isCollection = contentModsDetected > 1;
         bool isSingleMod = contentModsDetected == 1;
@@ -126,7 +126,7 @@ void PModDataAccess::loadModsFromFile(const QStringList &ztdList)
 
         if (foundMeta) { // meta.toml
             // Load the meta file and get the mod data
-            toml::table config = toml::parse(metaData.data());
+            toml::table config = toml::parse(metaData.data);
             mod = buildModFromToml(config, ztd);
             mod.setCollection(true); // set the collection flag   
         } else { // no meta file + no entrypoints. user will need to manually configure this mod.
@@ -139,7 +139,7 @@ void PModDataAccess::loadModsFromFile(const QStringList &ztdList)
         generateFileData(ztd, mod);
 
         // ------------------------------------------------------------------- Set the category for the mod
-        QString category = determineCategory(entryPoints);
+        QString category = determineModCategory(entryPoints);
         mod.setCategory(category);
 
         // ------------------------------------------------------------------- Set the tags for the mod
@@ -276,16 +276,16 @@ QList<PModItem> PModDataAccess::buildCollectionMods(QList<PFileData> entryPoints
 }
 
 // Determine the category of the mod based on the meta.toml file in the root of the ztd
-PModItem PModDataAccess::buildModFromToml(const PConfigMgr &config) {
+PModItem PModDataAccess::buildModFromToml(PConfigMgr &config) {
     PModItem mod;
 
     // values from TOML file
-    mod.setId(config.getValue("mod_id").value_or("Unknown"));
-    mod.setTitle(config.getValue("name").value_or("Unknown"));
-    mod.setAuthors(config.getValue("authors").value_or({"Unknown"}));
-    mod.setDescription(config.getValue("description").value_or("No description found"));
-    mod.setVersion(config.getValue("version").value_or("1.0.0"));
-    mod.setLink(config.getValue("link").value_or("Unknown"));
+    mod.setId(config.getValue("mod_id", "").toString());
+    mod.setTitle(config.getValue("name", "").toString());
+    mod.setAuthors(config.getValue("authors", "").toStringList());
+    mod.setDescription(config.getValue("description", "").toString());
+    mod.setVersion(config.getValue("version", "").toString());
+    mod.setLink(config.getValue("link", "").toString());
 
     // if dependency table exists, then add the dependency id to the mod and add to db
     QMap<QString, QVariant> depTable = config.getValue("dependencies").value_or({});
@@ -319,7 +319,7 @@ PModItem PModDataAccess::buildDefaultMod(const QString &ztdPath) {
 
 void PModDataAccess::generateFileData(const QString &filePath, PModItem &mod) {
     QFileInfo fileInfo(filePath);
-    mod.setFileName(fileInfo.fileName());
+    mod.setFilename(fileInfo.fileName());
     mod.setFileSize(QString::number(fileInfo.size()));
     mod.setFileDate(fileInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss"));
     mod.setCurrentLocation(fileInfo.absolutePath());
@@ -339,14 +339,14 @@ QStringList PModDataAccess::generateTagsFromConfig(const PConfig &config) {
     return tags;
 }
 
-QStringList PModDataAccess::getIconPngPaths(const PConfigMgr &config, const QString &category, const PFile &ztd) {
+QStringList PModDataAccess::getIconPngPaths(PConfigMgr &config, const QString &category, const PFile &ztd) {
     QStringList aniPaths = getIconAniPaths(config, category);
     QStringList iconPaths = getIconPaths(aniPaths, ztd);
     return iconPaths;
 }
 
 // TODO: Expand this to include more categories
-QStringList PModDataAccess::getIconAniPaths(const PConfigMgr &config, const QString &category) {
+QStringList PModDataAccess::getIconAniPaths(PConfigMgr &config, const QString &category) {
     QStringList iconAniPaths;
     if (category == "Animals") {
         // animals have 1-2 icon ani paths
@@ -368,12 +368,14 @@ QStringList PModDataAccess::getIconAniPaths(const PConfigMgr &config, const QStr
     }
 }
 
-QStringList PModDataAccess::getIconPaths(const QStringList &aniPaths, const PFile &ztd) {
+QStringList PModDataAccess::getIconPaths(const QStringList &aniPaths, PFile &ztd) {
     QStringList iconPaths;
-    PConfigMgr aniConfig(nullptr, ztd);
 
     for (const QString &aniPath : aniPaths) {
         // get the ani path and generate the icon path
+        PFileData aniData = ztd.read(aniPath);
+        PConfigMgr aniConfig(nullptr, aniData);
+
         QString iconPath = buildGraphicPath(aniConfig);
         iconPaths.append(iconPath);
     }
@@ -396,7 +398,7 @@ QStringList PModDataAccess::getIconPaths(const QStringList &aniPaths, const PFil
 // dir2 = "other"
 // animation = "n" or "N"
 // the number of dirN keys isn't guaranteed to be the same for all ani files
-QString PModDataAccess::buildGraphicPath(const PConfigMgr &aniFile) {
+QString PModDataAccess::buildGraphicPath(PConfigMgr &aniFile) {
     // clamp limit to 10 directory parts
     QString iconPath;
     for (int i = 0; i < 10; i++) {
