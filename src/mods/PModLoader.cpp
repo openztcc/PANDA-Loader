@@ -19,8 +19,8 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         }
         
         // File loading and parsing
-        PFile ztdFile(this, ztd, FileType::Zip); // Load the ztd file
-        QSharedPointer<PFileData> metaData = ztdFile.read("meta.toml"); // get the meta.toml at the root of the ztd (as a PFileData object)
+        const QSharedPointer<PFile> ztdFile = QSharedPointer<PFile>::create(this, ztd, FileType::Zip); // Load the ztd file
+        QSharedPointer<PFileData> metaData = ztdFile->read("meta.toml"); // get the meta.toml at the root of the ztd (as a PFileData object)
         bool foundMeta = !metaData->data.isEmpty(); // did we find a meta.toml file in the ztd?
 
         // load the meta file so we can parse it
@@ -33,7 +33,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         }
 
         // Get a list of the entrypoints in the ztd file. These are always in ucb, uca, ucs, or ai format.
-        QVector<QSharedPointer<PFileData>> entryPoints = ztdFile.readAll({"animals/", "scenery/other/"}, {"ucb", "uca", "ucs", "ai"});
+        QVector<QSharedPointer<PFileData>> entryPoints = ztdFile->readAll({"animals/", "scenery/other/"}, {"ucb", "uca", "ucs", "ai"});
         int contentModsDetected = entryPoints.size();
 
         // if found meta file and more than 1 entrypoint, then this is 
@@ -157,7 +157,7 @@ QString PModLoader::determineCategory(const QSharedPointer<PFileData> &fileData)
     }
 }
 
-QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(const QVector<QSharedPointer<PFileData>> &entryPoints, const QSharedPointer<PModItem> &mod, PFile &ztd) {
+QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(const QVector<QSharedPointer<PFileData>> &entryPoints, const QSharedPointer<PModItem> &mod, const QSharedPointer<PFile> &ztd) {
     QVector<QSharedPointer<PModItem>> collectionMods;
     for (const QSharedPointer<PFileData> &entryPoint : entryPoints) {
         QSharedPointer<PModItem> epMod = QSharedPointer<PModItem>::create(nullptr);
@@ -265,9 +265,10 @@ QStringList PModLoader::generateTagsFromConfig(const QSharedPointer<PConfigMgr> 
     return tags;
 }
 
-QStringList PModLoader::getIconPngPaths(const QSharedPointer<PConfigMgr> &config, const QSharedPointer<PFileData> &entryPoint, const QString &category, PFile &ztd) {
-    QStringList aniPaths = getIconAniPaths(config, category);
-    QStringList iconPaths = getIconPaths(aniPaths, ztd);
+QStringList PModLoader::getIconPngPaths(const QSharedPointer<PConfigMgr> &config, const QSharedPointer<PFileData> &entryPoint, const QString &category, const QSharedPointer<PFile> &ztd) {
+    QMap<QString, QString> aniPaths = getIconAniPaths(config, category);
+    QString typeName = entryPoint->filename;
+    QStringList iconPaths = getIconPaths(aniPaths, ztd, typeName);
     return iconPaths;
 }
 
@@ -314,7 +315,7 @@ QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, con
         QString aniFileName = path.split('/').last(); // get the ani file name from the rel path
 
         QString graphicPath = buildGraphicPath(aniConfig);
-        QString pngPath = PApeFile::generateGraphicsAsPng(graphicPath, id + "_" + typeName + "_" + aniFileName);
+        QString pngPath = PApeFile::generateGraphicAsPng(graphicPath, id + "_" + typeName + "_" + aniFileName);
         pngPaths.append(pngPath);
     }
 
