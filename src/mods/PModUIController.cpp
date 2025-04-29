@@ -92,12 +92,18 @@ void PModUIController::updateModList(QString property, QString value)
 }
 
 // Removes a mod from the list and database
-void PModUIController::removeMod(int index)
+void PModUIController::deleteMod(int index)
 {
-    // remove mod from list
-    beginRemoveRows(QModelIndex(), index, index);
-    m_mods_list.removeAt(index);
-    endRemoveRows();
+    // delete from list
+    m_mods_list.removeItem(index);
+
+    // delete from database
+    QSharedPointer<PModItem> mod = m_mods_list.getItem(index);
+    if (mod) {
+        m_dataAccess.deleteMod("mods", {{"mod_id", mod->id()}});
+    } else {
+        qDebug() << "Mod not found in list: " << index;
+    }
 }
 
 // Adds a mod to the list and database
