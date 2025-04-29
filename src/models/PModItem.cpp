@@ -13,7 +13,7 @@ PModItem::PModItem(QObject *parent)
     m_category = "";
     m_tags = {""};
     m_iconpaths = QStringList();
-    m_location = "";
+    m_current_location = "";
     m_filename = "";
     m_dependency_id = "";
 }
@@ -61,7 +61,7 @@ PModItem::PModItem(
     // Mod flags
     m_enabled(enabled),
     m_selected(selected),
-    m_listed(listed)
+    m_listed(listed),
 
     // Categorization properties
     m_category(category),
@@ -77,7 +77,7 @@ PModItem::PModItem(
     m_iconpaths(iconpaths),
 
     // External properties
-    m_dependency_id(depId),
+    m_dependency_id(depId)
 {
     m_index = 0;
     m_ui_component = nullptr;
@@ -98,8 +98,8 @@ PModItem::PModItem(QObject *parent, const QSqlQuery &query) : QObject(parent)
     setFilename(query.value("filename").toString());
     setIconPaths(query.value("iconpaths").toString().split(", "));
     setDependencyId(query.value("dep_id").toString());
-    setLocation(query.value("location").toString());
-    setOGLocation(query.value("oglocation").toString());
+    setCurrentLocation(query.value("currentLocation").toString());
+    setOriginalLocation(query.value("originalLocation").toString());
     setSelected(query.value("is_selected").toBool());
     setVersion(query.value("version").toString());
     setListed(query.value("listed").toBool());
@@ -193,11 +193,6 @@ void PModItem::setEnabled(bool newModEnabled)
     emit modEnabledChanged();
 }
 
-bool PModItem::listed() const
-{
-    return m_listed ? true : false;
-}
-
 // ----------------------------------------------- Mod categorization
 
 QString PModItem::category() const
@@ -257,35 +252,6 @@ void PModItem::setFilename(const QString &newModFilename)
     m_filename = newModFilename;
     emit modFilenameChanged();
 }
-
-QString PModItem::originalLocation() const
-{
-    return m_oglocation.isEmpty() ? "Unknown" : m_oglocation;
-}
-
-void PModItem::setOriginalLocation(const QString &oglocation)
-{
-    if (m_original_location == oglocation)
-        return;
-    
-    m_original_location = oglocation;
-    emit modOriginalLocationChanged();
-}
-
-QString PModItem::disabledLocation() const
-{
-    return m_disabled_location.isEmpty() ? "Unknown" : m_disabled_location;
-}
-
-void PModItem::setDisabledLocation(const QString &disabledLocation)
-{
-    if (m_disabled_location == disabledLocation)
-        return;
-
-    m_disabled_location = disabledLocation;
-    emit modDisabledLocationChanged();
-}
-
 
 // ------------------------------------------------ Graphics properties
 

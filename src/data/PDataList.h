@@ -96,6 +96,11 @@ public:
         endResetModel();
     }
 
+    int size() const
+    {
+        return m_list.size();
+    }
+
 private:
     QList<QSharedPointer<T>> m_list;
 };

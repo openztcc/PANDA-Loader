@@ -52,7 +52,7 @@ public:
         ModAuthorRole,
         ModDescriptionRole,
         ModIdRole,
-        ModVersionRole
+        ModVersionRole,
         
         // Categorization properties
         ModCategoryRole,
@@ -158,8 +158,8 @@ public:
     void setCurrentLocation(const QString &newModLocation);
     QString filename() const;
     void setFilename(const QString &newModFilename);
-    QString originalLocation() const { return m_oglocation; }
-    void setOriginalLocation(const QString &oglocation) { m_oglocation = oglocation; }
+    QString originalLocation() const { return m_original_location; }
+    void setOriginalLocation(const QString &oglocation) { m_original_location = oglocation; }
     QString disabledLocation() const { return m_disabled_location; }
     void setDisabledLocation(const QString &disabledLocation) { m_disabled_location = disabledLocation; }
 

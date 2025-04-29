@@ -1,6 +1,6 @@
 #include "PDepDal.h"
 
-PDepDal::PDepDal(QObject *parent) : QObject(parent) {
+PDepDal::PDepDal(QObject *parent) {
     m_db = PDatabase();
     if (!m_db.openDatabase()) {
         qDebug() << "Failed to open database in PDepDal";
