@@ -33,7 +33,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         }
 
         // Get a list of the entrypoints in the ztd file. These are always in ucb, uca, ucs, or ai format.
-        QList<PFileData> entryPoints = ztdFile.readAll({"animals/", "scenery/other/"}, {"ucb", "uca", "ucs", "ai"});
+        QVector<QSharedPointer<PFileData>> entryPoints = ztdFile.readAll({"animals/", "scenery/other/"}, {"ucb", "uca", "ucs", "ai"});
         int contentModsDetected = entryPoints.size();
 
         // if found meta file and more than 1 entrypoint, then this is 
@@ -94,7 +94,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
                 QString category = determineCategory(entryPoints[0]);
                 mod->setCategory(category);
 
-                QStringList epIconPaths = getIconPngPaths(epConfig, category, ztdFile);
+                QStringList epIconPaths = getIconPngPaths(epConfig, entryPoints[0], category, ztdFile);
                 if (!epIconPaths.isEmpty()) {
                     mod->setIconPaths(epIconPaths);
                 } else {
@@ -295,12 +295,14 @@ QStringList PModLoader::getIconAniPaths(PConfigMgr &config, const QString &categ
 }
 
 QStringList PModLoader::getIconPaths(const QStringList &aniPaths, PFile &ztd) {
-    QStringList iconPaths;
+    QVector<QSharedPointer<PFileData>> graphicFileData;
 
     for (const QString &aniPath : aniPaths) {
         // get the ani path and generate the icon path
         PFileData aniData = ztd.read(aniPath);
         PConfigMgr aniConfig(nullptr, aniData);
+
+        QString aniFileName = aniPath.section("/").last(); // get the ani file name from the rel path
 
         QString iconPath = buildGraphicPath(aniConfig);
         iconPaths.append(iconPath);
@@ -309,7 +311,7 @@ QStringList PModLoader::getIconPaths(const QStringList &aniPaths, PFile &ztd) {
     QStringList pngPaths;
     for (const QString &path : iconPaths) {
         // get the ani path and generate the icon path
-        QStringList pngs = PApeFile::generateGraphicsAsPng(iconPaths);
+        QStringList pngs = PApeFile::generateGraphicsAsPng(iconPaths, type);
         for (const QString &png : pngs) {
             pngPaths.append(png);
         }

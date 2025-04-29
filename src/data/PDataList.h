@@ -82,7 +82,7 @@ public:
         }
     }
 
-    void replaceList(QList<QSharedPointer<T>> list)
+    void replaceList(QVector<QSharedPointer<T>> list)
     {
         beginResetModel();
         m_list = list;

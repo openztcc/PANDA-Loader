@@ -28,7 +28,7 @@ class PModDataAccess : public QObject {
         ~PModDataAccess() = default;
 
         // Mod operations
-        bool insertMod(const PModItem &mod);
+        bool insertMod(QSharedPointer<PModItem> mod);
         bool deleteMod(const QString &table, const QMap<QString, QVariant> &conditions);
         bool updateMod(const QString &table, const QMap<QString, 
             QVariant> &setFields, const QMap<QString, QVariant> &whereConditions);

@@ -54,31 +54,31 @@ QSharedPointer<QuaZipFile> PZip::openZipFile(QSharedPointer<QuaZip> &zip, const 
 
 // Read a file from the zip archive
 // usage: PFileData fileData = zip.read("path/to/file.txt");
-PFileData PZip::read(const QString &relFilePath) {
+QSharedPointer<PFileData> PZip::read(const QString &relFilePath) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
     QSharedPointer<QuaZipFile> file = openZipFile(zip, relFilePath, QIODevice::ReadOnly);
     if (!file) {
         qDebug() << "Failed to open file in zip:" << relFilePath;
-        return PFileData();
+        return nullptr;
     }
 
-    PFileData fileData;
-    fileData.filename = relFilePath.section('/', -1, -1);
-    fileData.ext = relFilePath.section('.', -1, -1);
-    fileData.path = relFilePath.section('/', 0, -2) + '/';
+    QSharedPointer<PFileData> fileData = QSharedPointer<PFileData>::create();
+    fileData->filename = relFilePath.section('/', -1, -1);
+    fileData->ext = relFilePath.section('.', -1, -1);
+    fileData->path = relFilePath.section('/', 0, -2) + '/';
 
     QByteArray data = file->readAll();
     file->close();
     zip->close();
 
-    fileData.data = data;
+    fileData->data = data;
 
     // print file data for debugging
-    qDebug() << "File data size:" << fileData.data.size();
-    qDebug() << "File name:" << fileData.filename;
-    qDebug() << "File ext:" << fileData.ext;
-    qDebug() << "File path:" << fileData.path;
+    qDebug() << "File data size:" << fileData->data.size();
+    qDebug() << "File name:" << fileData->filename;
+    qDebug() << "File ext:" << fileData->ext;
+    qDebug() << "File path:" << fileData->path;
 
     return fileData;
 }
@@ -90,8 +90,8 @@ PFileData PZip::read(const QString &relFilePath) {
 //       dir with value "dir/" will read all files in the dir directory
 //       ext with value "txt" will read all files with the txt extension
 //       ext with value "" will read all files with no extension
-QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &validExts) {
-    QList<PFileData> filesFound;
+QVector<QSharedPointer<PFileData>> PZip::readAll(const QStringList &validDirs, const QStringList &validExts) {
+    QVector<QSharedPointer<PFileData>> filesFound;
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
     QStringList fileList = zip->getFileNameList();
     QStringList validFiles;
@@ -156,11 +156,11 @@ QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &
 
     // read the valid files
     for (const QString &validFile : validFiles) {
-        PFileData file = read(validFile);
-        if (!file.data.isEmpty()) {
+        QSharedPointer<PFileData> file = read(validFile);
+        if (!file->data.isEmpty()) {
             filesFound.append(file);
         } else {
-            qDebug() << "Failed to read file in zip:" << file.filename;
+            qDebug() << "Failed to read file in zip:" << file->filename;
         }
     }
     zip->close();
@@ -169,11 +169,11 @@ QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &
 
 // Write a file to the zip archive given a PFileData object
 // 
-bool PZip::write(const PFileData &data) {
+bool PZip::write(QSharedPointer<PFileData> data) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdAdd);
 
     // path to write to
-    QString relPath = data.path + data.filename;
+    QString relPath = data->path + data->filename;
 
     // check if the file already exists in the zip
     if (exists(relPath)) {
@@ -192,7 +192,7 @@ bool PZip::write(const PFileData &data) {
     }
 
     QuaZipFile file(zip.data());
-    QuaZipNewInfo info(data.path + data.filename);
+    QuaZipNewInfo info(data->path + data->filename);
 
     qDebug() << "Setting relative path:" << relPath;
 
@@ -201,7 +201,7 @@ bool PZip::write(const PFileData &data) {
                  << "Error:" << file.getZipError();
         return false;
     } 
-    file.write(data.data);
+    file.write(data->data);
     file.close();
     zip->close();
     return true;

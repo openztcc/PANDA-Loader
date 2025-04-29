@@ -6,23 +6,23 @@ PModDataAccess::PModDataAccess() : m_db(PDatabase(QDir::homePath() + "/panda.pad
     }
 }
 
-bool PModDataAccess::insertMod(const PModItem &mod) 
+bool PModDataAccess::insertMod(QSharedPointer<PModItem> mod) 
 {
     QVariantMap params;
-    params.insert(":title", mod.title());
-    params.insert(":authors", mod.authors().join(", "));
-    params.insert(":description", mod.description());
-    params.insert(":enabled", mod.enabled() ? 1 : 0);
-    params.insert(":category", mod.category());
-    params.insert(":tags", mod.tags().join(", "));
-    params.insert(":version", mod.version());
-    params.insert(":mod_id", mod.id());
-    params.insert(":dep_id", mod.dependencyId());
-    params.insert(":filename", mod.filename());
-    params.insert(":current_location", mod.currentLocation());
-    params.insert(":iconpaths", mod.iconpaths().join(", "));
-    params.insert(":original_location", mod.originalLocation());
-    params.insert(":is_selected", mod.selected() ? 1 : 0);
+    params.insert(":title", mod->title());
+    params.insert(":authors", mod->authors().join(", "));
+    params.insert(":description", mod->description());
+    params.insert(":enabled", mod->enabled() ? 1 : 0);
+    params.insert(":category", mod->category());
+    params.insert(":tags", mod->tags().join(", "));
+    params.insert(":version", mod->version());
+    params.insert(":mod_id", mod->id());
+    params.insert(":dep_id", mod->dependencyId());
+    params.insert(":filename", mod->filename());
+    params.insert(":current_location", mod->currentLocation());
+    params.insert(":iconpaths", mod->iconpaths().join(", "));
+    params.insert(":original_location", mod->originalLocation());
+    params.insert(":is_selected", mod->selected() ? 1 : 0);
     
     return m_db.runQuery(PQueries::ModsInsertQuery, params);
 }

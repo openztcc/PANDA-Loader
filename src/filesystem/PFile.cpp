@@ -19,12 +19,12 @@ std::unique_ptr<IVirtualFilesystem> PFile::createFilesystem(const QString &path,
     }
 }
 
-PFileData PFile::read(const QString &relFilePath) {
+QSharedPointer<PFileData> PFile::read(const QString &relFilePath) {
     // Read the file from the virtual filesystem
     return m_file->read(relFilePath);
 }
 
-QList<PFileData> PFile::readAll(const QStringList& validFolders, const QStringList &validExts) {
+QVector<QSharedPointer<PFileData>> PFile::readAll(const QStringList& validFolders, const QStringList &validExts) {
     return m_file->readAll(validFolders, validExts);
 }
 

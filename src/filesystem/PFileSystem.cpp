@@ -16,26 +16,26 @@ QSharedPointer<QFile> PFileSystem::openFile(const QString &filePath, QIODevice::
     return file;
 }
 
-PFileData PFileSystem::read(const QString &filePath) {
+QSharedPointer<PFileData> PFileSystem::read(const QString &filePath) {
     QSharedPointer<QFile> file = openFile(m_rootPath + "/" + filePath, QIODevice::ReadOnly);
     
     QFileInfo fileInfo(filePath);
-    PFileData fileData;
-    fileData.filename = fileInfo.fileName();
-    fileData.ext = fileInfo.suffix();
-    fileData.path = fileInfo.absolutePath();
+    QSharedPointer<PFileData> fileData;
+    fileData->filename = fileInfo.fileName();
+    fileData->ext = fileInfo.suffix();
+    fileData->path = fileInfo.absolutePath();
     QByteArray data = file->readAll();
-    fileData.data = data;
+    fileData->data = data;
 
     file->close();
 
     return fileData;
 }
 
-bool PFileSystem::write(const PFileData &data) {
-    QString filePath = data.path + "/" + data.filename;
+bool PFileSystem::write(QSharedPointer<PFileData> data) {
+    QString filePath = data->path + "/" + data->filename;
     QSharedPointer<QFile> file = openFile(filePath, QIODevice::WriteOnly);
-    file->write(data.data);
+    file->write(data->data);
     file->close();
     return true;
 }
