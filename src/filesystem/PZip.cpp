@@ -288,6 +288,17 @@ bool PZip::remove(const QString &itemToRemove) {
 
 // Check if a file exists in the zip archive
 bool PZip::exists(const QString &relFilePath) {
+    if (relFilePath == "") {
+        // test  if root path exists
+        QFileInfo fileInfo(m_rootPath);
+        if (!fileInfo.exists()) {
+            qDebug() << "Zip file does not exist:" << m_rootPath;
+            return false;
+        } else if (!fileInfo.isFile()) {
+            qDebug() << "Zip file is not a valid file:" << m_rootPath;
+            return false;
+        }
+    }
     if (read(relFilePath)->data.isEmpty()) {
         qDebug() << "File does not exist in zip:" << relFilePath;
         return false;

@@ -315,7 +315,8 @@ QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, con
         QString aniFileName = path.split('/').last(); // get the ani file name from the rel path
 
         QString graphicPath = buildGraphicPath(aniConfig);
-        QString pngPath = PApeFile::generateGraphicAsPng(graphicPath, id + "_" + typeName + "_" + aniFileName);
+        PApeFile ape(ztd->rootPath(), QDir::homePath() + "/.panda/modicons/");
+        QString pngPath = ape.generateGraphicAsPng(graphicPath, id + "_" + typeName + "_" + aniFileName);
         pngPaths.append(pngPath);
     }
 

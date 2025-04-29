@@ -18,8 +18,7 @@ class PApeFile : public QObject
     Q_OBJECT
 public:
     PApeFile(const QString &ztdPath, const QString &outputDir);
-    static QMap<QString, OutputBuffer> getGraphicBuffers(const QString &ztdFilePath);
-    static QString generateGraphicAsPng(const QString &graphicPath, const QString &fileName = "");
+    QString generateGraphicAsPng(const QString &graphicPath, const QString &fileName = "");
     static bool deleteIcons(const QString &modId);
 private:
     QString m_outputiconsPath = QDir::homePath() + "/.panda/modicons/";

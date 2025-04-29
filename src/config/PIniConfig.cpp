@@ -41,7 +41,7 @@ QVariant PIniConfig::getValue(const QString &section, const QString &key, bool g
         std::string sectionStr = section.toStdString();
 
         CSimpleIniA::TNamesDepend keys;
-        m_ini.GetAllKeys(sectionStr..c_str(), keys);
+        m_ini.GetAllKeys(sectionStr.c_str(), keys);
         for (const auto &k : keys) {
             if (key.compare(k.pItem, Qt::CaseInsensitive) == 0) {
                 const char *value = m_ini.GetValue(sectionStr.c_str(), k.pItem, nullptr);

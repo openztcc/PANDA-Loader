@@ -28,7 +28,7 @@ class PZip : public IVirtualFilesystem {
         bool write(const QSharedPointer<PFileData> &data) override;
         bool remove(const QStringList &itemsToRemove) override;
         bool remove(const QString &itemToRemove);
-        bool exists(const QString &filePath) override;
+        bool exists(const QString &filePath = "") override;
 
         // move/rename
         bool move(const QString &filePath, const QString &newLocation) override;

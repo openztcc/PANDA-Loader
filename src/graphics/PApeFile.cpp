@@ -1,7 +1,7 @@
 #include "PApeFile.h"
 
 PApeFile::PApeFile(const QString &ztdPath, const QString &outputDir) : m_ztdPath(ztdPath), m_outputDir(outputDir) {
-    m_ztdFile = std::make_shared<PFile>(ztdPath);
+    m_ztdFile = QSharedPointer<PFile>(nullptr, ztdPath);
     if (!m_ztdFile->exists()) {
         qDebug() << "ZTD file does not exist:" << ztdPath;
     }
@@ -25,7 +25,7 @@ OutputBuffer outputBufferCopy(const OutputBuffer& src) {
 // Process graphic buffers into cached PNG files
 // returns paths to the generated PNG files
 QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString &fileName) {
-    QByteArray graphicData = m_ztdPath->read(graphicPath);
+    QByteArray graphicData = m_ztdFile->read(graphicPath)->data;
 
     // local function to create temp files
     auto createTempFile = [&](const QByteArray &fileData, const QString &filePath) -> QString {
@@ -39,7 +39,6 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
         tempFile->flush();
 
         QString filename = tempFile->fileName();
-        tempFiles.push_back(std::move(tempFile));
         qDebug() << "Temp file created:" << filename;
         return filename;
     };
@@ -60,7 +59,7 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
     qDebug() << "Palette path: " << palettePath[0];
 
     // Get the palette data from the ztd file
-    QByteArray paletteData = m_ztdFile->read(palettePath[0]);
+    QByteArray paletteData = m_ztdFile->read(palettePath[0])->data;
     if (paletteData.isEmpty()) {
         qDebug() << "Failed to read palette data from ztd file:" << palettePath[0];
         return {};
@@ -68,30 +67,33 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
 
     // Create a temp file for the palette data
     QString paletteFile = createTempFile(paletteData, palettePath[0]);
-    if (paletteFile.isEmpty()) continue;
+    if (paletteFile.isEmpty()) return "";
 
     // read the graphic data
     ApeCore graphic;
     if (graphic.load(graphicFile.toStdString(), 0, paletteFile.toStdString()) != 1) {
-        qDebug() << "Failed to load graphic: " << path;
-        continue;
+        qDebug() << "Failed to load graphic: " << fileName;
+        return "";
     }
 
     OutputBuffer** buffer = graphic.apeBuffer();
     if (!buffer || !*buffer) {
-        qDebug() << "Invalid output buffer for:" << path;
-        continue;
+        qDebug() << "Invalid output buffer for:" << fileName;
+        return "";
     }
 
     // add the graphic buffer to the map
     OutputBuffer* out = *buffer;
     if (out) {
         // create the PNG file from the graphic buffer
-        ApeCore::exportToPNG(m_outputDir + "/" + fileName + ".png", *out);
+        QString  outputPng = m_outputDir + "/" + fileName + ".png";
+        if (ApeCore::exportToPNG(outputPng.toStdString(), *out) == 1) {
+            return outputPng;
+        }
     } else {
         qDebug() << "No buffers allocated.";
     }
-    return pngPaths;
+    return "";
 }
 
 // Deletes the icons from filesystem
