@@ -173,6 +173,21 @@ QVariant PConfigMgr::getValue(const QString &section, const QString &key)
     return m_config->getValue(section, key);
 }
 
+// Get a key value from config file with support for multiple keys
+QVariant PConfigMgr::getValue(const QString &section, const QString &key, bool getMultiKeys) const
+{
+    if (!getMultiKeys) {
+        return m_config->getValue(section, key);
+    }
+
+    if (!m_config) {
+        qDebug() << "Config parser not initialized";
+        return QVariant();
+    }
+
+    return m_config->getValue(section, key, getMultiKeys);
+}
+
 // Set a key value in config file
 void PConfigMgr::setValue(const QString &key, const QVariant &value, const QString &section)
 {

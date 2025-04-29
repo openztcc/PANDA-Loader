@@ -279,17 +279,21 @@ QMap<QString, QString> PModLoader::getIconAniPaths(const QSharedPointer<PConfigM
         // [m/Icon] and [f/Icon]. Sometimes only one exists.
         const QString &aniPathF = config->getValue("f/Icon", "Icon").toString();
         const QString &aniPathM = config->getValue("m/Icon", "Icon").toString();
+
         if (!aniPathF.isEmpty()) {
-            iconAniPaths.insert(aniPathF, "female");
+            iconAniPaths.insert(aniPathF, QString::number(iconAniPaths.size() + 1));
         }
         if (!aniPathM.isEmpty()) {
-            iconAniPaths.insert(aniPathM, "male");
+            iconAniPaths.insert(aniPathM, QString::number(iconAniPaths.size()));
         }
     } else if (category == "Building" || category == "Scenery") {
         // objects have just 1 icon ani path
-        const QString &iconPath = config->getValue("Icon", "Icon").toString();
-        const QString &fileName = iconPath.split("/").last();
-        iconAniPaths.insert(iconPath, fileName);
+        const QStringList &iconPaths = config->getValue("Icon", "Icon", true).toStringList();
+        int id = 0;
+        for (const QString &path : iconPaths) {
+            iconAniPaths.insert(path, QString::number(id));
+            id++;
+        }
     } else {
         return {};
     }
@@ -297,44 +301,24 @@ QMap<QString, QString> PModLoader::getIconAniPaths(const QSharedPointer<PConfigM
 }
 
 QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, const QSharedPointer<PFile> &ztd, const QString &typeName) {
-    QVector<QSharedPointer<PFileData>> graphicFileData;
-    const QMap<QString, QString> &fileNames = buildIconFileName(aniPaths, typeName);
+    QStringList pngPaths;
 
-    for (const QString &path : aniPaths.keys()) {
+    for (auto it = aniPaths.constBegin(); it != aniPaths.constEnd(); ++it) {
+        QString path = it.key();
+        QString id = it.value();
+
         // get the ani path and generate the icon path
         QSharedPointer<PFileData> aniData = ztd->read(path);
         QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData);
 
         QString aniFileName = path.split('/').last(); // get the ani file name from the rel path
-        QString filename = buildIconFileName(entryPointConfig, category, aniFileName);
 
-        QString iconPath = buildGraphicPath(aniConfig);
-        iconPaths.append(iconPath);
+        QString graphicPath = buildGraphicPath(aniConfig);
+        QString pngPath = PApeFile::generateGraphicsAsPng(graphicPath, id + "_" + typeName + "_" + aniFileName);
+        pngPaths.append(pngPath);
     }
 
-    QStringList pngPaths;
-    for (const QString &path : iconPaths) {
-        // get the ani path and generate the icon path
-        QStringList pngs = PApeFile::generateGraphicsAsPng(iconPaths, type);
-        for (const QString &png : pngs) {
-            pngPaths.append(png);
-        }
-    }
     return pngPaths;
-}
-
-// Creates filenames in order of sex or icon view (e.g. 0_NE, 1_NW, 2_SE, 3_SW)
-// TODO: optimize this function for better filenames
-QString buildIconFileName(const QMap<QString, QString> &aniPaths, const QString &typeName, const QString &category) {
-    QString cat = category.toLower();
-
-    if (cat == "animals") {
-        // prefix 'male' with "0_<aniFileName>". if 
-    } else if (cat == "building" || cat == "scenery") {
-        return aniPaths.value("aniPath") + "_" + typeName + ".png";
-    } else {
-        return aniPaths.value("aniPath") + "_" + typeName + ".png";
-    }
 }
 
 // ani files provide the directory structure in key/value pairs

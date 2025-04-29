@@ -54,6 +54,7 @@ public:
     Q_INVOKABLE bool revertChanges();
     bool clear();
     Q_INVOKABLE QVariant getValue(const QString &section, const QString &key);
+    Q_INVOKABLE QVariant getValue(const QString &section, const QString &key, bool getMultiKeys) const; // only for ini files
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
     QStringList getAllKeys(const QString &section = "") const;
 

@@ -32,19 +32,23 @@ QVariant PIniConfig::getValue(const QString &section, const QString &key) const 
 }
 
 // Support for multiple keys in the same section
-// Returns a map of key-value pairs if getMultiKeys is true, otherwise returns the first value found
+// Returns a QStringList values getMultiKeys is true, otherwise returns the first value found
 // If no keys are found, returns an empty QVariant
 QVariant PIniConfig::getValue(const QString &section, const QString &key, bool getMultiKeys) const {
     if (getMultiKeys) {
-        QMap<QString, QString> values;
+        QStringList values;
 
-        // grab raw data from section
-        const CSimpleIniA::TNamesDepend *sectionData = m_ini.GetSection(section.toStdString().c_str());
-        if (sectionData) {
-            for (auto it = sectionData->begin(); it != sectionData->end(); ++it) {
-                QString key = QString(it->first.pItem);
-                QString value = QString(it->second.pItem);
-                values.insertMulti(key, value);
+        std::string sectionStr = section.toStdString();
+
+        CSimpleIniA::TNamesDepend keys;
+        m_ini.GetAllKeys(sectionStr..c_str(), keys);
+        for (const auto &k : keys) {
+            if (key.compare(k.pItem, Qt::CaseInsensitive) == 0) {
+                const char *value = m_ini.GetValue(sectionStr.c_str(), k.pItem, nullptr);
+                if (value) {
+                    // convert to QString in correct encoding to avoid garbage characters
+                    values.append(QString::fromUtf8(value)); 
+                }
             }
         }
 
