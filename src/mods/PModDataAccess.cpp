@@ -79,7 +79,7 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const OrderBy &orde
 
     QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
     while (query.next()) {
-        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(query);
+        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(this, query);
         modItems.append(modItem);
     }
     return modItems;
@@ -87,11 +87,11 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const OrderBy &orde
 
 // Get search results as a list of strings
 QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation, const QString &propertyName, const QString &searchTerm) {
-    QSqlQuery query = m_db.runOperation(operation, "mods", QMap<QString, QVariant>({propertyName, searchTerm}));
-    QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
+    QSqlQuery query = m_db.runOperation(operation, "mods", {{propertyName, searchTerm}});
+    QVector<QSharedPointer<PModItem>> modItems;
 
     while (query.next()) {
-        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(query);
+        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(this, query);
         modItems.append(modItem);
     }
     return modItems;
@@ -103,7 +103,7 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation
     QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
 
     while (query.next()) {
-        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(query);
+        QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(this, query);
         modItems.append(modItem);
     }
     return modItems;
