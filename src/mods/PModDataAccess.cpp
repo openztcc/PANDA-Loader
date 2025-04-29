@@ -19,9 +19,9 @@ bool PModDataAccess::insertMod(const PModItem &mod)
     params.insert(":mod_id", mod.id());
     params.insert(":dep_id", mod.dependencyId());
     params.insert(":filename", mod.filename());
-    params.insert(":location", mod.location());
+    params.insert(":current_location", mod.currentLocation());
     params.insert(":iconpaths", mod.iconpaths().join(", "));
-    params.insert(":oglocation", mod.oglocation());
+    params.insert(":original_location", mod.originalLocation());
     params.insert(":is_selected", mod.selected() ? 1 : 0);
     
     return m_db.runQuery(PQueries::ModsInsertQuery, params);
@@ -173,11 +173,11 @@ void PModDataAccess::loadModsFromFile(const QStringList &ztdList)
                 if (!epIconPaths.isEmpty()) {
                     mod.setIconPaths(epIconPaths);
                 } else {
-                    mod.setIconsPaths({});
+                    mod.setIconPaths({});
                 }
             } else {
                 // if no entrypoints, then set the icon paths to empty
-                mod.setIconsPaths({});
+                mod.setIconPaths({});
             }
         }
 
@@ -231,7 +231,7 @@ QString PModDataAccess::determineCategory(const PFileData &fileData) {
     }
 }
 
-QList<PModItem> PModDataAccess::buildCollectionMods(QList<PFileData> entryPoints) {
+QList<PModItem> PModDataAccess::buildCollectionMods(QList<PFileData> entryPoints, PModItem &mod) {
     QList<PModItem> collectionMods;
     for (const PFileData &entryPoint : entryPoints) {
         PConfigMgr epConfig(nullptr, entryPoint);
@@ -244,9 +244,9 @@ QList<PModItem> PModDataAccess::buildCollectionMods(QList<PFileData> entryPoints
         epMod.setCollectionId(mod.id());
 
         epMod.setFilename(mod.filename());
-        epMod.setCurrentLocation(mod.location());
-        epMod.setOriginalLocation(mod.location());
-        epMod.setDisabledLocation(mod.location());
+        epMod.setCurrentLocation(mod.currentLocation());
+        epMod.setOriginalLocation(mod.currentLocation());
+        epMod.setDisabledLocation("");
         epMod.setFileSize(mod.fileSize());
 
         // generate the rest of the data
@@ -288,7 +288,7 @@ PModItem PModDataAccess::buildModFromToml(PConfigMgr &config) {
     mod.setLink(config.getValue("link", "").toString());
 
     // if dependency table exists, then add the dependency id to the mod and add to db
-    QMap<QString, QVariant> depTable = config.getValue("dependencies").value_or({});
+    QMap<QString, QVariant> depTable = config.getValue("dependencies", "").toMap();
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
             PDepDataAccess dependency(mod.id(), dep);
@@ -309,7 +309,7 @@ PModItem PModDataAccess::buildModFromToml(PConfigMgr &config) {
 PModItem PModDataAccess::buildDefaultMod(const QString &ztdPath) {
     PModItem mod;
     mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
-    mod.setTitle(filename);
+    mod.setTitle(QFileInfo(ztdPath).fileName());
     mod.setAuthors({"Unknown"});
     mod.setDescription("No description found");
     mod.setVersion("1.0.0");
@@ -327,8 +327,8 @@ void PModDataAccess::generateFileData(const QString &filePath, PModItem &mod) {
     mod.setDisabledLocation("");
 }
 
-QStringList PModDataAccess::generateTagsFromConfig(const PConfig &config) {
-    QStringList tags = config.getAllKeys("member").value_or({});
+QStringList PModDataAccess::generateTagsFromConfig(PConfigMgr &config) {
+    QStringList tags = config.getAllKeys("member");
 
     // Clean up the tags; format in proper case
     for (int i = 0; i < tags.size(); i++) {

@@ -30,9 +30,10 @@ class PModItem : public QObject
     Q_PROPERTY(QStringList tags READ tags WRITE setTags NOTIFY modTagsChanged)
 
     // File data properties
-    Q_PROPERTY(QString location READ location WRITE setLocation NOTIFY modLocationChanged)
+    Q_PROPERTY(QString currentLocation READ currrentLocation WRITE setCurrentLocation NOTIFY modCurrentLocationChanged)
+    Q_PROPERTY(QString originalLocation READ originallocation WRITE setoriginalLocation NOTIFY modOriginalLocationChanged)
+    Q_PROPERTY(QString disabledLocation READ disabledLocation WRITE setDisabledLocation NOTIFY modDisabledLocationChanged)
     Q_PROPERTY(QString filename READ filename WRITE setFilename NOTIFY modFilenameChanged)
-    Q_PROPERTY(QString oglocation READ oglocation WRITE setOGLocation NOTIFY modLocationChanged)
 
     // Graphics properties
     Q_PROPERTY(QStringList iconpaths READ iconpaths WRITE setIconPaths NOTIFY iconpathsChanged)
@@ -79,11 +80,38 @@ public:
     };
 
     explicit PModItem(QObject *parent = nullptr);
-    PModItem(const QString &title, const QString &description, const QStringList &authors, 
-        const QString &version, bool enabled, const QStringList &tags, const QString &category, 
-        const QString &id, const QString &depId, const QString &filename,
-        const QString &location, const QStringList &iconpaths, const QString &oglocation, 
-        bool selected, QObject *parent = nullptr);
+    PModItem(
+        // Mod properties
+        const QString &title, 
+        const QString &description, 
+        const QStringList &authors, 
+        const QString &version, 
+        const QString &id, 
+
+        // Mod flags
+        bool enabled, 
+        bool selected, 
+        bool listed, 
+
+        // Categorization properties
+        const QStringList &tags, 
+        const QString &category, 
+
+        // External properties
+        const QString &depId, 
+
+        // File data properties
+        const QString &filename,
+        const QString &currentLocation, 
+        const QString &originalLocation, 
+        const QString &disabledLocation, 
+
+        // Graphics properties
+        const QStringList &iconpaths, 
+
+        // Instance
+        QObject *parent = nullptr
+    );
     PModItem(QObject *parent, const QSqlQuery &query);
         
     int modIndex() const;
@@ -126,12 +154,14 @@ public:
     void setIconPaths(const QStringList &newModIconPaths);
 
     // File data properties
-    QString location() const;
-    void setLocation(const QString &newModLocation);
+    QString currentLocation() const;
+    void setCurrentLocation(const QString &newModLocation);
     QString filename() const;
     void setFilename(const QString &newModFilename);
-    QString oglocation() const { return m_oglocation; }
-    void setOGLocation(const QString &oglocation) { m_oglocation = oglocation; }
+    QString originalLocation() const { return m_oglocation; }
+    void setOriginalLocation(const QString &oglocation) { m_oglocation = oglocation; }
+    QString disabledLocation() const { return m_disabled_location; }
+    void setDisabledLocation(const QString &disabledLocation) { m_disabled_location = disabledLocation; }
 
     // External properties
     QString dependencyId() const;
@@ -166,7 +196,9 @@ signals:
     void qmlItemChanged();
 
     // File data properties
-    void modLocationChanged();
+    void modCurrentLocationChanged();
+    void modOriginalLocationChanged();
+    void modDisabledLocationChanged();
     void modFilenameChanged();
 
     // Graphics properties
@@ -194,9 +226,10 @@ private:
     QStringList m_tags;
     
     // File data properties
-    QString m_location;
+    QString m_current_location;
     QString m_filename;
-    QString m_oglocation;
+    QString m_original_location;
+    QString m_disabled_location;
 
     // Graphics properties
     QStringList m_iconpaths;

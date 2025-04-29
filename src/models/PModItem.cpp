@@ -18,27 +18,66 @@ PModItem::PModItem(QObject *parent)
     m_dependency_id = "";
 }
 
-PModItem::PModItem(const QString &title, const QString &description, const QStringList &authors,
-                   const QString &version, bool enabled, const QStringList &tags, const QString &category,
-                   const QString &id, const QString &depId, const QString &filename,
-                   const QString &location, const QStringList &iconpaths, const QString &oglocation,
-                   bool selected, bool listed, QObject *parent)
+PModItem::PModItem(
+        // Mod properties
+        const QString &title, 
+        const QString &description, 
+        const QStringList &authors, 
+        const QString &version, 
+        const QString &id, 
 
+        // Mod flags
+        bool enabled, 
+        bool selected, 
+        bool listed, 
+
+        // Categorization properties
+        const QStringList &tags, 
+        const QString &category, 
+
+        // External properties
+        const QString &depId, 
+
+        // File data properties
+        const QString &filename,
+        const QString &currentLocation, 
+        const QString &originalLocation, 
+        const QString &disabledLocation, 
+
+        // Graphics properties
+        const QStringList &iconpaths, 
+
+        // Instance
+        QObject *parent
+)
 : QObject(parent), 
+
+    // Mod properties
     m_title(title),
     m_authors(authors),
     m_description(description),
-    m_enabled(enabled),
-    m_category(category),
-    m_tags(tags),
     m_id(id),
-    m_location(location),
-    m_filename(filename),
-    m_iconpaths(iconpaths),
-    m_dependency_id(depId),
-    m_oglocation(oglocation),
+
+    // Mod flags
+    m_enabled(enabled),
     m_selected(selected),
     m_listed(listed)
+
+    // Categorization properties
+    m_category(category),
+    m_tags(tags),
+
+    // File data properties
+    m_current_location(currentLocation),
+    m_filename(filename),
+    m_original_location(originalLocation),
+    m_disabled_location(disabledLocation),
+
+    // Graphics properties
+    m_iconpaths(iconpaths),
+
+    // External properties
+    m_dependency_id(depId),
 {
     m_index = 0;
     m_ui_component = nullptr;
@@ -65,6 +104,8 @@ PModItem::PModItem(QObject *parent, const QSqlQuery &query) : QObject(parent)
     setVersion(query.value("version").toString());
     setListed(query.value("listed").toBool());
 }
+
+// ----------------------------------------------- Mod properties
 
 int PModItem::modIndex() const
 {
@@ -122,6 +163,22 @@ void PModItem::setDescription(const QString &newModDescription)
     emit modDescriptionChanged();
 }
 
+QString PModItem::id() const
+{
+    return m_id.isEmpty() ? "Unknown" : m_id;
+}
+
+void PModItem::setId(const QString &newModId)
+{
+    if (m_id == newModId)
+        return;
+
+    m_id = newModId;
+    emit modIdChanged();
+}
+
+// ----------------------------------------------- Mod flags
+
 bool PModItem::enabled() const
 {
     return m_enabled ? true : false;
@@ -135,6 +192,13 @@ void PModItem::setEnabled(bool newModEnabled)
     m_enabled = newModEnabled;
     emit modEnabledChanged();
 }
+
+bool PModItem::listed() const
+{
+    return m_listed ? true : false;
+}
+
+// ----------------------------------------------- Mod categorization
 
 QString PModItem::category() const
 {
@@ -164,32 +228,20 @@ void PModItem::setTags(const QStringList &newModTags)
     emit modTagsChanged();
 }
 
-QString PModItem::id() const
+// ----------------------------------------------- File data properties
+
+QString PModItem::currentLocation() const
 {
-    return m_id.isEmpty() ? "Unknown" : m_id;
+    return m_current_location.isEmpty() ? "Unknown" : m_current_location;
 }
 
-void PModItem::setId(const QString &newModId)
+void PModItem::setCurrentLocation(const QString &newModLocation)
 {
-    if (m_id == newModId)
+    if (m_current_location == newModLocation)
         return;
 
-    m_id = newModId;
-    emit modIdChanged();
-}
-
-QString PModItem::location() const
-{
-    return m_location.isEmpty() ? "Unknown" : m_location;
-}
-
-void PModItem::setLocation(const QString &newModLocation)
-{
-    if (m_location == newModLocation)
-        return;
-
-    m_location = newModLocation;
-    emit modLocationChanged();
+    m_current_location = newModLocation;
+    emit modCurrentLocationChanged();
 }
 
 QString PModItem::filename() const
@@ -206,6 +258,37 @@ void PModItem::setFilename(const QString &newModFilename)
     emit modFilenameChanged();
 }
 
+QString PModItem::originalLocation() const
+{
+    return m_oglocation.isEmpty() ? "Unknown" : m_oglocation;
+}
+
+void PModItem::setOriginalLocation(const QString &oglocation)
+{
+    if (m_original_location == oglocation)
+        return;
+    
+    m_original_location = oglocation;
+    emit modOriginalLocationChanged();
+}
+
+QString PModItem::disabledLocation() const
+{
+    return m_disabled_location.isEmpty() ? "Unknown" : m_disabled_location;
+}
+
+void PModItem::setDisabledLocation(const QString &disabledLocation)
+{
+    if (m_disabled_location == disabledLocation)
+        return;
+
+    m_disabled_location = disabledLocation;
+    emit modDisabledLocationChanged();
+}
+
+
+// ------------------------------------------------ Graphics properties
+
 QStringList PModItem::iconpaths() const
 {
     return m_iconpaths.isEmpty() ? QStringList() : m_iconpaths;
@@ -219,6 +302,8 @@ void PModItem::setIconPaths(const QStringList &newModIconPaths)
     m_iconpaths = newModIconPaths;
     emit iconpathsChanged();
 }
+
+// ------------------------------------------------ External properties
 
 QString PModItem::dependencyId() const
 {
@@ -234,6 +319,8 @@ void PModItem::setDependencyId(const QString &newDependencyId)
     emit dependencyIdChanged();
 }
 
+// ------------------------------------------------ Instance
+
 void PModItem::setUIComponent(QObject* item)
 {
     if (m_ui_component != item) {
@@ -242,45 +329,55 @@ void PModItem::setUIComponent(QObject* item)
     }
 }
 
-bool PModItem::listed() const
-{
-    return m_listed ? true : false;
-}
-
 QVariant PModItem::getData(int role) const
 {
     switch ((Role) role)
     {
+        // Mod properties
         case ModTitleRole:
             return title();
         case ModAuthorRole:
             return authors();
         case ModDescriptionRole:
             return description();
+        case ModIdRole:
+            return id();
+        case ModVersionRole:
+            return version();
+
+        // Mod flags
         case ModEnabledRole:
             return enabled();
+        case ModListedRole:
+            return listed();
+        case ModSelectedRole:
+            return selected();
+        
+        // Categorization properties
         case ModCategoryRole:
             return category();
         case ModTagsRole:
             return tags();
-        case ModIdRole:
-            return id();
+
+        // File data properties
         case ModFilenameRole:
             return filename();
+        case ModCurrentLocationRole:
+            return currentLocation();
+        case ModOriginalLocationRole:
+            return originalLocation();
+        case ModDisabledLocationRole:
+            return disabledLocation();
+
+        // External properties
         case ModDependencyIdRole:
             return dependencyId();
-        case ModLocationRole:
-            return location();
+        
+        // Graphics properties
         case ModIconPathsRole:
             return iconpaths();
-        case ModOgLocationRole:
-            return oglocation();
-        case ModSelectedRole:
-            return selected();
-        case ModVersionRole:
-            return version();
-        case ModListedRole:
-            return listed();
+
+        // Instance
         case ModObjectRole:
             qDebug() << "Returning mod object: " << title();
             return QVariant::fromValue(this); // return a whole mod object
@@ -291,22 +388,36 @@ QHash<int, QByteArray> PModItem::roleNames()
 {
     QHash<int, QByteArray> roles;
 
+    // Mod properties
     roles[ModTitleRole] = "title";
     roles[ModAuthorRole] = "authors";
     roles[ModDescriptionRole] = "description";
+    roles[ModIdRole] = "id";
+    roles[ModVersionRole] = "version";
+
+    // Mod flags
     roles[ModEnabledRole] = "enabled";
+    roles[ModSelectedRole] = "selected";
+    roles[ModListedRole] = "listed";
+
+    // Categorization properties
     roles[ModCategoryRole] = "category";
     roles[ModTagsRole] = "tags";
-    roles[ModIdRole] = "id";
+
+    // File data properties
     roles[ModFilenameRole] = "filename";
+    roles[ModCurrentLocationRole] = "currentLocation";
+    roles[ModOriginalLocationRole] = "originalLocation";
+    roles[ModDisabledLocationRole] = "disabledLocation";
+
+    // External properties
     roles[ModDependencyIdRole] = "depId";
-    roles[ModLocationRole] = "location";
+
+    // Instance
     roles[ModObjectRole] = "instance"; // return a whole mod object
+
+    // Graphics properties
     roles[ModIconPathsRole] = "iconpaths";
-    roles[ModOgLocationRole] = "oglocation";
-    roles[ModSelectedRole] = "selected";
-    roles[ModVersionRole] = "version";
-    roles[ModListedRole] = "listed";
 
     return roles;
 }
