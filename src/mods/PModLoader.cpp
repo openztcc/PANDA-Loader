@@ -296,16 +296,16 @@ QMap<QString, QString> PModLoader::getIconAniPaths(const QSharedPointer<PConfigM
     return iconAniPaths;
 }
 
-QStringList PModLoader::getIconPaths(const QStringList &aniPaths, const QSharedPointer<PFile> &ztd,
-                                     const QSharedPointer<PConfigMgr> &entryPointConfig, const QString &category) {
+QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, const QSharedPointer<PFile> &ztd, const QString &typeName) {
     QVector<QSharedPointer<PFileData>> graphicFileData;
+    const QMap<QString, QString> &fileNames = buildIconFileName(aniPaths, typeName);
 
-    for (const QString &aniPath : aniPaths) {
+    for (const QString &path : aniPaths.keys()) {
         // get the ani path and generate the icon path
-        QSharedPointer<PFileData> aniData = ztd->read(aniPath);
+        QSharedPointer<PFileData> aniData = ztd->read(path);
         QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData);
 
-        QString aniFileName = aniPath.split('/').last(); // get the ani file name from the rel path
+        QString aniFileName = path.split('/').last(); // get the ani file name from the rel path
         QString filename = buildIconFileName(entryPointConfig, category, aniFileName);
 
         QString iconPath = buildGraphicPath(aniConfig);
@@ -323,10 +323,17 @@ QStringList PModLoader::getIconPaths(const QStringList &aniPaths, const QSharedP
     return pngPaths;
 }
 
-QString buildIconFileName(const QSharedPointer<PConfigMgr> &entryPointConfig, const QString &category, const QString &aniFileName) {
+// Creates filenames in order of sex or icon view (e.g. 0_NE, 1_NW, 2_SE, 3_SW)
+// TODO: optimize this function for better filenames
+QString buildIconFileName(const QMap<QString, QString> &aniPaths, const QString &typeName, const QString &category) {
     QString cat = category.toLower();
+
     if (cat == "animals") {
-        QString animalSex
+        // prefix 'male' with "0_<aniFileName>". if 
+    } else if (cat == "building" || cat == "scenery") {
+        return aniPaths.value("aniPath") + "_" + typeName + ".png";
+    } else {
+        return aniPaths.value("aniPath") + "_" + typeName + ".png";
     }
 }
 

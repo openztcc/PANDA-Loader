@@ -31,6 +31,29 @@ QVariant PIniConfig::getValue(const QString &section, const QString &key) const 
     return QVariant("");
 }
 
+// Support for multiple keys in the same section
+// Returns a map of key-value pairs if getMultiKeys is true, otherwise returns the first value found
+// If no keys are found, returns an empty QVariant
+QVariant PIniConfig::getValue(const QString &section, const QString &key, bool getMultiKeys) const {
+    if (getMultiKeys) {
+        QMap<QString, QString> values;
+
+        // grab raw data from section
+        const CSimpleIniA::TNamesDepend *sectionData = m_ini.GetSection(section.toStdString().c_str());
+        if (sectionData) {
+            for (auto it = sectionData->begin(); it != sectionData->end(); ++it) {
+                QString key = QString(it->first.pItem);
+                QString value = QString(it->second.pItem);
+                values.insertMulti(key, value);
+            }
+        }
+
+        return QVariant::fromValue(values);
+    } else {
+        return getValue(section, key);
+    }
+}
+
 void PIniConfig::setValue(const QString &key, const QVariant &value, const QString &section) {
     if (section == "") {
         qDebug() << "Error: No section provided for ini file with key = " << key << " and value " << value;
