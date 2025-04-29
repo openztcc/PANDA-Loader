@@ -10,12 +10,14 @@
 #include "PFileData.h"
 #include "PConfigMgr.h"
 #include "PApeFile.h"
+#include "PModDataAccess.h"
 
 class PModLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit PModLoader(QObject *parent = nullptr);
+    explicit PModLoader(QObject *parent = nullptr, QSharedPointer<PModDataAccess> dataAccess = nullptr)
+        : QObject(parent), m_dataAccess(dataAccess) {}
     ~PModLoader() override = default;
 
     // Load mods from a given directory
@@ -34,6 +36,9 @@ public:
     QStringList getIconAniPaths(PConfigMgr &config, const QString &category);
     QStringList getIconPaths(const QStringList &aniPaths, PFile &ztd);
     QString buildGraphicPath(PConfigMgr &aniFile);
+
+private:
+    QSharedPointer<PModDataAccess> m_dataAccess;
 
 };
 

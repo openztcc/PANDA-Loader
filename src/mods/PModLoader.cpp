@@ -1,9 +1,5 @@
 #include "PModLoader.h"
 
-PModLoader::PModLoader(QObject *parent) : QObject(parent)
-{
-}
-
 // Grabs mods from ZTDs and stores them in database
 // TODO: Add any errors to a list of errors to display to user
 // TODO: Add a check to see if mod already exists in database
@@ -16,7 +12,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
     for (const QString &ztd : ztdList)
     {
         // Check if ztd already exists in database
-        QVector<QSharedPointer<PModItem>> existingMods = searchMods(Operation::Select, "filename", QFileInfo(ztd).fileName());
+        QVector<QSharedPointer<PModItem>> existingMods = m_dataAccess->searchMods(Operation::Select, {{"filename", QFileInfo(ztd).fileName()}});
         if (!existingMods.isEmpty()) {
             qDebug() << "ZTD already exists in database: " << QFileInfo(ztd).fileName();
             continue; // skip mod
@@ -54,13 +50,13 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
 
         if (foundMeta) { // meta.toml
             // Load the meta file and get the mod data
-            toml::table config = toml::parse(metaData.data);
+            PConfigMgr config(this, metaData.data);
             mod = buildModFromToml(config);
-            mod->setCollection(true); // set the collection flag
+            mod->setIsCollection(true); // set the collection flag
         } else { // no meta file + no entrypoints. user will need to manually configure this mod.
             // if no meta file and no entrypoints, then this is a misc mod
             mod = buildDefaultMod(ztd);
-            mod->setCollection(false);
+            mod->setIsCollection(false);
         }
 
         // ------------------------------------------------------------------- Insert file data (size, date, etc.)
@@ -110,11 +106,11 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
             }
         }
 
-        insertMod(mod); // insert the mod into the database
+        m_dataAccess->insertMod(mod); // insert the mod into the database
 
         if (collectionMods.size() > 0) {
-            for (const PModItem &collectionMod : collectionMods) {
-                insertMod(collectionMod); // insert the collection mods into the database
+            for (auto collectionMod : collectionMods) {
+                m_dataAccess->insertMod(collectionMod); // insert the collection mods into the database
             }
         }
 
