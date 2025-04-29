@@ -1,39 +1,8 @@
 #include "PModUIController.h"
 
-PModUIController::PModUIController(QObject *parent, QStringList ztdList) : QAbstractListModel(parent), m_ztdList(ztdList)
+PModUIController::PModUIController(QObject *parent, QStringList ztdList) : QAbstractListModel(parent), m_ztdList(ztdList), m_mods_list(parent)
 {
     m_ztdList = ztdList;
-}
-
-int PModUIController::rowCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent);
-    return m_mods_list.size();
-}
-
-// The data method is used to fetch the data for a given index and role
-// for a QAbstractListModel
-QVariant PModUIController::data(const QModelIndex &index, int role) const
-{
-    qDebug () << "Fetching data for index: " << index.row() << ", role: " << role;
-    if (index.isValid() && index.row() >= 0 && index.row() < m_mods_list.length())
-    {
-        QSharedPointer<PModItem> mod = m_mods_list[index.row()];
-        qDebug() << "Fetching data for mod: " << mod->title();
-        mod->getData(role); // this just translates the role to the data
-    }
-
-    // Return empty if the index is invalid
-    qDebug() << "Invalid index: " << index.row() << ", returning empty QVariant";
-    return QVariant();
-}
-
-// roleNames are a map that gives each enum role a string descriptor that
-// can be called from QML
-QHash<int, QByteArray> PModUIController::roleNames() const
-{
-    qDebug() << "PModUIController::roleNames() called";
-    return PModItem::roleNames();
 }
 
 // --------------- Manage Mod List ------------------
@@ -69,35 +38,20 @@ void PModUIController::loadMods()
 
 void PModUIController::reloadMod(int index)
 {
-    // Reload mod from database
-    beginResetModel();
-    if (index >= 0 && index < m_mods_list.size())
-    {
-        // qDebug() << "Reloading mod: " << mod->modTitle();
-        PDatabase db;
-        db.openDatabase();
-        QString id = m_mods_list[index]->id();
-        QSharedPointer<PModItem> newMod = db.getModByPk(id);
-        // Update the mod in the list
-        m_mods_list[index] = std::move(newMod);
-        db.closeDatabase();
-    }
-    endResetModel();
-}
-
-// Reload mod from database
-void PModUIController::reloadMod(QSharedPointer<PModItem> mod)
-{
-    // Get index from mod list
-    int index = m_mods_list.indexOf(mod);
-    if (index == -1)
-    {
-        qDebug() << "Mod not found in list: " << mod->title();
+    QSharedPointer<PModItem> listedMod = m_mods_list.getItem(index);
+    if (!listedMod) {
+        qDebug() << "Mod not found in list: " << index;
         return;
     }
-    // Reload mod from database
-    qDebug() << "Reloading mod: " << mod->title();
-    reloadMod(index);
+
+    QVector<QSharedPointer<PModItem>> dbMod = m_dataAccess.searchMods(Operation::Select, "mod_id", listedMod->id());
+    if (dbMod.isEmpty()) {
+        qDebug() << "Mod not found in database: " << listedMod->id();
+        return;
+    }
+
+    m_mods_list.replaceItem(index, dbMod[0]);
+    qDebug() << "Reloaded mod: " << dbMod[0]->title();
 }
 
 // Updates the mod list based on the property (filter) and search term (value) for filtering and live search

@@ -73,11 +73,12 @@ public:
     }
 
     // replace item in the list
-    void replaceItem(int row)
+    void replaceItem(int row, QSharedPointer<T> item)
     {
         if (row >= 0 && row < m_list.size()) {
-            QModelIndex index = this->index(row);
-            emit dataChanged(index, index);
+            beginResetModel();
+            m_list[row] = item;
+            endResetModel();
         }
     }
 
@@ -99,6 +100,19 @@ public:
     int size() const
     {
         return m_list.size();
+    }
+
+    int indexOf(QSharedPointer<T> item) const
+    {
+        return m_list.indexOf(item);
+    }
+
+    QSharedPointer<T> getItem(int index) const
+    {
+        if (index >= 0 && index < m_list.size()) {
+            return m_list[index];
+        }
+        return nullptr; // Return null if index is out of bounds
     }
 
 private:
