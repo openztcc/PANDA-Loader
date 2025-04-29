@@ -71,7 +71,7 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const OrderBy &orde
     }
 
     QSqlQuery query;
-    if (exception.isEmpty()) {
+    if (exception.first.isEmpty()) {
         query = m_db.returnQuery("SELECT * FROM mods ORDER BY " + order);
     } else { // return mods without the exception key/value
         query = m_db.returnQuery("SELECT * FROM mods WHERE " + exception.first + " != " + exception.second.toString() + " ORDER BY " + order);

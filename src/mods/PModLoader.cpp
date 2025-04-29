@@ -1,12 +1,16 @@
 #include "PModLoader.h"
 
+PModLoader::PModLoader(QObject *parent) : QObject(parent)
+{
+}
+
 // Grabs mods from ZTDs and stores them in database
 // TODO: Add any errors to a list of errors to display to user
 // TODO: Add a check to see if mod already exists in database
 // TODO: Add meta.toml file to ztd if it doesn't exist
 // TODO: If meta.toml does not exist, add to list of errors for user
 // TODO: Let user decide if it's a duplicate or not
-void PModUIController::loadModsFromFile(const QStringList &ztdList)
+void PModLoader::loadModsFromFile(const QStringList &ztdList)
 {
     // Insert mods into database
     for (const QString &ztd : ztdList)
@@ -132,30 +136,32 @@ void PModUIController::loadModsFromFile(const QStringList &ztdList)
 
 // Determine the category of the mod based on the file extension and path
 // Possible categories are: Building, Scenery, Animals, misc, Unknown
-QString PModUIController::determineCategory(const PFileData &fileData) {
-    if (fileData.size() == 0) {
+QString PModLoader::determineCategory(const PFileData &fileData) {
+    if (fileData.data.size() == 0) {
         return "Unknown";
     }
 
-    switch (fileData.ext) {
-        case "ucb":
+    QString ext = fileData.ext;
+
+    if (ext == "ucb") {
             return "Building";
-        case "ucs":
+    } else if (ext == "ucs") {
             return "Scenery";
-        case "uca":
+    } else if (ext == "uca") {
             return "Animals";
-        case "ai":
-            QString pathParts = fileData.path.split("/");
-            // category is always the first part of the path
-            QString category = pathParts[0];
-            // return proper case for category
-            return category.toUpper().left(1) + category.mid(1).toLower();
-        default:
+    } else if (ext == "ai") {
+        QStringList pathParts = fileData.path.split("/");
+        // category is always the first part of the path
+        QString category = pathParts[0];
+        // return proper case for category
+        return category.toUpper().left(1) + category.mid(1).toLower();
+    } else {
             return "Unknown";
+    }
     }
 }
 
-QList<PModItem> PModUIController::buildCollectionMods(QList<PFileData> entryPoints, PModItem &mod) {
+QList<PModItem> PModLoader::buildCollectionMods(QList<PFileData> entryPoints, PModItem &mod) {
     QList<PModItem> collectionMods;
     for (const PFileData &entryPoint : entryPoints) {
         PConfigMgr epConfig(nullptr, entryPoint);
@@ -200,7 +206,7 @@ QList<PModItem> PModUIController::buildCollectionMods(QList<PFileData> entryPoin
 }
 
 // Determine the category of the mod based on the meta.toml file in the root of the ztd
-PModItem PModUIController::buildModFromToml(PConfigMgr &config) {
+PModItem PModLoader::buildModFromToml(PConfigMgr &config) {
     PModItem mod;
 
     // values from TOML file
@@ -230,7 +236,7 @@ PModItem PModUIController::buildModFromToml(PConfigMgr &config) {
     return mod;
 }
 
-PModItem PModUIController::buildDefaultMod(const QString &ztdPath) {
+PModItem PModLoader::buildDefaultMod(const QString &ztdPath) {
     PModItem mod;
     mod.setId(QUuid::createUuid().toString(QUuid::WithoutBraces));
     mod.setTitle(QFileInfo(ztdPath).fileName());
@@ -241,7 +247,7 @@ PModItem PModUIController::buildDefaultMod(const QString &ztdPath) {
     return mod;
 }
 
-void PModUIController::generateFileData(const QString &filePath, PModItem &mod) {
+void PModLoader::generateFileData(const QString &filePath, PModItem &mod) {
     QFileInfo fileInfo(filePath);
     mod.setFilename(fileInfo.fileName());
     mod.setFileSize(QString::number(fileInfo.size()));
@@ -251,7 +257,7 @@ void PModUIController::generateFileData(const QString &filePath, PModItem &mod) 
     mod.setDisabledLocation("");
 }
 
-QStringList PModUIController::generateTagsFromConfig(PConfigMgr &config) {
+QStringList PModLoader::generateTagsFromConfig(PConfigMgr &config) {
     QStringList tags = config.getAllKeys("member");
 
     // Clean up the tags; format in proper case
@@ -263,14 +269,14 @@ QStringList PModUIController::generateTagsFromConfig(PConfigMgr &config) {
     return tags;
 }
 
-QStringList PModUIController::getIconPngPaths(PConfigMgr &config, const QString &category, const PFile &ztd) {
+QStringList PModLoader::getIconPngPaths(PConfigMgr &config, const QString &category, const PFile &ztd) {
     QStringList aniPaths = getIconAniPaths(config, category);
     QStringList iconPaths = getIconPaths(aniPaths, ztd);
     return iconPaths;
 }
 
 // TODO: Expand this to include more categories
-QStringList PModUIController::getIconAniPaths(PConfigMgr &config, const QString &category) {
+QStringList PModLoader::getIconAniPaths(PConfigMgr &config, const QString &category) {
     QStringList iconAniPaths;
     if (category == "Animals") {
         // animals have 1-2 icon ani paths
@@ -292,7 +298,7 @@ QStringList PModUIController::getIconAniPaths(PConfigMgr &config, const QString 
     }
 }
 
-QStringList PModUIController::getIconPaths(const QStringList &aniPaths, PFile &ztd) {
+QStringList PModLoader::getIconPaths(const QStringList &aniPaths, PFile &ztd) {
     QStringList iconPaths;
 
     for (const QString &aniPath : aniPaths) {
@@ -322,7 +328,7 @@ QStringList PModUIController::getIconPaths(const QStringList &aniPaths, PFile &z
 // dir2 = "other"
 // animation = "n" or "N"
 // the number of dirN keys isn't guaranteed to be the same for all ani files
-QString PModUIController::buildGraphicPath(PConfigMgr &aniFile) {
+QString PModLoader::buildGraphicPath(PConfigMgr &aniFile) {
     // clamp limit to 10 directory parts
     QString iconPath;
     for (int i = 0; i < 10; i++) {
