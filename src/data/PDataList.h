@@ -9,7 +9,6 @@
 // Qt
 #include <QObject>
 #include <QAbstractListModel>
-#include <QSharedPointer>
 
 template <typename T>
 class PDataList : public QAbstractListModel
@@ -30,7 +29,7 @@ public:
         qDebug () << "Fetching data for index: " << index.row() << ", role: " << role;
         if (index.isValid() && index.row() >= 0 && index.row() < m_list.length())
         {
-            QSharedPointer<T> item = m_list[index.row()];
+            T item = m_list[index.row()];
             item->getData(role);
             return item->getData(role);
         }
@@ -47,7 +46,7 @@ public:
     }
 
     // add item to the list
-    void addItem(QSharedPointer<T> item)
+    void addItem(T item)
     {
         beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
         m_list.append(item);
@@ -63,7 +62,7 @@ public:
     }
 
     // remove multiple items from the list
-    void removeItems(QList<QSharedPointer<T>> items)
+    void removeItems(QVector<T> items)
     {
         beginResetModel();
         for (const auto& item : items) {
@@ -73,7 +72,7 @@ public:
     }
 
     // replace item in the list
-    void replaceItem(int row, QSharedPointer<T> item)
+    void replaceItem(int row, T item)
     {
         if (row >= 0 && row < m_list.size()) {
             beginResetModel();
@@ -82,7 +81,7 @@ public:
         }
     }
 
-    void replaceList(QVector<QSharedPointer<T>> list)
+    void replaceList(QVector<T> list)
     {
         beginResetModel();
         m_list = list;
@@ -102,12 +101,12 @@ public:
         return m_list.size();
     }
 
-    int indexOf(QSharedPointer<T> item) const
+    int indexOf(T item) const
     {
         return m_list.indexOf(item);
     }
 
-    QSharedPointer<T> getItem(int index) const
+    T getItem(int index) const
     {
         if (index >= 0 && index < m_list.size()) {
             return m_list[index];
@@ -116,7 +115,7 @@ public:
     }
 
 private:
-    QVector<QSharedPointer<T>> m_list;
+    QVector<T> m_list;
 };
 
 #endif // PDataList_H

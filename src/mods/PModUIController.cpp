@@ -62,6 +62,6 @@ void PModUIController::deleteMod(int index)
 void PModUIController::addMod(QSharedPointer<PModItem> mod)
 {
     m_mods_list.addItem(mod);
-    m_dataAccess.insertMod(*mod);
+    m_dataAccess.insertMod(mod);
     qDebug() << "Added mod to list: " << mod->title();
 }

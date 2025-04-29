@@ -1,8 +1,8 @@
 #include "PApeFile.h"
 
 PApeFile::PApeFile(const QString &ztdPath, const QString &outputDir) : m_ztdPath(ztdPath), m_outputDir(outputDir) {
-    m_ztdFile = QSharedPointer<PFile>(nullptr, ztdPath);
-    if (!m_ztdFile->exists()) {
+    m_ztdFile = QSharedPointer<PFile>::create(nullptr, ztdPath, FileType::Zip);
+    if (!m_ztdFile->exists("")) {
         qDebug() << "ZTD file does not exist:" << ztdPath;
     }
 }
