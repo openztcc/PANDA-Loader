@@ -20,7 +20,7 @@
 
 class PModItem;
 
-class PModUIController : public QAbstractListModel
+class PModUIController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QSharedPointer<PModItem> currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
@@ -32,7 +32,7 @@ public:
     explicit PModUIController(QObject *parent = nullptr, QSharedPointer<PDatabase> db = nullptr); // , QStringList ztdList = QStringList());
 
     // Model object
-    const PDataList<QSharedPointer<PModItem>>& model() const { return m_mods_list; }
+    QObject* model() const { return m_mods_list.get(); }
 
     void loadMods();
     void reloadMod(int index);

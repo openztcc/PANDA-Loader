@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     QSharedPointer<PConfigMgr> zoo = state->m_zooini;
     QSharedPointer<PConfigMgr> settings = state->m_pandacfg;
     engine.rootContext()->setContextProperty("modController", modController.get());
-    engine.rootContext()->setContextProperty("modModel", modController->model().get());
+    engine.rootContext()->setContextProperty("modModel", modController->model());
     engine.rootContext()->setContextProperty("state", state.get());
     engine.rootContext()->setContextProperty("psettings", settings.get());
     engine.rootContext()->setContextProperty("zoo", zoo.get());
