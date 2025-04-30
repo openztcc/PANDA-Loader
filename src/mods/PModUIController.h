@@ -52,8 +52,8 @@ public:
     void setCurrentMod(QSharedPointer<PModItem> mod) { m_current_mod = mod; emit currentModChanged(); }
     QSharedPointer<PModItem> currentMod() const { return m_current_mod; }
 
-    void previousMod(QSharedPointer<PModItem> mod) { m_previous_mod = mod; emit previousModChanged(); }
     QSharedPointer<PModItem> previousMod() const { return m_previous_mod; }
+    void setPreviousMod(QSharedPointer<PModItem> mod) { m_previous_mod = mod; emit previousModChanged(); }
 
 signals:
     void modAdded(QSharedPointer<PModItem>);

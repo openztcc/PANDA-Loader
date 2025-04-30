@@ -67,7 +67,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
             QStringList tags = generateTagsFromConfig(meta);
             mod->setTags(tags);
         } else if (isSingleMod) {
-            QSharedPointer<PConfigMgr> cfg = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]);
+            QSharedPointer<PConfigMgr> cfg = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]->data);
             QStringList tags = generateTagsFromConfig(cfg);
             mod->setTags(tags);
         } else {
@@ -89,7 +89,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         } else {
             // if it's not a collection, then we can just set the icon paths from the entrypoint
             if (isSingleMod) {
-                QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]);
+                QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]->data);
                 // ------------------------------------------------------------------- Set the category for the mod
                 QString category = determineCategory(entryPoints[0]);
                 mod->setCategory(category);
@@ -161,7 +161,7 @@ QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(const QVector<
     QVector<QSharedPointer<PModItem>> collectionMods;
     for (const QSharedPointer<PFileData> &entryPoint : entryPoints) {
         QSharedPointer<PModItem> epMod = QSharedPointer<PModItem>::create(nullptr);
-        QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoint);
+        QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoint->data);
         // first, copy some base mod data from the collection mod
         epMod->setAuthors(mod->authors());
         epMod->setId(mod->id());
@@ -310,7 +310,7 @@ QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, con
 
         // get the ani path and generate the icon path
         QSharedPointer<PFileData> aniData = ztd->read(path);
-        QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData);
+        QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData->data);
 
         QString aniFileName = path.split('/').last(); // get the ani file name from the rel path
 

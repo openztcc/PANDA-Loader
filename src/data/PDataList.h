@@ -40,7 +40,7 @@ public:
     }
 
     // return the role names for the model
-    QHash<int, QByteArray> roleNames() const
+    QHash<int, QByteArray> roleNames()
     {
         return T::roleNames();
     }
