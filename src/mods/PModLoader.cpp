@@ -50,7 +50,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
 
         if (foundMeta) { // meta.toml
             // Load the meta file and get the mod data
-            PConfigMgr config(this, metaData->data);
+            QSharedPointer<PConfigMgr> config = QSharedPointer<PConfigMgr>::create(this, metaData->data);
             mod = buildModFromToml(config);
             mod->setIsCollection(true); // set the collection flag
         } else { // no meta file + no entrypoints. user will need to manually configure this mod.
@@ -202,19 +202,19 @@ QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(const QVector<
 }
 
 // Determine the category of the mod based on the meta.toml file in the root of the ztd
-QSharedPointer<PModItem> PModLoader::buildModFromToml(PConfigMgr &config) {
+QSharedPointer<PModItem> PModLoader::buildModFromToml(const QSharedPointer<PConfigMgr> &config) {
     QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(nullptr);
 
     // values from TOML file
-    mod->setId(config.getValue("mod_id", "").toString());
-    mod->setTitle(config.getValue("name", "").toString());
-    mod->setAuthors(config.getValue("authors", "").toStringList());
-    mod->setDescription(config.getValue("description", "").toString());
-    mod->setVersion(config.getValue("version", "").toString());
-    mod->setLink(config.getValue("link", "").toString());
+    mod->setId(config->getValue("mod_id", "").toString());
+    mod->setTitle(config->getValue("name", "").toString());
+    mod->setAuthors(config->getValue("authors", "").toStringList());
+    mod->setDescription(config->getValue("description", "").toString());
+    mod->setVersion(config->getValue("version", "").toString());
+    mod->setLink(config->getValue("link", "").toString());
 
     // if dependency table exists, then add the dependency id to the mod and add to db
-    QVariantList depTable = config.getValue("dependencies", "").toList();
+    QVariantList depTable = config->getValue("dependencies", "").toList();
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
             QVariantMap depMap = dep.toMap();
@@ -225,7 +225,7 @@ QSharedPointer<PModItem> PModLoader::buildModFromToml(PConfigMgr &config) {
     else {
         mod->setDependencyId("None");
     }
-    mod->setDependencyId(config.getValue("dep_id", "").toString());
+    mod->setDependencyId(config->getValue("dep_id", "").toString());
 
     return mod;
 }

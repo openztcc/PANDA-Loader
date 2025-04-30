@@ -11,7 +11,6 @@
 #include "PConfigMgr.h"
 #include "PApeFile.h"
 #include "PModDataAccess.h"
-#include "PDepDataAccess.h"
 
 class PModLoader : public QObject
 {
@@ -31,7 +30,7 @@ private:
 
     // Mod loaders
     QVector<QSharedPointer<PModItem>> buildCollectionMods(const QVector<QSharedPointer<PFileData>> &entryPoints, const QSharedPointer<PModItem> &mod, const QSharedPointer<PFile> &ztd);
-    QSharedPointer<PModItem> buildModFromToml(PConfigMgr &config);
+    QSharedPointer<PModItem> buildModFromToml(const QSharedPointer<PConfigMgr> &config);
     QSharedPointer<PModItem> buildDefaultMod(const QString &ztdPath);
 
     // File data
