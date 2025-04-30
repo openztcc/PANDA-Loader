@@ -11,6 +11,7 @@
 #include "PConfigMgr.h"
 #include "PApeFile.h"
 #include "PModDataAccess.h"
+#include "PDepDataAccess.h"
 
 class PModLoader : public QObject
 {

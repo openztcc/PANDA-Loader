@@ -5,24 +5,24 @@
 
 namespace PQueries {
     const QString CreateModsTable = 
-    "CREATE TABLE IF NOT EXISTS mods ("
-    "pk INTEGER PRIMARY KEY AUTOINCREMENT, "
-    "title TEXT NOT NULL, "
-    "authors TEXT NOT NULL, "
-    "description TEXT, "
-    "enabled INTEGER NOT NULL, "
-    "category TEXT, "
-    "tags TEXT, "
-    "version TEXT NOT NULL, "
-    "mod_id TEXT NOT NULL UNIQUE, "
-    "dep_id TEXT, "
-    "iconpaths TEXT, "
-    "filename TEXT, "
-    "location TEXT, "
-    "oglocation TEXT, "
-    "is_selected INTEGER NOT NULL, "
-    "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
-    ");";
+        "CREATE TABLE IF NOT EXISTS mods ("
+        "pk INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "title TEXT NOT NULL, "
+        "authors TEXT NOT NULL, "
+        "description TEXT, "
+        "enabled INTEGER NOT NULL, "
+        "category TEXT, "
+        "tags TEXT, "
+        "version TEXT NOT NULL, "
+        "mod_id TEXT NOT NULL UNIQUE, "
+        "dep_id TEXT, "
+        "iconpaths TEXT, "
+        "filename TEXT, "
+        "location TEXT, "
+        "oglocation TEXT, "
+        "is_selected INTEGER NOT NULL, "
+        "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
+        ");";
 
     const QString ModsInsertQuery = 
         "INSERT INTO mods ("
@@ -55,6 +55,20 @@ namespace PQueries {
         ":iconpaths, "
         ":oglocation, "
         ":is_selected)";
+
+    const QString m_createDependenciesTableQuery =
+        "CREATE TABLE IF NOT EXISTS dependencies ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "mod_id TEXT NOT NULL, "
+        "dependency_id TEXT NOT NULL, "
+        "name TEXT NOT NULL, "
+        "min_version TEXT, "
+        "optional INTEGER NOT NULL, "
+        "ordering TEXT, "
+        "link TEXT, "
+        "FOREIGN KEY(mod_id) REFERENCES mods(mod_id)"
+        ");";
+
 }
 
 #endif // PMODQUERIES_H
