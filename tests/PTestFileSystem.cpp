@@ -43,16 +43,16 @@ void PTestFileSystem::testReadZip()
     PFile fileSystem(this, filePath + fileName, FileType::Zip);
 
     // Read the file
-    PFileData fileData = fileSystem.read(relFilePath);
+    QSharedPointer<PFileData> fileData = fileSystem.read(relFilePath);
 
     // Check if the data is as expected
     if (expectedData) {
-        QVERIFY(!fileData.data.isEmpty());
-        QCOMPARE(fileData.filename, "hwnyala.uca");
-        QCOMPARE(fileData.ext, "uca");
-        QCOMPARE(fileData.path, "animals/");
+        QVERIFY(!fileData->data.isEmpty());
+        QCOMPARE(fileData->filename, "hwnyala.uca");
+        QCOMPARE(fileData->ext, "uca");
+        QCOMPARE(fileData->path, "animals/");
     } else {
-        QVERIFY(fileData.data.isEmpty());
+        QVERIFY(fileData->data.isEmpty());
     }
 }
 
@@ -78,31 +78,31 @@ void PTestFileSystem::testWriteZip()
     PFile fileSystem(this, filePath + fileName, FileType::Zip);
 
     // Create a PFileData object to write
-    PFileData fileData;
+    QSharedPointer<PFileData> fileData = QSharedPointer<PFileData>::create();
     QByteArray data;
     QFile file(filePath + "config.toml");
     if (file.open(QIODevice::ReadOnly)) {
         data = file.readAll();
         file.close();
     }
-    fileData.data = data;
-    fileData.filename = "config.toml";
-    fileData.ext = "toml";
-    fileData.path = relFilePath;
+    fileData->data = data;
+    fileData->filename = "config.toml";
+    fileData->ext = "toml";
+    fileData->path = relFilePath;
 
     // Write the file
     bool result = fileSystem.write(fileData);
 
     // Read the file back to check if it was written correctly
-    PFileData readFileData = fileSystem.read(relFilePath + fileData.filename);
+    QSharedPointer<PFileData> readFileData = fileSystem.read(relFilePath + fileData->filename);
 
     // Check if the data is as expected
     if (expectedData) {
         QVERIFY(result);
-        QCOMPARE(readFileData.data, fileData.data);
-        QCOMPARE(readFileData.filename, fileData.filename);
-        QCOMPARE(readFileData.ext, fileData.ext);
-        QCOMPARE(readFileData.path, fileData.path);
+        QCOMPARE(readFileData->data, fileData->data);
+        QCOMPARE(readFileData->filename, fileData->filename);
+        QCOMPARE(readFileData->ext, fileData->ext);
+        QCOMPARE(readFileData->path, fileData->path);
         QVERIFY(!result);
     }
 }
@@ -183,10 +183,10 @@ void PTestFileSystem::testReadAllZip()
     PFile fileSystem(this, filePath + fileName, FileType::Zip);
 
     // Read all files
-    QList<PFileData> files = fileSystem.readAll({"animals/"}, {"uca"});
+    QList<QSharedPointer<PFileData>> files = fileSystem.readAll({"animals/"}, {"uca"});
     qDebug() << "Files found:" << files.size();
 
-    PConfigMgr configMgr(this, files[0]);
+    PConfigMgr configMgr(this, files[0]->data);
 
     qDebug() << "Config manager:" << configMgr.getValue("m/Icon", "Icon");
     qDebug() << "Config manager:" << configMgr.getValue("f/Icon", "Icon");
