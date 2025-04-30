@@ -67,10 +67,10 @@ QVariant PTomlConfig::getValue(const QString &section, const QString &key) const
 
     // check if key exists in the table
     auto it = table->find(k);
-    if (k.isEmpty() || it == table->end()) {
+    if (k.empty() || it == table->end()) {
         QVariantMap result;
         for (const auto& [mapKey, mapValue] : *table) {
-            result.insert(QString::fromStdString(mapKey), extractVariant(mapValue));
+            result.insert(QString::fromStdString(mapKey.data()), extractVariant(mapValue));
         }
         return result;
     }
@@ -312,58 +312,54 @@ QVariant PTomlConfig::extractVariant(const toml::node& node) const {
         return list;
     }
 
-    // return QVariant();
-    return QVariant(); // interpret as string
+    if (auto val = node.as_table()) {
+        QVariantMap map;
+        for (const auto& [key, value] : *val) {
+            map.insert(QString::fromStdString(key.data()), extractVariant(value));
+        }
+        return map;
+    }
+
+    return QVariant();
 }
 
 // returns as QVariant for flexibility
 QVariant PTomlConfig::extractVariant(const QString& variant) const {
-    if (auto val = node.as_string())
-        return QString::fromStdString(val->get());
-    if (auto val = node.as_boolean())
-        return val->get();
-    if (auto val = node.as_integer())
-        return static_cast<qint64>(val->get());
-    if (auto val = node.as_floating_point())
-        return val->get();
+    // if (auto val = node.as_string())
+    //     return QString::fromStdString(val->get());
+    // if (auto val = node.as_boolean())
+    //     return val->get();
+    // if (auto val = node.as_integer())
+    //     return static_cast<qint64>(val->get());
+    // if (auto val = node.as_floating_point())
+    //     return val->get();
+    // if (auto val = node.as_array()) {
+    //     QVariantList list;
+    //     for (const auto& item : *val) {
+    //         list.append(extractVariant(item));
+    //     }
+    //     return list;
+    // }
 
-    // if it's an array, convert to QVariantList
-    if (auto val = node.as_array()) {
-        QVariantList list;
-        for (const auto& item : *val) {
-            list.append(extractVariant(item));
-        }
-        return list;
+    if (variant.isEmpty()) {
+        return QVariant(""); // empty string
     }
 
-    // if (variant.isEmpty()) {
-    //     return QVariant(""); // empty string
-    // }
+    if (variant == "true" || variant == "True") {
+        return true; // boolean true
+    } else if (variant == "false" || variant == "False") {
+        return false; // boolean false
+    }
 
-    // if (variant == "true" || variant == "True") {
-    //     return true; // boolean true
-    // } else if (variant == "false" || variant == "False") {
-    //     return false; // boolean false
-    // }
+    bool ok = false;
+    int intVal = variant.toInt(&ok);
+    if (ok) {
+        return intVal;
+    }
 
-    // bool ok = false;
-    // int intVal = variant.toInt(&ok);
-    // if (ok) {
-    //     return intVal;
-    // }
-
-    // double dblVal = variant.toFloat(&ok);
-    // if (ok) {
-    //     return dblVal;
-    // }
-
-    // if it's a table, convert to QVariantMap
-    if (auto val = node.as_table()) {
-        QVariantMap map;
-        for (const auto& [key, value] : *val) {
-            map.insert(QString::fromStdString(key), extractVariant(value));
-        }
-        return map;
+    double dblVal = variant.toFloat(&ok);
+    if (ok) {
+        return dblVal;
     }
 
     // return QVariant();
