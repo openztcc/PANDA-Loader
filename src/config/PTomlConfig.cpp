@@ -67,9 +67,12 @@ QVariant PTomlConfig::getValue(const QString &section, const QString &key) const
 
     // check if key exists in the table
     auto it = table->find(k);
-    if (it == table->end()) {
-        qDebug() << "Key not found:" << key;
-        return QVariant();
+    if (k.isEmpty() || it == table->end()) {
+        QVariantMap result;
+        for (const auto& [mapKey, mapValue] : *table) {
+            result.insert(QString::fromStdString(mapKey), extractVariant(mapValue));
+        }
+        return result;
     }
 
     // return correct type
