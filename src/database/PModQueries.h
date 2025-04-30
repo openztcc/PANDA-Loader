@@ -4,6 +4,10 @@
 #include <QString>
 
 namespace PQueries {
+    // Table Names
+    const QString ModsTable = "mods";
+    const QString DependenciesTable = "dependencies";
+
     const QString CreateModsTable = 
         "CREATE TABLE IF NOT EXISTS mods ("
         "pk INTEGER PRIMARY KEY AUTOINCREMENT, "

@@ -218,7 +218,7 @@ QSharedPointer<PModItem> PModLoader::buildModFromToml(PConfigMgr &config) {
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
             QVariantMap depMap = dep.toMap();
-            m_dataAccess->insertDependency(depData);
+            m_dataAccess->insertDependency(depMap);
         }
     }
     // if no dependency table, then set the dependency id to None

@@ -27,10 +27,6 @@ class PModDataAccess : public QObject {
         PModDataAccess(QObject *parent = nullptr, QSharedPointer<PDatabase> db = nullptr);
         ~PModDataAccess() = default;
 
-        // Table names
-        const QString m_modsTable = "mods";
-        const QString m_dependenciesTable = "dependencies";
-
         // Mod load operations
         bool insertMod(QSharedPointer<PModItem> mod);
         bool deleteMod(const QString &table, const QMap<QString, QVariant> &conditions);
@@ -46,7 +42,7 @@ class PModDataAccess : public QObject {
 
         // dependencies
         bool insertDependency(const QMap<QString, QVariant> &dependency);
-        bool removeDependency(const QString &depId);
+        bool removeDependency(const QString &modId, const QString &depId);
 
         QSharedPointer<PDatabase> getDatabase() const {
             return m_db;
