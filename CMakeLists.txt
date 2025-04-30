@@ -55,8 +55,6 @@ qt_add_executable(appPandaLdr
     src/database/PModQueries.h
     # data
     src/data/PDataList.h
-
-    src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp 
     )
 
 add_subdirectory(libs/apecore)
@@ -147,8 +145,6 @@ qt_add_qml_module(appPandaLdr
         src/mods/PModUIController.cpp
         src/mods/PModDataAccess.cpp
         src/mods/PModLoader.cpp
-
-        src/ldrs/PZtdMgr.cpp 
 )
 
 target_include_directories(appPandaLdr
@@ -260,8 +256,6 @@ qt_add_executable(testFileSystem
     src/filesystem/PFileSystem.h src/filesystem/PFileSystem.cpp
     src/filesystem/PFile.h src/filesystem/PFile.cpp
     src/filesystem/PZip.h src/filesystem/PZip.cpp
-
-    src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp
 )
 
 target_include_directories(testFileSystem
@@ -302,7 +296,6 @@ add_custom_command(TARGET testFileSystem POST_BUILD
 # qt_add_executable(testConfigMgr
 #     tests/PTestConfigMgr.cpp
 #     src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
-#     src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
 #     src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
 #     src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
 #     src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
@@ -332,7 +325,6 @@ add_custom_command(TARGET testFileSystem POST_BUILD
 #     tests/PTestDatabaseMgr.cpp
 #     PDatabase.h PDatabase.cpp
 #     PConfigMgr.h PConfigMgr.cpp
-#     PZtdMgr.h PZtdMgr.cpp
 # )
 
 # # link the required libraries
@@ -357,7 +349,6 @@ add_custom_command(TARGET testFileSystem POST_BUILD
 #     tests/PTestGraphicsMgr.cpp
 #     src/PConfigMgr.h src/PConfigMgr.cpp
 #     src/PApeFile.h src/PApeFile.cpp
-#     src/PZtdMgr.h src/PZtdMgr.cpp
 # )
 
 # # link the required libraries

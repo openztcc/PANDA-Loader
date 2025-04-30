@@ -13,7 +13,6 @@
 #include "toml.hpp"
 
 // Project
-#include "PZtdMgr.h"
 #include "IConfigLoader.h"
 #include "PFileData.h"
 #include "PIniConfig.h"
@@ -83,8 +82,5 @@ private:
     std::unique_ptr<IConfigLoader> m_dirty_laundry;
     int m_dirty;
     std::unique_ptr<IConfigLoader> createParser(const QString &path) const;
-    // helper functions
-    static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);
-    static QStringList extractDuplicateKeys(const QByteArray& rawData, const QString& group, const QString& key);
 };
 #endif // PCONFIGMGR_H

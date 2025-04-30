@@ -7,7 +7,7 @@
 #include <QQmlEngine>
 
 // Project
-#include "PModController.h"
+#include "PModUIController.h"
 #include "PModItem.h"
 #include "PModLoader.h"
 #include "PConfigMgr.h"
@@ -21,8 +21,8 @@ int main(int argc, char *argv[])
     PAppController *p_state = new PAppController(&app);
     qmlRegisterSingletonInstance("PandaLdr", 1, 0, "PAppController", p_state);
 
-    // Register the PModController singleton
-    PModController *controller = new PModController(&app, p_state);
+    // Register the PModUIController singleton
+    PModUIController *controller = new PModUIController(&app, p_state);
     PAppController *state = new PAppController(&app);
     PConfigMgr *zoo = state->m_zooini.get();
     PConfigMgr *settings = state->m_pandacfg.get();
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     // meta objects
     qRegisterMetaType<PModList*>("PModList*");
     qmlRegisterType<PModList>("PandaLdr", 1, 0, "PModList");
-    qmlRegisterType<PModController>("PandaLdr", 1, 0, "PModController");
+    qmlRegisterType<PModUIController>("PandaLdr", 1, 0, "PModUIController");
 
     // Load the main QML file
     QObject::connect(
