@@ -118,4 +118,13 @@ private:
     QVector<T> m_list;
 };
 
+// Concrete implementation of the PDataList class for QSharedPointer<PModItem>
+
+class PModList : public PDataList<QSharedPointer<PModItem>>
+{
+    Q_OBJECT
+public:
+    explicit PModList(QObject *parent = nullptr) : PDataList<QSharedPointer<PModItem>>(parent) {}
+};
+
 #endif // PDataList_H

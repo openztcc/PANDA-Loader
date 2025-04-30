@@ -25,9 +25,8 @@ enum Operation
     Delete
 };
 
-class PDatabase : public QObject
+class PDatabase
 {
-    Q_OBJECT
 public:
     PDatabase(const QString &dbPath, const QString &connection = "default", const QStringList &tableQueries = {});
     ~PDatabase();

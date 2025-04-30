@@ -103,7 +103,7 @@ QStringList PAppController::getZtdList() {
 
 bool PAppController::loadZooIni() {
     // Load the Zoo Tycoon config file
-    m_zooini = std::make_unique<PConfigMgr>(this, m_path + "\\zoo.ini");
+    m_zooini = QSharedPointer<PConfigMgr>::create(this, m_path + "\\zoo.ini");
     if (!m_zooini) {
         qDebug() << "Failed to load Zoo Tycoon config file.";
         return false;
@@ -118,7 +118,7 @@ bool PAppController::loadPandaCfg() {
     if (!QFile::exists(configPath)) {
         qDebug() << "Panda config file not found: " << configPath;
         // time to create a new one
-         m_pandacfg = std::make_unique<PConfigMgr>(this, configPath);
+         m_pandacfg = QSharedPointer<PConfigMgr>::create(this, configPath);
 
         // add default settings to the config
         m_pandacfg->setValue("zooGamePath", m_path, "");
@@ -128,7 +128,7 @@ bool PAppController::loadPandaCfg() {
         m_pandacfg->saveConfig(configPath);
     } else {
         // load the config file
-        m_pandacfg = std::make_unique<PConfigMgr>(this, configPath);
+        m_pandacfg = QSharedPointer<PConfigMgr>::create(this, configPath);
         if (!m_pandacfg) {
             qDebug() << "Failed to load Panda config file: " << configPath;
             return false;

@@ -26,11 +26,10 @@ class PModUIController : public QAbstractListModel
     Q_PROPERTY(QSharedPointer<PModItem> currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
     Q_PROPERTY(QVector<QSharedPointer<PModItem>> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
     Q_PROPERTY(QSharedPointer<PModItem> previousMod READ previousMod WRITE setPreviousMod NOTIFY previousModChanged)
-    Q_PROPERTY(int size READ size NOTIFY modAdded)
-    Q_PROPERTY(QAbstractListModel* model READ model CONSTANT)
+    // Q_PROPERTY(QAbstractListModel* model READ model CONSTANT) TODO: fix this to be a QML model
 public:
 
-    explicit PModUIController(QObject *parent = nullptr, QStringList ztdList = QStringList());
+    explicit PModUIController(QObject *parent = nullptr, QSharedPointer<PDatabase> db = nullptr); // , QStringList ztdList = QStringList());
 
     // Model object
     const PDataList<QSharedPointer<PModItem>>& model() const { return m_mods_list; }
@@ -59,7 +58,7 @@ signals:
     void currentModChanged();
     void selectedModsListUpdated(QVector<QSharedPointer<PModItem>> mods);
 private:
-    PDataList<QSharedPointer<PModItem>> m_mods_list;
+    PModList m_mods_list;
     QStringList m_ztdList;
     QVector<QSharedPointer<PModItem>> m_selected_mods;
     QSharedPointer<PModItem> m_current_mod;

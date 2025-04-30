@@ -26,6 +26,9 @@ public:
     // Load mods from a given file
     Q_INVOKABLE void loadModsFromFile(const QStringList &filePath);
 
+    // Mod Cleanup
+    bool deleteIcons(const QString &modId);
+
 private:
 
     // Mod loaders
@@ -49,9 +52,6 @@ private:
     // Description and tit
     QString determineDescription(const QSharedPointer<PConfigMgr> &config, const QString &category);
     QString determineTitle(const QSharedPointer<PConfigMgr> &config, const QString &category);
-
-    // Mod Cleanup
-    bool deleteIcons(const QString &modId);
 
     // Private fields
     QSharedPointer<PModDataAccess> m_dataAccess;

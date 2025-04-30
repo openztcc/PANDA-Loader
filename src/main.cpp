@@ -11,6 +11,8 @@
 #include "PModItem.h"
 #include "PModLoader.h"
 #include "PConfigMgr.h"
+#include "PModQueries.h"
+#include "PDatabase.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,19 +20,23 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     // Register the PAppController singleton
-    PAppController *p_state = new PAppController(&app);
-    qmlRegisterSingletonInstance("PandaLdr", 1, 0, "PAppController", p_state);
+    // PAppController *p_state = new PAppController(&app);
+    // qmlRegisterSingletonInstance("PandaLdr", 1, 0, "PAppController", p_state);
 
     // Register the PModUIController singleton
-    PModUIController *controller = new PModUIController(&app, p_state);
-    PAppController *state = new PAppController(&app);
-    PConfigMgr *zoo = state->m_zooini.get();
-    PConfigMgr *settings = state->m_pandacfg.get();
-    engine.rootContext()->setContextProperty("modController", controller);
-    engine.rootContext()->setContextProperty("modModel", QVariant::fromValue(controller->model()));
-    engine.rootContext()->setContextProperty("state", state);
-    engine.rootContext()->setContextProperty("psettings", settings);
-    engine.rootContext()->setContextProperty("zoo", zoo);
+    QSharedPointer<PLauncher> launcher = QSharedPointer<PLauncher>::create();
+    QSharedPointer<PDatabase> pandaDb = QSharedPointer<PDatabase>::create(QDir::homePath() + "/.panda", "ModsDb",
+                                                                          QStringList{PQueries::CreateModsTable, PQueries::CreateDependenciesTable});
+    QSharedPointer<PModUIController> modController = QSharedPointer<PModUIController>::create(&app, pandaDb);
+    QSharedPointer<PAppController> state = QSharedPointer<PAppController>::create(&app);
+    QSharedPointer<PConfigMgr> zoo = state->m_zooini;
+    QSharedPointer<PConfigMgr> settings = state->m_pandacfg;
+    engine.rootContext()->setContextProperty("modController", modController.get());
+    engine.rootContext()->setContextProperty("modModel", modController->model().get());
+    engine.rootContext()->setContextProperty("state", state.get());
+    engine.rootContext()->setContextProperty("psettings", settings.get());
+    engine.rootContext()->setContextProperty("zoo", zoo.get());
+    engine.rootContext()->setContextProperty("launcher", launcher.get());
 
     // models
     qmlRegisterAnonymousType<QAbstractListModel>("PandaLdr", 1);
@@ -39,8 +45,8 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<PModItem>("PandaLdr", 1, 0, "PModItem", "PModItem can only be created in C++");
 
     // meta objects
-    qRegisterMetaType<PModList*>("PModList*");
-    qmlRegisterType<PModList>("PandaLdr", 1, 0, "PModList");
+    // qRegisterMetaType<PModList*>("PModList*");
+    // qmlRegisterType<PModList>("PandaLdr", 1, 0, "PModList");
     qmlRegisterType<PModUIController>("PandaLdr", 1, 0, "PModUIController");
 
     // Load the main QML file

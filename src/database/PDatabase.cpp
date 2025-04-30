@@ -16,6 +16,7 @@ PDatabase::PDatabase(const QString &dbPath, const QString &connection, const QSt
     }
 
     m_tableQueries = tableQueries;
+    open();
 }
 
 PDatabase::~PDatabase() {

@@ -1,17 +1,22 @@
 #include "PModUIController.h"
 
-PModUIController::PModUIController(QObject *parent, QStringList ztdList) : QAbstractListModel(parent), m_ztdList(ztdList), m_mods_list(parent)
+PModUIController::PModUIController(QObject *parent, QSharedPointer<PDatabase> db) : QAbstractListModel(parent), m_dataAccess(db)
 {
-    m_ztdList = ztdList;
+    // Initialize the model
+    m_mods_list = PDataList<QSharedPointer<PModItem>>(this);
+    m_current_mod = nullptr;
+    m_previous_mod = nullptr;
+    m_selected_mods = QVector<QSharedPointer<PModItem>>();
 
-    // load mods from file here (using PModLoader)
+    m_dataAccess = QSharedPointer<PModDataAccess>::create(this, db);
+    m_loader = QSharedPointer<PModLoader>::create(this, m_dataAccess);
 }
 
 // --------------- Manage Mod List ------------------
 
 void PModUIController::loadMods()
 {
-    QVector<QSharedPointer<PModItem>> mods = m_dataAccess.getAllMods(OrderBy::Ascending, {"listed", true});
+    QVector<QSharedPointer<PModItem>> mods = m_dataAccess->getAllMods(OrderBy::Ascending, {"listed", true});
 
     //add to list
     for (const auto &mod : mods) {
@@ -27,7 +32,7 @@ void PModUIController::reloadMod(int index)
         return;
     }
 
-    QVector<QSharedPointer<PModItem>> dbMod = m_dataAccess.searchMods(Operation::Select, "mod_id", listedMod->id());
+    QVector<QSharedPointer<PModItem>> dbMod = m_dataAccess->searchMods(Operation::Select, "mod_id", listedMod->id());
     if (dbMod.isEmpty()) {
         qDebug() << "Mod not found in database: " << listedMod->id();
         return;
@@ -40,7 +45,7 @@ void PModUIController::reloadMod(int index)
 // Updates the mod list based on the property (filter) and search term (value) for filtering and live search
 void PModUIController::searchMods() 
 {
-    m_mods_list.replaceList(m_dataAccess.searchMods(Operation::Select, m_current_filters));
+    m_mods_list.replaceList(m_dataAccess->searchMods(Operation::Select, m_current_search_tags));
 }
 
 // Removes a mod from the list and database
@@ -51,14 +56,14 @@ void PModUIController::deleteMod(int index)
 
     // delete from filesystem
     QSharedPointer<PModItem> mod = m_mods_list.getItem(index);
-    QFile(mod->location() + "/" + mod->filename()).remove();
+    QFile(mod->currentLocation() + "/" + mod->filename()).remove();
     
     // remove icons from filesystem
     m_loader->deleteIcons(mod->id());
 
     // remove from database
     if (mod) {
-        m_dataAccess.deleteMod("mods", {{"mod_id", mod->id()}});
+        m_dataAccess->deleteMod("mods", {{"mod_id", mod->id()}});
     } else {
         qDebug() << "Mod not found in list: " << index;
     }
@@ -68,6 +73,6 @@ void PModUIController::deleteMod(int index)
 void PModUIController::addMod(QSharedPointer<PModItem> mod)
 {
     m_mods_list.addItem(mod);
-    m_dataAccess.insertMod(mod);
+    m_dataAccess->insertMod(mod);
     qDebug() << "Added mod to list: " << mod->title();
 }

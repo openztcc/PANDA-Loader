@@ -37,8 +37,8 @@ public:
     bool loadPandaCfg();
     Q_INVOKABLE QString pandaHomePath() { return m_configPath; }
 
-    std::unique_ptr<PConfigMgr> m_zooini;
-    std::unique_ptr<PConfigMgr> m_pandacfg;
+    QSharedPointer<PConfigMgr> m_zooini;
+    QSharedPointer<PConfigMgr> m_pandacfg;
 
     int dirty() const { return m_dirty; }
     void setDirty(int dirty) { m_dirty = dirty; }
