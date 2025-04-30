@@ -58,7 +58,7 @@ signals:
     void currentModChanged();
     void selectedModsListUpdated(QVector<QSharedPointer<PModItem>> mods);
 private:
-    PModList m_mods_list;
+    QSharedPointer<PModList> m_mods_list;
     QStringList m_ztdList;
     QVector<QSharedPointer<PModItem>> m_selected_mods;
     QSharedPointer<PModItem> m_current_mod;

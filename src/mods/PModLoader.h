@@ -21,7 +21,7 @@ public:
     ~PModLoader() override = default;
 
     // Load mods from a given directory
-    Q_INVOKABLE void loadModsFromDirectory(const QString &directoryPath);
+    // Q_INVOKABLE void loadModsFromDirectory(const QString &directoryPath); TODO: implement this function
 
     // Load mods from a given file
     Q_INVOKABLE void loadModsFromFile(const QStringList &filePath);
