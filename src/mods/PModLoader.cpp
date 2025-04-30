@@ -214,10 +214,27 @@ QSharedPointer<PModItem> PModLoader::buildModFromToml(PConfigMgr &config) {
     mod->setLink(config.getValue("link", "").toString());
 
     // if dependency table exists, then add the dependency id to the mod and add to db
-    QMap<QString, QVariant> depTable = config.getValue("dependencies", "").toMap();
+    QVariantList depTable = config.getValue("dependencies", "").toList();
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
-            
+            QVariantMap depMap = dep.toMap();
+            QString depId = depMap["mod_id"].toString();
+            QString depName = depMap["name"].toString();
+            QString depMinVersion = depMap["min_version"].toString();
+            QString depOptional = depMap["optional"].toBool() ? "true" : "false";
+            QString depOrdering = depMap["ordering"].toString();
+            QString depLink = depMap["link"].toString();
+            QMap<QString, QString> depData = {
+                {"mod_id", mod->id()},
+                {"dependency_id", depId},
+                {"name", depName},
+                {"min_version", depMinVersion},
+                {"optional", depOptional},
+                {"ordering", depOrdering},
+                {"link", depLink}
+            };
+
+            m_dataAccess->insertDependency(depData);
         }
     }
     // if no dependency table, then set the dependency id to None
