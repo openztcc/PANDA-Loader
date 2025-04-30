@@ -217,10 +217,7 @@ QSharedPointer<PModItem> PModLoader::buildModFromToml(PConfigMgr &config) {
     QMap<QString, QVariant> depTable = config.getValue("dependencies", "").toMap();
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
-            PDepDataAccess dependency(m_dataAccess->getDatabase());
-            if (dependency.isValid()) {
-                mod->setDependencyId(dependency.id());
-            }
+            
         }
     }
     // if no dependency table, then set the dependency id to None
