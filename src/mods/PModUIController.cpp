@@ -49,8 +49,14 @@ void PModUIController::deleteMod(int index)
     // delete from list
     m_mods_list.removeItem(index);
 
-    // delete from database
+    // delete from filesystem
     QSharedPointer<PModItem> mod = m_mods_list.getItem(index);
+    QFile(mod->location() + "/" + mod->filename()).remove();
+    
+    // remove icons from filesystem
+    m_loader->deleteIcons(mod->id());
+
+    // remove from database
     if (mod) {
         m_dataAccess.deleteMod("mods", {{"mod_id", mod->id()}});
     } else {

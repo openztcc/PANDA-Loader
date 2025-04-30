@@ -28,17 +28,13 @@ class PModUIController : public QAbstractListModel
     Q_PROPERTY(QVector<QSharedPointer<PModItem>> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
     Q_PROPERTY(QSharedPointer<PModItem> previousMod READ previousMod WRITE setPreviousMod NOTIFY previousModChanged)
     Q_PROPERTY(int size READ size NOTIFY modAdded)
+    Q_PROPERTY(QAbstractListModel* model READ model CONSTANT)
 public:
 
     explicit PModUIController(QObject *parent = nullptr, QStringList ztdList = QStringList());
 
     // Model object
     const PDataList<QSharedPointer<PModItem>>& model() const { return m_mods_list; }
-
-    // Mod list properties
-    int size(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    QHash<int, QByteArray> roleNames() const;
 
     void loadMods();
     void reloadMod(int index);
@@ -69,9 +65,9 @@ private:
     QVector<QSharedPointer<PModItem>> m_selected_mods;
     QSharedPointer<PModItem> m_current_mod;
     QSharedPointer<PModItem> m_previous_mod;
-    PModDataAccess m_dataAccess;
-    PModLoader m_loader;
-    QMap<QString, QVariant> m_current_filters;
+    QSharedPointer<PModDataAccess> m_dataAccess;
+    QSharedPointer<PModLoader> m_loader;
+    QMap<QString, QVariant> m_current_search_tags;
 
 };
 
