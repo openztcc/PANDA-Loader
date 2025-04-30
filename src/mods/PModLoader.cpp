@@ -407,3 +407,25 @@ bool PModLoader::deleteIcons(const QString &modId) {
 
     return true;
 }
+
+QString PModLoader::determineDescription(const QSharedPointer<PConfigMgr> &config, const QString &category) {
+    if (category == "Animals") {
+        return config->getValue("cLongHelp", "1033").toString();
+    } else if (category == "Building" || category == "Scenery") {
+        // later use lookup table to get description from lang files
+        return "No description found";
+    } else {
+        return "No description found";
+    }
+}
+
+QString PModLoader::determineTitle(const QSharedPointer<PConfigMgr> &config, const QString &category) {
+    if (category == "Animals") {
+        return config->getValue("cName", "1033").toString();
+    } else if (category == "Building" || category == "Scenery") {
+        // later use lookup table to get title from lang files
+        return "No title found";
+    } else {
+        return "No title found";
+    }
+}

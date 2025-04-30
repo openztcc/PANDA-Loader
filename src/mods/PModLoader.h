@@ -47,8 +47,8 @@ private:
     QString buildGraphicPath(const QSharedPointer<PConfigMgr> &aniFile);
 
     // Description and tit
-    QString getDescription(const QSharedPointer<PConfigMgr> &config, const QString &category);
-    QString getTitle(const QSharedPointer<PConfigMgr> &config, const QString &category);
+    QString determineDescription(const QSharedPointer<PConfigMgr> &config, const QString &category);
+    QString determineTitle(const QSharedPointer<PConfigMgr> &config, const QString &category);
 
     // Mod Cleanup
     bool deleteIcons(const QString &modId);
