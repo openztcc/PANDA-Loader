@@ -45,7 +45,7 @@ class PModDataAccess : public QObject {
         void loadModsFromFile(const QStringList &ztdList);
 
         // dependencies
-        bool insertDependency(const QMap<QString, QString> &dependency);
+        bool insertDependency(const QMap<QString, QVariant> &dependency);
         bool removeDependency(const QString &depId);
 
         QSharedPointer<PDatabase> getDatabase() const {

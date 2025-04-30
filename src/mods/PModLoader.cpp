@@ -218,22 +218,6 @@ QSharedPointer<PModItem> PModLoader::buildModFromToml(PConfigMgr &config) {
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
             QVariantMap depMap = dep.toMap();
-            QString depId = depMap["mod_id"].toString();
-            QString depName = depMap["name"].toString();
-            QString depMinVersion = depMap["min_version"].toString();
-            QString depOptional = depMap["optional"].toBool() ? "true" : "false";
-            QString depOrdering = depMap["ordering"].toString();
-            QString depLink = depMap["link"].toString();
-            QMap<QString, QString> depData = {
-                {"mod_id", mod->id()},
-                {"dependency_id", depId},
-                {"name", depName},
-                {"min_version", depMinVersion},
-                {"optional", depOptional},
-                {"ordering", depOrdering},
-                {"link", depLink}
-            };
-
             m_dataAccess->insertDependency(depData);
         }
     }

@@ -108,7 +108,7 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation
 }
 
 // Insert mod dependencies into the database
-bool PModDataAccess::insertDependency(const QMap<QString, QString> &dependency) {
+bool PModDataAccess::insertDependency(const QMap<QString, QVariant> &dependency) {
     if (!m_db->runQuery(PQueries::DependencyInsertQuery, dependency)) {
         qDebug() << "Failed to insert dependency: " << dependency["name"];
         return false;
