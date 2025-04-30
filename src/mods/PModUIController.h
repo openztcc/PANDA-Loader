@@ -24,11 +24,10 @@ class PModItem;
 class PModUIController : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(QObject* currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
-    Q_PROPERTY(QList<QObject*> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
-    Q_PROPERTY(QObject* previousMod READ previousMod NOTIFY previousModChanged)
-    Q_PROPERTY(int modCount READ modCount NOTIFY modAdded)
-    Q_PROPERTY(QAbstractListModel* model READ model CONSTANT)
+    Q_PROPERTY(QSharedPointer<PModItem> currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
+    Q_PROPERTY(QVector<QSharedPointer<PModItem>> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
+    Q_PROPERTY(QSharedPointer<PModItem> previousMod READ previousMod WRITE setPreviousMod NOTIFY previousModChanged)
+    Q_PROPERTY(int size READ size NOTIFY modAdded)
 public:
 
     explicit PModUIController(QObject *parent = nullptr, QStringList ztdList = QStringList());
@@ -46,6 +45,16 @@ public:
     Q_INVOKABLE void searchMods();
     void deleteMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
+
+    QVector<QSharedPointer<PModItem>> selectedMods() const { return m_selected_mods; }
+    void setSelectedMods(QVector<QSharedPointer<PModItem>> selectedMods) { m_selected_mods = selectedMods; }
+
+    void setCurrentMod(QSharedPointer<PModItem> mod) { m_current_mod = mod; emit currentModChanged(); }
+    QSharedPointer<PModItem> currentMod() const { return m_current_mod; }
+
+    void previousMod(QSharedPointer<PModItem> mod) { m_previous_mod = mod; emit previousModChanged(); }
+    QSharedPointer<PModItem> previousMod() const { return m_previous_mod; }
+
 signals:
     void modAdded(QSharedPointer<PModItem>);
     void modRemoved(QSharedPointer<PModItem>);
@@ -53,11 +62,13 @@ signals:
     void modDeselected();
     void previousModChanged();
     void currentModChanged();
-    void selectedModsListUpdated(QList<QSharedPointer<PModItem>> mods);
+    void selectedModsListUpdated(QVector<QSharedPointer<PModItem>> mods);
 private:
     PDataList<QSharedPointer<PModItem>> m_mods_list;
     QStringList m_ztdList;
     QVector<QSharedPointer<PModItem>> m_selected_mods;
+    QSharedPointer<PModItem> m_current_mod;
+    QSharedPointer<PModItem> m_previous_mod;
     PModDataAccess m_dataAccess;
     PModLoader m_loader;
     QMap<QString, QVariant> m_current_filters;

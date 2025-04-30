@@ -33,8 +33,8 @@ class PModItem : public QObject
     Q_PROPERTY(QStringList tags READ tags WRITE setTags NOTIFY modTagsChanged)
 
     // File data properties
-    Q_PROPERTY(QString currentLocation READ currrentLocation WRITE setCurrentLocation NOTIFY modCurrentLocationChanged)
-    Q_PROPERTY(QString originalLocation READ originallocation WRITE setoriginalLocation NOTIFY modOriginalLocationChanged)
+    Q_PROPERTY(QString currentLocation READ currentLocation WRITE setCurrentLocation NOTIFY modCurrentLocationChanged)
+    Q_PROPERTY(QString originalLocation READ originalLocation WRITE setOriginalLocation NOTIFY modOriginalLocationChanged)
     Q_PROPERTY(QString disabledLocation READ disabledLocation WRITE setDisabledLocation NOTIFY modDisabledLocationChanged)
     Q_PROPERTY(QString filename READ filename WRITE setFilename NOTIFY modFilenameChanged)
     Q_PROPERTY(QString fileSize READ fileSize WRITE setFileSize NOTIFY modFileSizeChanged)

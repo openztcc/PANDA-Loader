@@ -1,9 +1,7 @@
 #include "PModDataAccess.h"
 
 PModDataAccess::PModDataAccess(QObject *parent, QSharedPointer<PDatabase> db) {
-    if (!m_db) {
-        m_db = QSharedPointer<PDatabase>::create(this, m_dbName, "ModDal");
-    }
+    m_db = db;
 }
 
 bool PModDataAccess::insertMod(QSharedPointer<PModItem> mod) 
