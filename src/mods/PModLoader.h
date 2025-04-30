@@ -37,6 +37,9 @@ public:
     QStringList getIconPaths(const QMap<QString, QString> &aniPaths, const QSharedPointer<PFile> &ztd, const QString &typeName);
     QString buildGraphicPath(const QSharedPointer<PConfigMgr> &aniFile);
 
+    // Mod Cleanup
+    bool deleteIcons(const QString &modId);
+
 private:
     QSharedPointer<PModDataAccess> m_dataAccess;
 

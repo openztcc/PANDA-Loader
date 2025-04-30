@@ -1,8 +1,8 @@
 #include "PModDataAccess.h"
 
-PModDataAccess::PModDataAccess() : m_db(PDatabase(QDir::homePath() + "/panda.padb", "ModDal")) {
-    if (!m_db.open()) {
-        qDebug() << "Failed to open database in PModDataAccess";
+PModDataAccess::PModDataAccess(QObject *parent, QSharedPointer<PDatabase> db) {
+    if (!m_db) {
+        m_db = QSharedPointer<PDatabase>::create(this, m_dbName, "ModDal");
     }
 }
 
@@ -24,11 +24,11 @@ bool PModDataAccess::insertMod(QSharedPointer<PModItem> mod)
     params.insert(":original_location", mod->originalLocation());
     params.insert(":is_selected", mod->selected() ? 1 : 0);
     
-    return m_db.runQuery(PQueries::ModsInsertQuery, params);
+    return m_db->runQuery(PQueries::ModsInsertQuery, params);
 }
 
 bool PModDataAccess::deleteMod(const QString &table, const QMap<QString, QVariant> &conditions) {
-    QSqlQuery deletedMods = m_db.runOperation(Operation::Delete, table, conditions);
+    QSqlQuery deletedMods = m_db->runOperation(Operation::Delete, table, conditions);
     if (deletedMods.lastError().isValid()) {
         qDebug() << "Error deleting mod: " << deletedMods.lastError().text();
         return false;
@@ -37,7 +37,7 @@ bool PModDataAccess::deleteMod(const QString &table, const QMap<QString, QVarian
 }
 
 bool PModDataAccess::updateMod(const QString &table, const QMap<QString, QVariant> &setFields, const QMap<QString, QVariant> &whereConditions) {
-    QSqlQuery updatedMods = m_db.runOperation(Operation::Update, table, setFields, {}, "", whereConditions);
+    QSqlQuery updatedMods = m_db->runOperation(Operation::Update, table, setFields, {}, "", whereConditions);
     if (updatedMods.lastError().isValid()) {
         qDebug() << "Error updating mod: " << updatedMods.lastError().text();
         return false;
@@ -46,7 +46,7 @@ bool PModDataAccess::updateMod(const QString &table, const QMap<QString, QVarian
 }
 
 bool PModDataAccess::doesModExist(const QString &modId) {
-    QSqlQuery doesExist = m_db.runOperation(Operation::Select, "mods", {{"mod_id", modId}});
+    QSqlQuery doesExist = m_db->runOperation(Operation::Select, "mods", {{"mod_id", modId}});
     if (doesExist.lastError().isValid()) {
         qDebug() << "Error checking if mod exists: " << doesExist.lastError().text();
         return false;
@@ -72,9 +72,9 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const OrderBy &orde
 
     QSqlQuery query;
     if (exception.first.isEmpty()) {
-        query = m_db.returnQuery("SELECT * FROM mods ORDER BY " + order);
+        query = m_db->returnQuery("SELECT * FROM mods ORDER BY " + order);
     } else { // return mods without the exception key/value
-        query = m_db.returnQuery("SELECT * FROM mods WHERE " + exception.first + " != " + exception.second.toString() + " ORDER BY " + order);
+        query = m_db->returnQuery("SELECT * FROM mods WHERE " + exception.first + " != " + exception.second.toString() + " ORDER BY " + order);
     }
 
     QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
@@ -87,7 +87,7 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const OrderBy &orde
 
 // Get search results as a list of strings
 QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation, const QString &propertyName, const QString &searchTerm) {
-    QSqlQuery query = m_db.runOperation(operation, "mods", {{propertyName, searchTerm}});
+    QSqlQuery query = m_db->runOperation(operation, "mods", {{propertyName, searchTerm}});
     QVector<QSharedPointer<PModItem>> modItems;
 
     while (query.next()) {
@@ -99,7 +99,7 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation
 
 // Get search results as a list of strings
 QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation, const QMap<QString, QVariant> &conditions) {
-    QSqlQuery query = m_db.runOperation(operation, "mods", conditions);
+    QSqlQuery query = m_db->runOperation(operation, "mods", conditions);
     QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
 
     while (query.next()) {

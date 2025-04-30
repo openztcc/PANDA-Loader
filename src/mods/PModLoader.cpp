@@ -346,3 +346,64 @@ QString PModLoader::buildGraphicPath(const QSharedPointer<PConfigMgr> &aniFile) 
 
     return iconPath;
 }
+
+// Deletes the icons from filesystem
+bool PModLoader::deleteIcons(const QString &modId) {
+    // Get the home path
+    QString homePath = QDir::homePath() + "/.panda/modicons/";
+    QDir dir(homePath);
+    if (!dir.exists()) {
+        qDebug() << "Icons directory does not exist:" << homePath;
+        return false;
+    }
+
+    QSharedPointer<PDatabase> db = m_dataAccess->getDatabase();
+    if (!db) {
+        qDebug() << "deleteIcons: Database is not initialized.";
+        return false;
+    }
+
+    QStringList iconPaths = db->runOperation(Operation::Select, "mods", {{"mod_id", modId}}).value("icon_paths").toStringList();
+    if (iconPaths.isEmpty()) {
+        qDebug() << "No icon paths found for mod ID:" << modId;
+        return false;
+    }
+
+    if (iconPaths.isEmpty()) {
+        qDebug() << "No icon paths found for mod ID:" << modId;
+        // print the paths for debugging
+        for (const QString &iconPath : iconPaths) {
+            qDebug() << "Icon path:" << iconPath;
+        }
+        return false;
+    }
+
+    // Delete each icon file
+    for (const QString &iconPath : iconPaths) {
+        // Convert QUrl to local file path
+        if (QFile::exists(iconPath)) {
+            if (!QFile::remove(iconPath)) {
+                qDebug() << "Failed to delete icon file:" << iconPath;
+                return false;
+            } else {
+                qDebug() << "Deleted icon file:" << iconPath;
+            }
+        } else {
+            qDebug() << "Icon file does not exist:" << iconPath;
+        }
+    }
+
+    // Remove the directory if empty
+    if (dir.isEmpty()) {
+        if (!dir.rmdir(homePath)) {
+            qDebug() << "Failed to remove empty directory:" << homePath;
+            return false;
+        } else {
+            qDebug() << "Removed empty directory:" << homePath;
+        }
+    } else {
+        qDebug() << "Directory is not empty, not removing:" << homePath;
+    }
+
+    return true;
+}

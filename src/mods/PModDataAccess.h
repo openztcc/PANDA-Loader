@@ -24,10 +24,10 @@ class PModDataAccess : public QObject {
 
     public:
         // Constructor
-        PModDataAccess();
+        PModDataAccess(QObject *parent = nullptr, QSharedPointer<PDatabase> db = nullptr);
         ~PModDataAccess() = default;
 
-        // Mod operations
+        // Mod load operations
         bool insertMod(QSharedPointer<PModItem> mod);
         bool deleteMod(const QString &table, const QMap<QString, QVariant> &conditions);
         bool updateMod(const QString &table, const QMap<QString, 
@@ -39,8 +39,13 @@ class PModDataAccess : public QObject {
         QVector<QSharedPointer<PModItem>> searchMods(Operation operation,
             const QMap<QString, QVariant> &conditions);
         void loadModsFromFile(const QStringList &ztdList);
+
+        QSharedPointer<PDatabase> getDatabase() const {
+            return m_db;
+        }
+
     private:
-        PDatabase m_db;
+        QSharedPointer<PDatabase> m_db;
 
         const QString m_dbName = "panda.padb";
         // PModList
