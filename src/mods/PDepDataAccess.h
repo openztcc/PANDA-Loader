@@ -10,13 +10,13 @@
 
 class PDepDataAccess {
     public:
-    PDepDataAccess(QObject *parent = nullptr);
+        PDepDataAccess(const QSharedPointer<PDatabase> &db = nullptr);
         ~PDepDataAccess() = default;
         bool addDependency(const QString &modId, const PDependency &dependency);
         bool removeDependency(const QString &depId);
         bool doesDependencyExist(const QString &dependencyId);
     private: 
-        PDatabase m_db;
+        QSharedPointer<PDatabase> m_db;
         const QString m_tableName = "dependencies";
 };
 

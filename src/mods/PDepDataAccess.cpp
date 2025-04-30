@@ -1,13 +1,14 @@
-#include "PDepDal.h"
+#include "PDepDataAccess.h"
 
-PDepDal::PDepDal(QObject *parent) {
-    m_db = PDatabase();
-    if (!m_db.openDatabase()) {
-        qDebug() << "Failed to open database in PDepDal";
+PDepDataAccess::PDepDataAccess(const QSharedPointer<PDatabase> &db) {
+    m_db = db;
+    if (!m_db) {
+        qDebug() << "Database is not initialized.";
+        return;
     }
 }
 
-bool PDepDal::addDependency(const QString &modId, const PDependency &dependency) {
+bool PDepDataAccess::addDependency(const QString &modId, const PDependency &dependency) {
     QSqlQuery query(m_db);
 
     // Check if mod exists
@@ -72,7 +73,7 @@ bool PDepDal::addDependency(const QString &modId, const PDependency &dependency)
 }
 
 //TODO: Fix so it removes dependency from mod, not just dependencies table
-bool PDepDal::removeDependency(const QString &dependencyId) {
+bool PDepDataAccess::removeDependency(const QString &dependencyId) {
     QSqlQuery query(m_db);
 
     // Remove the dependency from dependencies table
@@ -87,7 +88,7 @@ bool PDepDal::removeDependency(const QString &dependencyId) {
     return true;
 }
 
-bool PDepDal::doesDependencyExist(const QString &dependencyId) {
+bool PDepDataAccess::doesDependencyExist(const QString &dependencyId) {
     QSqlQuery query(m_db);
 
     // Check if dependency exists
