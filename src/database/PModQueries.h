@@ -56,7 +56,25 @@ namespace PQueries {
         ":oglocation, "
         ":is_selected)";
 
-    const QString m_createDependenciesTableQuery =
+    const QString DependencyInsertQuery = 
+        "INSERT INTO dependencies ("
+        "mod_id, "
+        "dependency_id, "
+        "name, "
+        "min_version, "
+        "optional, "
+        "ordering, "
+        "link) "
+        "VALUES ("
+        ":mod_id, "
+        ":dependency_id, "
+        ":name, "
+        ":min_version, "
+        ":optional, "
+        ":ordering, "
+        ":link)";
+
+    const QString CreateDependenciesTable =
         "CREATE TABLE IF NOT EXISTS dependencies ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "mod_id TEXT NOT NULL, "
