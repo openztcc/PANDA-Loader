@@ -211,15 +211,15 @@ QSharedPointer<PModItem> PModLoader::buildModFromToml(const QSharedPointer<PConf
     QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(nullptr);
 
     // values from TOML file
-    mod->setId(config->getValue("mod_id", "").toString());
-    mod->setTitle(config->getValue("name", "").toString());
-    mod->setAuthors(config->getValue("authors", "").toStringList());
-    mod->setDescription(config->getValue("description", "").toString());
-    mod->setVersion(config->getValue("version", "").toString());
-    mod->setLink(config->getValue("link", "").toString());
+    mod->setId(config->getValue("", "mod_id").toString());
+    mod->setTitle(config->getValue("", "name").toString());
+    mod->setAuthors(config->getValue("", "authors").toStringList());
+    mod->setDescription(config->getValue("", "description").toString());
+    mod->setVersion(config->getValue("", "version").toString());
+    mod->setLink(config->getValue("", "link").toString());
 
     // if dependency table exists, then add the dependency id to the mod and add to db
-    QVariantList depTable = config->getValue("dependencies", "").toList();
+    QVariantList depTable = config->getValue("", "dependencies").toList();
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
             QVariantMap depMap = dep.toMap();
@@ -230,7 +230,7 @@ QSharedPointer<PModItem> PModLoader::buildModFromToml(const QSharedPointer<PConf
     else {
         mod->setDependencyId("None");
     }
-    mod->setDependencyId(config->getValue("dep_id", "").toString());
+    mod->setDependencyId(config->getValue("", "dep_id").toString());
 
     return mod;
 }
