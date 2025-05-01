@@ -16,9 +16,9 @@ PConfigMgr::PConfigMgr(QObject *parent, const QString &filepath) : QObject(paren
     }
 }
 
-PConfigMgr::PConfigMgr(QObject *parent, const PFileData &fileData) : QObject(parent), m_dirty(0), m_config(nullptr), m_configBackup(nullptr), m_dirty_laundry(nullptr)
+PConfigMgr::PConfigMgr(QObject *parent, const QSharedPointer<PFileData> &fileData) : QObject(parent), m_dirty(0), m_config(nullptr), m_configBackup(nullptr), m_dirty_laundry(nullptr)
 {
-    if (!fileData.data.isEmpty()) {
+    if (!fileData) {
         loadConfig(fileData);
     } else {
         qDebug() << "No data provided for config file";
@@ -80,21 +80,23 @@ bool PConfigMgr::loadConfig(const QString &filePath)
 
 // Load config from a PFileData object
 // TODO: Eventually rework this to use the PFileData object directly instead of creating a temporary file
-bool PConfigMgr::loadConfig(const PFileData &fileData)
+bool PConfigMgr::loadConfig(const QSharedPointer<PFileData> &fileData)
 {
-    if (fileData.data.isEmpty()) {
+    if (!fileData) {
         qDebug() << "No data provided for config file";
         return false;
     }
 
     // Create a temporary file to load the config from
-    QString tempFilePath = QDir::tempPath() + "/" + fileData.filename + fileData.ext;
+    QString tempFilePath = QDir::tempPath() + "/" + fileData->filename + fileData->ext;
     QFile tempFile(tempFilePath);
     if (!tempFile.open(QIODevice::WriteOnly)) {
         qDebug() << "Failed to create temporary file: " << tempFilePath;
         return false;
+    } else {
+        qDebug() << "Temporary file created: " << tempFilePath;
     }
-    tempFile.write(fileData.data);
+    tempFile.write(fileData->data);
     tempFile.close();
 
     // Load the config from the temporary file

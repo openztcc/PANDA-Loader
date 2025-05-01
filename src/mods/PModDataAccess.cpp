@@ -7,20 +7,39 @@ PModDataAccess::PModDataAccess(QObject *parent, QSharedPointer<PDatabase> db) {
 bool PModDataAccess::insertMod(QSharedPointer<PModItem> mod) 
 {
     QVariantMap params;
-    params.insert(":title", mod->title());
-    params.insert(":authors", mod->authors().join(", "));
-    params.insert(":description", mod->description());
-    params.insert(":enabled", mod->enabled() ? 1 : 0);
-    params.insert(":category", mod->category());
-    params.insert(":tags", mod->tags().join(", "));
-    params.insert(":version", mod->version());
-    params.insert(":mod_id", mod->id());
-    params.insert(":dep_id", mod->dependencyId());
-    params.insert(":filename", mod->filename());
-    params.insert(":current_location", mod->currentLocation());
-    params.insert(":iconpaths", mod->iconpaths().join(", "));
-    params.insert(":original_location", mod->originalLocation());
-    params.insert(":is_selected", mod->selected() ? 1 : 0);
+
+    // mod properties
+    params.insert("title", mod->title());
+    params.insert("authors", mod->authors().join(", "));
+    params.insert("description", mod->description());
+    params.insert("version", mod->version());
+    params.insert("mod_id", mod->id());
+    params.insert("link", mod->link());
+
+    // mod flags
+    params.insert("enabled", mod->enabled() ? 1 : 0);
+    params.insert("is_selected", mod->selected() ? 1 : 0);
+    params.insert("listed", mod->listed() ? 1 : 0);
+    params.insert("is_collection", mod->isCollection() ? 1 : 0);
+
+    // categorization properties
+    params.insert("category", mod->category());
+    params.insert("tags", mod->tags().join(", "));
+
+    // external properties
+    params.insert("dep_id", mod->dependencyId());
+    params.insert("collection_id", mod->collectionId());
+
+    // file data properties
+    params.insert("filename", mod->filename());
+    params.insert("current_location", mod->currentLocation());
+    params.insert("original_location", mod->originalLocation());
+    params.insert("disabled_location", mod->disabledLocation());
+    params.insert("file_size", mod->fileSize());
+    params.insert("file_date", mod->fileDate());
+
+    // graphics properties
+    params.insert("icon_paths", mod->iconpaths().join(", "));
     
     return m_db->runQuery(PQueries::ModsInsertQuery, params);
 }

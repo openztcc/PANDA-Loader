@@ -27,7 +27,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         QSharedPointer<PConfigMgr> meta = QSharedPointer<PConfigMgr>::create();
         if (foundMeta) {
             // Load the meta file and get the mod data
-            meta->loadConfig(metaData->data);
+            meta->loadConfig(metaData);
         } else {
             qDebug() << "No meta config found in ztd: " << ztd;
         }

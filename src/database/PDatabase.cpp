@@ -83,7 +83,7 @@ bool PDatabase::createTables(const QStringList &tableQueries) {
 bool PDatabase::runQuery(const QString &query) {
     QSqlQuery q(m_db);
     if (!q.exec(query)) {
-        qDebug() << "Error running query: " << q.lastError().text();
+        qDebug() << "Error running runQuery -> query: " << q.lastError().text();
         return false;
     }
     return true;
@@ -105,7 +105,7 @@ bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
 
     // run prepared query
     if (!q.exec()) {
-        qDebug() << "Error running query: " << q.lastError().text();
+        qDebug() << "Error running runQuery -> query, params: " << q.lastError().text();
         return false;
     }
     return true;
@@ -116,7 +116,7 @@ bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
 QSqlQuery PDatabase::returnQuery(const QString &query) {
     QSqlQuery q(m_db);
     if (!q.exec(query)) {
-        qDebug() << "Error running query: " << q.lastError().text();
+        qDebug() << "Error running returnQuery: " << q.lastError().text();
     }
     return q;
 }

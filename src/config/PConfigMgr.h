@@ -41,13 +41,13 @@ public:
     };
 
     PConfigMgr(QObject *parent = nullptr, const QString &filepath = "");
-    PConfigMgr(QObject *parent, const PFileData &fileData = PFileData());
+    PConfigMgr(QObject *parent, const QSharedPointer<PFileData> &fileData = nullptr);
 
     ~PConfigMgr();
 
     // meta configuration operations
     bool loadConfig(const QString &filePath);
-    bool loadConfig(const PFileData &fileData);
+    bool loadConfig(const QSharedPointer<PFileData> &fileData);
     bool saveConfig(const QString &filePath);
     Q_INVOKABLE bool saveConfig();
     Q_INVOKABLE bool revertChanges();
