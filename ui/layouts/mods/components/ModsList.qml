@@ -157,16 +157,17 @@ ColumnLayout {
                 width: ListView.view.width
                 height: 50
 
-                required property int index
+                // required property int index
                 required property var model
-                required property string title
-                required property var instance
+                // required property string title
+                // required property var instance
 
                 Component.onCompleted: {
-                    console.log("Delegate created for item at index:", modPane.index)
-                    console.log("title:", modPane.title)
-                    console.log("instance:", modPane.instance)
-                    console.log("Available roles:", Object.keys(modPane.model).join(", "))
+                    console.log("Delegate created for item at index:", model.index)
+                    console.log("title:", model.title)
+                    console.log("Description:", model.description)
+                    // console.log("instance:", model.instance)
+                    console.log("Available roles:", Object.keys(model).join(", "))
                 }
 
                 // bottom border
@@ -181,8 +182,8 @@ ColumnLayout {
                 // mod list item
                 ModItem {
                     id: modItems
-                    title: modPane.title
-                    instance: modPane.instance
+                    // title: modPane.title
+                    // instance: modPane.instance
                     cDialog: confirmDialog
                     centerTo: modPage
                 }

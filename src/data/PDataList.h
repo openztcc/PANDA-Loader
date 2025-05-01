@@ -40,7 +40,7 @@ public:
     }
 
     // return the role names for the model
-    QHash<int, QByteArray> roleNames()
+    QHash<int, QByteArray> roleNames() const override
     {
         return T::roleNames();
     }
@@ -119,6 +119,12 @@ private:
 };
 
 // Concrete implementation of the PDataList class for QSharedPointer<PModItem>
+template<> // need this to trick the compiler into using the correct specialization (since we are using a template class
+// and the type is a smart pointer, so it doesn't know which one to use)
+inline QHash<int, QByteArray> PDataList<QSharedPointer<PModItem>>::roleNames() const
+{
+    return PModItem::roleNames();
+}
 
 class PModList : public PDataList<QSharedPointer<PModItem>>
 {

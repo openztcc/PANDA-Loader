@@ -32,7 +32,7 @@ public:
     explicit PModUIController(QObject *parent = nullptr, QSharedPointer<PDatabase> db = nullptr); // , QStringList ztdList = QStringList());
 
     // Model object
-    QObject* model() const { return m_mods_list.get(); }
+    QAbstractItemModel* model() const { return m_mods_list.get(); }
 
     Q_INVOKABLE void loadMods();
     void reloadMod(int index);
