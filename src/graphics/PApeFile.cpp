@@ -28,20 +28,20 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
     qDebug() << "Generating graphic as PNG:" << graphicPath << "with file name:" << fileName;
     QByteArray graphicData = m_ztd->read(graphicPath)->data;
 
+    qDebug() << "Graphic data size:" << graphicData.size();
+
     // local function to create temp files
     auto createTempFile = [&](const QByteArray &fileData, const QString &filePath) -> QString {
-        auto tempFile = std::make_unique<QTemporaryFile>();
-        tempFile->setAutoRemove(true);
-        if (!tempFile->open()) {
-            qDebug() << "Failed to create temp file for:" << filePath;
-            return {};
+        QTemporaryFile *tempFile = new QTemporaryFile();
+        tempFile->setAutoRemove(false);
+        if (tempFile->open()) {
+            tempFile->write(fileData);
+            tempFile->flush();
+            return tempFile->fileName();
+        } else {
+            qDebug() << "Failed to create temp file:" << tempFile->errorString();
+            return "";
         }
-        tempFile->write(fileData);
-        tempFile->flush();
-
-        QString filename = tempFile->fileName();
-        qDebug() << "Temp file created:" << filename;
-        return filename;
     };
 
     // Create a temp file that will store the graphic data
@@ -49,8 +49,10 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
 
     // Read Header from the graphic file
     Header header = ApeCore::getHeader(graphicFile.toStdString());
-    if (header.palName.data() == nullptr) {
+    qDebug() << "Header size:" << sizeof(header);
+    if (header.palName.size() == 0) {
         qDebug() << "Invalid or missing palette path for graphic:" << graphicPath;
+        QFile::remove(graphicFile);
         return {};
     }
 
@@ -63,23 +65,30 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
     QByteArray paletteData = m_ztd->read(palettePath[0])->data;
     if (paletteData.isEmpty()) {
         qDebug() << "Failed to read palette data from ztd file:" << palettePath[0];
+        QFile::remove(graphicFile);
         return {};
     }
 
     // Create a temp file for the palette data
     QString paletteFile = createTempFile(paletteData, palettePath[0]);
-    if (paletteFile.isEmpty()) return "";
+    if (paletteFile.isEmpty()) 
+    {
+        QFile::remove(graphicFile);
+        return "";
+    }
 
     // read the graphic data
     ApeCore graphic;
     if (graphic.load(graphicFile.toStdString(), 0, paletteFile.toStdString()) != 1) {
         qDebug() << "Failed to load graphic: " << fileName;
+        QFile::remove(graphicFile);
         return "";
     }
 
     OutputBuffer** buffer = graphic.apeBuffer();
     if (!buffer || !*buffer) {
         qDebug() << "Invalid output buffer for:" << fileName;
+        QFile::remove(graphicFile);
         return "";
     }
 
@@ -89,10 +98,14 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
         // create the PNG file from the graphic buffer
         QString  outputPng = m_outputDir + "/" + fileName + ".png";
         if (ApeCore::exportToPNG(outputPng.toStdString(), *out) == 1) {
+            // cleanup
+            QFile::remove(graphicFile);
             return outputPng;
         }
     } else {
         qDebug() << "No buffers allocated.";
     }
+    // cleanup
+    QFile::remove(graphicFile);
     return "";
 }
