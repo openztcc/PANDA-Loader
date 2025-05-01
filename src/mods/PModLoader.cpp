@@ -206,6 +206,12 @@ QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(const QVector<
     return collectionMods;
 }
 
+void mapDefault(QVariantMap &map, const QString &key, const QVariant &value) {
+    if (!map.contains(key)) {
+        map.insert(key, value);
+    }
+}
+
 // Determine the category of the mod based on the meta.toml file in the root of the ztd
 QSharedPointer<PModItem> PModLoader::buildModFromToml(const QSharedPointer<PConfigMgr> &config) {
     QSharedPointer<PModItem> mod = QSharedPointer<PModItem>::create(nullptr);
@@ -223,6 +229,14 @@ QSharedPointer<PModItem> PModLoader::buildModFromToml(const QSharedPointer<PConf
     if (!depTable.isEmpty()) {
         for (const auto &dep : depTable) {
             QVariantMap depMap = dep.toMap();
+            // TODO: find better way to populate the dependency map with either user I/O or config data
+            mapDefault(depMap, "mod_id", mod->id());
+            mapDefault(depMap, "dependency_id", depMap["mod_id"]);
+            mapDefault(depMap, "name", "");
+            mapDefault(depMap, "min_version", "");
+            mapDefault(depMap, "optional", 0);
+            mapDefault(depMap, "ordering", 0);
+            mapDefault(depMap, "link", "");
             m_dataAccess->insertDependency(depMap);
         }
     }
