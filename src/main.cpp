@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
     QSharedPointer<PDatabase> pandaDb = QSharedPointer<PDatabase>::create(QDir::homePath() + "/.panda", "ModsDb",
                                                                           QStringList{PQueries::CreateModsTable, PQueries::CreateDependenciesTable});
     QSharedPointer<PModUIController> modController = QSharedPointer<PModUIController>::create(&app, pandaDb);
+    modController->loadMods();
     QSharedPointer<PAppController> state = QSharedPointer<PAppController>::create(&app);
     QSharedPointer<PConfigMgr> zoo = state->m_zooini;
     QSharedPointer<PConfigMgr> settings = state->m_pandacfg;

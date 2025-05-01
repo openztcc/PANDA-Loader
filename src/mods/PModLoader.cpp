@@ -110,11 +110,20 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
             }
         }
 
-        m_dataAccess->insertMod(mod); // insert the mod into the database
+        if (m_dataAccess->insertMod(mod)) { // insert the mod into the database
+            qDebug() << "Inserted mod into database: " << mod->title();
+        } else {
+            qDebug() << "Failed to insert mod into database: " << mod->title();
+        }
 
         if (collectionMods.size() > 0) {
+            qDebug() << "Found collection mods: " << collectionMods.size();
             for (auto collectionMod : collectionMods) {
-                m_dataAccess->insertMod(collectionMod); // insert the collection mods into the database
+                if (m_dataAccess->insertMod(collectionMod)) {
+                    qDebug() << "Inserted collection mod into database: " << collectionMod->title();
+                } else {
+                    qDebug() << "Failed to insert collection mod into database: " << collectionMod->title();
+                }
             }
         }
 

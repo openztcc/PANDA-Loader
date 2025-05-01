@@ -33,7 +33,7 @@ class PModDataAccess : public QObject {
         bool updateMod(const QString &table, const QMap<QString, 
             QVariant> &setFields, const QMap<QString, QVariant> &whereConditions);
         bool doesModExist(const QString &modId);
-        QVector<QSharedPointer<PModItem>> getAllMods(const OrderBy &orderBy = OrderBy::Ascending, const QPair<QString, QVariant> &exception = {});
+        QVector<QSharedPointer<PModItem>> getAllMods(const QString &orderBy,  OrderBy direction = OrderBy::Ascending, const QPair<QString, QVariant> &exception = {});
         QVector<QSharedPointer<PModItem>> searchMods(Operation operation,
             const QString &propertyName, const QString &searchTerm);
         QVector<QSharedPointer<PModItem>> searchMods(Operation operation,

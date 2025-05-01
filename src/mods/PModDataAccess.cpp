@@ -77,21 +77,27 @@ bool PModDataAccess::doesModExist(const QString &modId) {
 
 // TODO: update runOperation to handle select all queries so that user can potentially
 // use orderBy and groupBy to get all mods in a certain order or group
-QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const OrderBy &orderBy, const QPair<QString, QVariant> &exception) {
-    QString order;
-    if (orderBy == OrderBy::Ascending) {
-        order = "ASC";
-    } else if (orderBy == OrderBy::Descending) {
-        order = "DESC";
+QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const QString &orderBy,  OrderBy direction, const QPair<QString, QVariant> &exception) {
+    QString dir;
+    if (direction == OrderBy::Ascending) {
+        dir = "ASC";
+    } else if (direction == OrderBy::Descending) {
+        dir = "DESC";
     } else {
-        order = "ASC"; // def ascending
+        dir = "ASC"; // def ascending
     }
 
     QSqlQuery query;
     if (exception.first.isEmpty()) {
-        query = m_db->returnQuery("SELECT * FROM mods ORDER BY " + order);
+        query = m_db->returnQuery("SELECT * FROM mods ORDER BY " + orderBy + " " + dir);
     } else { // return mods without the exception key/value
-        query = m_db->returnQuery("SELECT * FROM mods WHERE " + exception.first + " != " + exception.second.toString() + " ORDER BY " + order);
+        query = m_db->returnQuery("SELECT * FROM mods WHERE " + exception.first + " != " + exception.second.toString() + " ORDER BY " + orderBy + " " + dir);
+    }
+
+    // check for errors
+    if (query.lastError().isValid()) {
+        qDebug() << "Error getting all mods: " << query.lastError().text();
+        return QVector<QSharedPointer<PModItem>>(); // return empty vector on error
     }
 
     QVector<QSharedPointer<PModItem>> modItems = QVector<QSharedPointer<PModItem>>();
@@ -99,6 +105,7 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::getAllMods(const OrderBy &orde
         QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(this, query);
         modItems.append(modItem);
     }
+    qDebug() << "getAllMods: Found " << modItems.size() << " mods in database.";
     return modItems;
 }
 

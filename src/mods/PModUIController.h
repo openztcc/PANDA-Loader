@@ -34,7 +34,7 @@ public:
     // Model object
     QObject* model() const { return m_mods_list.get(); }
 
-    void loadMods();
+    Q_INVOKABLE void loadMods();
     void reloadMod(int index);
     Q_INVOKABLE void searchMods();
     void deleteMod(int index);

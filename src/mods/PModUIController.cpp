@@ -16,12 +16,16 @@ PModUIController::PModUIController(QObject *parent, QSharedPointer<PDatabase> db
 
 void PModUIController::loadMods()
 {
-    QVector<QSharedPointer<PModItem>> mods = m_dataAccess->getAllMods(OrderBy::Ascending, {"listed", true});
+    QVector<QSharedPointer<PModItem>> mods = m_dataAccess->getAllMods("title", OrderBy::Ascending, {"listed", false});
+
+    qDebug() << "Loaded mods from database: " << mods.size();
 
     //add to list
     for (const auto &mod : mods) {
         m_mods_list->addItem(mod);
     }
+
+    qDebug() << "Mods list size: " << m_mods_list->size();
 }
 
 void PModUIController::reloadMod(int index)

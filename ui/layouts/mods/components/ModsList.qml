@@ -113,6 +113,9 @@ ColumnLayout {
             focus: true
 
             Component.onCompleted: {
+                // load mods into the model
+                modController.loadMods()
+                
                 modsList.forceActiveFocus(Qt.MouseFocusReason)
                 console.log("ListView model:", modsList.model)
                 console.log("Model type:", typeof modsList.model)
