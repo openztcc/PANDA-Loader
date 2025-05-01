@@ -50,7 +50,8 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
 
         if (foundMeta) { // meta.toml
             // Load the meta file and get the mod data
-            QSharedPointer<PConfigMgr> config = QSharedPointer<PConfigMgr>::create(this, metaData->data);
+            QSharedPointer<PConfigMgr> config = QSharedPointer<PConfigMgr>::create(this, metaData);
+            qDebug() << "Attempting to load mod from meta.toml after found meta file.";
             mod = buildModFromToml(config);
             mod->setIsCollection(true); // set the collection flag
         } else { // no meta file + no entrypoints. user will need to manually configure this mod.
@@ -67,7 +68,9 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
             QStringList tags = generateTagsFromConfig(meta);
             mod->setTags(tags);
         } else if (isSingleMod) {
-            QSharedPointer<PConfigMgr> cfg = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]->data);
+            QSharedPointer<PConfigMgr> cfg = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]);
+            qDebug() <<"Is entrypoint null: " << !entryPoints[0];
+            qDebug() << "Attempting to load single mod from entrypoint after found entrypoint: " << entryPoints[0]->filename + "." + entryPoints[0]->ext;
             QStringList tags = generateTagsFromConfig(cfg);
             mod->setTags(tags);
         } else {
@@ -89,7 +92,8 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         } else {
             // if it's not a collection, then we can just set the icon paths from the entrypoint
             if (isSingleMod) {
-                QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]->data);
+                QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoints[0]);
+                qDebug() << "Attempting to load single mod from entrypoint after found entrypoint: " << entryPoints[0]->filename + "." + entryPoints[0]->ext;
                 // ------------------------------------------------------------------- Set the category for the mod
                 QString category = determineCategory(entryPoints[0]);
                 mod->setCategory(category);
@@ -161,7 +165,8 @@ QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(const QVector<
     QVector<QSharedPointer<PModItem>> collectionMods;
     for (const QSharedPointer<PFileData> &entryPoint : entryPoints) {
         QSharedPointer<PModItem> epMod = QSharedPointer<PModItem>::create(nullptr);
-        QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoint->data);
+        QSharedPointer<PConfigMgr> epConfig = QSharedPointer<PConfigMgr>::create(nullptr, entryPoint);
+        qDebug() << "Attempting to load mod from entrypoint after found entrypoint: " << entryPoint->filename + "." + entryPoint->ext;
         // first, copy some base mod data from the collection mod
         epMod->setAuthors(mod->authors());
         epMod->setId(mod->id());
@@ -308,7 +313,8 @@ QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, con
 
         // get the ani path and generate the icon path
         QSharedPointer<PFileData> aniData = ztd->read(path);
-        QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData->data);
+        QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData);
+        qDebug() << "Attempting to load icon ani file: " << aniData->filename + "." + aniData->ext;
 
         QString aniFileName = path.split('/').last(); // get the ani file name from the rel path
 

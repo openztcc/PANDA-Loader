@@ -64,9 +64,10 @@ QSharedPointer<PFileData> PZip::read(const QString &relFilePath) {
     }
 
     QSharedPointer<PFileData> fileData = QSharedPointer<PFileData>::create();
-    fileData->filename = relFilePath.section('/', -1, -1);
-    fileData->ext = relFilePath.section('.', -1, -1);
-    fileData->path = relFilePath.section('/', 0, -2) + '/';
+    QFileInfo fileInfo(relFilePath);
+    fileData->filename = fileInfo.completeBaseName();
+    fileData->ext = fileInfo.suffix();
+    fileData->path = fileInfo.path() + "/"; // add trailing slash
 
     QByteArray data = file->readAll();
     file->close();
