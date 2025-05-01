@@ -21,7 +21,7 @@ void PModLoader::loadModsFromFile(const QStringList &ztdList)
         // File loading and parsing
         const QSharedPointer<PFile> ztdFile = QSharedPointer<PFile>::create(this, ztd, FileType::Zip); // Load the ztd file
         QSharedPointer<PFileData> metaData = ztdFile->read("meta.toml"); // get the meta.toml at the root of the ztd (as a PFileData object)
-        bool foundMeta = !metaData->data.isEmpty(); // did we find a meta.toml file in the ztd?
+        bool foundMeta = !(metaData == nullptr); // did we find a meta.toml file in the ztd?
 
         // load the meta file so we can parse it
         QSharedPointer<PConfigMgr> meta = QSharedPointer<PConfigMgr>::create();
