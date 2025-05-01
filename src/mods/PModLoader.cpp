@@ -288,11 +288,12 @@ QMap<QString, QString> PModLoader::getIconAniPaths(const QSharedPointer<PConfigM
             iconAniPaths.insert(aniPathF, QString::number(iconAniPaths.size() + 1));
         }
         if (!aniPathM.isEmpty()) {
-            iconAniPaths.insert(aniPathM, QString::number(iconAniPaths.size()));
+            iconAniPaths.insert(aniPathM, QString::number(iconAniPaths.size() == 1 ? 0 : iconAniPaths.size() + 1));
         }
     } else if (category == "Building" || category == "Scenery") {
         // objects have just 1 icon ani path
         const QStringList &iconPaths = config->getValue("Icon", "Icon", true).toStringList();
+        qDebug() << "Icon paths in objects: " << iconPaths;
         int id = 0;
         for (const QString &path : iconPaths) {
             iconAniPaths.insert(path, QString::number(id));
