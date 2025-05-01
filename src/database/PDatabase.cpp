@@ -95,6 +95,11 @@ bool PDatabase::runQuery(const QString &query) {
 // Note: The parameters should be passed as a QVariantMap where the keys are the parameter names
 // and the values are the corresponding values to bind to the query.
 bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
+    if (!m_db.isOpen()) {
+        qDebug() << "ERROR: Database is not open!";
+        return false;
+    }
+    
     QSqlQuery q(m_db);
     q.prepare(query);
 
@@ -103,8 +108,11 @@ bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
 
     // bind parameters to the query
     for (auto it = params.constBegin(); it != params.constEnd(); ++it) {
-        q.bindValue(it.key(), it.value());
+        q.bindValue(":" + it.key(), it.value());
     }
+
+    qDebug() << "Query is valid?" << q.isValid();
+    qDebug() << "Bound values:" << q.boundValues();
 
     // run prepared query
     if (!q.exec()) {
