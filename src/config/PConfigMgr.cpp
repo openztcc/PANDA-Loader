@@ -88,7 +88,7 @@ bool PConfigMgr::loadConfig(const PFileData &fileData)
     }
 
     // Create a temporary file to load the config from
-    QString tempFilePath = QDir::tempPath() + "/" + QUuid::createUuid().toString(QUuid::WithoutBraces) + ".tmp.ini";
+    QString tempFilePath = QDir::tempPath() + "/" + fileData.filename + fileData.ext;
     QFile tempFile(tempFilePath);
     if (!tempFile.open(QIODevice::WriteOnly)) {
         qDebug() << "Failed to create temporary file: " << tempFilePath;
