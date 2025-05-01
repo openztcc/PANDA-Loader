@@ -97,7 +97,7 @@ namespace PQueries {
         "collection_id, "
 
         // Graphics properties
-        "icon_paths, "
+        "icon_paths "
         ") "
 
         "VALUES ("
@@ -133,7 +133,7 @@ namespace PQueries {
         ":collection_id, "
 
         // Graphics properties
-        ":icon_paths, "
+        ":icon_paths "
         ")";
 
     const QString DependencyInsertQuery = 

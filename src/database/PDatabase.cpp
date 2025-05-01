@@ -98,6 +98,9 @@ bool PDatabase::runQuery(const QString &query, const QVariantMap &params) {
     QSqlQuery q(m_db);
     q.prepare(query);
 
+    qDebug() << "Running query: " << query;
+    qDebug() << "With parameters: " << params;
+
     // bind parameters to the query
     for (auto it = params.constBegin(); it != params.constEnd(); ++it) {
         q.bindValue(it.key(), it.value());
