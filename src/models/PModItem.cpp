@@ -153,7 +153,7 @@ PModItem::PModItem(QObject *parent, const QSqlQuery &query) : QObject(parent)
     setOriginalLocation(query.value("original_location").toString());
     setDisabledLocation(query.value("disabled_location").toString());
     setFileSize(query.value("file_size").toString());
-    setFileDate(query.value("fil_date").toString());
+    setFileDate(query.value("file_date").toString());
 
     // Graphics properties
     setIconPaths(query.value("icon_paths").toString().split(", "));

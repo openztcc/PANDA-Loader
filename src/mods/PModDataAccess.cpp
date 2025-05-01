@@ -119,4 +119,5 @@ bool PModDataAccess::insertDependency(const QMap<QString, QVariant> &dependency)
 // Delete mod dependencies from the database
 bool PModDataAccess::removeDependency(const QString &modId, const QString &depId) {
     m_db->runOperation(Operation::Delete, PQueries::DependenciesTable, {{"mod_id", modId}, {"dependency_id", depId}});
+    return true;
 }
