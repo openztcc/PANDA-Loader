@@ -81,26 +81,6 @@ QString PAppController::getGamePath() {
     return m_path;
 }
 
-QStringList PAppController::getZtdList() {
-    // Get list of ztd files in m_resource_path
-    QDir dir(m_resource_path);
-    QStringList filters;
-    filters << "*.ztd";
-
-    // Get ztd paths
-    QStringList ztdList;
-    for (const QString &file : dir.entryList(filters, QDir::Files, QDir::Name)) {
-        ztdList << dir.absoluteFilePath(file);
-    }
-
-    // Print list of ztd files
-    for (const QString &ztd : ztdList) {
-        qDebug() << ztd;
-    }
-
-    return ztdList;
-}
-
 bool PAppController::loadZooIni() {
     // Load the Zoo Tycoon config file
     m_zooini = QSharedPointer<PConfigMgr>::create(this, m_path + "\\zoo.ini");

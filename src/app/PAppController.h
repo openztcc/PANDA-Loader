@@ -31,7 +31,6 @@ public:
     QString getGamePath();
     void setGamePath(QString);
     bool loadZooIni();
-    QStringList getZtdList();
     Q_INVOKABLE PConfigMgr* settings() const { return m_pandacfg.get(); }
     // Q_INVOKABLE void updateState();
     bool loadPandaCfg();

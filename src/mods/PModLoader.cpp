@@ -198,7 +198,7 @@ QVector<QSharedPointer<PModItem>> PModLoader::buildCollectionMods(const QVector<
         epMod->setTitle(epTitle);
         collectionMods.append(epMod);
     }
-
+    return collectionMods;
 }
 
 // Determine the category of the mod based on the meta.toml file in the root of the ztd
@@ -426,4 +426,24 @@ QString PModLoader::determineTitle(const QSharedPointer<PConfigMgr> &config, con
     } else {
         return "No title found";
     }
+}
+
+QStringList PModLoader::getZtdList() {
+    // Get list of ztd files in m_resource_path
+    QDir dir(m_resource_path);
+    QStringList filters;
+    filters << "*.ztd";
+
+    // Get ztd paths
+    QStringList ztdList;
+    for (const QString &file : dir.entryList(filters, QDir::Files, QDir::Name)) {
+        ztdList << dir.absoluteFilePath(file);
+    }
+
+    // Print list of ztd files
+    for (const QString &ztd : ztdList) {
+        qDebug() << ztd;
+    }
+
+    return ztdList;
 }

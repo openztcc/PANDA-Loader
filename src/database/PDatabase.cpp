@@ -2,21 +2,19 @@
 
 
 // init all db structs
-PDatabase::PDatabase(const QString &dbPath, const QString &connection, const QStringList &tableQueries) : m_dbPath(dbPath) {
+PDatabase::PDatabase(const QString &dbPath, const QString &connection, const QStringList &tableQueries) 
+: m_dbPath(dbPath), m_tableQueries(tableQueries) {
     // remove old connection
     if (QSqlDatabase::contains(m_dbPath)) {
         QSqlDatabase::removeDatabase(m_dbPath);
     }
     m_db = QSqlDatabase::addDatabase("QSQLITE", connection);
-    m_db.setDatabaseName(m_dbPath);
+    m_db.setDatabaseName(m_dbPath + "/panda.padb");
 
     // try to open database
     if (!open()) {
         qDebug() << "Failed to open database";
     }
-
-    m_tableQueries = tableQueries;
-    open();
 }
 
 PDatabase::~PDatabase() {
@@ -24,6 +22,8 @@ PDatabase::~PDatabase() {
 }
 
 bool PDatabase::open() {
+
+    qDebug() << "Trying to open DB at: " << m_dbPath;
 
     if (!m_db.open()) {
         qDebug() << "Failed to open database: " << m_db.lastError();
