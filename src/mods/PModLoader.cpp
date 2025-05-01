@@ -312,7 +312,7 @@ QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, con
         QString id = it.value();
 
         // get the ani path and generate the icon path
-        QSharedPointer<PFileData> aniData = ztd->read(path);
+        QSharedPointer<PFileData> aniData = ztd->read(path + ".ani");
         QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData);
         qDebug() << "Attempting to load icon ani file: " << aniData->filename + "." + aniData->ext;
 
@@ -345,8 +345,8 @@ QString PModLoader::buildGraphicPath(const QSharedPointer<PConfigMgr> &aniFile) 
         }
         iconPath += dirValue + "/";
     }
-    // remove the last "/" from the path
-    iconPath.chop(1);
+    // add the animation file name to the path
+    QString aniFileName = aniFile->getValue("animation", "animation").toString();
 
     return iconPath;
 }
