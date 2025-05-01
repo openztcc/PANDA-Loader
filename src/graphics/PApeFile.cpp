@@ -1,9 +1,9 @@
 #include "PApeFile.h"
 
-PApeFile::PApeFile(const QString &ztdPath, const QString &outputDir) : m_ztdPath(ztdPath), m_outputDir(outputDir) {
-    m_ztdFile = QSharedPointer<PFile>::create(nullptr, ztdPath, FileType::Zip);
-    if (!m_ztdFile->exists("")) {
-        qDebug() << "ZTD file does not exist:" << ztdPath;
+PApeFile::PApeFile(const QSharedPointer<PFile> &ztd, const QString &outputDir) : m_ztd(ztd), m_outputDir(outputDir) {
+    if (!m_ztd) {
+        qDebug() << "Tried to access a null ztd file pointer in PApeFile.";
+        return;
     }
 }
 
@@ -25,7 +25,8 @@ OutputBuffer outputBufferCopy(const OutputBuffer& src) {
 // Process graphic buffers into cached PNG files
 // returns paths to the generated PNG files
 QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString &fileName) {
-    QByteArray graphicData = m_ztdFile->read(graphicPath)->data;
+    qDebug() << "Generating graphic as PNG:" << graphicPath << "with file name:" << fileName;
+    QByteArray graphicData = m_ztd->read(graphicPath)->data;
 
     // local function to create temp files
     auto createTempFile = [&](const QByteArray &fileData, const QString &filePath) -> QString {
@@ -59,7 +60,7 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
     qDebug() << "Palette path: " << palettePath[0];
 
     // Get the palette data from the ztd file
-    QByteArray paletteData = m_ztdFile->read(palettePath[0])->data;
+    QByteArray paletteData = m_ztd->read(palettePath[0])->data;
     if (paletteData.isEmpty()) {
         qDebug() << "Failed to read palette data from ztd file:" << palettePath[0];
         return {};

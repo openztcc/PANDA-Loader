@@ -17,12 +17,11 @@ class PApeFile : public QObject
 {
     Q_OBJECT
 public:
-    PApeFile(const QString &ztdPath, const QString &outputDir);
+    PApeFile(const QSharedPointer<PFile> &ztd, const QString &outputDir);
     QString generateGraphicAsPng(const QString &graphicPath, const QString &fileName = "");
 private:
     QString m_outputiconsPath = QDir::homePath() + "/.panda/modicons/";
-    QString m_ztdPath;
-    QSharedPointer<PFile> m_ztdFile;
+    QSharedPointer<PFile> m_ztd;
     QString m_outputDir;
 };
 

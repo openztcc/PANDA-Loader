@@ -319,7 +319,7 @@ QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, con
         QString aniFileName = path.split('/').last(); // get the ani file name from the rel path
 
         QString graphicPath = buildGraphicPath(aniConfig);
-        PApeFile ape(ztd->rootPath(), QDir::homePath() + "/.panda/modicons/");
+        PApeFile ape(ztd, QDir::homePath() + "/.panda/modicons/");
         QString pngPath = ape.generateGraphicAsPng(graphicPath, id + "_" + typeName + "_" + aniFileName);
         pngPaths.append(pngPath);
     }
@@ -339,7 +339,7 @@ QString PModLoader::buildGraphicPath(const QSharedPointer<PConfigMgr> &aniFile) 
     QString iconPath;
     for (int i = 0; i < 10; i++) {
         QString dirKey = "dir" + QString::number(i);
-        QString dirValue = aniFile->getValue(dirKey, "animation").toString();
+        QString dirValue = aniFile->getValue("animation", dirKey).toString();
         if (dirValue.isEmpty()) {
             break; // no more directories to add
         }
@@ -347,6 +347,9 @@ QString PModLoader::buildGraphicPath(const QSharedPointer<PConfigMgr> &aniFile) 
     }
     // add the animation file name to the path
     QString aniFileName = aniFile->getValue("animation", "animation").toString();
+    iconPath += aniFileName;
+
+    qDebug() << "Generated icon path: " << iconPath;
 
     return iconPath;
 }

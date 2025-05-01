@@ -1,10 +1,9 @@
 #include "PFile.h"
 
 PFile::PFile(QObject *parent, const QString &filePath, FileType type)
-    : QObject(parent), m_rootPath(""), m_file(nullptr) {
+    : QObject(parent), m_rootPath(filePath), m_file(nullptr) {
     // Initialize the virtual filesystem object
     m_file = createFilesystem(filePath, type);
-
 }
 
 // Create a virtual filesystem object
