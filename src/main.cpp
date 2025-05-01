@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     qmlRegisterAnonymousType<QAbstractListModel>("PandaLdr", 1);
     qmlRegisterType<PModItem>("PandaLdr", 1, 0, "PModItem");
     qRegisterMetaType<PModItem*>("PModItem*");
+    qRegisterMetaType<PModItem*>("QSharedPointer<PModItem>");
     qmlRegisterUncreatableType<PModItem>("PandaLdr", 1, 0, "PModItem", "PModItem can only be created in C++");
 
     // meta objects

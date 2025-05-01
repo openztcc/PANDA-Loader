@@ -166,7 +166,7 @@ ColumnLayout {
                     console.log("Delegate created for item at index:", model.index)
                     console.log("title:", model.title)
                     console.log("Description:", model.description)
-                    // console.log("instance:", model.instance)
+                    console.log("instance:", model.instance)
                     console.log("Available roles:", Object.keys(model).join(", "))
                 }
 
@@ -182,8 +182,7 @@ ColumnLayout {
                 // mod list item
                 ModItem {
                     id: modItems
-                    // title: modPane.title
-                    // instance: modPane.instance
+                    model: model
                     cDialog: confirmDialog
                     centerTo: modPage
                 }

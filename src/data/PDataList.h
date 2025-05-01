@@ -30,7 +30,6 @@ public:
         if (index.isValid() && index.row() >= 0 && index.row() < m_list.length())
         {
             T item = m_list[index.row()];
-            item->getData(role);
             return item->getData(role);
         }
 

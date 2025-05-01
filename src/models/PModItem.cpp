@@ -541,8 +541,10 @@ QVariant PModItem::getData(int role) const
         // Instance
         case ModObjectRole:
             qDebug() << "Returning mod object: " << title();
-            return QVariant::fromValue(this); // return a whole mod object
+            return QVariant::fromValue(const_cast<PModItem*>(this)); // Return the whole mod object
     }
+
+    return QVariant();
 }
 
 QHash<int, QByteArray> PModItem::roleNames()
