@@ -206,7 +206,7 @@ Item {
 
                         Component.onCompleted: {
                             if (modItem.mod) {
-                                console.log("Checking icon for modItem:" + modItem.mod.title + " - " + modItem.mod.icon_paths.length + " icons" + " - " + modItem.mod.icon_paths[0])
+                                console.log("Checking icon for modItem:" + modItem.mod.title + " - " + modItem.mod.iconpaths.size + " icons" + " - " + modItem.mod.iconpaths[0])
                             } else {
                                 console.log("MODEL OBJECT IS NULL")
                             }
@@ -219,8 +219,8 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        source: (modItem.mod && modItem.mod.icon_paths.length > 0
-                                ? "file:///" + modItem.mod.icon_paths[0]
+                        source: (modItem.mod && modItem.mod.iconpaths.length > 0
+                                ? "file:///" + modItem.mod.iconpaths[0]
                                 : "")
                         fillMode: Image.PreserveAspectCrop
                         layer.enabled: true
