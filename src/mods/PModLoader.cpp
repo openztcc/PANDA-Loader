@@ -337,6 +337,10 @@ QStringList PModLoader::getIconPaths(const QMap<QString, QString> &aniPaths, con
 
         // get the ani path and generate the icon path
         QSharedPointer<PFileData> aniData = ztd->read(path + ".ani");
+        if (!aniData) {
+            qDebug() << "Failed to read ani file: " << path + ".ani";
+            continue; // skip this ani file
+        }
         QSharedPointer<PConfigMgr> aniConfig = QSharedPointer<PConfigMgr>::create(nullptr, aniData);
         qDebug() << "Attempting to load icon ani file: " << aniData->filename + "." + aniData->ext;
 
