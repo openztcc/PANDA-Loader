@@ -62,16 +62,16 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
     qDebug() << "Palette path: " << palettePath[0];
 
     // Get the palette data from the ztd file
-    QByteArray paletteData = m_ztd->read(palettePath[0])->data;
-    if (paletteData.isEmpty()) {
-        qDebug() << "Failed to read palette data from ztd file:" << palettePath[0];
+    QSharedPointer<PFileData> paletteFile = m_ztd->read(palettePath[0]);
+    if (!paletteFile) {
+        qDebug() << "Failed to read palette file:" << palettePath[0];
         QFile::remove(graphicFile);
-        return {};
+        return "";
     }
-
+    QByteArray paletteData = paletteFile->data;
     // Create a temp file for the palette data
-    QString paletteFile = createTempFile(paletteData, palettePath[0]);
-    if (paletteFile.isEmpty()) 
+    QString palTempFile = createTempFile(paletteData, palettePath[0]);
+    if (palTempFile.isEmpty())
     {
         QFile::remove(graphicFile);
         return "";
@@ -79,7 +79,7 @@ QString PApeFile::generateGraphicAsPng(const QString &graphicPath, const QString
 
     // read the graphic data
     ApeCore graphic;
-    if (graphic.load(graphicFile.toStdString(), 0, paletteFile.toStdString()) != 1) {
+    if (graphic.load(graphicFile.toStdString(), 0, palTempFile.toStdString()) != 1) {
         qDebug() << "Failed to load graphic: " << fileName;
         QFile::remove(graphicFile);
         return "";
