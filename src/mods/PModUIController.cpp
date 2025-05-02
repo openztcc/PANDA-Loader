@@ -83,7 +83,7 @@ void PModUIController::addMod(QSharedPointer<PModItem> mod)
 
 bool PModUIController::isModSelected(QSharedPointer<PModItem> mod) const {
     // check if selected in db
-    if (m_dataAccess->runOperation(Operation::Select, "mods", {{"mod_id", mod->id()}}).value("selected").toBool()) {
+    if (m_dataAccess->getFlag(mod->id(), "is_selected")) {
         return true;
     }
     return false;
@@ -100,5 +100,24 @@ void PModUIController::setModSelected(QSharedPointer<PModItem> mod, bool selecte
     mod->setSelected(selected);
     // set the selected flag in the database
     m_dataAccess->updateMod("mods", {{"is_selected", 1}}, {{"mod_id", mod->id()}});
+    emit selectedModsListUpdated(m_selected_mods);
+}
+
+void PModUIController::clearSelection() {
+    for (auto &mod : m_selected_mods) {
+        mod->setSelected(false);
+        m_dataAccess->updateMod("mods", {{"is_selected", 0}}, {{"mod_id", mod->id()}});
+    }
+    m_selected_mods.clear();
+    emit selectedModsListUpdated(m_selected_mods);
+}
+
+void PModUIController::selectAllMods(bool selected) {
+    for (int i = 0; i < m_mods_list->size(); i++) {
+        QSharedPointer<PModItem> mod = m_mods_list->getItem(i);
+        if (mod) {
+            setModSelected(mod, selected);
+        }
+    }
     emit selectedModsListUpdated(m_selected_mods);
 }
