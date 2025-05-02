@@ -23,7 +23,6 @@ class PModItem;
 class PModUIController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QSharedPointer<PModItem> currentMod READ currentMod WRITE setCurrentMod NOTIFY currentModChanged)    
     Q_PROPERTY(QVector<QSharedPointer<PModItem>> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
     Q_PROPERTY(QSharedPointer<PModItem> previousMod READ previousMod WRITE setPreviousMod NOTIFY previousModChanged)
     // Q_PROPERTY(QAbstractListModel* model READ model CONSTANT) TODO: fix this to be a QML model
@@ -40,16 +39,16 @@ public:
     void deleteMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
 
-    Q_INVOKABLE void setModSelected(QSharedPointer<PModItem> mod, bool selected);
-    Q_INVOKABLE bool isModSelected(QSharedPointer<PModItem> mod) const;
+    Q_INVOKABLE void setModSelected(int index, bool selected);
+    Q_INVOKABLE bool isModSelected(int index) const;
     Q_INVOKABLE void clearSelection();
     Q_INVOKABLE void selectAllMods(bool selected);
 
     QVector<QSharedPointer<PModItem>> selectedMods() const { return m_selected_mods; }
     void setSelectedMods(QVector<QSharedPointer<PModItem>> selectedMods) { m_selected_mods = selectedMods; }
 
-    void setCurrentMod(QSharedPointer<PModItem> mod) { m_current_mod = mod; emit currentModChanged(); }
-    QSharedPointer<PModItem> currentMod() const { return m_current_mod; }
+    Q_INVOKABLE void setCurrentMod(int index);
+    QObject* currentMod() const { return qobject_cast<QObject*>(m_current_mod.data()); }
 
     QSharedPointer<PModItem> previousMod() const { return m_previous_mod; }
     void setPreviousMod(QSharedPointer<PModItem> mod) { m_previous_mod = mod; emit previousModChanged(); }

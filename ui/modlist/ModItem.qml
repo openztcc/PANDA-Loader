@@ -80,7 +80,7 @@ Item {
                 // Ctrl + left click adds to selection
                 if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
                     modController.addModToSelection(modItem.mod)
-                    modItem.mod.setModSelected(true)
+                    modController.setModSelected(modItem.mod, true)
 
                     // print selected mods
                     console.log("Selected mods:")
@@ -93,7 +93,7 @@ Item {
                 else if (mouse.button === Qt.LeftButton) {
                     modController.clearSelection()
                     modController.setCurrentMod(modItem.mod)
-                    modItem.mod.setModSelected(true)
+                    modController.setModSelected(modItem.mod, true)
 
                     // print selected mods
                     console.log("Selected mods:")
@@ -277,8 +277,7 @@ Item {
                             console.log("Checkbox changed:", modItem.mod.title, checked)
                             modController.clearSelection()
                             modController.setCurrentMod(modItem.mod)
-                            modItem.mod.setModSelected(true)
-                            modController.setSelectedModsEnabled(checked)
+                            modController.setModSelected(modItem.mod, checked)
                         }
                     }
                     
@@ -299,11 +298,11 @@ Item {
         Connections {
             target: modController
             function onCurrentModChanged() {
-                modItem.mod.setModSelected(modController.currentMod === modItem.mod)
+                modController.setModSelected(modItem.mod, modController.currentMod === modItem.mod)
             }
 
             function onSelectedModsListUpdated() {
-                modItem.mod.setModSelected(modController.selectedMods.includes(modItem.mod));
+                // modController.setModSelected(modItem.mod, modController.selectedMods.includes(modItem.mod));
             }
 
         }

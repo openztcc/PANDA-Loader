@@ -21,8 +21,11 @@ void PModUIController::loadMods()
     qDebug() << "Loaded mods from database: " << mods.size();
 
     //add to list
-    for (const auto &mod : mods) {
+    int i = 0;
+    for (auto &mod : mods) {
+        mod->setmodIndex(i);
         m_mods_list->addItem(mod);
+        i++;
     }
 
     qDebug() << "Mods list size: " << m_mods_list->size();
@@ -81,18 +84,24 @@ void PModUIController::addMod(QSharedPointer<PModItem> mod)
     qDebug() << "Added mod to list: " << mod->title();
 }
 
-bool PModUIController::isModSelected(QSharedPointer<PModItem> mod) const {
+bool PModUIController::isModSelected(int index) const {
+    QSharedPointer<PModItem> modItem = m_mods_list->getItem(index);
+    if (!modItem) {
+        qDebug() << "Mod not found in list: " << index;
+        return false;
+    }
+
     // check if selected in db
-    if (m_dataAccess->getFlag(mod->id(), "is_selected")) {
+    if (m_dataAccess->getFlag(modItem->id(), "is_selected")) {
         return true;
     }
     return false;
 }
 
-void PModUIController::setModSelected(QSharedPointer<PModItem> mod, bool selected) {
-    // check if the mod is already in the list
-    if (m_selected_mods.contains(mod)) {
-        qDebug() << "Mod already in selection: " << mod->title();
+void PModUIController::setModSelected(int index, bool selected) {
+    QSharedPointer<PModItem> mod = m_mods_list->getItem(index);
+    if (!mod) {
+        qDebug() << "Mod not found in list: " << index;
         return;
     }
 
@@ -116,8 +125,19 @@ void PModUIController::selectAllMods(bool selected) {
     for (int i = 0; i < m_mods_list->size(); i++) {
         QSharedPointer<PModItem> mod = m_mods_list->getItem(i);
         if (mod) {
-            setModSelected(mod, selected);
+            setModSelected(i, selected);
         }
     }
     emit selectedModsListUpdated(m_selected_mods);
+}
+
+void PModUIController::setCurrentMod(int index) {
+    QSharedPointer<PModItem> modItem = m_mods_list->getItem(index);
+    if (!modItem) {
+        qDebug() << "Mod is not a valid PModItem, cannot set current mod.";
+        return;
+    }
+
+    m_current_mod = modItem;
+    emit currentModChanged();
 }
