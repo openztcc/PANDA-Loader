@@ -80,7 +80,7 @@ Item {
                 // Ctrl + left click adds to selection
                 if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
                     modController.addModToSelection(modItem.mod)
-                    modController.setModSelected(modItem.mod, true)
+                    modController.setModSelected(modItem.mod.index, true)
 
                     // print selected mods
                     console.log("Selected mods:")
@@ -92,8 +92,8 @@ Item {
                 // Left click selects single mod
                 else if (mouse.button === Qt.LeftButton) {
                     modController.clearSelection()
-                    modController.setCurrentMod(modItem.mod)
-                    modController.setModSelected(modItem.mod, true)
+                    modController.setCurrentMod(modItem.mod.index)
+                    modController.setModSelected(modItem.mod.index, true)
 
                     // print selected mods
                     console.log("Selected mods:")
@@ -115,7 +115,7 @@ Item {
 
                     if (!alreadySelected) {
                         modController.clearSelection()
-                        modController.setCurrentMod(modItem.mod)
+                        modController.setCurrentMod(modItem.mod.index)
                         modItem.selected = true
                     }
 
@@ -276,8 +276,8 @@ Item {
                         if (modItem.mod) {
                             console.log("Checkbox changed:", modItem.mod.title, checked)
                             modController.clearSelection()
-                            modController.setCurrentMod(modItem.mod)
-                            modController.setModSelected(modItem.mod, checked)
+                            modController.setCurrentMod(modItem.mod.index)
+                            modController.setModSelected(modItem.mod.index, checked)
                         }
                     }
                     
@@ -298,11 +298,11 @@ Item {
         Connections {
             target: modController
             function onCurrentModChanged() {
-                modController.setModSelected(modItem.mod, modController.currentMod === modItem.mod)
+                modController.setModSelected(modItem.mod.index, modController.currentMod === modItem.mod)
             }
 
             function onSelectedModsListUpdated() {
-                // modController.setModSelected(modItem.mod, modController.selectedMods.includes(modItem.mod));
+                // modController.setModSelected(modItem.mod.index, modController.selectedMods.includes(modItem.mod));
             }
 
         }
