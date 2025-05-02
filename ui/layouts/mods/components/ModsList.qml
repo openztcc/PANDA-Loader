@@ -130,7 +130,7 @@ ColumnLayout {
                     var selectedMods = modController.selectedMods
 
                     for (var i = 0; i < selectedMods.length; i++) {
-                        selectedMods[i].isSelected = false
+                        selectedMods[i].setModSelected(false)
                     }
                     modController.clearSelection()
                     console.log("Deselected mods")

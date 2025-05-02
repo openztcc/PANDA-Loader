@@ -147,3 +147,16 @@ bool PModDataAccess::removeDependency(const QString &modId, const QString &depId
     m_db->runOperation(Operation::Delete, PQueries::DependenciesTable, {{"mod_id", modId}, {"dependency_id", depId}});
     return true;
 }
+
+// Get the flag value for a mod
+bool PModDataAccess::getFlag(const QString &modId, const QString &flagName) {
+    QSqlQuery query = m_db->runOperation(Operation::Select, "mods", {{"mod_id", modId}});
+    if (query.lastError().isValid()) {
+        qDebug() << "Error getting flag: " << query.lastError().text();
+        return false;
+    }
+    if (query.next()) {
+        return query.value(flagName).toBool();
+    }
+    return false;
+}

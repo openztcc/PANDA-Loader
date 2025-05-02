@@ -41,7 +41,7 @@ Item {
         function determineBackgroundColor(_color) {
             if (modArea.containsPress && !determineDisabled()) {
                 return Qt.darker(_color, 1.25)
-            } else if (selected) {
+            } else if (modItem.mod.selected) {
                 return Qt.darker(_color, 1.15)
             } else if (modArea.containsMouse) {
                 return Qt.darker(_color, 1.10)
@@ -80,7 +80,7 @@ Item {
                 // Ctrl + left click adds to selection
                 if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
                     modController.addModToSelection(modItem.mod)
-                    modItem.selected = true
+                    modItem.mod.setModSelected(true)
 
                     // print selected mods
                     console.log("Selected mods:")
@@ -93,7 +93,7 @@ Item {
                 else if (mouse.button === Qt.LeftButton) {
                     modController.clearSelection()
                     modController.setCurrentMod(modItem.mod)
-                    modItem.selected = true
+                    modItem.mod.setModSelected(true)
 
                     // print selected mods
                     console.log("Selected mods:")
@@ -277,7 +277,7 @@ Item {
                             console.log("Checkbox changed:", modItem.mod.title, checked)
                             modController.clearSelection()
                             modController.setCurrentMod(modItem.mod)
-                            modItem.selected = true
+                            modItem.mod.setModSelected(true)
                             modController.setSelectedModsEnabled(checked)
                         }
                     }
@@ -299,11 +299,11 @@ Item {
         Connections {
             target: modController
             function onCurrentModChanged() {
-                modItem.selected = (modController.currentMod === modItem.mod)
+                modItem.mod.setModSelected(modController.currentMod === modItem.mod)
             }
 
             function onSelectedModsListUpdated() {
-                modItem.selected = modController.selectedMods.includes(modItem.mod);
+                modItem.mod.setModSelected(modController.selectedMods.includes(modItem.mod));
             }
 
         }

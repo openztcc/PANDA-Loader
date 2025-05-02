@@ -39,6 +39,7 @@ class PModDataAccess : public QObject {
         QVector<QSharedPointer<PModItem>> searchMods(Operation operation,
             const QMap<QString, QVariant> &conditions);
         void loadModsFromFile(const QStringList &ztdList);
+        bool getFlag(const QString &modId, const QString &flagName);
 
         // dependencies
         bool insertDependency(const QMap<QString, QVariant> &dependency);
