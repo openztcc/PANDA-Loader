@@ -80,3 +80,37 @@ void PModUIController::addMod(QSharedPointer<PModItem> mod)
     m_dataAccess->insertMod(mod);
     qDebug() << "Added mod to list: " << mod->title();
 }
+
+void addModToSelection(QSharedPointer<PModItem> mod) {
+    // check if the mod is already in the list
+    if (m_selected_mods.contains(mod)) {
+        qDebug() << "Mod already in selection: " << mod->title();
+        return;
+    }
+
+    mod->setSelected(true);
+
+    m_selected_mods.append(mod);
+    emit selectedModsListUpdated(m_selected_mods);
+}
+
+bool PModUIController::isModSelected(QSharedPointer<PModItem> mod) const {
+    // check if selected in db
+    if (m_dataAccess->runOperation(Operation::Select, "mods", {{"mod_id", mod->id()}}).value("selected").toBool()) {
+        return true;
+    }
+    return false;
+}
+
+void PModUIController::setModSelected(QSharedPointer<PModItem> mod, bool selected) {
+    // check if the mod is already in the list
+    if (m_selected_mods.contains(mod)) {
+        qDebug() << "Mod already in selection: " << mod->title();
+        return;
+    }
+
+    m_selected_mods.append(mod);
+    // set the selected flag in the database
+    m_dataAccess->updateMod("mods", {{"is_selected", 1}}, {{"mod_id", mod->id()}});
+    emit selectedModsListUpdated(m_selected_mods);
+}

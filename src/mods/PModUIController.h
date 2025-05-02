@@ -40,6 +40,9 @@ public:
     void deleteMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
 
+    Q_INVOKABLE void setModSelected(QSharedPointer<PModItem> mod, bool selected);
+    Q_INVOKABLE bool isModSelected(QSharedPointer<PModItem> mod) const;
+
     QVector<QSharedPointer<PModItem>> selectedMods() const { return m_selected_mods; }
     void setSelectedMods(QVector<QSharedPointer<PModItem>> selectedMods) { m_selected_mods = selectedMods; }
 
