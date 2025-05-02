@@ -119,6 +119,7 @@ void PModUIController::clearSelection() {
     }
     m_selected_mods.clear();
     emit selectedModsListUpdated(m_selected_mods);
+    emit forceModelUpdate();
 }
 
 void PModUIController::selectAllMods(bool selected) {

@@ -43,12 +43,13 @@ public:
     Q_INVOKABLE bool isModSelected(int index) const;
     Q_INVOKABLE void clearSelection();
     Q_INVOKABLE void selectAllMods(bool selected);
+    Q_INVOKABLE int selectedModsCount() const { return m_selected_mods.size(); }
 
     QVector<QSharedPointer<PModItem>> selectedMods() const { return m_selected_mods; }
     void setSelectedMods(QVector<QSharedPointer<PModItem>> selectedMods) { m_selected_mods = selectedMods; }
 
     Q_INVOKABLE void setCurrentMod(int index);
-    QObject* currentMod() const { return qobject_cast<QObject*>(m_current_mod.data()); }
+    Q_INVOKABLE QObject* currentMod() const { return qobject_cast<QObject*>(m_current_mod.data()); }
 
     QSharedPointer<PModItem> previousMod() const { return m_previous_mod; }
     void setPreviousMod(QSharedPointer<PModItem> mod) { m_previous_mod = mod; emit previousModChanged(); }
@@ -61,6 +62,7 @@ signals:
     void previousModChanged();
     void currentModChanged();
     void selectedModsListUpdated(QVector<QSharedPointer<PModItem>> mods);
+    void forceModelUpdate();
 private:
     QSharedPointer<PModList> m_mods_list;
     QStringList m_ztdList;

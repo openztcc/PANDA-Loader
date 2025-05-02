@@ -61,7 +61,7 @@ LayoutFrame {
                 Connections {
                     target: modController
                     function onCurrentModChanged() {
-                        modList.currentMod = modController.currentMod;
+                        modList.currentMod = modController.currentMod();
                     }
                 }
 
@@ -74,7 +74,7 @@ LayoutFrame {
                 Connections {
                     target: modController
                     function onCurrentModChanged() {
-                        infoPane.targetComponent = modController.currentMod;
+                        infoPane.targetComponent = modController.currentMod();
                     }
                 }
                 SplitView.minimumWidth: 300

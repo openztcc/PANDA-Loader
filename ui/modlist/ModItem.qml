@@ -41,7 +41,7 @@ Item {
         function determineBackgroundColor(_color) {
             if (modArea.containsPress && !determineDisabled()) {
                 return Qt.darker(_color, 1.25)
-            } else if (modItem.mod.selected) {
+            } else if (modController.isModSelected(modItem.mod.index)) {
                 return Qt.darker(_color, 1.15)
             } else if (modArea.containsMouse) {
                 return Qt.darker(_color, 1.10)
@@ -67,7 +67,10 @@ Item {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
-            z: -1
+            onContainsMouseChanged: {
+                modPane.Material.background = modPane.Material.background
+            }
+
             onClicked: function(mouse) {
                 // Sanity checks
                 console.log("Clicked on mod:", modItem.mod.title)
@@ -79,14 +82,7 @@ Item {
 
                 // Ctrl + left click adds to selection
                 if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
-                    modController.addModToSelection(modItem.mod)
                     modController.setModSelected(modItem.mod.index, true)
-
-                    // print selected mods
-                    console.log("Selected mods:")
-                    for (let i = 0; i < modController.selectedMods.length; i++) {
-                        console.log(modController.selectedMods[i].title)
-                    }
                 }
 
                 // Left click selects single mod
@@ -94,53 +90,33 @@ Item {
                     modController.clearSelection()
                     modController.setCurrentMod(modItem.mod.index)
                     modController.setModSelected(modItem.mod.index, true)
-
-                    // print selected mods
-                    console.log("Selected mods:")
-                    for (let i = 0; i < modController.selectedMods.length; i++) {
-                        console.log(modController.selectedMods[i].title)
-                    }
                 }
 
                 // Right click only clears selection if the clicked mod isn't already selected
                 else if (mouse.button === Qt.RightButton) {
-                    const selected = modController.selectedMods
-                    let alreadySelected = false
-                    for (let i = 0; i < selected.length; i++) {
-                        if (selected[i] === modItem.mod) {
-                            alreadySelected = true
-                            break
-                        }
-                    }
+                    let alreadySelected = modController.isModSelected(modItem.mod.index)
 
                     if (!alreadySelected) {
                         modController.clearSelection()
                         modController.setCurrentMod(modItem.mod.index)
-                        modItem.selected = true
+                        modItem.setModSelected(true)
                     }
 
                     // set the selection so that the context menu gets updated array
-                    modContextMenu.selection = modController.selectedMods
                     modContextMenu.popup()
-
-                    // print selected mods
-                    console.log("Selected mods:")
-                    for (let i = 0; i < modController.selectedMods.length; i++) {
-                        console.log(modController.selectedMods[i].title)
-                    }
                 }
             }
 
             hoverEnabled: true
 
             Menu {
-                property var selection: modController.selectedMods
+                property var selectionCount: modController.selectedModsCount()
                 id: modContextMenu
                 // Disable/Enable mods
                 MenuItem {
-                    text: modContextMenu.selection.length > 1
-                        ? (modItem.mod.enabled ? "Disable (" + modContextMenu.selection.length + ") mods"
-                                                    : "Enable (" + modContextMenu.selection.length + ") mods")
+                    text: selectionCount > 1
+                        ? (modItem.mod.enabled ? "Disable (" + selectionCount + ") mods"
+                                                    : "Enable (" + selectionCount + ") mods")
                         : (modItem.mod.enabled ? "Disable mod" : "Enable mod")
                     onTriggered: {
                         console.log("Disabling mods")
@@ -150,9 +126,8 @@ Item {
                 }
                 // Enable mods
                 MenuItem {
-                    text: modContextMenu.selection.length > 1 ? "Delete (" + modContextMenu.selection.length + ") mods" : "Delete mod"
+                    text: selectionCount > 1 ? "Delete (" + selectionCount + ") mods" : "Delete mod"
                     onTriggered: {
-                        var selectedCount = modContextMenu.selection.length
                         // Ask for confirmation before deleting
                         modItem.cDialog.action = function() {
                             modController.deleteSelected()
@@ -166,14 +141,14 @@ Item {
                 }
                 // Divider
                 MenuSeparator {
-                    visible: modContextMenu.selection.length > 1
+                    visible: selectionCount > 1
                 }
                 // Select all mods
                 MenuItem {
                     text: "Select all"
                     onTriggered: {
                         console.log("Selecting all mods")
-                        modController.selectAll()
+                        modController.selectAllMods()
                         console.log("Selected all mods")
                     }
                 }
@@ -301,8 +276,10 @@ Item {
                 modController.setModSelected(modItem.mod.index, modController.currentMod === modItem.mod)
             }
 
-            function onSelectedModsListUpdated() {
-                // modController.setModSelected(modItem.mod.index, modController.selectedMods.includes(modItem.mod));
+            function onForceModelUpdate() {
+                // modController.setModSelected(modItem.mod.index, modController.isModSelected(modItem.mod.index)Mods.includes(modItem.mod));
+                // update the selected state of the modItem
+                modPane.Material.background = modItem.mod.enabled ? modPane.determineBackgroundColor(modItem.itemColor) : modPane.determineBackgroundColor(modItem.disabledColor)
             }
 
         }
