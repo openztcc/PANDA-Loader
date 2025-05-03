@@ -99,7 +99,7 @@ Item {
                     if (!alreadySelected) {
                         modController.clearSelection()
                         modController.setCurrentMod(modItem.mod.index)
-                        modItem.setModSelected(true)
+                        modController.setModSelected(modItem.mod.index, true)
                     }
 
                     // set the selection so that the context menu gets updated array
