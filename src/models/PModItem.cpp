@@ -547,6 +547,75 @@ QVariant PModItem::getData(int role) const
     return QVariant();
 }
 
+void PModItem::setData(int role, const QVariant &value)
+{
+    switch ((Role) role)
+    {
+        // Mod properties
+        case ModTitleRole:
+            setTitle(value.toString());
+            break;
+        case ModAuthorRole:
+            setAuthors(value.toStringList());
+            break;
+        case ModDescriptionRole:
+            setDescription(value.toString());
+            break;
+        case ModIdRole:
+            setId(value.toString());
+            break;
+        case ModVersionRole:
+            setVersion(value.toString());
+            break;
+
+        // Mod flags
+        case ModEnabledRole:
+            setEnabled(value.toBool());
+            break;
+        case ModListedRole:
+            setListed(value.toBool());
+            break;
+        case ModSelectedRole:
+            setSelected(value.toBool());
+            break;
+
+        // Categorization properties
+        case ModCategoryRole:
+            setCategory(value.toString());
+            break;
+        case ModTagsRole:
+            setTags(value.toStringList());
+            break;
+
+        // File data properties
+        case ModFilenameRole:
+            setFilename(value.toString());
+            break;
+        case ModCurrentLocationRole:
+            setCurrentLocation(value.toString());
+            break;
+        case ModOriginalLocationRole:
+            setOriginalLocation(value.toString());
+            break;
+        case ModDisabledLocationRole:
+            setDisabledLocation(value.toString());
+            break;
+
+        // External properties
+        case ModDependencyIdRole:
+            setDependencyId(value.toString());
+            break;
+
+        // Graphics properties
+        case ModIconPathsRole:
+            setIconPaths(value.toStringList());
+            break;
+
+        default:
+            qDebug() << "Unknown role: " << role;
+    }
+}
+
 QHash<int, QByteArray> PModItem::roleNames()
 {
     QHash<int, QByteArray> roles;

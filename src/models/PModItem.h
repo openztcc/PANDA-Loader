@@ -192,8 +192,10 @@ public:
     QObject* uiComponent() const { return m_ui_component; }
     void setUIComponent(QObject* item);
 
+    // Model implementations
     QVariant getData(int role) const;
     static QHash<int, QByteArray> roleNames();
+    void setData(int role, const QVariant &value);
 
 signals:
     // Mod properties
