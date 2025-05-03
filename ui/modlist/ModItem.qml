@@ -282,11 +282,9 @@ Item {
             function onForceModelUpdate() {
                 // modController.setModSelected(modItem.mod.index, modController.isModSelected(modItem.mod.index)Mods.includes(modItem.mod));
                 // update the selected state of the modItem
-                // modPane.Material.background = Qt.binding(() => {
-                //     modItem.mod.enabled 
-                //         ? determineBackgroundColor(modItem.itemColor) 
-                //         : determineBackgroundColor(modItem.disabledColor)
-                // })
+                modPane.Material.background =  Qt.binding(() => {
+                    return modItem.mod.enabled ? modPane.determineBackgroundColor(modItem.itemColor) : modPane.determineBackgroundColor(modItem.disabledColor)
+                })
             }
 
         }
