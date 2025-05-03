@@ -60,9 +60,9 @@ LayoutFrame {
 
                 Connections {
                     target: modController
-                    function onCurrentModChanged() {
-                        modList.currentMod = modController.currentMod();
-                    }
+                    // function onCurrentModChanged() {
+                    //     modList.currentMod = modController.currentMod();
+                    // }
                 }
 
                 SplitView.fillWidth: true

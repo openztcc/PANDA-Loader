@@ -33,7 +33,7 @@ Item {
     Pane {
         id: modPane
         anchors.fill: parent
-        Material.background: modItem.mod.enabled ? determineBackgroundColor(modItem.itemColor) : determineBackgroundColor(modItem.disabledColor)
+        Material.background: modItem.mod.enabled ? modPane.determineBackgroundColor(modItem.itemColor) : modPane.determineBackgroundColor(modItem.disabledColor)
         leftPadding: 10
         rightPadding: 10
         // topPadding: -5
@@ -41,7 +41,7 @@ Item {
         function determineBackgroundColor(_color) {
             if (modArea.containsPress && !determineDisabled()) {
                 return Qt.darker(_color, 1.25)
-            } else if (modController.isModSelected(modItem.mod.index)) {
+            } else if (modItem.mod.selected) {
                 return Qt.darker(_color, 1.15)
             } else if (modArea.containsMouse) {
                 return Qt.darker(_color, 1.10)
@@ -67,9 +67,9 @@ Item {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
-            onContainsMouseChanged: {
-                modPane.Material.background = modPane.Material.background
-            }
+            // onContainsMouseChanged: {
+            //     modPane.Material.background = modPane.Material.background
+            // }
 
             onClicked: function(mouse) {
                 // Sanity checks
@@ -273,13 +273,20 @@ Item {
         Connections {
             target: modController
             function onCurrentModChanged() {
-                modController.setModSelected(modItem.mod.index, modController.currentMod === modItem.mod)
+                let shouldBeSelected = modController.currentMod === modItem.mod
+                if (shouldBeSelected) {
+                    modController.setModSelected(modItem.mod.index, shouldBeSelected)
+                }
             }
 
             function onForceModelUpdate() {
                 // modController.setModSelected(modItem.mod.index, modController.isModSelected(modItem.mod.index)Mods.includes(modItem.mod));
                 // update the selected state of the modItem
-                modPane.Material.background = modItem.mod.enabled ? modPane.determineBackgroundColor(modItem.itemColor) : modPane.determineBackgroundColor(modItem.disabledColor)
+                // modPane.Material.background = Qt.binding(() => {
+                //     modItem.mod.enabled 
+                //         ? determineBackgroundColor(modItem.itemColor) 
+                //         : determineBackgroundColor(modItem.disabledColor)
+                // })
             }
 
         }
