@@ -109,6 +109,7 @@ void PModUIController::setModSelected(int index, bool selected) {
     mod->setSelected(selected);
     // set the selected flag in the database
     m_dataAccess->updateMod("mods", {{"is_selected", 1}}, {{"mod_id", mod->id()}});
+    updateMod(index, mod);
     emit selectedModsListUpdated(m_selected_mods);
 }
 
@@ -141,4 +142,25 @@ void PModUIController::setCurrentMod(int index) {
 
     m_current_mod = modItem;
     emit currentModChanged();
+}
+
+void PModUIController::updateMod(int index) {
+    QSharedPointer<PModItem> mod = m_mods_list->getItem(index);
+    if (!mod) {
+        qDebug() << "Mod not found in list: " << index;
+        return;
+    }
+
+    m_mods_list->replaceItem(index, mod);
+    emit forceModelUpdate();
+}
+
+void PModUIController::updateMod(int index, QSharedPointer<PModItem> mod) {
+    if (!mod) {
+        qDebug() << "Mod is not a valid PModItem, cannot update mod.";
+        return;
+    }
+
+    m_mods_list->replaceItem(index, mod);
+    emit forceModelUpdate();
 }

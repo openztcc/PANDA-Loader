@@ -25,6 +25,7 @@ class PModUIController : public QObject
     Q_OBJECT
     Q_PROPERTY(QVector<QSharedPointer<PModItem>> selectedMods READ selectedMods NOTIFY selectedModsListUpdated)
     Q_PROPERTY(QSharedPointer<PModItem> previousMod READ previousMod WRITE setPreviousMod NOTIFY previousModChanged)
+
     // Q_PROPERTY(QAbstractListModel* model READ model CONSTANT) TODO: fix this to be a QML model
 public:
 
@@ -42,6 +43,8 @@ public:
     Q_INVOKABLE void setModSelected(int index, bool selected);
     Q_INVOKABLE bool isModSelected(int index) const;
     Q_INVOKABLE void clearSelection();
+    void updateMod(int index);
+    Q_INVOKABLE void updateMod(int index, QSharedPointer<PModItem> mod);
     Q_INVOKABLE void selectAllMods(bool selected);
     Q_INVOKABLE int selectedModsCount() const { return m_selected_mods.size(); }
 

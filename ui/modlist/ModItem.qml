@@ -33,12 +33,20 @@ Item {
     Pane {
         id: modPane
         anchors.fill: parent
-        Material.background: modItem.mod.enabled ? modPane.determineBackgroundColor(modItem.itemColor) : modPane.determineBackgroundColor(modItem.disabledColor)
         leftPadding: 10
         rightPadding: 10
+        Material.background: updateBackground()
         // topPadding: -5
 
+        function updateBackground() {
+            return modItem.mod.enabled 
+            ? modPane.determineBackgroundColor(modItem.itemColor) 
+            : modPane.determineBackgroundColor(modItem.disabledColor)
+        }
+
         function determineBackgroundColor(_color) {
+            console.log("Determining background color for modItem:", modItem.mod.title)
+            console.log("Is modItem selected:", modItem.mod.selected)
             if (modArea.containsPress && !determineDisabled()) {
                 return Qt.darker(_color, 1.25)
             } else if (modItem.mod.selected) {
@@ -271,20 +279,12 @@ Item {
         // allows selected to be dynamic; true only if the modItem matches currentMod
         // (makes select and deselect work)
         Connections {
-            target: modController
-            function onCurrentModChanged() {
-                let shouldBeSelected = modController.currentMod === modItem.mod
-                if (shouldBeSelected) {
-                    modController.setModSelected(modItem.mod.index, shouldBeSelected)
+            target: modController.mod
+            function onIsSelectedChanged() {
+                if (modItem.mod) {
+                    console.log("Mod selected changed:", modItem.mod.title, modItem.mod.isSelected)
+                    modPane.Material.background = modPane.updateBackground()
                 }
-            }
-
-            function onForceModelUpdate() {
-                // modController.setModSelected(modItem.mod.index, modController.isModSelected(modItem.mod.index)Mods.includes(modItem.mod));
-                // update the selected state of the modItem
-                modPane.Material.background =  Qt.binding(() => {
-                    return modItem.mod.enabled ? modPane.determineBackgroundColor(modItem.itemColor) : modPane.determineBackgroundColor(modItem.disabledColor)
-                })
             }
 
         }

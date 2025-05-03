@@ -38,6 +38,19 @@ public:
         return QVariant();
     }
 
+    // set the data for the given index and role
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override
+    {
+        if (index.isValid() && index.row() >= 0 && index.row() < m_list.length())
+        {
+            T item = m_list[index.row()];
+            item->setData(role, value);
+            emit dataChanged(index, index, {role});
+            return true;
+        }
+        return false;
+    }
+
     // return the role names for the model
     QHash<int, QByteArray> roleNames() const override
     {
