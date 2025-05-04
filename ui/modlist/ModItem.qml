@@ -17,7 +17,7 @@ Item {
     property var cDialog: null
     property var centerTo: null
     property var itemColor: "#77956C"
-    property var disabledColor: "#5F7955"
+    property var disabledColor: "#849E7A"
     property color backgroundColor: "#77956C"
     anchors.fill: parent
     signal selectedMod(var mod)
@@ -71,6 +71,14 @@ Item {
             }
         }
 
+        Rectangle {
+            id: disabledBorder
+            width: parent.width
+            color: modItem.mod.enabled ? Qt.darker("#6E8865", 1.2) : "#6E8865"
+            height: 4
+            anchors.top: parent.top
+            visible: modItem.mod && !modItem.mod.enabled
+        }
 
         Rectangle {
             height: 1
@@ -268,6 +276,10 @@ Item {
                         target: modCheck
                         property: "checked"
                         value: modItem.mod.enabled
+                    }
+
+                    onCheckChanged: (checked) => {
+                        modItem.Material.background = modPane.updateBackground()
                     }
                     
                     // Prevent click propagation to parent MouseArea

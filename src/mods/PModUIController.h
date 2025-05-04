@@ -58,8 +58,14 @@ public:
     QVector<QSharedPointer<PModItem>> selectedMods() const { return m_selected_mods; }
     void setSelectedMods(QVector<QSharedPointer<PModItem>> selectedMods) { m_selected_mods = selectedMods; }
 
+    // Current mod operations
     Q_INVOKABLE void setCurrentMod(int index);
     Q_INVOKABLE QObject* currentMod() const { return qobject_cast<QObject*>(m_current_mod.data()); }
+
+    // Filter tag operations
+    Q_INVOKABLE void addFilter(const QString &propertyName, const QString &searchTerm);
+    Q_INVOKABLE void removeLastFilter();
+    Q_INVOKABLE void clearFilters() { m_current_search_tags.clear(); }
 
     QSharedPointer<PModItem> previousMod() const { return m_previous_mod; }
     void setPreviousMod(QSharedPointer<PModItem> mod) { m_previous_mod = mod; emit previousModChanged(); }
@@ -78,14 +84,24 @@ signals:
     void selectedModsListUpdated(QVector<QSharedPointer<PModItem>> mods);
     void forceModelUpdate();
 private:
+    // Mod list model
     QSharedPointer<PModList> m_mods_list;
+    QSharedPointer<PModList> m_filtered_subset;
+    QSharedPointer<PModList> m_backup_mods_list;
+
     QStringList m_ztdList;
+
+    // Controller state
     QVector<QSharedPointer<PModItem>> m_selected_mods;
     QSharedPointer<PModItem> m_current_mod;
     QSharedPointer<PModItem> m_previous_mod;
+
+    // Mod loader and data access
     QSharedPointer<PModDataAccess> m_dataAccess;
     QSharedPointer<PModLoader> m_loader;
-    QMap<QString, QVariant> m_current_search_tags;
+
+    // Tags
+    QList<QPair<QString, QVariant>> m_current_search_tags;
 
     QString m_disabled_location = QDir::homePath() + "/.panda/resources/mods/.disabled";
 

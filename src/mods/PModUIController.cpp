@@ -28,6 +28,10 @@ void PModUIController::loadMods()
         i++;
     }
 
+    // update backup list
+    m_backup_mods_list = QSharedPointer<PModList>::create(this);
+    m_backup_mods_list->replaceList(m_mods_list->getList());
+
     qDebug() << "Mods list size: " << m_mods_list->size();
 }
 
@@ -52,7 +56,17 @@ void PModUIController::reloadMod(int index)
 // Updates the mod list based on the property (filter) and search term (value) for filtering and live search
 void PModUIController::searchMods() 
 {
-    m_mods_list->replaceList(m_dataAccess->searchMods(Operation::Select, m_current_search_tags));
+    // build a qmap from the current search tags
+    QMap<QString, QVariant> searchTags;
+    for (const auto &tag : m_current_search_tags) {
+        QStringList tagParts = tag.split("=");
+        if (tagParts.size() == 2) {
+            searchTags.insert(tagParts[0], tagParts[1]);
+        } else {
+            qDebug() << "Invalid search tag format: " << tag;
+        }
+    }
+    m_mods_list->replaceList(m_dataAccess->searchMods(Operation::Select, searchTags));
 }
 
 // Removes a mod from the list and database
@@ -213,7 +227,6 @@ void PModUIController::setModDisabled(int index, bool disabled) {
     }
 
     qDebug() << "Mod moved successfully. Now updating UI component opacity.";
-    updateOpacity(index, !disabled);
 }
 
 bool PModUIController::isModDisabled(int index) const {
@@ -242,4 +255,22 @@ void PModUIController::updateOpacity(int index, bool enabled) {
         return;
     }
     mod->uiComponent()->setProperty("opacity", enabled ? 1.0 : 0.9);
+}
+
+// --------------- Filter and Search ------------------
+
+void PModUIController::addFilter(const QString &propertyName, const QString &searchTerm) {
+    m_current_search_tags.append({propertyName, searchTerm});
+    searchMods();
+}
+
+void PModUIController::removeLastFilter() {
+    m_current_search_tags.removeLast();
+    searchMods();
+}
+
+void PModUIController::clearFilters() {
+    // restore the backup list
+    m_mods_list->replaceList(m_backup_mods_list->getList());
+    m_current_search_tags.clear();
 }
