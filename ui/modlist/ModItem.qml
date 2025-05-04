@@ -23,11 +23,11 @@ Item {
     signal selectedMod(var mod)
 
     Component.onCompleted: {
-        // if (modItem.mod) {
-        //     modItem.mod.uiComponent = modItem            
-        // } else {
-        //     console.log("MODEL OBJECT IS NULL")
-        // }
+        if (modItem.mod) {
+            modItem.mod.uiComponent = modItem            
+        } else {
+            console.log("MODEL OBJECT IS NULL")
+        }
     }
 
     Pane {
