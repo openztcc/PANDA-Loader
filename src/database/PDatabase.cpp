@@ -161,7 +161,7 @@ QSqlQuery PDatabase::runOperation(Operation operation, const QString &table, con
 
     // bind parameters to the query
     for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
-        query.bindValue(":" + it.key(), it.value());
+        query.bindValue(":" + it.key(), "%" + it.value().toString() + "%");
     }
 
     // execute query
@@ -187,7 +187,7 @@ QString PDatabase::buildSelectQuery(const QString &table, const QMap<QString, QV
 
     // build where clause from conditions
     for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
-        whereClauses.append(it.key() + " = :" + it.key());
+        whereClauses.append(it.key() + " LIKE :" + it.key());
     }
 
     queryStr += whereClauses.join(" AND "); // join with AND
