@@ -130,6 +130,7 @@ QVector<QSharedPointer<PModItem>> PModDataAccess::searchMods(Operation operation
         QSharedPointer<PModItem> modItem = QSharedPointer<PModItem>::create(this, query);
         modItems.append(modItem);
     }
+
     return modItems;
 }
 

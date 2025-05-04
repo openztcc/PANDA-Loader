@@ -63,6 +63,8 @@ void PModUIController::searchMods()
         searchTags.insert(filter, searchTerm);
     }
     m_mods_list->replaceList(m_dataAccess->searchMods(Operation::Select, searchTags));
+
+    emit modelUpdated();
 }
 
 // Removes a mod from the list and database

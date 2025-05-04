@@ -82,6 +82,7 @@ signals:
     void previousModChanged();
     void currentModChanged();
     void selectedModsListUpdated(QVector<QSharedPointer<PModItem>> mods);
+    void modelUpdated();
     void forceModelUpdate();
 private:
     // Mod list model

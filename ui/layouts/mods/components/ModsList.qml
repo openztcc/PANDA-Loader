@@ -113,6 +113,15 @@ ColumnLayout {
             focus: true
             cacheBuffer: 0
 
+            Connections {
+                target: modController
+                onModelUpdated: {
+                    console.log("Model updated")
+                    modsList.model = null
+                    modsList.model = modModel
+                }
+            }
+
             Component.onCompleted: {
                 // load mods into the model
                 modController.loadMods()

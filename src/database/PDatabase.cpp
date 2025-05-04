@@ -185,16 +185,6 @@ QString PDatabase::buildSelectQuery(const QString &table, const QMap<QString, QV
     QString queryStr = "SELECT * FROM " + table + " WHERE ";
     QStringList whereClauses;
 
-    // remove any empty keys in conditions
-    QMap<QString, QVariant> filteredConditions = conditions;
-    for (auto it = filteredConditions.constBegin(); it != filteredConditions.constEnd();) {
-        if (it.key().isEmpty() || it.key() == "") {
-            it = filteredConditions.erase(it); // remove empty keys
-        } else {
-            ++it;
-        }
-    }
-
     // build where clause from conditions
     for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
         whereClauses.append(it.key() + " = :" + it.key());

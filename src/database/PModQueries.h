@@ -15,12 +15,12 @@ namespace PQueries {
         "pk INTEGER PRIMARY KEY AUTOINCREMENT, "
 
         // Mod Properties
-        "title TEXT NOT NULL, "
-        "authors TEXT NOT NULL, "
-        "description TEXT, "
-        "version TEXT NOT NULL, "
+        "title TEXT COLLATE NOCASE NOT NULL, "
+        "authors TEXT COLLATE NOCASE NOT NULL, "
+        "description TEXT COLLATE NOCASE, "
+        "version TEXT COLLATE NOCASE NOT NULL, "
         "mod_id TEXT NOT NULL UNIQUE, "
-        "link TEXT, "
+        "link TEXT COLLATE NOCASE, "
 
         // Flags
         "enabled INTEGER NOT NULL, "
@@ -29,14 +29,14 @@ namespace PQueries {
         "is_collection INTEGER NOT NULL, "
 
         // Categorization
-        "category TEXT, "
-        "tags TEXT, "
+        "category TEXT COLLATE NOCASE, "
+        "tags TEXT COLLATE NOCASE, "
 
         // File data
-        "filename TEXT, "
-        "current_location TEXT, "
-        "original_location TEXT, "
-        "disabled_location TEXT, "
+        "filename TEXT COLLATE NOCASE, "
+        "current_location TEXT COLLATE NOCASE, "
+        "original_location TEXT COLLATE NOCASE, "
+        "disabled_location TEXT COLLATE NOCASE, "
         "file_size TEXT, "
         "file_date TEXT, "
 
@@ -45,7 +45,7 @@ namespace PQueries {
         "collection_id TEXT, "
 
         // Graphics
-        "icon_paths TEXT, "
+        "icon_paths TEXT COLLATE NOCASE, "
         "FOREIGN KEY(mod_id) REFERENCES dependencies(mod_id)"
         ");";
 
@@ -54,11 +54,11 @@ namespace PQueries {
         "id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "mod_id TEXT NOT NULL, "
         "dependency_id TEXT, "
-        "name TEXT, "
+        "name TEXT COLLATE NOCASE, "
         "min_version TEXT, "
         "optional INTEGER, "
-        "ordering TEXT, "
-        "link TEXT, "
+        "ordering TEXT COLLATE NOCASE, "
+        "link TEXT COLLATE NOCASE, "
         "FOREIGN KEY(mod_id) REFERENCES mods(mod_id)"
         ");";
 
