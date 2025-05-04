@@ -81,6 +81,7 @@ Item {
         MouseArea {
             id: modArea
             anchors.fill: parent
+            z: -1
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onContainsMouseChanged: {
@@ -261,24 +262,26 @@ Item {
                     id: modCheck
                     z: 1
                     Layout.alignment: Qt.AlignRight
-                    checked: modItem.mod ? modItem.mod.enabled : false
                     Material.accent: "#376a3e"
                     enabled: true
-                    // onCheckChanged: (checked) => {
-                    //     if (modItem.mod) {
-                    //         console.log("Checkbox changed:", modItem.mod.title, checked)
-                    //         modController.clearSelection(modItem.idx)
-                    //         modController.setCurrentMod(modItem.idx)
-                    //         modController.setModSelected(modItem.idx, checked)
-                    //     }
-                    // }
+                    Binding {
+                        target: modCheck
+                        property: "checked"
+                        value: modItem.mod.enabled
+                    }
                     
                     // Prevent click propagation to parent MouseArea
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: function(mouse) {     
+                        onClicked: function(mouse) {   
+                            console.log("Clicked on mod checkbox:", modItem.mod.title)  
                             mouse.accepted = true
                             modCheck.onCheckChanged(!modCheck.checked)
+                            modController.clearSelection(modItem.idx)
+                            modController.setCurrentMod(modItem.idx)
+                            modController.setModSelected(modItem.idx, modCheck.checked)
+                            modController.setModDisabled(modItem.idx, modCheck.checked)
+
                         }
                     }
                 }

@@ -186,26 +186,48 @@ void PModUIController::setModDisabled(int index, bool disabled) {
         return;
     }
 
+    qDebug() << "Attempt to set enable status to: " << disabled << " for mod: " << mod->title();
     mod->setEnabled(!disabled);
 
     if (disabled) {
+        qDebug() << "Mod is disabled, moving to disabled location: " << m_disabled_location + "/" + mod->filename();
         mod->setCurrentLocation(m_disabled_location + "/" + mod->filename());
     } else {
+        qDebug() << "Mod is enabled, moving to original location: " << mod->originalLocation() + "/" + mod->filename();
         mod->setCurrentLocation(mod->originalLocation());
     }
 
+    qDebug() << "Updating mod in database: " << mod->title() << " with enabled status: " << !disabled;
     m_dataAccess->updateMod("mods", {{"enabled", !disabled}, {"current_location", mod->currentLocation()}}, {{"mod_id", mod->id()}});
+    qDebug() << "Updated mod in database. Now updating model.";
     m_mods_list->setData(m_mods_list->getIndex(index), !disabled, PModItem::Role::ModEnabledRole);
     m_mods_list->setData(m_mods_list->getIndex(index), mod->currentLocation(), PModItem::Role::ModCurrentLocationRole);
 
     // Move mod to disabled location (or original location)
     if (disabled) {
+        qDebug() << "Moving mod to disabled location: " << m_disabled_location + "/" + mod->filename();
         QFile::rename(mod->originalLocation() + "/" + mod->filename(), m_disabled_location + "/" + mod->filename());
     } else {
+        qDebug() << "Moving mod to original location: " << mod->originalLocation() + "/" + mod->filename();
         QFile::rename(m_disabled_location + "/" + mod->filename(), mod->originalLocation() + "/" + mod->filename());
     }
 
+    qDebug() << "Mod moved successfully. Now updating UI component opacity.";
     updateOpacity(index, !disabled);
+}
+
+bool PModUIController::isModDisabled(int index) const {
+    QSharedPointer<PModItem> mod = m_mods_list->getItem(index);
+    if (!mod) {
+        qDebug() << "Mod not found in list: " << index;
+        return false;
+    }
+
+    // check if disabled in db
+    if (m_dataAccess->getFlag(mod->id(), "enabled")) {
+        return false;
+    }
+    return true;
 }
 
 void PModUIController::updateOpacity(int index, bool enabled) {
@@ -214,5 +236,5 @@ void PModUIController::updateOpacity(int index, bool enabled) {
         qDebug() << "Mod not found in list: " << index;
         return;
     }
-    mod->uiComponent()->setProperty("opacity", selected ? 1.0 : 0.5);
+    mod->uiComponent()->setProperty("opacity", enabled ? 1.0 : 0.5);
 }

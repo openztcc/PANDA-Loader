@@ -87,7 +87,7 @@ private:
     QSharedPointer<PModLoader> m_loader;
     QMap<QString, QVariant> m_current_search_tags;
 
-    QString m_disabled_location = QDir::homePath() + "/.panda/mods/.disabled";
+    QString m_disabled_location = QDir::homePath() + "/.panda/resources/mods/.disabled";
 
 };
 
