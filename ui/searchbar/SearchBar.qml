@@ -133,7 +133,11 @@ Item {
                 searchBar.isTagOpen = false
                 searchBar.activeTag = ""
                 searchField.leftPadding = 8        
-                modController.removeLastFilter()    
+                modController.removeLastFilter()  
+
+                if (searchBar.activeTag === "" && searchField.text === "") {
+                    modController.clearFilters()
+                }
             }
 
             // When user hits enter, search for the current text
