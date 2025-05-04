@@ -124,6 +124,7 @@ Item {
                 searchField.focus = false
                 // update signals
                 searchBar.searchTextChanged("");
+                modController.clearFilters()
             }
 
             // Delete filter tag when backspace is pressed
@@ -131,14 +132,21 @@ Item {
                 console.log("Attempted to delete tag at SearchBar.qml with key event.")
                 searchBar.isTagOpen = false
                 searchBar.activeTag = ""
-                searchField.leftPadding = 8            
+                searchField.leftPadding = 8        
+                modController.removeLastFilter()    
             }
 
             // When user hits enter, search for the current text
             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                 console.log("Enter key hit at SearchBar.qml")
                 searchField.focus = false
-                searchBar.filterBy(searchBar.activeFilter, searchField.text)
+                if (searchBar.activeTag === "") {
+                    searchBar.filterBy("title", searchField.text)
+                } else {
+                    // search for the current text with the active filter
+                    console.log("Searching by " + searchBar.activeFilter + " and query: " + searchField.text)
+                    searchBar.filterBy(searchBar.activeFilter, searchField.text)
+                }
             }
         }
 

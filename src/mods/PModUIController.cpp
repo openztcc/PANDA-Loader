@@ -271,5 +271,7 @@ void PModUIController::removeLastFilter() {
 void PModUIController::clearFilters() {
     // restore the backup list
     m_mods_list = m_backup_mods_list;
+    loadMods();
     m_current_search_tags.clear();
+    emit modelUpdated();
 }
