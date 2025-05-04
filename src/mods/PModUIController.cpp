@@ -241,5 +241,5 @@ void PModUIController::updateOpacity(int index, bool enabled) {
         qDebug() << "Mod UI component is null, cannot update opacity.";
         return;
     }
-    mod->uiComponent()->setProperty("opacity", enabled ? 1.0 : 0.5);
+    mod->uiComponent()->setProperty("opacity", enabled ? 1.0 : 0.9);
 }
