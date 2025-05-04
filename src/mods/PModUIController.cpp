@@ -105,14 +105,14 @@ void PModUIController::setModSelected(int index, bool selected) {
         return;
     }
 
+    mod->setSelected(selected);
+
     // update your internal data structures
     if (selected) {
         m_selected_mods.append(mod);
-        mod->setSelected(true);
         emit modSelected();
     } else {
         m_selected_mods.removeOne(mod);
-        mod->setSelected(false);
         emit modDeselected();
     }
 
@@ -122,11 +122,20 @@ void PModUIController::setModSelected(int index, bool selected) {
     emit selectedModsListUpdated(m_selected_mods);
 }
 
-void PModUIController::clearSelection() {
-    for (auto &mod : m_selected_mods) {
-        setModSelected(m_mods_list->indexOf(mod), false);
+void PModUIController::clearSelection(int exceptIndex) {
+    for (const auto &mod : m_selected_mods) {
+        int index = m_mods_list->indexOf(mod);
+        if (index != -1 && index != exceptIndex) {
+            // remove from selected mods list
+            setModSelected(index, false);
+        }
     }
+
     m_selected_mods.clear();
+
+    if (exceptIndex != -1) {
+        setModSelected(exceptIndex, true);
+    }
     emit selectedModsListUpdated(m_selected_mods);
     emit forceModelUpdate();
 }

@@ -11,7 +11,7 @@ Item {
     id: modItem
 
     property string title: "Unknown"
-
+    property int idx: -1
     property var mod
     property var prevObject: null
     property bool selected: false
@@ -52,8 +52,8 @@ Item {
         }
 
         function determineBackgroundColor(_color) {
-            console.log("Determining background color for modItem:", modItem.mod.title)
-            console.log("Is modItem selected:", modItem.mod.selected)
+            // console.log("Determining background color for modItem:", modItem.mod.title)
+            // console.log("Is modItem selected:", modItem.mod.selected)
             if (modArea.containsPress && !determineDisabled()) {
                 return Qt.darker(_color, 1.25)
             } else if (modItem.mod.selected) {
@@ -98,24 +98,24 @@ Item {
 
                 // Ctrl + left click adds to selection
                 if (mouse.button === Qt.LeftButton && (mouse.modifiers & Qt.ControlModifier)) {
-                    modController.setModSelected(modItem.mod.index, true)
+                    modController.setModSelected(modItem.idx, true)
                 }
 
                 // Left click selects single mod
                 else if (mouse.button === Qt.LeftButton) {
-                    modController.clearSelection()
-                    modController.setCurrentMod(modItem.mod.index)
-                    modController.setModSelected(modItem.mod.index, true)
+                    modController.clearSelection(modItem.idx)
+                    modController.setCurrentMod(modItem.idx)
+                    modController.setModSelected(modItem.idx, true)
                 }
 
                 // Right click only clears selection if the clicked mod isn't already selected
                 else if (mouse.button === Qt.RightButton) {
-                    let alreadySelected = modController.isModSelected(modItem.mod.index)
+                    let alreadySelected = modController.isModSelected(modItem.idx)
 
                     if (!alreadySelected) {
-                        modController.clearSelection()
-                        modController.setCurrentMod(modItem.mod.index)
-                        modController.setModSelected(modItem.mod.index, true)
+                        modController.clearSelection(modItem.idx)
+                        modController.setCurrentMod(modItem.idx)
+                        modController.setModSelected(modItem.idx, true)
                     }
 
                     // set the selection so that the context menu gets updated array
@@ -266,9 +266,9 @@ Item {
                     onCheckChanged: (checked) => {
                         if (modItem.mod) {
                             console.log("Checkbox changed:", modItem.mod.title, checked)
-                            modController.clearSelection()
-                            modController.setCurrentMod(modItem.mod.index)
-                            modController.setModSelected(modItem.mod.index, checked)
+                            modController.clearSelection(modItem.idx)
+                            modController.setCurrentMod(modItem.idx)
+                            modController.setModSelected(modItem.idx, checked)
                         }
                     }
                     
@@ -289,17 +289,28 @@ Item {
         Connections {
             target: mod
             onIsSelectedChanged: {
-                console.log("Mod selected state changed:", modItem.mod.title, modItem.mod.isSelected)
+                console.log("Mod selected state changed:", modItem.mod.title, modItem.mod.selected)
                 modPane.Material.background = modPane.updateBackground()
             }
+        }
+        Connections {
+            target: modController
 
             onModSelected: {
-                console.log("Mod selected signal received:", modItem.mod.title, modItem.mod.isSelected)
+                console.log("Mod selected signal received:", modItem.mod.title, modItem.mod.selected)
                 modPane.Material.background = modPane.updateBackground()
             }
 
             onModDeselected: {
-                console.log("Mod deselected signal received:", modItem.mod.title, modItem.mod.isSelected)
+                console.log("Mod deselected signal received:", modItem.mod.title, modItem.mod.selected)
+                modPane.Material.background = modPane.updateBackground()
+            }
+        }
+
+        Connections {
+            target: modModel
+            onDataChanged: {
+                console.log("Mod data changed signal received:", modItem.mod.title, modItem.mod.selected)
                 modPane.Material.background = modPane.updateBackground()
             }
         }

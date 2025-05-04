@@ -297,6 +297,7 @@ bool PModItem::selected() const
 
 void PModItem::setSelected(bool selected)
 {
+    qDebug() << "PModItem::setSelected: Setting selected to: " << selected;
     if (m_selected == selected)
         return;
 

@@ -183,6 +183,7 @@ ColumnLayout {
                 ModItem {
                     id: modItems
                     mod: model.instance
+                    idx: model.index
                     cDialog: confirmDialog
                     centerTo: modPage
                 }

@@ -43,7 +43,7 @@ public:
 
     Q_INVOKABLE void setModSelected(int index, bool selected);
     Q_INVOKABLE bool isModSelected(int index) const;
-    Q_INVOKABLE void clearSelection();
+    Q_INVOKABLE void clearSelection(int exceptIndex = -1);
     void updateMod(int index);
     Q_INVOKABLE void updateMod(int index, QSharedPointer<PModItem> mod);
     Q_INVOKABLE void selectAllMods(bool selected);
