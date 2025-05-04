@@ -8,6 +8,7 @@
 // Qt
 #include <QObject>
 #include <QAbstractListModel>
+#include <QModelIndex>
 #include <QSharedPointer>
 
 // Project

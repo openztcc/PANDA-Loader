@@ -105,18 +105,26 @@ void PModUIController::setModSelected(int index, bool selected) {
         return;
     }
 
-    m_selected_mods.append(mod);
-    mod->setSelected(selected);
+    // update your internal data structures
+    if (selected) {
+        m_selected_mods.append(mod);
+        mod->setSelected(true);
+        emit modSelected();
+    } else {
+        m_selected_mods.removeOne(mod);
+        mod->setSelected(false);
+        emit modDeselected();
+    }
+
     // set the selected flag in the database
-    m_dataAccess->updateMod("mods", {{"is_selected", 1}}, {{"mod_id", mod->id()}});
-    updateMod(index, mod);
+    m_dataAccess->updateMod("mods", {{"is_selected", selected}}, {{"mod_id", mod->id()}});
+    m_mods_list->setData(m_mods_list->getIndex(index), selected, PModItem::Role::ModSelectedRole);
     emit selectedModsListUpdated(m_selected_mods);
 }
 
 void PModUIController::clearSelection() {
     for (auto &mod : m_selected_mods) {
-        mod->setSelected(false);
-        m_dataAccess->updateMod("mods", {{"is_selected", 0}}, {{"mod_id", mod->id()}});
+        setModSelected(m_mods_list->indexOf(mod), false);
     }
     m_selected_mods.clear();
     emit selectedModsListUpdated(m_selected_mods);
@@ -125,10 +133,7 @@ void PModUIController::clearSelection() {
 
 void PModUIController::selectAllMods(bool selected) {
     for (int i = 0; i < m_mods_list->size(); i++) {
-        QSharedPointer<PModItem> mod = m_mods_list->getItem(i);
-        if (mod) {
-            setModSelected(i, selected);
-        }
+        setModSelected(i, selected);
     }
     emit selectedModsListUpdated(m_selected_mods);
 }

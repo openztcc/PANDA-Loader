@@ -9,6 +9,7 @@
 // Qt
 #include <QObject>
 #include <QAbstractListModel>
+#include "PModItem.h"
 
 template <typename T>
 class PDataList : public QAbstractListModel
@@ -124,6 +125,14 @@ public:
             return m_list[index];
         }
         return nullptr; // Return null if index is out of bounds
+    }
+
+    QModelIndex getIndex(int index) const
+    {
+        if (index >= 0 && index < m_list.size()) {
+            return createIndex(index, 0);
+        }
+        return QModelIndex(); // Return invalid index if out of bounds
     }
 
 private:

@@ -182,7 +182,7 @@ ColumnLayout {
                 // mod list item
                 ModItem {
                     id: modItems
-                    mod: model
+                    mod: model.instance
                     cDialog: confirmDialog
                     centerTo: modPage
                 }

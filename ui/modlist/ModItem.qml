@@ -35,8 +35,15 @@ Item {
         anchors.fill: parent
         leftPadding: 10
         rightPadding: 10
-        Material.background: updateBackground()
         // topPadding: -5
+
+        Material.background: modItem.mod.selected 
+            ? Qt.darker(modItem.itemColor, 1.15)
+            : modArea.containsMouse 
+                ? Qt.darker(modItem.itemColor, 1.10) 
+                : modArea.containsPress 
+                    ? Qt.darker(modItem.itemColor, 1.25) 
+                    : Qt.darker(modItem.itemColor, 1.05)
 
         function updateBackground() {
             return modItem.mod.enabled 
@@ -60,9 +67,10 @@ Item {
 
         function determineDisabled() {
             if (modItem.mod) {
-                return modItem.mod.enabled
+                return !modItem.mod.enabled
             }
         }
+
 
         Rectangle {
             height: 1
@@ -75,9 +83,9 @@ Item {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
-            // onContainsMouseChanged: {
-            //     modPane.Material.background = modPane.Material.background
-            // }
+            onContainsMouseChanged: {
+                modPane.Material.background = modPane.updateBackground()
+            }
 
             onClicked: function(mouse) {
                 // Sanity checks
@@ -279,14 +287,21 @@ Item {
         // allows selected to be dynamic; true only if the modItem matches currentMod
         // (makes select and deselect work)
         Connections {
-            target: modController.mod
-            function onIsSelectedChanged() {
-                if (modItem.mod) {
-                    console.log("Mod selected changed:", modItem.mod.title, modItem.mod.isSelected)
-                    modPane.Material.background = modPane.updateBackground()
-                }
+            target: mod
+            onIsSelectedChanged: {
+                console.log("Mod selected state changed:", modItem.mod.title, modItem.mod.isSelected)
+                modPane.Material.background = modPane.updateBackground()
             }
 
+            onModSelected: {
+                console.log("Mod selected signal received:", modItem.mod.title, modItem.mod.isSelected)
+                modPane.Material.background = modPane.updateBackground()
+            }
+
+            onModDeselected: {
+                console.log("Mod deselected signal received:", modItem.mod.title, modItem.mod.isSelected)
+                modPane.Material.background = modPane.updateBackground()
+            }
         }
 
 
