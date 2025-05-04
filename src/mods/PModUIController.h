@@ -65,7 +65,7 @@ public:
     // Filter tag operations
     Q_INVOKABLE void addFilter(const QString &propertyName, const QString &searchTerm);
     Q_INVOKABLE void removeLastFilter();
-    Q_INVOKABLE void clearFilters() { m_current_search_tags.clear(); }
+    Q_INVOKABLE void clearFilters();
 
     QSharedPointer<PModItem> previousMod() const { return m_previous_mod; }
     void setPreviousMod(QSharedPointer<PModItem> mod) { m_previous_mod = mod; emit previousModChanged(); }

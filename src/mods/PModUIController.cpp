@@ -29,8 +29,7 @@ void PModUIController::loadMods()
     }
 
     // update backup list
-    m_backup_mods_list = QSharedPointer<PModList>::create(this);
-    m_backup_mods_list->replaceList(m_mods_list->getList());
+    m_backup_mods_list = m_mods_list;
 
     qDebug() << "Mods list size: " << m_mods_list->size();
 }
@@ -59,12 +58,9 @@ void PModUIController::searchMods()
     // build a qmap from the current search tags
     QMap<QString, QVariant> searchTags;
     for (const auto &tag : m_current_search_tags) {
-        QStringList tagParts = tag.split("=");
-        if (tagParts.size() == 2) {
-            searchTags.insert(tagParts[0], tagParts[1]);
-        } else {
-            qDebug() << "Invalid search tag format: " << tag;
-        }
+        QString filter = tag.first;
+        QVariant searchTerm = tag.second;
+        searchTags.insert(filter, searchTerm);
     }
     m_mods_list->replaceList(m_dataAccess->searchMods(Operation::Select, searchTags));
 }
@@ -260,6 +256,7 @@ void PModUIController::updateOpacity(int index, bool enabled) {
 // --------------- Filter and Search ------------------
 
 void PModUIController::addFilter(const QString &propertyName, const QString &searchTerm) {
+    qDebug() << "Adding filter: " << propertyName << " with search term: " << searchTerm;
     m_current_search_tags.append({propertyName, searchTerm});
     searchMods();
 }
@@ -271,6 +268,6 @@ void PModUIController::removeLastFilter() {
 
 void PModUIController::clearFilters() {
     // restore the backup list
-    m_mods_list->replaceList(m_backup_mods_list->getList());
+    m_mods_list = m_backup_mods_list;
     m_current_search_tags.clear();
 }

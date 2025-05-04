@@ -166,6 +166,8 @@ QSqlQuery PDatabase::runOperation(Operation operation, const QString &table, con
 
     // execute query
     if (!query.exec()) {
+        qDebug() << "Failed to run query: " << query.lastQuery();
+        qDebug() << "Bound values: " << conditions;
         qDebug() << "Failed to run selectWhere: " << query.lastError().text();
         return query;
     }
@@ -182,6 +184,16 @@ QString PDatabase::buildSelectQuery(const QString &table, const QMap<QString, QV
     const QPair<QString, OrderBy> &orderBy, const QString &groupBy) {
     QString queryStr = "SELECT * FROM " + table + " WHERE ";
     QStringList whereClauses;
+
+    // remove any empty keys in conditions
+    QMap<QString, QVariant> filteredConditions = conditions;
+    for (auto it = filteredConditions.constBegin(); it != filteredConditions.constEnd();) {
+        if (it.key().isEmpty() || it.key() == "") {
+            it = filteredConditions.erase(it); // remove empty keys
+        } else {
+            ++it;
+        }
+    }
 
     // build where clause from conditions
     for (auto it = conditions.constBegin(); it != conditions.constEnd(); ++it) {
