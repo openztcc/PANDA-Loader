@@ -41,9 +41,15 @@ public:
     void deleteMod(int index);
     void addMod(QSharedPointer<PModItem> mod);
 
+    // Set select flags for the mod
     Q_INVOKABLE void setModSelected(int index, bool selected);
     Q_INVOKABLE bool isModSelected(int index) const;
     Q_INVOKABLE void clearSelection(int exceptIndex = -1);
+
+    // Set disabled flags for the mod
+    Q_INVOKABLE void setModDisabled(int index, bool disabled);
+    Q_INVOKABLE bool isModDisabled(int index) const;
+    
     void updateMod(int index);
     Q_INVOKABLE void updateMod(int index, QSharedPointer<PModItem> mod);
     Q_INVOKABLE void selectAllMods(bool selected);
@@ -57,6 +63,10 @@ public:
 
     QSharedPointer<PModItem> previousMod() const { return m_previous_mod; }
     void setPreviousMod(QSharedPointer<PModItem> mod) { m_previous_mod = mod; emit previousModChanged(); }
+
+
+    // QML UI helpers (for visual cues)
+    void updateOpacity(int index, bool enabled);
 
 signals:
     void modAdded(QSharedPointer<PModItem>);
@@ -76,6 +86,8 @@ private:
     QSharedPointer<PModDataAccess> m_dataAccess;
     QSharedPointer<PModLoader> m_loader;
     QMap<QString, QVariant> m_current_search_tags;
+
+    QString m_disabled_location = QDir::homePath() + "/.panda/mods/.disabled";
 
 };
 

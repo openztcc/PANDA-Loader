@@ -178,3 +178,41 @@ void PModUIController::updateMod(int index, QSharedPointer<PModItem> mod) {
     m_mods_list->replaceItem(index, mod);
     emit forceModelUpdate();
 }
+
+void PModUIController::setModDisabled(int index, bool disabled) {
+    QSharedPointer<PModItem> mod = m_mods_list->getItem(index);
+    if (!mod) {
+        qDebug() << "Mod not found in list: " << index;
+        return;
+    }
+
+    mod->setEnabled(!disabled);
+
+    if (disabled) {
+        mod->setCurrentLocation(m_disabled_location + "/" + mod->filename());
+    } else {
+        mod->setCurrentLocation(mod->originalLocation());
+    }
+
+    m_dataAccess->updateMod("mods", {{"enabled", !disabled}, {"current_location", mod->currentLocation()}}, {{"mod_id", mod->id()}});
+    m_mods_list->setData(m_mods_list->getIndex(index), !disabled, PModItem::Role::ModEnabledRole);
+    m_mods_list->setData(m_mods_list->getIndex(index), mod->currentLocation(), PModItem::Role::ModCurrentLocationRole);
+
+    // Move mod to disabled location (or original location)
+    if (disabled) {
+        QFile::rename(mod->originalLocation() + "/" + mod->filename(), m_disabled_location + "/" + mod->filename());
+    } else {
+        QFile::rename(m_disabled_location + "/" + mod->filename(), mod->originalLocation() + "/" + mod->filename());
+    }
+
+    updateOpacity(index, !disabled);
+}
+
+void PModUIController::updateOpacity(int index, bool enabled) {
+    QSharedPointer<PModItem> mod = m_mods_list->getItem(index);
+    if (!mod) {
+        qDebug() << "Mod not found in list: " << index;
+        return;
+    }
+    mod->uiComponent()->setProperty("opacity", selected ? 1.0 : 0.5);
+}
