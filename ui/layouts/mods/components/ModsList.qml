@@ -111,6 +111,7 @@ ColumnLayout {
             model: modModel
             clip: true
             focus: true
+            cacheBuffer: 0
 
             Component.onCompleted: {
                 // load mods into the model

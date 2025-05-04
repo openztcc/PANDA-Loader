@@ -11,23 +11,23 @@ Item {
     id: modItem
 
     property string title: "Unknown"
-    property int idx: -1
+    property var idx
     property var mod
     property var prevObject: null
-    property bool selected: false
     property var cDialog: null
     property var centerTo: null
     property var itemColor: "#77956C"
     property var disabledColor: "#5F7955"
+    property color backgroundColor: "#77956C"
     anchors.fill: parent
     signal selectedMod(var mod)
 
     Component.onCompleted: {
-        if (modItem.mod) {
-            modItem.mod.uiComponent = modItem            
-        } else {
-            console.log("MODEL OBJECT IS NULL")
-        }
+        // if (modItem.mod) {
+        //     modItem.mod.uiComponent = modItem            
+        // } else {
+        //     console.log("MODEL OBJECT IS NULL")
+        // }
     }
 
     Pane {
@@ -54,7 +54,7 @@ Item {
         function determineBackgroundColor(_color) {
             // console.log("Determining background color for modItem:", modItem.mod.title)
             // console.log("Is modItem selected:", modItem.mod.selected)
-            if (modArea.containsPress && !determineDisabled()) {
+            if (modArea.containsPress) {
                 return Qt.darker(_color, 1.25)
             } else if (modItem.mod.selected) {
                 return Qt.darker(_color, 1.15)
@@ -67,7 +67,7 @@ Item {
 
         function determineDisabled() {
             if (modItem.mod) {
-                return !modItem.mod.enabled
+                return modItem.mod.enabled ? false : true
             }
         }
 
@@ -103,6 +103,7 @@ Item {
 
                 // Left click selects single mod
                 else if (mouse.button === Qt.LeftButton) {
+                    console.log("Left click on mod:", modItem.mod.title)
                     modController.clearSelection(modItem.idx)
                     modController.setCurrentMod(modItem.idx)
                     modController.setModSelected(modItem.idx, true)
@@ -263,14 +264,14 @@ Item {
                     checked: modItem.mod ? modItem.mod.enabled : false
                     Material.accent: "#376a3e"
                     enabled: true
-                    onCheckChanged: (checked) => {
-                        if (modItem.mod) {
-                            console.log("Checkbox changed:", modItem.mod.title, checked)
-                            modController.clearSelection(modItem.idx)
-                            modController.setCurrentMod(modItem.idx)
-                            modController.setModSelected(modItem.idx, checked)
-                        }
-                    }
+                    // onCheckChanged: (checked) => {
+                    //     if (modItem.mod) {
+                    //         console.log("Checkbox changed:", modItem.mod.title, checked)
+                    //         modController.clearSelection(modItem.idx)
+                    //         modController.setCurrentMod(modItem.idx)
+                    //         modController.setModSelected(modItem.idx, checked)
+                    //     }
+                    // }
                     
                     // Prevent click propagation to parent MouseArea
                     MouseArea {
