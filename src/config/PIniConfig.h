@@ -17,10 +17,12 @@ public:
 
     // get and set values
     QVariant getValue(const QString &section, const QString &key) const override;
+    QVariant getValue(const QString &section, const QString &key, bool getMultiKeys) const;
     void setValue(const QString &key, const QVariant &value, const QString &section) override;
     bool removeKey(const QString &key, const QString &section = "") override;
     bool removeSection(const QString &section) override;
     bool getAllSections() override;
+    QStringList getAllKeys(const QString &section) override;
 
     // exist tests
     bool sectionExists(const QString &section) const override;

@@ -29,7 +29,7 @@ Item {
     onFilterBy: (filter, search) => {
         console.log("Searching by " + filter + " and query: " + search)
         console.log("Current enabled status: " + modController.currentMod.enabled)
-        modController.updateModList(filter, search)
+        modController.addFilter(filter, search)
     }
 
     PTextField {
@@ -70,7 +70,7 @@ Item {
         }
 
         onTextChange: (text) => {
-            if (text === "by:" || text === "in:" || text === "on:" || text === "off:") {
+            if (text === "by:" || text === "in:" && searchBar.isTagOpen) {
                 console.log("Found tag: " + text + " in SearchBar.qml")
                 searchBar.activeTag = text;
                 searchBar.isTagOpen = true;
@@ -79,10 +79,6 @@ Item {
                     searchBar.activeFilter = "authors";
                 } else if (text === "in:") {
                     searchBar.activeFilter = "categories";
-                } else if (text === "on:" || text === "off:") {
-                    searchBar.activeFilter = "enabled";
-                    var query = (text === "on:") ? "true" : "false";
-                    searchBar.filterBy(searchBar.activeFilter, query);
                 }
 
                 searchField.text = "";
@@ -92,18 +88,6 @@ Item {
                     searchField.leftPadding = activeFilterTag.width + 15;
                 });
             }
-            else {
-                if (searchBar.isTagOpen && searchBar.activeFilter !== "enabled") {
-                    // non-boolean filter search
-                    searchBar.filterBy(searchBar.activeFilter, text);
-                } else if (!searchBar.isTagOpen) {
-                    // no active tag: do regular search
-                    searchBar.filterBy("", text);
-                }
-
-                // emit signal that search has changed (TODO: combine signals, redundant)
-                searchBar.searchTextChanged(text);
-            }
         }
 
         onCleared: {
@@ -111,7 +95,6 @@ Item {
             searchBar.isTagOpen = false
             searchField.leftPadding = 8
             searchBar.searchTextChanged("");
-            searchBar.filterBy("");
         }
 
         // timer to allow backspace to work without immediately clearing filter
@@ -141,7 +124,7 @@ Item {
                 searchField.focus = false
                 // update signals
                 searchBar.searchTextChanged("");
-                searchBar.filterBy("", "");
+                modController.clearFilters()
             }
 
             // Delete filter tag when backspace is pressed
@@ -149,9 +132,25 @@ Item {
                 console.log("Attempted to delete tag at SearchBar.qml with key event.")
                 searchBar.isTagOpen = false
                 searchBar.activeTag = ""
-                searchField.leftPadding = 8
-                // update signals
-                searchBar.filterBy("", "");
+                searchField.leftPadding = 8        
+                modController.removeLastFilter()  
+
+                if (searchBar.activeTag === "" && searchField.text === "") {
+                    modController.clearFilters()
+                }
+            }
+
+            // When user hits enter, search for the current text
+            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                console.log("Enter key hit at SearchBar.qml")
+                searchField.focus = false
+                if (searchBar.activeTag === "") {
+                    searchBar.filterBy("title", searchField.text)
+                } else {
+                    // search for the current text with the active filter
+                    console.log("Searching by " + searchBar.activeFilter + " and query: " + searchField.text)
+                    searchBar.filterBy(searchBar.activeFilter, searchField.text)
+                }
             }
         }
 

@@ -111,8 +111,21 @@ ColumnLayout {
             model: modModel
             clip: true
             focus: true
+            cacheBuffer: 0
+
+            Connections {
+                target: modController
+                onModelUpdated: {
+                    console.log("Model updated")
+                    modsList.model = null
+                    modsList.model = modModel
+                }
+            }
 
             Component.onCompleted: {
+                // load mods into the model
+                modController.loadMods()
+                
                 modsList.forceActiveFocus(Qt.MouseFocusReason)
                 console.log("ListView model:", modsList.model)
                 console.log("Model type:", typeof modsList.model)
@@ -127,7 +140,7 @@ ColumnLayout {
                     var selectedMods = modController.selectedMods
 
                     for (var i = 0; i < selectedMods.length; i++) {
-                        selectedMods[i].isSelected = false
+                        selectedMods[i].setModSelected(i, false)
                     }
                     modController.clearSelection()
                     console.log("Deselected mods")
@@ -154,16 +167,17 @@ ColumnLayout {
                 width: ListView.view.width
                 height: 50
 
-                required property int index
+                // required property int index
                 required property var model
-                required property string title
-                required property var instance
+                // required property string title
+                // required property var instance
 
                 Component.onCompleted: {
-                    console.log("Delegate created for item at index:", modPane.index)
-                    console.log("title:", modPane.title)
-                    console.log("instance:", modPane.instance)
-                    console.log("Available roles:", Object.keys(modPane.model).join(", "))
+                    console.log("Delegate created for item at index:", model.index)
+                    console.log("title:", model.title)
+                    console.log("Description:", model.description)
+                    console.log("instance:", model.instance)
+                    console.log("Available roles:", Object.keys(model).join(", "))
                 }
 
                 // bottom border
@@ -178,8 +192,8 @@ ColumnLayout {
                 // mod list item
                 ModItem {
                     id: modItems
-                    title: modPane.title
-                    instance: modPane.instance
+                    mod: model.instance
+                    idx: model.index
                     cDialog: confirmDialog
                     centerTo: modPage
                 }

@@ -54,31 +54,32 @@ QSharedPointer<QuaZipFile> PZip::openZipFile(QSharedPointer<QuaZip> &zip, const 
 
 // Read a file from the zip archive
 // usage: PFileData fileData = zip.read("path/to/file.txt");
-PFileData PZip::read(const QString &relFilePath) {
+QSharedPointer<PFileData> PZip::read(const QString &relFilePath) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
 
     QSharedPointer<QuaZipFile> file = openZipFile(zip, relFilePath, QIODevice::ReadOnly);
     if (!file) {
         qDebug() << "Failed to open file in zip:" << relFilePath;
-        return PFileData();
+        return nullptr;
     }
 
-    PFileData fileData;
-    fileData.filename = relFilePath.section('/', -1, -1);
-    fileData.ext = relFilePath.section('.', -1, -1);
-    fileData.path = relFilePath.section('/', 0, -2) + '/';
+    QSharedPointer<PFileData> fileData = QSharedPointer<PFileData>::create();
+    QFileInfo fileInfo(relFilePath);
+    fileData->filename = fileInfo.completeBaseName();
+    fileData->ext = fileInfo.suffix();
+    fileData->path = fileInfo.path() + "/"; // add trailing slash
 
     QByteArray data = file->readAll();
     file->close();
     zip->close();
 
-    fileData.data = data;
+    fileData->data = data;
 
     // print file data for debugging
-    qDebug() << "File data size:" << fileData.data.size();
-    qDebug() << "File name:" << fileData.filename;
-    qDebug() << "File ext:" << fileData.ext;
-    qDebug() << "File path:" << fileData.path;
+    qDebug() << "File data size:" << fileData->data.size();
+    qDebug() << "File name:" << fileData->filename;
+    qDebug() << "File ext:" << fileData->ext;
+    qDebug() << "File path:" << fileData->path;
 
     return fileData;
 }
@@ -90,8 +91,8 @@ PFileData PZip::read(const QString &relFilePath) {
 //       dir with value "dir/" will read all files in the dir directory
 //       ext with value "txt" will read all files with the txt extension
 //       ext with value "" will read all files with no extension
-QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &validExts) {
-    QList<PFileData> filesFound;
+QVector<QSharedPointer<PFileData>> PZip::readAll(const QStringList &validDirs, const QStringList &validExts) {
+    QVector<QSharedPointer<PFileData>> filesFound;
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
     QStringList fileList = zip->getFileNameList();
     QStringList validFiles;
@@ -156,11 +157,11 @@ QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &
 
     // read the valid files
     for (const QString &validFile : validFiles) {
-        PFileData file = read(validFile);
-        if (!file.data.isEmpty()) {
+        QSharedPointer<PFileData> file = read(validFile);
+        if (!file->data.isEmpty()) {
             filesFound.append(file);
         } else {
-            qDebug() << "Failed to read file in zip:" << file.filename;
+            qDebug() << "Failed to read file in zip:" << file->filename;
         }
     }
     zip->close();
@@ -168,12 +169,12 @@ QList<PFileData> PZip::readAll(const QStringList &validDirs, const QStringList &
 }
 
 // Write a file to the zip archive given a PFileData object
-// 
-bool PZip::write(const PFileData &data) {
+//
+bool PZip::write(const QSharedPointer<PFileData> &data) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdAdd);
 
     // path to write to
-    QString relPath = data.path + data.filename;
+    QString relPath = data->path + data->filename;
 
     // check if the file already exists in the zip
     if (exists(relPath)) {
@@ -192,7 +193,7 @@ bool PZip::write(const PFileData &data) {
     }
 
     QuaZipFile file(zip.data());
-    QuaZipNewInfo info(data.path + data.filename);
+    QuaZipNewInfo info(data->path + data->filename);
 
     qDebug() << "Setting relative path:" << relPath;
 
@@ -201,7 +202,7 @@ bool PZip::write(const PFileData &data) {
                  << "Error:" << file.getZipError();
         return false;
     } 
-    file.write(data.data);
+    file.write(data->data);
     file.close();
     zip->close();
     return true;
@@ -288,7 +289,18 @@ bool PZip::remove(const QString &itemToRemove) {
 
 // Check if a file exists in the zip archive
 bool PZip::exists(const QString &relFilePath) {
-    if (read(relFilePath).data.isEmpty()) {
+    if (relFilePath == "") {
+        // test  if root path exists
+        QFileInfo fileInfo(m_rootPath);
+        if (!fileInfo.exists()) {
+            qDebug() << "Zip file does not exist:" << m_rootPath;
+            return false;
+        } else if (!fileInfo.isFile()) {
+            qDebug() << "Zip file is not a valid file:" << m_rootPath;
+            return false;
+        }
+    }
+    if (read(relFilePath)->data.isEmpty()) {
         qDebug() << "File does not exist in zip:" << relFilePath;
         return false;
     }
@@ -300,8 +312,8 @@ bool PZip::exists(const QString &relFilePath) {
 // usage: bool success = zip.move("path/to/file.txt", "new/path/to/file.txt");
 // note: this will copy the file to the new location and remove the old one
 bool PZip::move(const QString &filePath, const QString &newLocation) {
-    PFileData updatedFile = read(filePath);
-    updatedFile.path = newLocation;
+    QSharedPointer<PFileData> updatedFile = read(filePath);
+    updatedFile->path = newLocation;
     if (!write(updatedFile)) {
         qDebug() << "Failed to write file to zip:" << filePath;
         return false;
@@ -323,12 +335,12 @@ bool PZip::copy(const QString &filePath, const QString &newLocation) {
     QSharedPointer<QuaZip> zip = openZip(m_rootPath, QuaZip::mdUnzip);
     QSharedPointer<QuaZipFile> file = openZipFile(zip, "", QIODevice::ReadOnly);
 
-    PFileData fileData;
+    QSharedPointer<PFileData> fileData = QSharedPointer<PFileData>::create();
     QByteArray data = file->readAll();
-    fileData.data = data;
-    fileData.filename = file->getFileName();
-    fileData.ext = file->getFileName().section('.', -1, -1);
-    fileData.path = file->getFileName().section('/', 0, -2);
+    fileData->data = data;
+    fileData->filename = file->getFileName();
+    fileData->ext = file->getFileName().section('.', -1, -1);
+    fileData->path = file->getFileName().section('/', 0, -2);
     file->close();
     zip->close();
 

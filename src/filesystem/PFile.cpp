@@ -1,10 +1,9 @@
 #include "PFile.h"
 
 PFile::PFile(QObject *parent, const QString &filePath, FileType type)
-    : QObject(parent), m_rootPath(""), m_file(nullptr) {
+    : QObject(parent), m_rootPath(filePath), m_file(nullptr) {
     // Initialize the virtual filesystem object
     m_file = createFilesystem(filePath, type);
-
 }
 
 // Create a virtual filesystem object
@@ -19,16 +18,16 @@ std::unique_ptr<IVirtualFilesystem> PFile::createFilesystem(const QString &path,
     }
 }
 
-PFileData PFile::read(const QString &relFilePath) {
+QSharedPointer<PFileData> PFile::read(const QString &relFilePath) {
     // Read the file from the virtual filesystem
     return m_file->read(relFilePath);
 }
 
-QList<PFileData> PFile::readAll(const QStringList& validFolders, const QStringList &validExts) {
+QVector<QSharedPointer<PFileData>> PFile::readAll(const QStringList& validFolders, const QStringList &validExts) {
     return m_file->readAll(validFolders, validExts);
 }
 
-bool PFile::write(const PFileData &data) {
+bool PFile::write(const QSharedPointer<PFileData> &data) {
     // Write the file to the virtual filesystem
     return m_file->write(data);
 }

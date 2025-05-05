@@ -23,12 +23,12 @@ class PZip : public IVirtualFilesystem {
         QString rootPath() const override;
 
         // file operations - relative to root path
-        PFileData read(const QString &filePath) override;
-        QList<PFileData> readAll(const QStringList &validDirs = {}, const QStringList &validExts = {});
-        bool write(const PFileData &data) override;
+        QSharedPointer<PFileData> read(const QString &filePath) override;
+        QVector<QSharedPointer<PFileData>> readAll(const QStringList &validDirs = {}, const QStringList &validExts = {}) override;
+        bool write(const QSharedPointer<PFileData> &data) override;
         bool remove(const QStringList &itemsToRemove) override;
         bool remove(const QString &itemToRemove);
-        bool exists(const QString &filePath) override;
+        bool exists(const QString &filePath = "") override;
 
         // move/rename
         bool move(const QString &filePath, const QString &newLocation) override;

@@ -31,6 +31,33 @@ QVariant PIniConfig::getValue(const QString &section, const QString &key) const 
     return QVariant("");
 }
 
+// Support for multiple keys in the same section
+// Returns a QStringList values getMultiKeys is true, otherwise returns the first value found
+// If no keys are found, returns an empty QVariant
+QVariant PIniConfig::getValue(const QString &section, const QString &key, bool getMultiKeys) const {
+    if (getMultiKeys) {
+        QStringList values;
+
+        std::string sectionStr = section.toStdString();
+
+        CSimpleIniA::TNamesDepend keys;
+        m_ini.GetAllKeys(sectionStr.c_str(), keys);
+        for (const auto &k : keys) {
+            if (key.compare(k.pItem, Qt::CaseInsensitive) == 0) {
+                const char *value = m_ini.GetValue(sectionStr.c_str(), k.pItem, nullptr);
+                if (value) {
+                    // convert to QString in correct encoding to avoid garbage characters
+                    values.append(QString::fromUtf8(value)); 
+                }
+            }
+        }
+
+        return QVariant::fromValue(values);
+    } else {
+        return getValue(section, key);
+    }
+}
+
 void PIniConfig::setValue(const QString &key, const QVariant &value, const QString &section) {
     if (section == "") {
         qDebug() << "Error: No section provided for ini file with key = " << key << " and value " << value;
@@ -56,6 +83,16 @@ bool PIniConfig::removeSection(const QString &section) {
 
 bool PIniConfig::getAllSections() {
     return false;
+}
+
+QStringList PIniConfig::getAllKeys(const QString &section) {
+    CSimpleIniA::TNamesDepend keys;
+    m_ini.GetAllKeys(section.toStdString().c_str(), keys);
+    QStringList keyList;
+    for (const auto &key : keys) {
+        keyList.append(QString(key.pItem));
+    }
+    return keyList;
 }
 
 // ---------------------------- Exist tests
