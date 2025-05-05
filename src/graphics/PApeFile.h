@@ -8,7 +8,6 @@
 
 // Project
 #include "PConfigMgr.h"
-#include "PDatabaseMgr.h"
 #include "PFile.h"
 
 // External
@@ -18,12 +17,12 @@ class PApeFile : public QObject
 {
     Q_OBJECT
 public:
-PApeFile();
-    static QMap<QString, OutputBuffer> getGraphicBuffers(const QString &ztdFilePath);
-    static QStringList processIcons(QMap<QString, OutputBuffer> &graphicBuffers);
-    static bool deleteIcons(const QString &modId);
+    PApeFile(const QSharedPointer<PFile> &ztd, const QString &outputDir);
+    QString generateGraphicAsPng(const QString &graphicPath, const QString &fileName = "");
 private:
     QString m_outputiconsPath = QDir::homePath() + "/.panda/modicons/";
+    QSharedPointer<PFile> m_ztd;
+    QString m_outputDir;
 };
 
 #endif // PAPEFILE_H

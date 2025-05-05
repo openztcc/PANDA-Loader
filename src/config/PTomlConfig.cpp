@@ -67,9 +67,12 @@ QVariant PTomlConfig::getValue(const QString &section, const QString &key) const
 
     // check if key exists in the table
     auto it = table->find(k);
-    if (it == table->end()) {
-        qDebug() << "Key not found:" << key;
-        return QVariant();
+    if (k.empty() || it == table->end()) {
+        QVariantMap result;
+        for (const auto& [mapKey, mapValue] : *table) {
+            result.insert(QString::fromStdString(mapKey.data()), extractVariant(mapValue));
+        }
+        return result;
     }
 
     // return correct type
@@ -132,6 +135,25 @@ bool PTomlConfig::getAllSections() {
     return false;
 }
 
+// TODO: unit test for this function
+QStringList PTomlConfig::getAllKeys(const QString &section) {
+    std::string s = section.toStdString();
+    QStringList keys;
+
+    if (s == "") {
+        for (const auto& [key, value] : m_toml) {
+            keys.append(QString::fromStdString(key.data()));
+        }
+    } else {
+        if (auto* settings = m_toml[s].as_table()) {
+            for (const auto& [key, value] : *settings) {
+                keys.append(QString::fromStdString(key.data()));
+            }
+        }
+    }
+
+    return keys;
+}
 // ---------------------------- EXIST TESTS
 
 bool PTomlConfig::sectionExists(const QString &section) const {
@@ -289,8 +311,15 @@ QVariant PTomlConfig::extractVariant(const toml::node& node) const {
         return list;
     }
 
-    // return QVariant();
-    return QVariant(); // interpret as string
+    if (auto val = node.as_table()) {
+        QVariantMap map;
+        for (const auto& [key, value] : *val) {
+            map.insert(QString::fromStdString(key.data()), extractVariant(value));
+        }
+        return map;
+    }
+
+    return QVariant();
 }
 
 // returns as QVariant for flexibility

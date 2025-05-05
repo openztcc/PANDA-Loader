@@ -16,9 +16,9 @@ PConfigMgr::PConfigMgr(QObject *parent, const QString &filepath) : QObject(paren
     }
 }
 
-PConfigMgr::PConfigMgr(QObject *parent, const PFileData &fileData) : QObject(parent), m_dirty(0), m_config(nullptr), m_configBackup(nullptr), m_dirty_laundry(nullptr)
+PConfigMgr::PConfigMgr(QObject *parent, const QSharedPointer<PFileData> &fileData) : QObject(parent), m_dirty(0), m_config(nullptr), m_configBackup(nullptr), m_dirty_laundry(nullptr)
 {
-    if (!fileData.data.isEmpty()) {
+    if (fileData) {
         loadConfig(fileData);
     } else {
         qDebug() << "No data provided for config file";
@@ -32,7 +32,7 @@ std::unique_ptr<IConfigLoader> PConfigMgr::createParser(const QString &path) con
 {
     // Get the file extension
     QString ext = QFileInfo(path).suffix().toLower();
-    if (ext == "ini") {
+    if (ext == "ini" || ext == "uca" || ext == "ucb" || ext == "ucs" || ext == "ai" || ext == "ani" || ext == "cfg") {
         return std::make_unique<PIniConfig>();
     } else if (ext == "toml") {
         return std::make_unique<PTomlConfig>();
@@ -80,21 +80,23 @@ bool PConfigMgr::loadConfig(const QString &filePath)
 
 // Load config from a PFileData object
 // TODO: Eventually rework this to use the PFileData object directly instead of creating a temporary file
-bool PConfigMgr::loadConfig(const PFileData &fileData)
+bool PConfigMgr::loadConfig(const QSharedPointer<PFileData> &fileData)
 {
-    if (fileData.data.isEmpty()) {
+    if (!fileData) {
         qDebug() << "No data provided for config file";
         return false;
     }
 
     // Create a temporary file to load the config from
-    QString tempFilePath = QDir::tempPath() + "/" + QUuid::createUuid().toString(QUuid::WithoutBraces) + ".tmp.ini";
+    QString tempFilePath = QDir::tempPath() + "/" + fileData->filename + "." + fileData->ext;
     QFile tempFile(tempFilePath);
     if (!tempFile.open(QIODevice::WriteOnly)) {
         qDebug() << "Failed to create temporary file: " << tempFilePath;
         return false;
+    } else {
+        qDebug() << "Temporary file created: " << tempFilePath;
     }
-    tempFile.write(fileData.data);
+    tempFile.write(fileData->data);
     tempFile.close();
 
     // Load the config from the temporary file
@@ -108,7 +110,7 @@ bool PConfigMgr::loadConfig(const PFileData &fileData)
 bool PConfigMgr::saveConfig(const QString &filePath)
 {
     if (!m_config) {
-        qDebug() << "Config parser not initialized";
+        qDebug() << "After trying to saveConfig, config parser not initialized";
         return false;
     }
 
@@ -149,7 +151,7 @@ bool PConfigMgr::revertChanges()
 bool PConfigMgr::clear()
 {
     if (!m_config) {
-        qDebug() << "Config parser not initialized";
+        qDebug() << "After trying to clear(), config parser not initialized";
         return false;
     }
 
@@ -166,11 +168,26 @@ bool PConfigMgr::clear()
 QVariant PConfigMgr::getValue(const QString &section, const QString &key)
 {
     if (!m_config) {
-        qDebug() << "Config parser not initialized";
+        qDebug() << "Tried to get key " << key << " from section [" << section << "] but config parser not initialized";
         return QVariant();
     }
 
     return m_config->getValue(section, key);
+}
+
+// Get a key value from config file with support for multiple keys
+QVariant PConfigMgr::getValue(const QString &section, const QString &key, bool getMultiKeys) const
+{
+    if (!getMultiKeys) {
+        return m_config->getValue(section, key);
+    }
+
+    if (!m_config) {
+        qDebug() << "Tried to get multiple keys " << key << " from section [" << section << "] but config parser not initialized";
+        return QVariant();
+    }
+
+    return m_config->getValue(section, key, getMultiKeys);
 }
 
 // Set a key value in config file
@@ -200,7 +217,7 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
     }
 
     if (!m_config) {
-        qDebug() << "Config parser not initialized";
+        qDebug() << "Tried to set key " << key << " in section [" << section << "] but config parser not initialized";
         return;
     }
 
@@ -213,131 +230,15 @@ void PConfigMgr::setValue(const QString &key, const QVariant &value, const QStri
     m_config->setValue(key, input, section);
 }
 
-// Get a key value from a toml table as a list (ie tags and authors)
-QVector<QString> PConfigMgr::getKeyValueAsList(const QString &key, const toml::table &config)
+// Returns all keys in the config file within a section
+QStringList PConfigMgr::getAllKeys(const QString &section) const
 {
-    QVector<QString> result;
-
-    // Find value in table
-    if (auto it = config.find(key.toStdString()); it != config.end()) {
-        if (auto arrVal = it->second.as_array()) {
-            for (const auto &item : *arrVal) {
-                if (auto strVal = item.as_string()) {
-                    result.append(QString::fromStdString(strVal->get()));
-                }
-            }
-        }
+    if (!m_config) {
+        qDebug() << "Tried to get all keys from section [" << section << "] but config parser not initialized";
+        return QStringList();
     }
 
-    return result;
+    // Get all keys in the config file within a section
+    QStringList keys = m_config->getAllKeys(section);
+    return keys;
 }
-
-// Updates the meta configuration in a ztd file
-// TODO: Test if this updates the config correctly
-// - Possible issue with old config not being removed
-// - If successful, remove addMetaConfig. Needs condition to check if config exists
-bool PConfigMgr::updateMetaConfig(const QString &ztdFilePath, const toml::table &config)
-{
-    // Check if the ztd file exists
-    if (!PZtdMgr::isZtdFile(ztdFilePath)) {
-        qDebug() << "Ztd file does not exist or is not valid";
-        return false; // Ztd file does not exist or is not valid
-    }
-
-    QString metaConfigPath = QDir::tempPath() + "/" + m_metaConfigName;
-    QString tempZtdPath = QDir::tempPath() + "/" + QUuid::createUuid().toString(QUuid::WithoutBraces) + ".ztd";
-
-    // Copy the original ztd to the temporary file
-    if (!PZtdMgr::copyZtdFile(ztdFilePath, tempZtdPath)) {
-        qDebug() << "Failed to copy ztd file";
-        qDebug() << "From " << ztdFilePath << " to " << tempZtdPath;
-        return false; // Failed to copy the ztd file
-    }
-
-    // if meta.toml already exists, remove it
-    if (PZtdMgr::fileExistsInZtd(tempZtdPath, m_metaConfigName)) {
-        if (!PZtdMgr::removeFileFromZtd(tempZtdPath, m_metaConfigName)) {
-            qDebug() << "Failed to remove old meta config from ztd";
-            return false; // Failed to remove the old meta config
-        }
-    }
-
-    // Create a temporary file to store the new meta config
-    QFile tempMeta(metaConfigPath);
-    if (!tempMeta.open(QIODevice::WriteOnly)) {
-        qDebug() << "Failed to create temporary meta config file";
-        tempMeta.remove(); // Cleanup temp file
-        return false; // Failed to create temporary meta config file
-    }
-    std::stringstream ss;
-    
-    ss << config;
-    QString tomlStr = QString::fromStdString(ss.str());
-    tempMeta.write(tomlStr.toUtf8());
-    tempMeta.close();
-    
-    // Add the TOML file to the ZTD archive
-    if (!PZtdMgr::addFileToZtd(tempZtdPath, metaConfigPath)) {
-        qDebug() << "Failed to add new meta config to ztd";
-        tempMeta.remove(); // Cleanup temp file
-        return false;
-    }
-
-    // Remove old ztd file
-    if (!QFile::remove(ztdFilePath)) {
-        qDebug() << "Failed to remove old ztd file";
-        tempMeta.remove(); // Cleanup temp file
-        return false;
-    }
-
-    // Replace the original ztd with the temporary one
-    if (!QFile::rename(tempZtdPath, ztdFilePath)) {
-        qDebug() << "Failed to replace old ztd file";
-        tempMeta.remove(); // Cleanup temp file
-        return false; // Failed to replace the original ztd
-    }
-
-    tempMeta.remove(); // Cleanup temp file
-    QFile::remove(metaConfigPath); // Cleanup temp file
-
-    return true;
-}
-
-// Removes a meta configuration from a ztd file (if it exists)
-// TODO: Test if this removes the config correctly
-bool PConfigMgr::removeMetaConfig(const QString &ztdFilePath)
-{
-    // Check if valid zip file
-    QuaZip zip(ztdFilePath);
-    if (!zip.open(QuaZip::mdUnzip)) {
-        qDebug() << "Failed to open ZTD file for extraction: " << zip.getZipError();
-        return false;
-    }
-    zip.close();
-
-    // Create a temporary file to store the new ztd without the meta config
-    QString tempZtdPath = ztdFilePath;
-
-    // // Copy the original ztd to the temporary file
-    // if (!PZtdMgr::copyZtdFile(ztdFilePath, tempZtdPath)) {
-    //     qDebug() << "Failed to copy ztd file";
-    //     return false; // Failed to copy the ztd file
-    // }
-
-    // Remove the meta configuration from the temporary ztd
-    if (!PZtdMgr::removeFileFromZtd(tempZtdPath, m_metaConfigName)) {
-        QFile::remove(tempZtdPath); // Clean up temporary file
-        qDebug() << "Failed to remove meta config from ztd";
-        return false; // Failed to remove the meta config
-    }
-
-    // // Replace the original ztd with the temporary one
-    // if (!PZtdMgr::moveZtdFile(tempZtdPath, ztdFilePath)) {
-    //     qDebug() << "Failed to replace old ztd file";
-    //     QFile::remove(tempZtdPath); // Clean up temporary file
-    //     return false; // Failed to replace the original ztd
-    // }
-
-    return true;
-}
-

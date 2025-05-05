@@ -24,11 +24,10 @@ find_package(QuaZip REQUIRED)
 qt_add_executable(appPandaLdr
     ${SRC_RC}
     src/main.cpp
-    # controllers
-    src/controllers/PAppController.cpp src/controllers/PAppController.h
-    src/controllers/PModController.cpp src/controllers/PModController.h
-    src/controllers/PModMgr.cpp src/controllers/PModMgr.h
-    src/controllers/PSystemMgr.cpp src/controllers/PSystemMgr.h
+    # app
+    src/app/PAppController.cpp src/app/PAppController.h
+    src/app/PLauncher.cpp src/app/PLauncher.h
+    src/app/PAppSettings.h src/app/PAppSettings.cpp
     # graphics
     src/graphics/PApeFile.cpp src/graphics/PApeFile.h
     # config
@@ -41,15 +40,21 @@ qt_add_executable(appPandaLdr
     src/models/PEntityType.cpp src/models/PEntityType.h
     src/models/PIconData.h
     src/models/PFileData.h
+    src/models/PDependency.h
     # filesystem
     src/filesystem/IVirtualFileSystem.h
     src/filesystem/PFileSystem.h src/filesystem/PFileSystem.cpp
     src/filesystem/PFile.h src/filesystem/PFile.cpp
     src/filesystem/PZip.h src/filesystem/PZip.cpp
+    # mods
+    src/mods/PModUIController.cpp src/mods/PModUIController.h
+    src/mods/PModDataAccess.cpp src/mods/PModDataAccess.h
+    src/mods/PModLoader.cpp src/mods/PModLoader.h
     # database
-    src/database/PDatabaseMgr.cpp src/database/PDatabaseMgr.h
-
-    src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp 
+    src/database/PDatabase.cpp src/database/PDatabase.h
+    src/database/PModQueries.h
+    # data
+    src/data/PDataList.h
     )
 
 add_subdirectory(libs/apecore)
@@ -117,11 +122,10 @@ qt_add_qml_module(appPandaLdr
         ui/layouts/settings/SettingsConfirmationBar.qml
     RESOURCES images/launch_bg.jpg
     SOURCES
-        # controllers
-        src/controllers/PAppController.cpp
-        src/controllers/PModController.cpp
-        src/controllers/PModMgr.cpp
-        src/controllers/PSystemMgr.cpp
+        # app
+        src/app/PAppController.cpp
+        src/app/PLauncher.cpp
+        src/app/PAppSettings.cpp
         # graphics
         src/graphics/PApeFile.cpp
         # config
@@ -136,21 +140,25 @@ qt_add_qml_module(appPandaLdr
         src/filesystem/PFile.cpp
         src/filesystem/PZip.cpp
         # database
-        src/database/PDatabaseMgr.cpp
-
-        src/ldrs/PZtdMgr.cpp 
+        src/database/PDatabase.cpp
+        # mods
+        src/mods/PModUIController.cpp
+        src/mods/PModDataAccess.cpp
+        src/mods/PModLoader.cpp
 )
 
 target_include_directories(appPandaLdr
     PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/models
-        ${CMAKE_SOURCE_DIR}/src/controllers
+        ${CMAKE_SOURCE_DIR}/src/app
         ${CMAKE_SOURCE_DIR}/src/graphics
         ${CMAKE_SOURCE_DIR}/src/filesystem
         ${CMAKE_SOURCE_DIR}/src/config
         ${CMAKE_SOURCE_DIR}/src/database
         ${CMAKE_SOURCE_DIR}/src/ldrs
+        ${CMAKE_SOURCE_DIR}/src/mods
+        ${CMAKE_SOURCE_DIR}/src/data
         ${CMAKE_SOURCE_DIR}/libs/apecore/include
 )
 
@@ -248,20 +256,19 @@ qt_add_executable(testFileSystem
     src/filesystem/PFileSystem.h src/filesystem/PFileSystem.cpp
     src/filesystem/PFile.h src/filesystem/PFile.cpp
     src/filesystem/PZip.h src/filesystem/PZip.cpp
-
-    src/ldrs/PZtdMgr.h src/ldrs/PZtdMgr.cpp
 )
 
 target_include_directories(testFileSystem
     PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/models
-        ${CMAKE_SOURCE_DIR}/src/controllers
+        ${CMAKE_SOURCE_DIR}/src/app
         ${CMAKE_SOURCE_DIR}/src/graphics
         ${CMAKE_SOURCE_DIR}/src/filesystem
         ${CMAKE_SOURCE_DIR}/src/config
         ${CMAKE_SOURCE_DIR}/src/database
         ${CMAKE_SOURCE_DIR}/src/ldrs
+        ${CMAKE_SOURCE_DIR}/src/mods
         ${CMAKE_SOURCE_DIR}/libs/apecore/include
 )
 
@@ -289,7 +296,6 @@ add_custom_command(TARGET testFileSystem POST_BUILD
 # qt_add_executable(testConfigMgr
 #     tests/PTestConfigMgr.cpp
 #     src/ldrs/PConfigMgr.cpp src/ldrs/PConfigMgr.h
-#     src/ldrs/PZtdMgr.cpp src/ldrs/PZtdMgr.h
 #     src/interfaces/IConfigLoader.h src/interfaces/IConfigLoader.cpp
 #     src/ldrs/PIniConfig.cpp src/ldrs/PIniConfig.h
 #     src/ldrs/PTomlConfig.cpp src/ldrs/PTomlConfig.h
@@ -317,9 +323,8 @@ add_custom_command(TARGET testFileSystem POST_BUILD
 # # ------------- PTestDatabaseMgr -------------
 # qt_add_executable(testDatabaseMgr
 #     tests/PTestDatabaseMgr.cpp
-#     PDatabaseMgr.h PDatabaseMgr.cpp
+#     PDatabase.h PDatabase.cpp
 #     PConfigMgr.h PConfigMgr.cpp
-#     PZtdMgr.h PZtdMgr.cpp
 # )
 
 # # link the required libraries
@@ -344,7 +349,6 @@ add_custom_command(TARGET testFileSystem POST_BUILD
 #     tests/PTestGraphicsMgr.cpp
 #     src/PConfigMgr.h src/PConfigMgr.cpp
 #     src/PApeFile.h src/PApeFile.cpp
-#     src/PZtdMgr.h src/PZtdMgr.cpp
 # )
 
 # # link the required libraries

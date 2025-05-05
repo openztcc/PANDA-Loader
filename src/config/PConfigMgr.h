@@ -13,7 +13,6 @@
 #include "toml.hpp"
 
 // Project
-#include "PZtdMgr.h"
 #include "IConfigLoader.h"
 #include "PFileData.h"
 #include "PIniConfig.h"
@@ -42,22 +41,23 @@ public:
     };
 
     PConfigMgr(QObject *parent = nullptr, const QString &filepath = "");
-    PConfigMgr(QObject *parent, const PFileData &fileData = PFileData());
+    PConfigMgr(QObject *parent, const QSharedPointer<PFileData> &fileData = nullptr);
 
     ~PConfigMgr();
 
     // meta configuration operations
     bool loadConfig(const QString &filePath);
-    bool loadConfig(const PFileData &fileData);
+    bool loadConfig(const QSharedPointer<PFileData> &fileData);
+
     bool saveConfig(const QString &filePath);
     Q_INVOKABLE bool saveConfig();
     Q_INVOKABLE bool revertChanges();
     bool clear();
     Q_INVOKABLE QVariant getValue(const QString &section, const QString &key);
+    Q_INVOKABLE QVariant getValue(const QString &section, const QString &key, bool getMultiKeys) const; // only for ini files
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
-    static QVector<QString> getKeyValueAsList(const QString &key, const toml::table &config);
-    static bool updateMetaConfig(const QString &ztdFilePath, const toml::table &config);
-    static bool removeMetaConfig(const QString &ztdFilePath);
+    QStringList getAllKeys(const QString &section = "") const;
+
 
     // setters and getters for QProperties
     int isDirty() const { return m_dirty; }
@@ -84,8 +84,6 @@ private:
     std::unique_ptr<IConfigLoader> m_dirty_laundry;
     int m_dirty;
     std::unique_ptr<IConfigLoader> createParser(const QString &path) const;
-    // helper functions
-    static PConfigMgr::IniData byteArrayToIniData(const PZtdMgr::FileData &data);
-    static QStringList extractDuplicateKeys(const QByteArray& rawData, const QString& group, const QString& key);
+
 };
 #endif // PCONFIGMGR_H

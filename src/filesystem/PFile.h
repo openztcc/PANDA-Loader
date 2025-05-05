@@ -32,9 +32,9 @@ public:
     QString rootPath() const;
 
     // file operations - relative to root path
-    PFileData read(const QString &filePath);
-    QList<PFileData> readAll(const QStringList& validFolders = {}, const QStringList &validExts = {});
-    bool write(const PFileData &data);
+    QSharedPointer<PFileData> read(const QString &filePath);
+    QVector<QSharedPointer<PFileData>> readAll(const QStringList& validFolders = {}, const QStringList &validExts = {});
+    bool write(const QSharedPointer<PFileData> &data);
     bool remove(const QStringList &filesToRemove);
     bool remove(const QString &fileToRemove);
     bool exists(const QString &filePath);

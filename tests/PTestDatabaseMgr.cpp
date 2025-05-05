@@ -1,6 +1,6 @@
 #include <QtTest/QtTest>
 #include <QVector>
-#include "PDatabaseMgr.h"
+#include "PDatabase.h"
 
 class PTestDatabaseMgr : public QObject
 {
@@ -29,10 +29,10 @@ void PTestDatabaseMgr::testInsertMod_data()
     QTest::addColumn<QString>("path");
     QTest::addColumn<bool>("enabled");
     QTest::addColumn<QVector<QString>>("tags");
-    QTest::addColumn<QVector<PDatabaseMgr::PDependency>>("dependencies");
+    QTest::addColumn<QVector<PDatabase::PDependency>>("dependencies");
     QTest::addColumn<bool>("expectedResult");
 
-    QVector<PDatabaseMgr::PDependency> deps;
+    QVector<PDatabase::PDependency> deps;
     deps.push_back({"mod_id", "dep_id", "name", "min_version", false, "ordering", "link"});
 
     // valid case
@@ -49,7 +49,7 @@ void PTestDatabaseMgr::testInsertMod_data()
         << QVector<QString>{} 
         << "1.0.0" << testDataDir + "valid.ztd" 
         << true << QVector<QString>{} 
-        << QVector<PDatabaseMgr::PDependency>{} << true;
+        << QVector<PDatabase::PDependency>{} << true;
 
     // missing required fields (name, version, path, modId)
     QTest::newRow("missing name") 
@@ -83,13 +83,13 @@ void PTestDatabaseMgr::testInsertMod()
     QFETCH(QString, path);
     QFETCH(bool, enabled);
     QFETCH(QVector<QString>, tags);
-    QFETCH(QVector<PDatabaseMgr::PDependency>, dependencies);
+    QFETCH(QVector<PDatabase::PDependency>, dependencies);
     QFETCH(bool, expectedResult);
 
     // unique modId for each test case
     QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
-    PDatabaseMgr dbMgr;
+    PDatabase dbMgr;
     QVERIFY(dbMgr.openDatabase());
 
     bool result = dbMgr.insertMod(name, desc, authors, version, path, enabled, tags, uniqueModId, dependencies);
@@ -119,13 +119,13 @@ void PTestDatabaseMgr::testDeleteMod()
     QFETCH(QString, modId);
     QFETCH(bool, expectedResult);
 
-    PDatabaseMgr dbMgr;
+    PDatabase dbMgr;
     QVERIFY(dbMgr.openDatabase());
 
     // Clean up in case of previous runs
     dbMgr.deleteMod(modId); 
 
-    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "delete.this", QVector<PDatabaseMgr::PDependency>{}));
+    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "delete.this", QVector<PDatabase::PDependency>{}));
 
     bool result = dbMgr.deleteMod(modId);
     QCOMPARE(result, expectedResult);
@@ -154,13 +154,13 @@ void PTestDatabaseMgr::testUpdateMod()
     QFETCH(QString, value);
     QFETCH(bool, expectedResult);
 
-    PDatabaseMgr dbMgr;
+    PDatabase dbMgr;
     QVERIFY(dbMgr.openDatabase());
 
     // Remove any previous mod with the same modId
     dbMgr.deleteMod(modId);
 
-    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "update.mod_id", QVector<PDatabaseMgr::PDependency>{}));
+    QVERIFY(dbMgr.insertMod("mod_name", "mod_desc", QVector<QString>{"author1", "author2"}, "1.0.0", testDataDir + "valid.ztd", true, QVector<QString>{"tag1", "tag2"}, "update.mod_id", QVector<PDatabase::PDependency>{}));
 
     bool result = dbMgr.updateMod(modId, key, value);
     QCOMPARE(result, expectedResult);
@@ -174,37 +174,37 @@ void PTestDatabaseMgr::testUpdateMod()
 void PTestDatabaseMgr::testAddDependency_data()
 {
     QTest::addColumn<QString>("modId");
-    QTest::addColumn<PDatabaseMgr::PDependency>("dependency");
+    QTest::addColumn<PDatabase::PDependency>("dependency");
     QTest::addColumn<bool>("expectedResult");
 
     // Test case 1: Add valid dependency
-    QTest::newRow("valid dependency") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "name", "min_version", false, "ordering", "link"} << true;
+    QTest::newRow("valid dependency") << "mod_id" << PDatabase::PDependency{"mod_id", "dep_id", "name", "min_version", false, "ordering", "link"} << true;
 
     // Test case 3: Add dependency with no name
-    QTest::newRow("no name") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "", "min_version", false, "ordering", "link"} << true;
+    QTest::newRow("no name") << "mod_id" << PDatabase::PDependency{"mod_id", "dep_id", "", "min_version", false, "ordering", "link"} << true;
 
     // Test case 4: Add dependency with no min_version
-    QTest::newRow("no min_version") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "name", "", false, "ordering", "link"} << true;
+    QTest::newRow("no min_version") << "mod_id" << PDatabase::PDependency{"mod_id", "dep_id", "name", "", false, "ordering", "link"} << true;
 
     // Test case 5: Add dependency with no ordering
-    QTest::newRow("no ordering") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "name", "min_version", false, "", "link"} << true;
+    QTest::newRow("no ordering") << "mod_id" << PDatabase::PDependency{"mod_id", "dep_id", "name", "min_version", false, "", "link"} << true;
 
     // Test case 6: Add dependency with no link
-    QTest::newRow("no link") << "mod_id" << PDatabaseMgr::PDependency{"mod_id", "dep_id", "name", "min_version", false, "ordering", ""} << true;
+    QTest::newRow("no link") << "mod_id" << PDatabase::PDependency{"mod_id", "dep_id", "name", "min_version", false, "ordering", ""} << true;
 }
 
 void PTestDatabaseMgr::testAddDependency()
 {
     QFETCH(QString, modId);
-    QFETCH(PDatabaseMgr::PDependency, dependency);
+    QFETCH(PDatabase::PDependency, dependency);
     QFETCH(bool, expectedResult);
 
-    PDatabaseMgr dbMgr;
+    PDatabase dbMgr;
     QVERIFY(dbMgr.openDatabase());
     QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
     // Create a mod to add dependency to
-    PDatabaseMgr::PMod mod;
+    PDatabase::PMod mod;
     mod.title = "mod_name";
     mod.description = "mod_desc";
     mod.authors = {"author1", "author2"};
@@ -248,12 +248,12 @@ void PTestDatabaseMgr::testRemoveDependency()
     QFETCH(QString, dependencyId);
     QFETCH(bool, expectedResult);
 
-    PDatabaseMgr dbMgr;
+    PDatabase dbMgr;
     QVERIFY(dbMgr.openDatabase());
     QString uniqueModId = QString("mod_id_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
 
     // Create a mod to add dependency to
-    PDatabaseMgr::PMod mod;
+    PDatabase::PMod mod;
     mod.title = "mod_name";
     mod.description = "mod_desc";
     mod.authors = {"author1", "author2"};
@@ -267,7 +267,7 @@ void PTestDatabaseMgr::testRemoveDependency()
     QVERIFY(dbMgr.insertMod(mod));
 
     // Add a dependency to the mod
-    PDatabaseMgr::PDependency dependency;
+    PDatabase::PDependency dependency;
     dependency.dependencyId = dependencyId;
     dependency.modId = uniqueModId;
     dependency.name = "name";
