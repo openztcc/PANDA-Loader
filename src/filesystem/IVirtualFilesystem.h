@@ -16,6 +16,7 @@ class IVirtualFilesystem {
         virtual QSharedPointer<PFileData> read(const QString &filePath) = 0;
         virtual QVector<QSharedPointer<PFileData>> readAll(const QStringList& validFolders, const QStringList &validExts) = 0;
         virtual bool write(const QSharedPointer<PFileData> &data) = 0;
+
         virtual bool remove(const QStringList &itemsToRemove) = 0;
         virtual bool exists(const QString &filePath) = 0;
 

@@ -154,7 +154,6 @@ QStringList PTomlConfig::getAllKeys(const QString &section) {
 
     return keys;
 }
-
 // ---------------------------- EXIST TESTS
 
 bool PTomlConfig::sectionExists(const QString &section) const {

@@ -48,6 +48,7 @@ public:
     // meta configuration operations
     bool loadConfig(const QString &filePath);
     bool loadConfig(const QSharedPointer<PFileData> &fileData);
+
     bool saveConfig(const QString &filePath);
     Q_INVOKABLE bool saveConfig();
     Q_INVOKABLE bool revertChanges();
@@ -56,6 +57,7 @@ public:
     Q_INVOKABLE QVariant getValue(const QString &section, const QString &key, bool getMultiKeys) const; // only for ini files
     Q_INVOKABLE void setValue(const QString &key, const QVariant &value, const QString &section);
     QStringList getAllKeys(const QString &section = "") const;
+
 
     // setters and getters for QProperties
     int isDirty() const { return m_dirty; }
@@ -82,5 +84,6 @@ private:
     std::unique_ptr<IConfigLoader> m_dirty_laundry;
     int m_dirty;
     std::unique_ptr<IConfigLoader> createParser(const QString &path) const;
+
 };
 #endif // PCONFIGMGR_H
