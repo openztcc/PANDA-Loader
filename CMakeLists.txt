@@ -233,6 +233,19 @@ install(TARGETS appPandaLdr
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+set(SRC_DLL "${CMAKE_SOURCE_DIR}/libs/res-openzt.dll")
+set(DEST_DLL "C:\\Program Files (x86)\\Microsoft Games\\Zoo Tycoon")
+
+add_custom_command(
+    OUTPUT ${DEST_DLL}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SRC_DLL} ${DEST_DLL}
+    DEPENDS ${SRC_DLL}
+    COMMENT "Copying res-openzt.dll to zt folder"
+)
+
+add_custom_target(copy_dll ALL DEPENDS ${DEST_DLL})
+
+
 
 # Set up unit tests
 

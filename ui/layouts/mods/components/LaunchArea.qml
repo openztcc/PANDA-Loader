@@ -53,22 +53,25 @@ Rectangle {
 
         }
 
-        Button {
-            text: "Install OpenZT"
-            Material.foreground: "#4D523B"
-            Material.background: "#FEB886"
+        // Button {
+        //     text: "Launch Scripting"
+        //     Material.foreground: "#4D523B"
+        //     Material.background: "#FEB886"
 
-            background: Rectangle {
-                color: "#FEB886"
-                radius: 5
-            }
+        //     background: Rectangle {
+        //         color: "#FEB886"
+        //         radius: 5
+        //     }
 
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: console.log("Install OpenZT clicked")
-            }
-        }
+        //     MouseArea {
+        //         anchors.fill: parent
+        //         cursorShape: Qt.PointingHandCursor
+        //         onClicked: { 
+        //             PAppController.launchScripting()
+        //             PAppController.launchZT()
+        //         }
+        //     }
+        // }
 
         Item {
             Layout.preferredWidth: 12

@@ -85,3 +85,6 @@ CMakeLists.txt.user*
 .vscode/
 
 *.test
+
+# Whitelist
+!res-openzt.dll

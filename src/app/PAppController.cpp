@@ -117,3 +117,36 @@ bool PAppController::loadPandaCfg() {
     }
     return true;
 }
+
+// this moves the openzt binary dll to the root zt folder
+int PAppController::launchScripting() {
+    // source file is in libs/res-openzt.dll
+    QString sourcePath = QDir::currentPath() + "/libs/res-openzt.dll";
+
+    // destination file is in the zt folder
+    QString destPath = QDir(m_path).filePath("res-openzt.dll");
+
+    // check if the source file exists
+    if (!QFile::exists(sourcePath)) {
+        qWarning() << "Source file not found: " << sourcePath;
+        return 0;
+    }
+
+    // check if the destination file exists
+    if (QFile::exists(destPath)) {
+        qWarning() << "Destination file already exists: " << destPath;
+        return 0;
+    }
+
+    // copy the file
+    if (!QFile::copy(sourcePath, destPath)) {
+        qWarning() << "Failed to copy file: " << sourcePath << " to " << destPath;
+        return 0;
+    }
+
+    // make a scripts directory in the zt folder if it doesn't exist
+    QString scriptsPath = m_path + "/scripts";
+    if (!QDir().exists(scriptsPath)) {
+        QDir().mkdir(scriptsPath);
+    }
+}
